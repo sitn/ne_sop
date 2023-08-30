@@ -34,7 +34,7 @@
                             alt="Neuchâtel" /></a>
                 </q-toolbar-title>
 
-                <div class="text-center text-body1">DDTE - Suivi des objets parlementaires</div>
+                <div class="text-center text-body1 gt-sm">DDTE - Suivi des objets parlementaires</div>
 
                 <q-space></q-space>
 
