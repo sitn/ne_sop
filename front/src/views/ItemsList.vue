@@ -59,8 +59,6 @@
 </template>
 
 <script>
-// import { ref } from 'vue'
-import { ref, onMounted } from 'vue'
 import items from '../assets/data/items.json'
 
 export default {
