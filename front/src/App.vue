@@ -79,8 +79,9 @@
             :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
             <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
                 <q-list padding>
-                    <q-item clickable v-ripple active-class="bg-indigo-2 text-orange" to="/items">
-                        <!-- active -->
+                    <q-item clickable v-ripple to="/items" style="color:#757575"
+                        active-class="bg-light-blue-1 text-blue-grey-7">
+                        <!-- active #dce4eb -->
                         <q-item-section avatar>
                             <q-icon name="sym_o_list_alt" size="lg" />
                         </q-item-section>
@@ -90,9 +91,10 @@
                         </q-item-section>
                     </q-item>
 
-                    <q-item clickable v-ripple to="/persons">
+                    <q-item clickable v-ripple to="/entities" style="color:#757575"
+                        active-class="bg-light-blue-1 text-blue-grey-7">
                         <q-item-section avatar>
-                            <q-icon name="sym_o_groups" size="lg" color="grey-7" />
+                            <q-icon name="sym_o_groups" size="lg" />
                         </q-item-section>
 
                         <q-item-section>
@@ -100,9 +102,10 @@
                         </q-item-section>
                     </q-item>
 
-                    <q-item clickable v-ripple to="/events">
+                    <q-item clickable v-ripple to="/events" style="color:#757575"
+                        active-class="bg-light-blue-1 text-blue-grey-7">
                         <q-item-section avatar>
-                            <q-icon name="sym_o_schedule" size="lg" color="grey-7" class="custom-font" />
+                            <q-icon name="sym_o_schedule" size="lg" />
                         </q-item-section>
 
                         <q-item-section>
@@ -112,9 +115,10 @@
 
                     <!-- <q-separator /> -->
 
-                    <q-item clickable v-ripple to="/statistics">
+                    <q-item clickable v-ripple to="/statistics" style="color:#757575" class="custom-font"
+                        active-class="bg-light-blue-1 text-blue-grey-7">
                         <q-item-section avatar>
-                            <q-icon name="sym_o_bar_chart" size="lg" color="grey-7" />
+                            <q-icon name="sym_o_bar_chart" size="lg" /> <!-- color="grey-7" -->
                         </q-item-section>
 
                         <q-item-section>

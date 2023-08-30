@@ -1,22 +1,117 @@
 [
     {
-        "number": 23.339,
+        "id": "63741922-4818-4252-ab28-19e31f972260",
+        "number": "23.339",
         "type": "Question",
         "title": "Les PFAS ne vont pas faire pshchitt",
         "status": "Terminé",
+        "content": "",
+        "urgent": false,
+        "writtenResponse": false,
+        "fight": false,
+        "authors": [],
+        "response": "written",
+        "comment": "",
+        "request": "",
+        "documents": [
+            {
+                "version": "000",
+                "date": "21.05.2023",
+                "step": "Réception",
+                "type": "Speaking Note",
+                "author": "Nicolas Ruedin",
+                "note": "",
+                "format": "DOCX",
+                "filesize": "435Ko",
+                "relpath": "\ne"
+            }
+        ],
+        "attachements": [
+            {
+                "version": "000",
+                "date": "21.05.2023",
+                "step": "Réception",
+                "type": "Speaking Note",
+                "author": "Nicolas Ruedin",
+                "note": "",
+                "format": "PDF",
+                "filesize": "435Ko",
+                "relpath": "/tes/file.pdf"
+            }
+        ],
+        "servicesAlt": [
+            {
+                "name": "SGRF",
+                "rue": "Av. du Tivoli 22",
+                "email": "sgrf@ne.ch",
+                "role": "Lead"
+            },
+            {
+                "name": "SAT",
+                "rue": "Av. du Tivoli 22",
+                "email": "sgrf@ne.ch",
+                "role": "Appui"
+            }
+        ],
+        "services": {
+            "lead": {
+                "id": "178a09eb-d04d-4cc2-94d7-c3e3b53d0580",
+                "name": "Service de l'aménagement du territoire (SCAT)",
+                "type": "Service de l'état",
+                "description": "",
+                "street": "Rue de Tivoli 5",
+                "city": "Neuchâtel",
+                "postalCode": "2002",
+                "region": "Neuchâtel",
+                "country": "Suisse",
+                "website": "",
+                "email": "Service.AmenagementTerritoire@ne.ch",
+                "telephone": "+41 32 889 67 40"
+            },
+            "support": [
+                {
+                    "id": "649b2776-bcd6-41dc-8e05-4784b9a944fa",
+                    "name": "Service de la faune, des forêts et de la nature (SFFN)",
+                    "type": "Service de l'état",
+                    "description": "",
+                    "street": "Rue du Premier-Mars 11",
+                    "city": "Couvet",
+                    "postalCode": "2108",
+                    "region": "Neuchâtel",
+                    "country": "Suisse",
+                    "website": "",
+                    "email": "SFFN@ne.ch",
+                    "telephone": "+41 32 889 67 60"
+                }
+            ]
+        },
         "events": [
             {
                 "name": "Dépôt",
-                "date": "23.03.2023"
+                "date": "23.03.2023 10:00:00",
+                "status": "Pas encore traité",
+                "statusGrandConseil": "En traitement",
+                "description": ""
             },
             {
                 "name": "Délai",
-                "date": "12.06.2023"
+                "date": "12.06.2023 02:00:00",
+                "status": "En traitement",
+                "statusGrandConseil": "En traitement",
+                "description": ""
+            },
+            {
+                "name": "Demande département",
+                "date": "28.03.2023 10:00:00",
+                "status": "En traitement",
+                "statusGrandConseil": "En traitement",
+                "description": ""
             }
         ]
     },
     {
-        "number": 23.34,
+        "id": "3fb9fdc3-a235-40ab-a86f-83b0976cd59c",
+        "number": "23.34",
         "type": "Question",
         "title": "Plan directeur des transports : la révision est-elle à l’horaire ?",
         "status": "En traitement",
@@ -29,10 +124,15 @@
                 "name": "Délai",
                 "date": "06.05.2023"
             }
-        ]
+        ],
+        "services": {
+            "lead": null,
+            "support": []
+        }
     },
     {
-        "number": 23.341,
+        "id": "9b70570a-c30f-4c46-8cf8-ed5906bcdd30",
+        "number": "23.341",
         "type": "Question",
         "title": "L’humusation, ou mourir pour donner la vie",
         "status": "En traitement",
@@ -45,10 +145,15 @@
                 "name": "Délai",
                 "date": "06.05.2023"
             }
-        ]
+        ],
+        "services": {
+            "lead": null,
+            "support": []
+        }
     },
     {
-        "number": 23.352,
+        "id": "64873d4c-266d-4a81-8ced-a68ef9707ee7",
+        "number": "23.352",
         "type": "Question",
         "title": "Changement d’affectation de parcelles agricoles : transparence ?",
         "status": "Terminé",
@@ -61,9 +166,14 @@
                 "name": "Délai",
                 "date": "25.08.2023"
             }
-        ]
+        ],
+        "services": {
+            "lead": null,
+            "support": []
+        }
     },
     {
+        "id": "a8940c8d-4fb4-4769-a450-ba13aecbdf3f",
         "number": 23.19,
         "type": "Interpellation",
         "title": "Pâturage et élevage, valorisons notre terroir",
@@ -77,10 +187,15 @@
                 "name": "Délai",
                 "date": "25.08.2023"
             }
-        ]
+        ],
+        "services": {
+            "lead": null,
+            "support": []
+        }
     },
     {
-        "number": 23.191,
+        "id": "18f57808-5503-406d-b977-10c6625a8627",
+        "number": "23.191",
         "type": "Postulat",
         "title": "État des lieux de nos milieux fontinaux",
         "status": "Pas traité",
@@ -93,6 +208,10 @@
                 "name": "Délai",
                 "date": "25.08.2023"
             }
-        ]
+        ],
+        "services": {
+            "lead": null,
+            "support": []
+        }
     }
 ]

@@ -2,15 +2,19 @@ import { createApp } from 'vue'
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import { Quasar } from 'quasar'
 import App from './App.vue'
-import Items from '@/views/Items.vue'
-import Persons from '@/views/Persons.vue'
-import Events from '@/views/Events.vue'
+import ItemsList from '@/views/ItemsList.vue'
+import EntitiesList from '@/views/EntitiesList.vue'
+import EventsList from '@/views/EventsList.vue'
 import Statistics from '@/views/Statistics.vue'
+import Item from '@/views/Item.vue'
+import Entity from '@/views/Entity.vue'
 
 const routes = [
-    { path: '/items', name: 'Items', component: Items },
-    { path: '/persons', name: 'Persons', component: Persons },
-    { path: '/events', name: 'Events', component: Events },
+    { path: '/items', name: 'ItemsList', component: ItemsList },
+    { path: '/items/:id', name: 'Item', component: Item, props: true },
+    { path: '/entities', name: 'EntitiesList', component: EntitiesList },
+    { path: '/entities/:id', name: 'Entity', component: Entity, props: true },
+    { path: '/events', name: 'EventsList', component: EventsList },
     { path: '/statistics', name: 'Statistics', component: Statistics }
 ]
 
