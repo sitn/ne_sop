@@ -29,7 +29,7 @@
 
                 <q-btn size="lg" flat @click="drawer = !drawer" round dense icon="menu" />
 
-                <q-toolbar-title class="">
+                <q-toolbar-title class="gt-xs">
                     <a href="https://www.ne.ch/autorites/DDTE/" target="_blank"><img src="/img/ne_logo_white.svg"
                             alt="Neuchâtel" /></a>
                 </q-toolbar-title>
