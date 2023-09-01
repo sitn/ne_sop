@@ -60,7 +60,7 @@
 
                         <q-separator />
 
-                        <q-item clickable v-close-popup @click="">
+                        <q-item clickable v-close-popup @click="processLogout">
                             <q-item-section>
                                 <q-item-label>Déconnexion</q-item-label>
                             </q-item-section>
@@ -170,7 +170,10 @@ export default {
 
     },
     methods: {
-
+        processLogout() {
+            // do something here to log out !
+            this.$router.push({name: 'Login'});
+        }
 
     }
 
