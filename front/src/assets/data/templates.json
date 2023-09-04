@@ -1,0 +1,54 @@
+[
+    {
+        "name": "Prise de position - Motion Postulat (CE)",
+        "relpath": "Modele_FicheAccomp_PrisePositionCEMoPo.dotx"
+    },
+    {
+        "name": "Refus Motion Postulat 1",
+        "relpath": "Modele_FicheAccomp_RefusMoPo1.dotx"
+    },
+    {
+        "name": "Refus Motion Postulat 2",
+        "relpath": "Modele_FicheAccomp_RefusMoPo2.dotx"
+    },
+    {
+        "name": "Réponse écrite - Interpellation",
+        "relpath": "Modele_FicheAccomp_ReponseEcriteInterpellation.dotx"
+    },
+    {
+        "name": "Réponse écrite - Question",
+        "relpath": "Modele_FicheAccomp_ReponseEcriteQuestion1.dotx"
+    },
+    {
+        "name": "Position contre - Motion Postulat (CE)",
+        "relpath": "Modele_PositionContre_MoPo.dotx"
+    },
+    {
+        "name": "Prise de position contre - Motion Postulat (CE)",
+        "relpath": "Modele_PrisePositionContre_MoPo.dotx"
+    },
+    {
+        "name": "Réponse écrite - Interpellation (CE)",
+        "relpath": "Modele_ReponseEcrite_Interpellation.dotx"
+    },
+    {
+        "name": "Réponse écrite - Question (CE)",
+        "relpath": "Modele_ReponseEcrite_Question.dotx"
+    },
+    {
+        "name": "Speaking note - Interpellation (CE)",
+        "relpath": "Modele_SpeakingNote_Interpellation.dotx"
+    },
+    {
+        "name": "Speaking note - Question (CE)",
+        "relpath": "Modele_SpeakingNote_Question.dotx"
+    },
+    {
+        "name": "Speaking note - Recommandation (CE)",
+        "relpath": "Modele_SpeakingNote_Recommandation.dotx"
+    },
+    {
+        "name": "Note (CE)",
+        "relpath": "NoteCE.dotx"
+    }
+]
