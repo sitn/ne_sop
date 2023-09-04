@@ -109,8 +109,102 @@
             <template v-slot:content>
                 <div class="text-h6">Documents</div>
 
+                  <div class="q-pa-md">
+                    <q-table
+                    :title="'Documents formels (' + formalDocumentRows.length + ')'"
+                    :rows="formalDocumentRows"
+                    :columns="formalDocumentColumns"
+                    row-key="name"
+                    >
+                    <template v-slot:body="props">
+                        <q-tr :props="props">
+                            <q-td key="version" :props="props">
+                                {{ props.row.version }}
+                            </q-td>
+                            <q-td key="filename" :props="props">
+                                <a href="#" @click.prevent="downloadRessource(props.row)">
+                                    {{ props.row.filename }}
+                                </a>
+                            </q-td>
+                            <q-td key="filesize" :props="props">
+                                {{ props.row.filesize }}
+                            </q-td>
+                            <!-- <q-td key="format" :props="props">
+                                {{ props.row.format }}
+                            </q-td> -->
+                            <q-td key="auteur" :props="props">
+                                {{ props.row.author }}
+                            </q-td>
+                            <q-td key="date" :props="props">
+                                {{ props.row.date }}
+                            </q-td>
+                            <!-- <q-td key="etape" :props="props">
+                                {{ props.row.step }}
+                            </q-td> -->
+                            <!-- <q-td key="type" :props="props">
+                                {{ props.row.type }}
+                            </q-td> -->
+                            <q-td key="note" :props="props">
+                                {{ props.row.note }}
+                            </q-td>
+                            <q-td key="action" :props="props">
+                                <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)"
+                                    icon="delete"></q-btn>
+                            </q-td>
+                        </q-tr>
+                    </template>
+                </q-table>
+                </div>
+                
+                <div class="q-pa-md">
+                  <q-table
+                  :title="'Pièces jointes (' + attachementRows.length + ')'"
+                  :rows="attachementRows"
+                  :columns="attachementColumns"
+                  row-key="name"
+                  >
+                  <template v-slot:body="props">
+                      <q-tr :props="props">
+                          <q-td key="version" :props="props">
+                              {{ props.row.version }}
+                          </q-td>
+                          <q-td key="filename" :props="props">
+                              <a href="#" @click.prevent="downloadRessource(props.row)">
+                                  {{ props.row.filename }}
+                              </a>
+                          </q-td>
+                          <q-td key="filesize" :props="props">
+                              {{ props.row.filesize }}
+                          </q-td>
+                          <q-td key="format" :props="props">
+                              {{ props.row.format }}
+                          </q-td>
+                          <q-td key="auteur" :props="props">
+                              {{ props.row.author }}
+                          </q-td>
+                          <q-td key="date" :props="props">
+                              {{ props.row.date }}
+                          </q-td>
+                          <!-- <q-td key="etape" :props="props">
+                              {{ props.row.step }}
+                          </q-td> -->
+                          <!-- <q-td key="type" :props="props">
+                              {{ props.row.type }}
+                          </q-td> -->
+                          <q-td key="note" :props="props">
+                              {{ props.row.note }}
+                          </q-td>
+                          <q-td key="action" :props="props">
+                              <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)"
+                                  icon="delete"></q-btn>
+                          </q-td>
+                      </q-tr>
+                  </template>
+              </q-table>
+              </div>
                 <div class="bg-light-blue-1 q-my-md q-pa-md">
-                    {{ item.documents }}
+                    {{ formalDocumentRows }}
+                    <!-- {{ item.documents }} -->
                 </div>
 
             </template>
@@ -122,8 +216,36 @@
 
 <script>
 import items from '../assets/data/items.json'
+import documents from '../assets/data/documents.json'
 import entities from '../assets/data/entities.json'
 import FormSection from "../components/FormSection.vue"
+
+
+const formalDocumentColumns = [
+  { name: 'version', align: 'center', label: 'version', field: 'version', sortable: true },
+  { name: 'filename', align: 'left', label: 'Fichier', field: 'filename', sortable: true },
+  { name: 'filesize', align: 'left', label: 'Taille', field: 'filesize', sortable: true },
+//   { name: 'format', align: 'left', label: 'Format', field: 'format', sortable: true },
+  { name: 'auteur', align: 'left', label: 'Auteur', field: 'author', sortable: true },
+  { name: 'date', align: 'left', label: 'Date', field: 'date', sortable: true },
+//   { name: 'etape', align: 'left', label: 'Étape', field: 'step', sortable: true },
+//   { name: 'type', align: 'left', label: 'Type', field: 'type', sortable: true },
+  { name: 'note', align: 'left', label: 'Note', field: 'note', sortable: true },
+  { name: 'action', align: 'left', label: '', field: 'action' }
+]
+const attachementColumns = [
+//   { name: 'version', align: 'center', label: 'version', field: 'version', sortable: true },
+  { name: 'filename', align: 'left', label: 'Fichier', field: 'filename', sortable: true },
+  { name: 'filesize', align: 'left', label: 'Taille', field: 'filesize', sortable: true },
+  { name: 'format', align: 'left', label: 'Format', field: 'format', sortable: true },
+  { name: 'auteur', align: 'left', label: 'Auteur', field: 'author', sortable: true },
+  { name: 'date', align: 'left', label: 'Date', field: 'date', sortable: true },
+//   { name: 'etape', align: 'left', label: 'Étape', field: 'step', sortable: true },
+//   { name: 'type', align: 'left', label: 'Type', field: 'type', sortable: true },
+  { name: 'note', align: 'left', label: 'Note', field: 'note', sortable: true },
+  { name: 'action', align: 'left', label: '', field: 'action' }
+]
+
 
 export default {
     name: 'Item',
@@ -142,15 +264,22 @@ export default {
             objectTypes: [
                 'Amendement', 'Interpellation', 'Motion', 'Postulat', 'Projet de lois et décrets', 'Question', 'Rapport', 'Recommandation', 'Resolution'
             ],
+            formalDocumentRows: documents.filter(e => e.ressourcetype === 'formal'),
+            formalDocumentColumns: formalDocumentColumns,
+            attachementRows: documents.filter(e => e.ressourcetype === 'attachement'),
+            attachementColumns: attachementColumns,
             serviceOptions: entities.filter(e => e.type === "Service de l'état")
         }
     },
     computed: {
     },
     mounted() {
-
+        
     },
     methods: {
+        async downloadRessource(ressource) {
+            console.log('téléchargement de la ressource', ressource)
+        }
     }
 }
 </script>

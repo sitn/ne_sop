@@ -1,0 +1,93 @@
+[
+    {
+        "ressourcetype": "formal",
+        "version": "0",
+        "date": "01.09.2023",
+        "step": "Réception",
+        "type": "Speaking Note",
+        "author": "Nicolas Ruedin",
+        "note": "",
+        "format": "DOCX",
+        "filename": "Modele_SpeakingNote_Question.docx",
+        "filesize": "435Ko",
+        "relpath": "\\ne"
+    },
+    {
+        "ressourcetype": "formal",
+        "version": "1",
+        "date": "02.09.2023",
+        "step": "Retour du préavis",
+        "type": "Speaking Note",
+        "author": "Jane Doe (SPCH)",
+        "note": "",
+        "format": "DOCX",
+        "filename": "Modele_SpeakingNote_Question.docx",
+        "filesize": "435Ko",
+        "relpath": "\\ne"
+    },
+    {
+        "ressourcetype": "formal",
+        "version": "2",
+        "date": "03.09.2023",
+        "step": "Retour du préavis",
+        "type": "Speaking Note",
+        "author": "John Doe (SFFN)",
+        "note": "A discuter",
+        "format": "DOCX",
+        "filename": "Modele_SpeakingNote_Question.docx",
+        "filesize": "435Ko",
+        "relpath": "\\ne"
+    },
+    {
+        "ressourcetype": "formal",
+        "version": "3",
+        "date": "04.09.2023",
+        "step": "Modification",
+        "type": "Speaking Note",
+        "author": "Nicolas Ruedin",
+        "note": "",
+        "format": "DOCX",
+        "filename": "Modele_SpeakingNote_Question.docx",
+        "filesize": "435Ko",
+        "relpath": "\\ne"
+    },
+    {
+        "ressourcetype": "formal",
+        "version": "4",
+        "date": "05.09.2023",
+        "step": "Finalisation",
+        "type": "Speaking Note",
+        "author": "Nicolas Ruedin",
+        "note": "",
+        "format": "DOCX",
+        "filename": "Modele_SpeakingNote_Question.docx",
+        "filesize": "435Ko",
+        "relpath": "\\ne"
+    },
+    {
+        "ressourcetype": "attachement",
+        "version": "",
+        "date": "02.09.2023",
+        "step": "Modification",
+        "type": "Speaking Note",
+        "author": "Jane Doe (SPCH)",
+        "note": "Cf. §4.2",
+        "format": "PDF",
+        "filename": "Règlement_8054.pdf",
+        "filesize": "435Ko",
+        "relpath": "\\ne"
+    },
+    {
+        "ressourcetype": "attachement",
+        "version": "",
+        "date": "08.09.2023",
+        "step": "Finalisation",
+        "type": "Speaking Note",
+        "author": "John Doe (SFFN)",
+        "note": "Juste pour le fun!",
+        "format": "JPG",
+        "filename": "Photo_de_vacances.jpg",
+        "filesize": "435Ko",
+        "relpath": "\\ne"
+    }
+]
