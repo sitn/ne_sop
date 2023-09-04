@@ -27,7 +27,7 @@
 
             <q-toolbar>
 
-                <q-btn size="lg" flat @click="drawer = !drawer" round dense icon="menu" />
+                <q-btn size="lg" flat @click="drawer = !drawer" round dense icon="menu" :disable="$route.name === 'Login'" />
 
                 <q-toolbar-title class="gt-xs">
                     <a href="https://www.ne.ch/autorites/DDTE/" target="_blank"><img src="/img/ne_logo_white.svg"
@@ -38,7 +38,7 @@
 
                 <q-space></q-space>
 
-                <q-btn-dropdown size="lg" label="" dense icon="account_circle" dropdown-icon="" unelevated>
+                <q-btn-dropdown size="lg" label="" dense icon="account_circle" dropdown-icon="" unelevated v-if="$route.name !== 'Login'">
                     <q-list style="width:180px">
                         <q-item clickable v-close-popup @click="">
                             <q-item-section>
@@ -60,7 +60,7 @@
 
                         <q-separator />
 
-                        <q-item clickable v-close-popup @click="">
+                        <q-item clickable v-close-popup @click="processLogout">
                             <q-item-section>
                                 <q-item-label>Déconnexion</q-item-label>
                             </q-item-section>
@@ -76,7 +76,7 @@
 
         <q-drawer v-model="drawer" show-if-above :mini="miniState" @mouseover="miniState = false"
             @mouseout="miniState = true" mini-to-overlay :mini-width=70 :width="300" :breakpoint="500"
-            :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
+            :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'" v-if="$route.name !== 'Login'">
             <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
                 <q-list padding>
                     <q-item clickable v-ripple to="/items" style="color:#757575"
@@ -170,7 +170,10 @@ export default {
 
     },
     methods: {
-
+        processLogout() {
+            // do something here to log out !
+            this.$router.push({name: 'Login'});
+        }
 
     }
 
