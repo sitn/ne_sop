@@ -109,23 +109,61 @@
             <template v-slot:content>
                 <div class="text-h6">Documents</div>
 
-                  <q-select 
-                    v-model="selectedFormalDocumentModel"
-                    :options="formalDocumentModels"
-                    :option-label="'label'"
-                    :option-value="'id'"
-                    label="Type de document"
-                    map-options
-                    emit-value
-                    @update:model-value="updateFormalDocumentModelFilter"
-                    style="max-width: 400px"
-                    bg-color="white"
-                    outlined />
+                <div class="q-py-sm q-gutter-md row">
+                    <q-select 
+                        v-model="selectedFormalDocumentModel"
+                        :options="formalDocumentModels"
+                        :option-label="'label'"
+                        :option-value="'id'"
+                        label="Modèle de document"
+                        map-options
+                        emit-value
+                        @update:model-value="updateFormalDocumentModelFilter"
+                        style="max-width: 400px"
+                        bg-color="white"
+                        outlined />
 
-                  <div class="q-py-md">
+                    <q-btn color="primary" icon="add" label="ajouter" @click="showAddDocumentDialog = true" />
+
+                    <q-dialog v-model="showAddDocumentDialog" persistent>
+                        <q-card style="min-width: 600px">
+                            <q-card-section>
+                                <div class="text-h6">Ajouter un document</div>
+                            </q-card-section>
+
+                            <q-card-section class="q-pt-sm q-gutter-sm">
+                                <p>
+                                    Sélectionner le fichier Word à enregistrer. <br> 
+                                    Il sera enregistré comme une nouvelle version du modèle "<b>{{ formalDocumentModels.filter(e => e.id == selectedFormalDocumentModel)[0].name }}</b>". Pour changer le type de modèle, il faut modifier la valeur sélectionnée dans le champ "Modèle de document".
+                                </p>
+                                <q-file
+                                    outlined
+                                    v-model="newFilepath"
+                                    label="Fichier"
+                                    accept=".doc, .docx"
+                                    @update:model-value="updateNewFilepath">
+
+                                    <template v-slot:prepend>
+                                        <q-icon name="attach_file" />
+                                    </template>
+                                    <template v-if="newFilepath" v-slot:append>
+                                        <q-icon name="cancel" @click.stop.prevent="newFilepath = null" class="cursor-pointer" />
+                                    </template>
+                                </q-file>
+                            </q-card-section>
+
+                            <q-card-actions align="right" class="text-primary">
+                                <q-btn flat label="Annuler" v-close-popup />
+                                <q-btn flat label="Enregistrer" v-close-popup :disable="newFilepath === null" @click="saveNewDocument"/>
+                            </q-card-actions>
+                        </q-card>
+                    </q-dialog>
+                </div>
+
+                    <div class="q-py-md">
 
                         <q-table
-                            :title="'Documents formels (' + formalDocumentRows.length + ')'"
+                            title="Documents formels"
                             :rows="formalDocumentRows"
                             :columns="formalDocumentColumns"
                             row-key="name"
@@ -159,9 +197,9 @@
                                 </q-tr>
                             </template>
                         </q-table>
-                  </div>
+                    </div>
                 
-                  <div class="q-py-md">
+                    <div class="q-py-md">
 
                     <q-table
                         :title="'Pièces jointes (' + attachementRows.length + ')'"
@@ -267,6 +305,8 @@ export default {
             serviceOptions: entities.filter(e => e.type === "Service de l'état"),
             formalDocumentModels: templates,
             selectedFormalDocumentModel: templates[10].id,
+            showAddDocumentDialog: false,
+            newFilepath: '',
         }
     },
     computed: {
@@ -295,6 +335,14 @@ export default {
 
         updateNumberOfFormalDocumentsByModel() {
             this.formalDocumentModels.forEach(e => e.label = e.name + " [" + this.formalDocumentRowsUnfiltered.filter(x => x.model_id == e.id).length + "]");
+        },
+
+        updateNewFilepath(filepath) {
+            console.log('updated new file path', filepath);
+        },
+
+        saveNewDocument() {
+            console.log('save new document', this.newFilepath)
         }
     }
 }
