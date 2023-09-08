@@ -113,7 +113,7 @@
                     <q-select 
                         v-model="selectedFormalDocumentModel"
                         :options="formalDocumentModels"
-                        :option-label="'label'"
+                        :option-label="'name'"
                         :option-value="'id'"
                         label="Modèle de document"
                         map-options
@@ -121,7 +121,26 @@
                         @update:model-value="updateFormalDocumentModelFilter"
                         style="min-width: 400px"
                         bg-color="white"
-                        outlined />
+                        outlined>
+
+                        <template v-slot:option="scope">
+                        <q-item v-bind="scope.itemProps">
+                            <!-- 
+                            <q-item-section avatar>
+                                <q-icon name="email" />
+                            </q-item-section>
+                            -->
+                            <q-item-section>
+                                <q-item-label>{{ scope.opt.name }}</q-item-label>
+                            </q-item-section>
+                            <q-item-section side>
+                                <q-badge :color="scope.opt.nbVersions > 0 ? 'green' : 'grey'">
+                                    {{ scope.opt.nbVersions }}
+                                </q-badge>
+                            </q-item-section>
+                        </q-item>
+                        </template>
+                    </q-select>
 
                     <q-btn color="primary" icon="add" label="ajouter" @click="openAddNewFormalDocumentDialog" :disabled="selectedFormalDocumentModel < 0" />
                 </div>
@@ -129,7 +148,7 @@
                     <div class="q-py-md">
 
                         <q-table
-                            title="Documents formels"
+                            :title="`Documents formels (${this.formalDocumentRows.length})`"
                             :rows="formalDocumentRows"
                             :columns="formalDocumentColumns"
                             row-key="name"
@@ -168,7 +187,7 @@
                     <div class="q-py-md">
 
                     <q-table
-                        :title="'Pièces jointes (' + attachementRows.length + ')'"
+                        :title="`Pièces jointes (${this.attachementRows.length})`"
                         :rows="attachementRows"
                         :columns="attachementColumns"
                         row-key="name"
@@ -214,69 +233,67 @@
             </template>
         </FormSection>
 
+        <!-- Dialog for creating first model in documents -->
+        <q-dialog v-model="showAddFirstDocumentDialog">
+            <q-card>
+                <q-card-section>
+                    <div class="text-h6">Ajouter un nouveau modèle aux documents ?</div>
+                </q-card-section>
+
+                <q-card-section class="row q-pt-sm">
+                    <div class="row">
+                        <div class="col-1" style="text-align: center;">
+                            <q-icon name="warning" color="warning" size="3em" />
+                        </div>
+                        <div class="col-11 q-pl-md">
+                            <span class="q-ml-sm" style="float: left;">En cliquant sur confirmer, une version originale du modèle "<b>{{ formalDocumentModels.filter(e => e.id == selectedFormalDocumentModel)[0].name }}</b>" sera ajoutée aux documents.</span>
+                        </div>
+                    </div>
+                </q-card-section>
+                    
+                <q-card-actions align="right">
+                    <q-btn flat label="Annuler" color="primary" v-close-popup />
+                    <q-btn flat label="Confirmer" color="primary" v-close-popup @click="saveNewFirstDocument" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+
+        <!-- Dialog for adding new version of document -->
+        <q-dialog v-model="showAddDocumentDialog" persistent>
+            <q-card style="min-width: 600px">
+                <q-card-section>
+                    <div class="text-h6">Ajouter un document</div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-sm q-gutter-sm">
+                    <p>
+                        Sélectionner le fichier Word à enregistrer. <br> 
+                        Il sera enregistré comme une nouvelle version du modèle "<b>{{ formalDocumentModels.filter(e => e.id == selectedFormalDocumentModel)[0].name }}</b>". Pour changer le type de modèle, il faut modifier la valeur sélectionnée dans le champ "Modèle de document".
+                    </p>
+                    <q-file
+                        outlined
+                        v-model="newFile"
+                        label="Fichier"
+                        accept=".doc, .docx"
+                        @update:model-value="updatenewFile">
+
+                        <template v-slot:prepend>
+                            <q-icon name="attach_file" />
+                        </template>
+                        <template v-if="newFile" v-slot:append>
+                            <q-icon name="cancel" @click.stop.prevent="newFile = null" class="cursor-pointer" />
+                        </template>
+                    </q-file>
+                </q-card-section>
+
+                <q-card-actions align="right" class="text-primary">
+                    <q-btn flat label="Annuler" v-close-popup />
+                    <q-btn flat label="Enregistrer" v-close-popup :disable="newFile === null" @click="saveNewDocument"/>
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
 
     </div>
-
-
-    <!-- Dialog for creating first model in documents -->
-    <q-dialog v-model="showAddFirstDocumentDialog">
-        <q-card>
-            <q-card-section>
-                <div class="text-h6">Ajouter un nouveau modèle aux documents ?</div>
-            </q-card-section>
-
-            <q-card-section class="row q-pt-sm">
-                <div class="row">
-                    <div class="col-1" style="text-align: center;">
-                        <q-icon name="warning" color="warning" size="3em" />
-                    </div>
-                    <div class="col-11 q-pl-md">
-                        <span class="q-ml-sm" style="float: left;">En cliquant sur confirmer, une version originale du modèle "<b>{{ formalDocumentModels.filter(e => e.id == selectedFormalDocumentModel)[0].name }}</b>" sera ajoutée aux documents.</span>
-                    </div>
-                </div>
-            </q-card-section>
-                
-            <q-card-actions align="right">
-                <q-btn flat label="Annuler" color="primary" v-close-popup />
-                <q-btn flat label="Confirmer" color="primary" v-close-popup @click="saveNewFirstDocument" />
-            </q-card-actions>
-        </q-card>
-    </q-dialog>
-
-    <!-- Dialog for adding new version of document -->
-    <q-dialog v-model="showAddDocumentDialog" persistent>
-        <q-card style="min-width: 600px">
-            <q-card-section>
-                <div class="text-h6">Ajouter un document</div>
-            </q-card-section>
-
-            <q-card-section class="q-pt-sm q-gutter-sm">
-                <p>
-                    Sélectionner le fichier Word à enregistrer. <br> 
-                    Il sera enregistré comme une nouvelle version du modèle "<b>{{ formalDocumentModels.filter(e => e.id == selectedFormalDocumentModel)[0].name }}</b>". Pour changer le type de modèle, il faut modifier la valeur sélectionnée dans le champ "Modèle de document".
-                </p>
-                <q-file
-                    outlined
-                    v-model="newFile"
-                    label="Fichier"
-                    accept=".doc, .docx"
-                    @update:model-value="updatenewFile">
-
-                    <template v-slot:prepend>
-                        <q-icon name="attach_file" />
-                    </template>
-                    <template v-if="newFile" v-slot:append>
-                        <q-icon name="cancel" @click.stop.prevent="newFile = null" class="cursor-pointer" />
-                    </template>
-                </q-file>
-            </q-card-section>
-
-            <q-card-actions align="right" class="text-primary">
-                <q-btn flat label="Annuler" v-close-popup />
-                <q-btn flat label="Enregistrer" v-close-popup :disable="newFile === null" @click="saveNewDocument"/>
-            </q-card-actions>
-        </q-card>
-    </q-dialog>
 
 </template>
 
@@ -341,9 +358,11 @@ export default {
     computed: {
     },
     mounted() {
+      
         this.formalDocumentRows = this.formalDocumentRowsUnfiltered;
         this.updateFormalDocumentModelFilter(this.selectedFormalDocumentModel);
         this.updateNumberOfFormalDocumentsByModel();
+     
     },
     methods: {
         async downloadRessource(ressource) {
@@ -369,15 +388,14 @@ export default {
         updateNumberOfFormalDocumentsByModel() {
             this.formalDocumentModels.forEach(e => {
                 e.nbVersions = this.formalDocumentRowsUnfiltered.filter(x => x.model_id == e.id).length;
-                e.label = e.name + " [" + e.nbVersions + "]";
             });
             
             this.formalDocumentModels.sort((a, b) => (a.nbVersions < b.nbVersions) ? 1 : -1);
             
             this.formalDocumentModels.unshift({
-                id: -1,
+                id: -1, 
                 nbVersions: this.formalDocumentRowsUnfiltered.length,
-                label: "Tous [" + this.formalDocumentRowsUnfiltered.length + "]",
+                name: "Tous",
             });
         },
 
