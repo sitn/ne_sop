@@ -118,11 +118,17 @@
         "events": [
             {
                 "name": "Dépôt",
-                "date": "23.03.2023"
+                "date": "23.03.2023",
+                "status": "Pas encore traité",
+                "statusGrandConseil": "En traitement",
+                "description": ""
             },
             {
                 "name": "Délai",
-                "date": "06.05.2023"
+                "date": "06.05.2023",
+                "status": "En traitement",
+                "statusGrandConseil": "En traitement",
+                "description": ""
             }
         ],
         "services": {
@@ -139,11 +145,17 @@
         "events": [
             {
                 "name": "Dépôt",
-                "date": "23.03.2023"
+                "date": "23.03.2023",
+                "status": "Pas encore traité",
+                "statusGrandConseil": "En traitement",
+                "description": ""
             },
             {
                 "name": "Délai",
-                "date": "06.05.2023"
+                "date": "06.05.2023",
+                "status": "En traitement",
+                "statusGrandConseil": "En traitement",
+                "description": ""
             }
         ],
         "services": {
@@ -160,11 +172,17 @@
         "events": [
             {
                 "name": "Dépôt",
-                "date": "27.03.2023"
+                "date": "27.03.2023",
+                "status": "Pas encore traité",
+                "statusGrandConseil": "En traitement",
+                "description": ""
             },
             {
                 "name": "Délai",
-                "date": "25.08.2023"
+                "date": "25.08.2023",
+                "status": "En traitement",
+                "statusGrandConseil": "En traitement",
+                "description": ""
             }
         ],
         "services": {
@@ -181,11 +199,17 @@
         "events": [
             {
                 "name": "Dépôt",
-                "date": "27.03.2023"
+                "date": "27.03.2023",
+                "status": "Pas encore traité",
+                "statusGrandConseil": "En traitement",
+                "description": ""
             },
             {
                 "name": "Délai",
-                "date": "25.08.2023"
+                "date": "25.08.2023",
+                "status": "En traitement",
+                "statusGrandConseil": "En traitement",
+                "description": ""
             }
         ],
         "services": {
@@ -202,11 +226,17 @@
         "events": [
             {
                 "name": "Dépôt",
-                "date": "27.03.2023"
+                "date": "27.03.2023",
+                "status": "Pas encore traité",
+                "statusGrandConseil": "En traitement",
+                "description": ""
             },
             {
                 "name": "Délai",
-                "date": "25.08.2023"
+                "date": "25.08.2023",
+                "status": "En traitement",
+                "statusGrandConseil": "En traitement",
+                "description": ""
             }
         ],
         "services": {
