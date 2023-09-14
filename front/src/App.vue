@@ -27,7 +27,8 @@
 
             <q-toolbar>
 
-                <q-btn size="lg" flat @click="drawer = !drawer" round dense icon="menu" :disable="$route.name === 'Login'" />
+                <q-btn size="lg" flat @click="drawer = !drawer" round dense icon="menu"
+                    :disable="$route.name === 'Login'" />
 
                 <q-toolbar-title class="gt-xs">
                     <a href="https://www.ne.ch/autorites/DDTE/" target="_blank"><img src="/img/ne_logo_white.svg"
@@ -38,7 +39,8 @@
 
                 <q-space></q-space>
 
-                <q-btn-dropdown size="lg" label="" dense icon="account_circle" dropdown-icon="" unelevated v-if="$route.name !== 'Login'">
+                <q-btn-dropdown size="lg" label="" dense icon="account_circle" dropdown-icon="" unelevated
+                    v-if="$route.name !== 'Login'">
                     <q-list style="width:180px">
                         <q-item clickable v-close-popup @click="">
                             <q-item-section>
@@ -105,7 +107,7 @@
                     <q-item clickable v-ripple to="/events" style="color:#757575"
                         active-class="bg-light-blue-1 text-blue-grey-7">
                         <q-item-section avatar>
-                            <q-icon name="sym_o_schedule" size="lg" />
+                            <q-icon name="sym_o_schedule" size="lg" class="material-symbols-outlined" />
                         </q-item-section>
 
                         <q-item-section>
@@ -142,9 +144,6 @@
 <script>
 /* import objets_parlementaires from './assets/data/objets_parlementaires.json' */
 import { ref } from 'vue'
-import items from './assets/data/items.json'
-
-console.log(items)
 
 export default {
     name: 'App',
@@ -172,7 +171,7 @@ export default {
     methods: {
         processLogout() {
             // do something here to log out !
-            this.$router.push({name: 'Login'});
+            this.$router.push({ name: 'Login' });
         }
 
     }
@@ -183,14 +182,4 @@ export default {
 <style>
 @import './assets/styles/main.css';
 @import './assets/styles/quasar.prod.css';
-
-/*
-.material-symbols-outlined {
-    font-variation-settings:
-        'FILL' 1,
-        'wght' 400,
-        'GRAD' 0,
-        'opsz' 24 !important
-}
-*/
 </style>
