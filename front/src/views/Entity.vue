@@ -80,17 +80,19 @@
 
                 <div class="row q-col-gutter-lg q-py-md">
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input bg-color="white" outlined v-model="entity.email" label="Email" />
+                        <q-input type="email" bg-color="white" outlined v-model="entity.email" label="Email" />
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input bg-color="white" outlined v-model="entity.telephone" label="Téléphone" />
-
+                        <q-input type="tel" bg-color="white" outlined v-model="entity.telephone"
+                            label="Téléphone (format international)"
+                            @update:model-value="checkPhoneNumber(this.entity.telephone)"
+                            @blur="formatPhoneNumber(this.entity.telephone)" :rules="[val => checkPhoneNumber(val)]" />
                     </div>
                 </div>
 
                 <div class="row q-col-gutter-lg q-py-md">
                     <div class="col">
-                        <q-input bg-color="white" outlined v-model="entity.website" label="Site Internet" />
+                        <q-input type="text" bg-color="white" outlined v-model="entity.website" label="Site Internet" />
                     </div>
                 </div>
 
@@ -101,8 +103,10 @@
 </template>
 
 <script>
+import parsePhoneNumber from 'libphonenumber-js'
 import entities from '../assets/data/entities.json'
 import FormSection from "../components/FormSection.vue"
+
 
 export default {
     name: 'Entity',
@@ -124,8 +128,47 @@ export default {
     },
     mounted() {
 
+        // TEST
+        /*
+        const phoneNumber = parsePhoneNumber('+41 32 889 47 72') // , 'CH')
+        console.log(phoneNumber)
+        console.log(phoneNumber.isPossible())
+        console.log(phoneNumber.isValid())
+        console.log(phoneNumber.number)
+        console.log(phoneNumber.country)
+        console.log(phoneNumber.formatInternational())
+        console.log(phoneNumber.formatNational())
+        console.log(phoneNumber.getURI())
+        */
+
     },
     methods: {
+
+        checkPhoneNumber(val) {
+
+            let phoneNumber = parsePhoneNumber(val)
+            if (phoneNumber) {
+                val = '+41255555555'
+                console.log('this.entity.phoneNumber')
+                console.log(this.entity.phoneNumber)
+                return phoneNumber.isPossible() & phoneNumber.isValid()
+            } else {
+                return 'Format non-valable'
+            }
+
+        },
+        formatPhoneNumber(val) {
+            // this.entity.telephone = '+41255555555'
+            console.log('formatPhoneNumber')
+            console.log(val)
+        },
+        checkEmail() {
+
+        },
+        checkWebsite() {
+
+        },
+
     }
 }
 </script>
