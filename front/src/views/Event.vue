@@ -68,8 +68,9 @@
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <!-- <q-input bg-color="white" outlined v-model="event.itemNumber" label="Objet lié" /> -->
-                        <q-select bg-color="white" outlined v-model="event.itemNumber" :options="items"
-                            option-label="number" option-value="number" label="Objet lié" clearable>
+                        <q-select bg-color="white" outlined v-model="event.itemNumber" :options="this.items"
+                            option-label="number" option-value="number" label="Objet lié" @update:model-value="setItem()"
+                            clearable>
                             <template v-slot:option="scope">
                                 <q-item v-bind="scope.itemProps">
                                     <q-item-section>
@@ -124,6 +125,7 @@ export default {
             eventTypes: [
                 'Dépôt', 'Demande département', 'Délai', 'Clôture'
             ],
+            linkedItem: null,
         }
     },
     computed: {
@@ -133,6 +135,10 @@ export default {
     },
     methods: {
 
+        setItem() {
+
+
+        }
 
     }
 }
