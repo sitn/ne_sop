@@ -21,7 +21,7 @@
                             {{ props.row.type }}
                         </q-td>
                         <!-- title column -->
-                        <q-td key="type" :props="props">
+                        <q-td key="title" :props="props">
 
                             <router-link :to="{
                                 name: 'Item',
@@ -34,11 +34,11 @@
 
                         </q-td>
                         <!-- deposit date column -->
-                        <q-td key="type" :props="props">
+                        <q-td key="deposit" :props="props">
                             {{ props.row.events.find((e) => e.name === "Dépôt").date }}
                         </q-td>
                         <!-- delay date column -->
-                        <q-td key="type" :props="props">
+                        <q-td key="delay" :props="props">
                             {{ props.row.events.find((e) => e.name === "Délai").date }}
                         </q-td>
                         <!-- actions column -->
