@@ -44,7 +44,7 @@
                     <!-- TIME INPUT FIELD -->
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <!-- <q-input type="time" bg-color="white" outlined v-model="event.time" label="Heure" /> -->
-                        <q-input bg-color="white" outlined v-model="event.time" mask="time" :rules="['time']">
+                        <q-input bg-color="white" outlined v-model="event.time" label="Heure" mask="time" :rules="['time']">
                             <template v-slot:append>
                                 <q-icon name="access_time" class="cursor-pointer">
                                     <q-popup-proxy transition-show="scale" transition-hide="scale">
