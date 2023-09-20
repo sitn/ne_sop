@@ -26,8 +26,7 @@
 
                 <div class="row q-col-gutter-lg q-py-md">
                     <div class="col">
-                        <q-input bg-color="white" outlined v-model="entity.description" label="Description"
-                            type="textarea" />
+                        <q-input bg-color="white" outlined v-model="entity.description" label="Description" type="textarea" />
                     </div>
                 </div>
 
@@ -83,14 +82,11 @@
                         <q-input type="email" bg-color="white" outlined v-model="entity.email" label="Email" />
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input type="tel" bg-color="white" outlined v-model="entity.telephone"
-                            label="Téléphone (format international)"
-                            @update:model-value="checkPhoneNumber(this.entity.telephone)"
-                            @blur="formatPhoneNumber(this.entity.telephone)" :rules="[val => checkPhoneNumber(val)]" />
+                        <q-input type="tel" bg-color="white" outlined v-model="entity.telephone" label="Téléphone (format international)" @update:model-value="checkPhoneNumber(this.entity.telephone)" @blur="formatPhoneNumber(this.entity.telephone)" :rules="[val => checkPhoneNumber(val)]" />
                     </div>
                 </div>
 
-                <div class="row q-col-gutter-lg q-py-md">
+                <div class="row">
                     <div class="col">
                         <q-input type="text" bg-color="white" outlined v-model="entity.website" label="Site Internet" />
                     </div>

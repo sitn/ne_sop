@@ -15,6 +15,8 @@
                 <div class="text-h6">Événement</div>
 
                 <div class="row q-col-gutter-lg q-py-md">
+
+                    <!-- DATE INPUT FIELD -->
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <!--  <q-input type="date" bg-color="white" outlined v-model="eventDate" label="Date" required /> -->
                         <q-input bg-color="white" outlined v-model="event.date" label="Date" mask="date" :rules="['date']">
@@ -22,7 +24,7 @@
                                 <q-icon name="event" class="cursor-pointer">
                                     <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
                                         <q-date v-model="event.date" color="blue-grey" text-color="white">
-                                            <div class="row items-center justify-end">
+                                            <div class="row justify-end">
                                                 <q-btn v-close-popup label="Close" color="primary" flat />
                                             </div>
                                         </q-date>
@@ -39,6 +41,7 @@
                         </q-input>
                     </div>
 
+                    <!-- TIME INPUT FIELD -->
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <!-- <q-input type="time" bg-color="white" outlined v-model="event.time" label="Heure" /> -->
                         <q-input bg-color="white" outlined v-model="event.time" mask="time" :rules="['time']">
@@ -56,21 +59,21 @@
                         </q-input>
                     </div>
 
-
-
                 </div>
 
-                <div class="row q-col-gutter-lg q-py-md">
+
+                <div class="row q-col-gutter-lg">
+
+                    <!-- TYPE SELECT FIELD -->
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-select bg-color="white" outlined v-model="event.eventType" :options="eventTypes" label="Type"
-                            clearable>
+                        <q-select bg-color="white" outlined v-model="event.eventType" :options="eventTypes" label="Type" clearable>
                         </q-select>
                     </div>
+
+                    <!-- LINKED ITEM SELECT FIELD -->
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <!-- <q-input bg-color="white" outlined v-model="event.itemNumber" label="Objet lié" /> -->
-                        <q-select bg-color="white" outlined v-model="event.itemNumber" :options="this.items"
-                            option-label="number" option-value="number" label="Objet lié" @update:model-value="setItem()"
-                            clearable>
+                        <q-select bg-color="white" outlined v-model="event.itemNumber" :options="this.items" option-label="number" option-value="number" label="Objet lié" @update:model-value="setItem()" emit-value clearable>
                             <template v-slot:option="scope">
                                 <q-item v-bind="scope.itemProps">
                                     <q-item-section>
@@ -83,10 +86,10 @@
                     </div>
                 </div>
 
-                <div class="row q-col-gutter-lg q-py-md">
+                <!-- DESCRIPTION TEXT AREA FIELD -->
+                <div class="row q-col-gutter-lg q-my-sm">
                     <div class="col">
-                        <q-input bg-color="white" outlined v-model="event.description" label="Description"
-                            type="textarea" />
+                        <q-input bg-color="white" outlined v-model="event.description" label="Description" type="textarea" />
                     </div>
                 </div>
 

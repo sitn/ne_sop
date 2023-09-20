@@ -43,8 +43,7 @@
                         </q-td>
                         <!-- actions column -->
                         <q-td key="actions" :props="props">
-                            <q-btn dense round flat color="grey" name="delete" @click="console.log(props.row)"
-                                icon="delete"></q-btn>
+                            <q-btn dense round flat color="grey" name="delete" @click="console.log(props.row)" icon="sym_o_delete"></q-btn>
                         </q-td>
                     </q-tr>
                 </template>

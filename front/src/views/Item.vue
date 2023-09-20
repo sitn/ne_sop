@@ -1,7 +1,7 @@
 <template>
     <div class="">
 
-        <!-- Breadcrumbs navigation -->
+        <!-- BREADCRUMBS NAVIGATION -->
         <div class="q-pa-sm q-gutter-sm">
             <q-breadcrumbs style="font-size: 16px">
                 <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
@@ -9,24 +9,34 @@
             </q-breadcrumbs>
         </div>
 
-        <!-- General information -->
+        <!-- GENERAL INFORMATION SECTION -->
         <FormSection title="Informations générales">
             <template v-slot:content>
                 <div class="text-h6">Informations générales</div>
 
                 <div class="row q-col-gutter-lg q-py-md">
+                    <!-- NO TEXT FIELD -->
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <q-input bg-color="white" outlined v-model="item.number" label="N°" />
                     </div>
+                    <!-- TYPE SELECT FIELD -->
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <q-select bg-color="white" outlined v-model="item.type" :options="objectTypes" label="Type">
                         </q-select>
                     </div>
                 </div>
 
+                <!-- TITLE TEXT FIELD -->
                 <div class="row q-col-gutter-lg q-py-md">
                     <div class="col">
                         <q-input bg-color="white" outlined v-model="item.title" label="Titre" />
+                    </div>
+                </div>
+
+                <!-- CONTENT TEXT AREA FIELD -->
+                <div class="row q-col-gutter-lg q-py-md">
+                    <div class="col">
+                        <q-input bg-color="white" outlined v-model="item.content" label="Description" type="textarea" />
                     </div>
                 </div>
 
@@ -36,15 +46,14 @@
             </template>
         </FormSection>
 
-        <!-- Processing -->
+        <!-- PROCESSING SECTION -->
         <FormSection title="Traitement">
             <template v-slot:content>
                 <div class="text-h6">Traitement</div>
 
                 <div class="row q-col-gutter-lg q-py-md">
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-select bg-color="white" outlined v-model="item.services.lead" :options="serviceOptions"
-                            option-label="name" option-value="id" label="Service principal" clearable>
+                        <q-select bg-color="white" outlined v-model="item.services.lead" :options="serviceOptions" option-label="name" option-value="id" label="Service principal" clearable>
                             <template v-slot:option="scope">
                                 <q-item v-bind="scope.itemProps">
                                     <q-item-section>
@@ -55,8 +64,7 @@
                         </q-select>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-select bg-color="white" outlined v-model="item.services.support" :options="serviceOptions"
-                            option-label="name" option-value="id" label="Service(s) en appui" multiple clearable>
+                        <q-select bg-color="white" outlined v-model="item.services.support" :options="serviceOptions" option-label="name" option-value="id" label="Service(s) en appui" multiple clearable>
                             <template v-slot:option="scope">
                                 <q-item v-bind="scope.itemProps">
                                     <q-item-section>
@@ -92,7 +100,7 @@
             </template>
         </FormSection>
 
-        <!-- Events -->
+        <!-- EVENTS SECTION -->
         <FormSection title="Calendrier">
             <template v-slot:content>
                 <div class="text-h6">Calendrier</div>
@@ -104,94 +112,72 @@
             </template>
         </FormSection>
 
-        <!-- Documents -->
+        <!-- DOCUMENTS SECTION -->
         <FormSection title="Documents">
             <template v-slot:content>
                 <div class="text-h6">Documents</div>
 
                 <div class="q-py-sm q-gutter-md row">
-                    <q-select 
-                        v-model="selectedFormalDocumentModel"
-                        :options="formalDocumentModels"
-                        :option-label="'name'"
-                        :option-value="'id'"
-                        label="Modèle de document"
-                        map-options
-                        emit-value
-                        @update:model-value="updateFormalDocumentModelFilter"
-                        style="min-width: 400px"
-                        bg-color="white"
-                        outlined>
+                    <q-select v-model="selectedFormalDocumentModel" :options="formalDocumentModels" :option-label="'name'" :option-value="'id'" label="Modèle de document" map-options emit-value @update:model-value="updateFormalDocumentModelFilter" style="min-width: 400px" bg-color="white" outlined>
 
                         <template v-slot:option="scope">
-                        <q-item v-bind="scope.itemProps">
-                            <!-- 
-                            <q-item-section avatar>
-                                <q-icon name="email" />
-                            </q-item-section>
-                            -->
-                            <q-item-section>
-                                <q-item-label>{{ scope.opt.name }}</q-item-label>
-                            </q-item-section>
-                            <q-item-section side>
-                                <q-badge :color="scope.opt.nbVersions > 0 ? 'green' : 'grey'">
-                                    {{ scope.opt.nbVersions }}
-                                </q-badge>
-                            </q-item-section>
-                        </q-item>
+                            <q-item v-bind="scope.itemProps">
+                                <!--
+                                <q-item-section avatar>
+                                    <q-icon name="email" />
+                                </q-item-section>
+                                -->
+                                <q-item-section>
+                                    <q-item-label>{{ scope.opt.name }}</q-item-label>
+                                </q-item-section>
+                                <q-item-section side>
+                                    <q-badge :color="scope.opt.nbVersions > 0 ? 'green' : 'grey'">
+                                        {{ scope.opt.nbVersions }}
+                                    </q-badge>
+                                </q-item-section>
+                            </q-item>
                         </template>
                     </q-select>
 
                     <q-btn color="primary" icon="add" label="ajouter" @click="openAddNewFormalDocumentDialog" :disabled="selectedFormalDocumentModel < 0" />
                 </div>
 
-                    <div class="q-py-md">
+                <div class="q-py-md">
 
-                        <q-table
-                            :title="`Documents formels (${this.formalDocumentRows.length})`"
-                            :rows="formalDocumentRows"
-                            :columns="formalDocumentColumns"
-                            row-key="name"
-                            >
-                            <template v-slot:body="props">
-                                <q-tr :props="props">
-                                    <q-td key="version" :props="props">
-                                        {{ props.row.version }}
-                                    </q-td>
-                                    <q-td key="filename" :props="props">
-                                        <a href="#" @click.prevent="downloadRessource(props.row)">
-                                            {{ props.row.filename }}
-                                        </a>
-                                    </q-td>
-                                    <q-td key="filesize" :props="props">
-                                        {{ props.row.filesize }}
-                                    </q-td>
-                                    <q-td key="auteur" :props="props">
-                                        {{ props.row.author }}
-                                    </q-td>
-                                    <q-td key="date" :props="props">
-                                        {{ props.row.date }}
-                                    </q-td>
-                                    <q-td key="note" :props="props">
-                                        {{ props.row.note }}
-                                    </q-td>
-                                    <q-td key="action" :props="props">
-                                        <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)"
-                                            icon="delete"></q-btn>
-                                    </q-td>
-                                </q-tr>
-                            </template>
-                        </q-table>
-                    </div>
-                
-                    <div class="q-py-md">
+                    <q-table :title="`Documents formels (${this.formalDocumentRows.length})`" :rows="formalDocumentRows" :columns="formalDocumentColumns" row-key="name">
+                        <template v-slot:body="props">
+                            <q-tr :props="props">
+                                <q-td key="version" :props="props">
+                                    {{ props.row.version }}
+                                </q-td>
+                                <q-td key="filename" :props="props">
+                                    <a href="#" @click.prevent="downloadRessource(props.row)">
+                                        {{ props.row.filename }}
+                                    </a>
+                                </q-td>
+                                <q-td key="filesize" :props="props">
+                                    {{ props.row.filesize }}
+                                </q-td>
+                                <q-td key="auteur" :props="props">
+                                    {{ props.row.author }}
+                                </q-td>
+                                <q-td key="date" :props="props">
+                                    {{ props.row.date }}
+                                </q-td>
+                                <q-td key="note" :props="props">
+                                    {{ props.row.note }}
+                                </q-td>
+                                <q-td key="action" :props="props">
+                                    <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="delete"></q-btn>
+                                </q-td>
+                            </q-tr>
+                        </template>
+                    </q-table>
+                </div>
 
-                    <q-table
-                        :title="`Pièces jointes (${this.attachementRows.length})`"
-                        :rows="attachementRows"
-                        :columns="attachementColumns"
-                        row-key="name"
-                        >
+                <div class="q-py-md">
+
+                    <q-table :title="`Pièces jointes (${this.attachementRows.length})`" :rows="attachementRows" :columns="attachementColumns" row-key="name">
                         <template v-slot:body="props">
                             <q-tr :props="props">
                                 <q-td key="version" :props="props">
@@ -218,8 +204,7 @@
                                     {{ props.row.note }}
                                 </q-td>
                                 <q-td key="action" :props="props">
-                                    <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)"
-                                        icon="delete"></q-btn>
+                                    <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="delete"></q-btn>
                                 </q-td>
                             </q-tr>
                         </template>
@@ -250,7 +235,7 @@
                         </div>
                     </div>
                 </q-card-section>
-                    
+
                 <q-card-actions align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
                     <q-btn flat label="Confirmer" color="primary" v-close-popup @click="saveNewFirstDocument" />
@@ -267,15 +252,10 @@
 
                 <q-card-section class="q-pt-sm q-gutter-sm">
                     <p>
-                        Sélectionner le fichier Word à enregistrer. <br> 
+                        Sélectionner le fichier Word à enregistrer. <br>
                         Il sera enregistré comme une nouvelle version du modèle "<b>{{ formalDocumentModels.filter(e => e.id == selectedFormalDocumentModel)[0].name }}</b>". Pour changer le type de modèle, il faut modifier la valeur sélectionnée dans le champ "Modèle de document".
                     </p>
-                    <q-file
-                        outlined
-                        v-model="newFile"
-                        label="Fichier"
-                        accept=".doc, .docx"
-                        @update:model-value="updatenewFile">
+                    <q-file outlined v-model="newFile" label="Fichier" accept=".doc, .docx" @update:model-value="updatenewFile">
 
                         <template v-slot:prepend>
                             <q-icon name="attach_file" />
@@ -288,13 +268,12 @@
 
                 <q-card-actions align="right" class="text-primary">
                     <q-btn flat label="Annuler" v-close-popup />
-                    <q-btn flat label="Enregistrer" v-close-popup :disable="newFile === null" @click="saveNewDocument"/>
+                    <q-btn flat label="Enregistrer" v-close-popup :disable="newFile === null" @click="saveNewDocument" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
 
     </div>
-
 </template>
 
 <script>
@@ -306,22 +285,22 @@ import FormSection from "../components/FormSection.vue"
 
 
 const formalDocumentColumns = [
-  { name: 'version', align: 'center', label: 'version', field: 'version', sortable: true },
-  { name: 'filename', align: 'left', label: 'Fichier', field: 'filename', sortable: true },
-  { name: 'filesize', align: 'left', label: 'Taille', field: 'filesize', sortable: true },
-  { name: 'auteur', align: 'left', label: 'Auteur', field: 'author', sortable: true },
-  { name: 'date', align: 'left', label: 'Date', field: 'date', sortable: true },
-  { name: 'note', align: 'left', label: 'Note', field: 'note', sortable: true },
-  { name: 'action', align: 'left', label: '', field: 'action' }
+    { name: 'version', align: 'center', label: 'version', field: 'version', sortable: true },
+    { name: 'filename', align: 'left', label: 'Fichier', field: 'filename', sortable: true },
+    { name: 'filesize', align: 'left', label: 'Taille', field: 'filesize', sortable: true },
+    { name: 'auteur', align: 'left', label: 'Auteur', field: 'author', sortable: true },
+    { name: 'date', align: 'left', label: 'Date', field: 'date', sortable: true },
+    { name: 'note', align: 'left', label: 'Note', field: 'note', sortable: true },
+    { name: 'action', align: 'left', label: '', field: 'action' }
 ]
 const attachementColumns = [
-  { name: 'filename', align: 'left', label: 'Fichier', field: 'filename', sortable: true },
-  { name: 'filesize', align: 'left', label: 'Taille', field: 'filesize', sortable: true },
-  { name: 'format', align: 'left', label: 'Format', field: 'format', sortable: true },
-  { name: 'auteur', align: 'left', label: 'Auteur', field: 'author', sortable: true },
-  { name: 'date', align: 'left', label: 'Date', field: 'date', sortable: true },
-  { name: 'note', align: 'left', label: 'Note', field: 'note', sortable: true },
-  { name: 'action', align: 'left', label: '', field: 'action' }
+    { name: 'filename', align: 'left', label: 'Fichier', field: 'filename', sortable: true },
+    { name: 'filesize', align: 'left', label: 'Taille', field: 'filesize', sortable: true },
+    { name: 'format', align: 'left', label: 'Format', field: 'format', sortable: true },
+    { name: 'auteur', align: 'left', label: 'Auteur', field: 'author', sortable: true },
+    { name: 'date', align: 'left', label: 'Date', field: 'date', sortable: true },
+    { name: 'note', align: 'left', label: 'Note', field: 'note', sortable: true },
+    { name: 'action', align: 'left', label: '', field: 'action' }
 ]
 
 
@@ -358,11 +337,11 @@ export default {
     computed: {
     },
     mounted() {
-      
+
         this.formalDocumentRows = this.formalDocumentRowsUnfiltered;
         this.updateFormalDocumentModelFilter(this.selectedFormalDocumentModel);
         this.updateNumberOfFormalDocumentsByModel();
-     
+
     },
     methods: {
         async downloadRessource(ressource) {
@@ -389,11 +368,11 @@ export default {
             this.formalDocumentModels.forEach(e => {
                 e.nbVersions = this.formalDocumentRowsUnfiltered.filter(x => x.model_id == e.id).length;
             });
-            
+
             this.formalDocumentModels.sort((a, b) => (a.nbVersions < b.nbVersions) ? 1 : -1);
-            
+
             this.formalDocumentModels.unshift({
-                id: -1, 
+                id: -1,
                 nbVersions: this.formalDocumentRowsUnfiltered.length,
                 name: "Tous",
             });
