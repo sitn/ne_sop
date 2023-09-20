@@ -9,7 +9,7 @@
             </q-breadcrumbs>
         </div>
 
-        <!-- IDENTIFICCATION SECTION -->
+        <!-- IDENTIFICATION SECTION -->
         <FormSection title="Event">
             <template v-slot:content>
                 <div class="text-h6">Événement</div>
