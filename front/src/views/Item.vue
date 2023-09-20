@@ -168,7 +168,9 @@
                                     {{ props.row.note }}
                                 </q-td>
                                 <q-td key="action" :props="props">
-                                    <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="delete"></q-btn>
+                                    <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="sym_o_delete">
+                                        <q-tooltip class="bg-black">Supprimer</q-tooltip>
+                                    </q-btn>
                                 </q-td>
                             </q-tr>
                         </template>
@@ -204,7 +206,9 @@
                                     {{ props.row.note }}
                                 </q-td>
                                 <q-td key="action" :props="props">
-                                    <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="delete"></q-btn>
+                                    <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="sym_o_delete">
+                                        <q-tooltip class="bg-black">Supprimer</q-tooltip>
+                                    </q-btn>
                                 </q-td>
                             </q-tr>
                         </template>
