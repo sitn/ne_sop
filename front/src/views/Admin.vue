@@ -24,7 +24,7 @@ import FormSection from "../components/FormSection.vue"
 
 
 export default {
-    name: 'Entity',
+    name: 'Admin',
     components: { FormSection },
     props: { 'model': Object },
     emits: [],
@@ -36,7 +36,7 @@ export default {
     },
     data() {
         return {
-            
+
         }
     },
     computed: {
