@@ -7,8 +7,7 @@
                 <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
             </q-breadcrumbs>
 
-            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination"
-                :loading="loading" :filter="filter" dense class="q-my-lg">
+            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" dense class="q-my-lg">
                 <!-- TABLE BODY -->
                 <template v-slot:body="props">
                     <q-tr :props="props">
