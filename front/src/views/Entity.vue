@@ -79,7 +79,7 @@
 
                 <div class="row q-col-gutter-lg q-py-md">
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input type="email" bg-color="white" outlined v-model="entity.email" label="Email" />
+                        <q-input type="email" bg-color="white" outlined v-model="entity.email" label="Email" :rules="[val => checkEmail(val)]" />
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <q-input type="tel" bg-color="white" outlined v-model="entity.telephone" label="Téléphone (format international)" @update:model-value="checkPhoneNumber(this.entity.telephone)" @blur="formatPhoneNumber(this.entity.telephone)" :rules="[val => checkPhoneNumber(val)]" />
@@ -88,7 +88,7 @@
 
                 <div class="row">
                     <div class="col">
-                        <q-input type="text" bg-color="white" outlined v-model="entity.website" label="Site Internet" />
+                        <q-input type="text" bg-color="white" outlined v-model="entity.website" label="Site Internet" :rules="[val => checkWebsite(val)]" />
                     </div>
                 </div>
 
@@ -158,10 +158,28 @@ export default {
             console.log('formatPhoneNumber')
             console.log(val)
         },
-        checkEmail() {
+        checkEmail(val) {
+
+            let reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+            let isValid = reg.test(val)
+
+            if (isValid) {
+                return true
+            } else {
+                return 'Format non-valable'
+            }
 
         },
-        checkWebsite() {
+        checkWebsite(val) {
+
+            let reg = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+            let isValid = reg.test(val)
+
+            if (isValid) {
+                return true
+            } else {
+                return 'Format non-valable'
+            }
 
         },
 
