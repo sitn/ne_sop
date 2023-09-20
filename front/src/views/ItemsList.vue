@@ -9,7 +9,9 @@
             </q-breadcrumbs>
 
             <div class="row q-col-gutter-md q-px-sm q-mt-xs items-center">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+
+                <!-- SEARCH ITEMS FIELD -->
+                <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
                     <q-input bg-color="white" outlined dense placeholder="Rechercher">
                         <template v-slot:prepend>
                             <q-icon name="search" />
@@ -17,8 +19,9 @@
                     </q-input>
                 </div>
 
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <q-btn padding="sm" unelevated no-caps color="blue-grey-9" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" />
+                <!-- ADD NEW ITEM BUTTON -->
+                <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
+                    <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" />
                 </div>
 
             </div>
