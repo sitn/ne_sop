@@ -3,23 +3,41 @@
 
         <div class="q-pa-sm q-gutter-sm">
 
+            <!-- BREADCRUMBS NAVIGATION -->
             <q-breadcrumbs style="font-size: 16px">
                 <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
             </q-breadcrumbs>
 
-            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" dense class="q-my-lg">
+            <div class="row q-col-gutter-md q-px-sm q-mt-xs items-center">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <q-input bg-color="white" outlined dense placeholder="Rechercher">
+                        <template v-slot:prepend>
+                            <q-icon name="search" />
+                        </template>
+                    </q-input>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <q-btn padding="sm" unelevated no-caps color="blue-grey-9" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" />
+                </div>
+
+            </div>
+
+            <!-- ITEMS TABLE -->
+            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" class="q-my-lg">
+
                 <!-- TABLE BODY -->
                 <template v-slot:body="props">
                     <q-tr :props="props">
-                        <!-- number column -->
+                        <!-- NUMBER COLUMN -->
                         <q-td key="number" :props="props">
                             {{ props.row.number }}
                         </q-td>
-                        <!-- type column -->
+                        <!-- TYPE COLUMN -->
                         <q-td key="type" :props="props">
                             {{ props.row.type }}
                         </q-td>
-                        <!-- title column -->
+                        <!-- TITLE COLUMN -->
                         <q-td key="title" :props="props">
 
                             <router-link :to="{
@@ -32,15 +50,15 @@
                             </router-link>
 
                         </q-td>
-                        <!-- deposit date column -->
+                        <!-- DEPOSIT DATE COLUMN -->
                         <q-td key="deposit" :props="props">
                             {{ props.row.events.find((e) => e.name === "Dépôt").date }}
                         </q-td>
-                        <!-- delay date column -->
+                        <!-- DELAY DATE COLUMN -->
                         <q-td key="delay" :props="props">
                             {{ props.row.events.find((e) => e.name === "Délai").date }}
                         </q-td>
-                        <!-- actions column -->
+                        <!-- ACTIONS COLUMN -->
                         <q-td key="actions" :props="props">
                             <div class="float-right">
                                 <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="sym_o_delete">
