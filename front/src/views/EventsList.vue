@@ -1,12 +1,14 @@
 <template>
     <div class="">
 
+        <!-- BREADCRUMBS NAVIGATION -->
         <div class="q-pa-sm q-gutter-sm">
             <q-breadcrumbs style="font-size: 16px">
                 <q-breadcrumbs-el label="Calendrier" to="/events" />
             </q-breadcrumbs>
         </div>
 
+        <!-- EVENTS TABLE -->
         <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" dense class="q-my-lg">
             <!-- TABLE BODY -->
             <template v-slot:body="props">
