@@ -7,12 +7,12 @@
             </q-breadcrumbs>
         </div>
 
-        <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading"
-            :filter="filter" dense class="q-my-lg">
+        <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" dense class="q-my-lg">
             <!-- TABLE BODY -->
             <template v-slot:body="props">
                 <q-tr :props="props">
-                    <!-- name  column -->
+
+                    <!-- NAME COLUMN -->
                     <q-td key="type" :props="props">
 
                         <router-link :to="{
@@ -26,21 +26,26 @@
 
                     </q-td>
 
-                    <!-- type column -->
+                    <!-- TYPE COLUMN -->
                     <q-td key="type" :props="props">
                         {{ props.row.type }}
                     </q-td>
-                    <!-- title column -->
 
-                    <!-- actions column -->
+                    <!-- ACTIONS COLUMN -->
                     <q-td key="actions" :props="props">
-                        <q-btn dense round flat color="grey" name="email" @click="console.log(props.row.email)"
-                            icon="email"></q-btn>
-                        <q-btn dense round flat color="grey" name="phone" @click="console.log(props.row.telephone)"
-                            icon="phone"></q-btn>
-                        <q-btn dense round flat color="grey" name="delete" @click="console.log(props.row.id)"
-                            icon="delete"></q-btn>
+                        <div class="float-right">
+                            <q-btn dense round flat color="grey" :name="email" @click="console.log(props.row.email)" icon="sym_o_mail" :href="`mailto:${props.row.email}`" v-if="props.row.email !== ''">
+                                <q-tooltip class="bg-black" v-if="props.row.email !== ''">Envoyer un email: {{ props.row.email }}</q-tooltip>
+                            </q-btn>
+                            <q-btn dense round flat color="grey" name="phone" @click="console.log(props.row.telephone)" icon="sym_o_call" :href="`tel:${props.row.telephone}`" v-if="props.row.telephone !== ''">
+                                <q-tooltip class="bg-black" v-if="props.row.telephone !== ''">Appeler: {{ props.row.telephone }}</q-tooltip>
+                            </q-btn>
+                            <q-btn dense round flat color="red" name="delete" @click="console.log(props.row.id)" icon="sym_o_delete">
+                                <q-tooltip class="bg-black">Supprimer</q-tooltip>
+                            </q-btn>
+                        </div>
                     </q-td>
+
                 </q-tr>
             </template>
             <template v-slot:no-data>

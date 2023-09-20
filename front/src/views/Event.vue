@@ -1,7 +1,7 @@
 <template>
     <div class="">
 
-        <!-- Breadcrumbs navigation -->
+        <!-- BREADCRUMBS NAVIGATION -->
         <div class="q-pa-sm q-gutter-sm">
             <q-breadcrumbs style="font-size: 16px">
                 <q-breadcrumbs-el label="Événements" to="/events" />
@@ -9,7 +9,7 @@
             </q-breadcrumbs>
         </div>
 
-        <!-- Identification -->
+        <!-- IDENTIFICCATION SECTION -->
         <FormSection title="Event">
             <template v-slot:content>
                 <div class="text-h6">Événement</div>

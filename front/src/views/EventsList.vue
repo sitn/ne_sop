@@ -7,13 +7,12 @@
             </q-breadcrumbs>
         </div>
 
-        <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading"
-            :filter="filter" dense class="q-my-lg">
+        <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" dense class="q-my-lg">
             <!-- TABLE BODY -->
             <template v-slot:body="props">
                 <q-tr :props="props">
 
-                    <!-- date column -->
+                    <!-- DATE COLUMN -->
                     <q-td key="date" :props="props">
 
                         <router-link :to="{
@@ -27,12 +26,12 @@
 
                     </q-td>
 
-                    <!-- event type column -->
+                    <!-- EVEN TYPE COLUMN -->
                     <q-td key="type" :props="props">
                         {{ props.row.eventType }}
                     </q-td>
 
-                    <!-- date column -->
+                    <!-- ITEM COLUMN -->
                     <q-td key="item" :props="props">
 
                         <router-link :to="{
@@ -48,16 +47,16 @@
 
                     </q-td>
 
-                    <!-- actions column -->
+                    <!-- ACTIONS COLUMN -->
                     <q-td key="actions" :props="props">
-                        <q-btn dense round flat color="grey" name="calendar" @click="console.log(props.row.date)"
-                            icon="sym_o_calendar_add_on">
-                            <q-tooltip class="bg-black">Ajouter à votre calendrier</q-tooltip>
-                        </q-btn>
-                        <q-btn dense round flat color="grey" name="delete" @click="console.log(props.row.id)"
-                            icon="sym_o_delete">
-                            <q-tooltip class="bg-black">Supprimer</q-tooltip>
-                        </q-btn>
+                        <div class="float-right">
+                            <q-btn dense round flat color="grey" name="calendar" @click="console.log(props.row.date)" icon="sym_o_calendar_add_on">
+                                <q-tooltip class="bg-black">Ajouter au calendrier</q-tooltip>
+                            </q-btn>
+                            <q-btn dense round flat color="red" name="delete" @click="console.log(props.row.id)" icon="sym_o_delete">
+                                <q-tooltip class="bg-black">Supprimer</q-tooltip>
+                            </q-btn>
+                        </div>
                     </q-td>
                 </q-tr>
             </template>
