@@ -1,12 +1,14 @@
 <template>
     <div class="">
 
+        <!-- BREADCRUMBS NAVIGATION -->
         <div class="q-pa-sm q-gutter-sm">
             <q-breadcrumbs style="font-size: 16px">
                 <q-breadcrumbs-el label="Personnes et groupes" to="/entities" />
             </q-breadcrumbs>
         </div>
 
+        <!-- ENTITIES TABLE -->
         <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" dense class="q-my-lg">
             <!-- TABLE BODY -->
             <template v-slot:body="props">
