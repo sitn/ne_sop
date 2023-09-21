@@ -24,7 +24,7 @@
 
                 <!-- ADD NEW ITEM BUTTON -->
                 <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
-                    <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" />
+                    <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" @click="addItem()" />
                 </div>
 
             </div>
@@ -58,16 +58,16 @@
                         </q-td>
                         <!-- DEPOSIT DATE COLUMN -->
                         <q-td key="deposit" :props="props">
-                            {{ props.row.events.find((e) => e.name === "Dépôt").date }}
+                            {{ props.row.events.find((e) => e.eventType === "Dépôt").date }}
                         </q-td>
                         <!-- DELAY DATE COLUMN -->
                         <q-td key="delay" :props="props">
-                            {{ props.row.events.find((e) => e.name === "Délai").date }}
+                            {{ props.row.events.find((e) => e.eventType === "Délai").date }}
                         </q-td>
                         <!-- ACTIONS COLUMN -->
                         <q-td key="actions" :props="props">
                             <div class="float-right">
-                                <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="sym_o_delete">
+                                <q-btn dense round flat color="red" name="delete" @click="confirmDelete(props.row)" icon="sym_o_delete">
                                     <q-tooltip class="bg-black">Supprimer</q-tooltip>
                                 </q-btn>
                             </div>
@@ -78,6 +78,38 @@
                     Aucune objet
                 </template>
             </q-table>
+
+            <!-- ADD ITEM DIALOG -->
+            <q-dialog v-model="addDialog">
+                <q-card>
+                    <q-card-section>
+                        <div class="text-h6">Nouvel objet</div>
+                    </q-card-section>
+                    <q-card-section class="row items-center">
+
+                    </q-card-section>
+
+                    <q-card-actions align="right">
+                        <q-btn flat label="Annuler" color="primary" v-close-popup />
+                        <q-btn flat label="Sauvegarder" color="primary" v-close-popup />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+
+            <!-- DELETE ITEM DIALOG -->
+            <q-dialog v-model="deleteDialog">
+                <q-card>
+                    <q-card-section class="row items-center">
+                        <q-avatar icon="sym_o_delete_forever" color="primary" text-color="white" />
+                        <span class="q-ml-sm">Supprimer dénitivement cet objet et tous les évenements liés?</span>
+                    </q-card-section>
+
+                    <q-card-actions align="right">
+                        <q-btn flat label="Annuler" color="primary" v-close-popup />
+                        <q-btn flat label="Supprimer" color="primary" v-close-popup />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
 
         </div>
 
@@ -102,6 +134,8 @@ export default {
     data() {
         return {
             searchString: null,
+            deleteDialog: false,
+            addDialog: false,
             rows: items,
             loading: false,
             /* filter: "filter", */
@@ -183,8 +217,19 @@ export default {
             }
             this.loading = false
 
+        },
+        confirmDelete(val) {
+
+            this.deleteDialog = true
+            console.log('delete')
+            console.log(val)
+
+        },
+        addItem() {
+            this.addDialog = true
         }
     }
+
 }
 </script>
 
