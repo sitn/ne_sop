@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/sitn/ne_sop#readme",
   "dependencies": {
+    "ics": "^3.5.0",
     "libphonenumber-js": "^1.10.44",
     "quasar": "^2.12.5",
     "vue": "^3.3.4",
