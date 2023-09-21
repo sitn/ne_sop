@@ -19,8 +19,11 @@
                         <q-input bg-color="white" outlined v-model="entity.name" label="Nom" />
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input bg-color="white" outlined v-model="entity.type" label="Type" />
-
+                        <!-- TYPE SELECT FIELD -->
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <q-select bg-color="white" outlined v-model="entity.type" :options="entityTypes" label="Type">
+                            </q-select>
+                        </div>
                     </div>
                 </div>
 
@@ -44,28 +47,23 @@
                 <div class="row q-col-gutter-lg q-py-md">
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <q-input bg-color="white" outlined v-model="entity.street" label="Rue" />
-                        <!-- <q-select bg-color="white" outlined v-model="" :options="" label="Principal" /> -->
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <q-input bg-color="white" outlined v-model="entity.postalCode" label="Code postal" />
-                        <!-- <q-select bg-color="white" outlined v-model="" :options="" label="Appui" /> -->
                     </div>
                 </div>
 
                 <div class="row q-col-gutter-lg q-py-md">
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <q-input bg-color="white" outlined v-model="entity.city" label="Localité" />
-                        <!-- <q-select bg-color="white" outlined v-model="" :options="" label="Principal" /> -->
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <q-input bg-color="white" outlined v-model="entity.region" label="Canton / Région" />
-                        <!-- <q-select bg-color="white" outlined v-model="" :options="" label="Appui" /> -->
                     </div>
                 </div>
                 <div class="row q-col-gutter-lg q-py-md">
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <q-input bg-color="white" outlined v-model="entity.country" label="Pays" />
-                        <!-- <q-select bg-color="white" outlined v-model="" :options="" label="Principal" /> -->
                     </div>
 
                 </div>
@@ -117,7 +115,10 @@ export default {
     },
     data() {
         return {
-            entity: entities.find(e => e.id === this.$route.params.id)
+            entity: entities.find(e => e.id === this.$route.params.id),
+            entityTypes: [
+                "Service de l'état", 'Parlementaire', 'Groupe politique', 'Commission parlementaire instituée', 'Commission parlementaire ad-hoc', 'Autorité (ex: CE, GC, Bureau-GC)', 'Autre'
+            ],
         }
     },
     computed: {
