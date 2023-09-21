@@ -12,9 +12,12 @@
 
                 <!-- SEARCH ITEMS FIELD -->
                 <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
-                    <q-input bg-color="white" outlined dense placeholder="Rechercher">
+                    <q-input bg-color="white" v-model="searchString" outlined dense placeholder="Rechercher" @update:model-value="query()">
                         <template v-slot:prepend>
                             <q-icon name="search" />
+                        </template>
+                        <template v-slot:append>
+                            <q-spinner color="blue-grey" :thickness="3" v-if="loading" />
                         </template>
                     </q-input>
                 </div>
@@ -27,7 +30,7 @@
             </div>
 
             <!-- ITEMS TABLE -->
-            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" class="q-my-lg">
+            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" class="q-my-lg"> <!-- :filter="filter" -->
 
                 <!-- TABLE BODY -->
                 <template v-slot:body="props">
@@ -84,10 +87,12 @@
 <script>
 import items from '../assets/data/items.json'
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 export default {
     name: 'ItemsList',
     components: {},
-    props: { 'title': String, 'model': Object }, // 'rows': items
+    props: { 'title': String, 'model': Object },
     emits: [],
     setup() {
         return {
@@ -96,9 +101,10 @@ export default {
     },
     data() {
         return {
+            searchString: null,
             rows: items,
             loading: false,
-            filter: "",
+            /* filter: "filter", */
             pagination: {
                 sortBy: "desc",
                 descending: false,
@@ -157,6 +163,27 @@ export default {
 
     },
     methods: {
+        async query() {
+
+            // TODO: REPLACE WITH GET CALL TO DATABASE 
+            console.log(`search: ${this.searchString}`)
+            this.loading = true
+            await sleep(Math.random() * 1300)
+
+            let str = this.searchString.toLowerCase()
+            if (this.searchString.length >= 3) {
+
+                this.rows = items.filter((x) => (x.title.toLowerCase().includes(str) || x.number.toLowerCase().includes(str)))
+                console.log(this.rows)
+
+            } else {
+
+                this.rows = items
+
+            }
+            this.loading = false
+
+        }
     }
 }
 </script>
