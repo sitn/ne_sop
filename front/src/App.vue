@@ -37,6 +37,12 @@
 
                 <q-space></q-space>
 
+                <!-- color="white" text-color="blue-grey" -->
+                <q-btn size="lg" text-color="white" round label="" dense unelevated icon="sym_o_logout" @click="processLogout" v-if="$route.name !== 'Login'">
+                    <q-tooltip class="bg-black">Déconnexion</q-tooltip>
+                </q-btn>
+
+                <!-- 
                 <q-btn-dropdown size="lg" label="" dense icon="account_circle" dropdown-icon="" unelevated v-if="$route.name !== 'Login'">
                     <q-list style="width:180px">
                         <q-item clickable v-close-popup @click="">
@@ -66,8 +72,7 @@
                         </q-item>
                     </q-list>
                 </q-btn-dropdown>
-
-                <!-- <q-btn size="lg" flat @click="" round dense icon="account_circle" /> -->
+                -->
 
             </q-toolbar>
 
