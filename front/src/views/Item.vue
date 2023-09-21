@@ -105,6 +105,29 @@
             <template v-slot:content>
                 <div class="text-h6">Calendrier</div>
 
+                <q-table :rows="item.events" :columns="eventsColumns" row-key="date" class="q-my-md">
+                    <template v-slot:body="props">
+                        <q-tr :props="props">
+                            <q-td key="date" :props="props">
+                                {{ props.row.date }}
+                            </q-td>
+                            <q-td key="time" :props="props">
+                                {{ props.row.time }}
+                            </q-td>
+                            <q-td key="type" :props="props">
+                                {{ props.row.eventType }}
+                            </q-td>
+                            <q-td key="actions" :props="props">
+                                <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="sym_o_delete">
+                                    <q-tooltip class="bg-black">Supprimer</q-tooltip>
+                                </q-btn>
+                            </q-td>
+                        </q-tr>
+                    </template>
+                </q-table>
+
+
+
                 <div class="bg-light-blue-1 q-my-md q-pa-md">
                     {{ item.events }}
                 </div>
@@ -307,6 +330,13 @@ const attachementColumns = [
     { name: 'action', align: 'left', label: '', field: 'action' }
 ]
 
+const eventsColumns = [
+    { name: "date", align: "left", label: "Date", field: "date", sortable: true },
+    { name: "time", align: "left", label: "Heure", field: "", sortable: true },
+    { name: "type", align: "left", label: "Type", field: "eventType", sortable: true },
+    { name: "actions", align: "center", label: "", field: "", sortable: false }
+]
+
 
 export default {
     name: 'Item',
@@ -330,6 +360,7 @@ export default {
             formalDocumentColumns: formalDocumentColumns,
             attachementRows: documents.filter(e => e.ressourcetype === 'attachement'),
             attachementColumns: attachementColumns,
+            eventsColumns: eventsColumns,
             serviceOptions: entities.filter(e => e.type === "Service de l'état"),
             formalDocumentModels: templates,
             selectedFormalDocumentModel: -1,
