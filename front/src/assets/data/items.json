@@ -87,21 +87,21 @@
         },
         "events": [
             {
-                "name": "Dépôt",
+                "eventType": "Dépôt",
                 "date": "23.03.2023 10:00:00",
                 "status": "Pas encore traité",
                 "statusGrandConseil": "En traitement",
                 "description": ""
             },
             {
-                "name": "Délai",
+                "eventType": "Délai",
                 "date": "12.06.2023 02:00:00",
                 "status": "En traitement",
                 "statusGrandConseil": "En traitement",
                 "description": ""
             },
             {
-                "name": "Demande département",
+                "eventType": "Demande département",
                 "date": "28.03.2023 10:00:00",
                 "status": "En traitement",
                 "statusGrandConseil": "En traitement",
@@ -117,14 +117,14 @@
         "status": "En traitement",
         "events": [
             {
-                "name": "Dépôt",
+                "eventType": "Dépôt",
                 "date": "23.03.2023",
                 "status": "Pas encore traité",
                 "statusGrandConseil": "En traitement",
                 "description": ""
             },
             {
-                "name": "Délai",
+                "eventType": "Délai",
                 "date": "06.05.2023",
                 "status": "En traitement",
                 "statusGrandConseil": "En traitement",
@@ -144,14 +144,14 @@
         "status": "En traitement",
         "events": [
             {
-                "name": "Dépôt",
+                "eventType": "Dépôt",
                 "date": "23.03.2023",
                 "status": "Pas encore traité",
                 "statusGrandConseil": "En traitement",
                 "description": ""
             },
             {
-                "name": "Délai",
+                "eventType": "Délai",
                 "date": "06.05.2023",
                 "status": "En traitement",
                 "statusGrandConseil": "En traitement",
@@ -171,14 +171,14 @@
         "status": "Terminé",
         "events": [
             {
-                "name": "Dépôt",
+                "eventType": "Dépôt",
                 "date": "27.03.2023",
                 "status": "Pas encore traité",
                 "statusGrandConseil": "En traitement",
                 "description": ""
             },
             {
-                "name": "Délai",
+                "eventType": "Délai",
                 "date": "25.08.2023",
                 "status": "En traitement",
                 "statusGrandConseil": "En traitement",
@@ -198,14 +198,14 @@
         "status": "En traitement",
         "events": [
             {
-                "name": "Dépôt",
+                "eventType": "Dépôt",
                 "date": "27.03.2023",
                 "status": "Pas encore traité",
                 "statusGrandConseil": "En traitement",
                 "description": ""
             },
             {
-                "name": "Délai",
+                "eventType": "Délai",
                 "date": "25.08.2023",
                 "status": "En traitement",
                 "statusGrandConseil": "En traitement",
@@ -225,14 +225,14 @@
         "status": "Pas traité",
         "events": [
             {
-                "name": "Dépôt",
+                "eventType": "Dépôt",
                 "date": "27.03.2023",
                 "status": "Pas encore traité",
                 "statusGrandConseil": "En traitement",
                 "description": ""
             },
             {
-                "name": "Délai",
+                "eventType": "Délai",
                 "date": "25.08.2023",
                 "status": "En traitement",
                 "statusGrandConseil": "En traitement",
