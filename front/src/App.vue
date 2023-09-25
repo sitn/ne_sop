@@ -27,7 +27,7 @@
 
             <q-toolbar>
 
-                <q-btn size="lg" flat @click="drawer = !drawer" round dense icon="sym_o_menu" :disable="$route.name === 'Login'" />
+                <q-btn size="lg" text-color="white" flat @click="drawer = !drawer" round dense icon="sym_o_menu" :disable="$route.name === 'Login'" />
 
                 <q-toolbar-title class="gt-xs">
                     <a href="https://www.ne.ch/autorites/DDTE/" target="_blank"><img src="/img/ne_logo_white.svg" alt="Neuchâtel" /></a>
@@ -37,7 +37,6 @@
 
                 <q-space></q-space>
 
-                <!-- color="white" text-color="blue-grey" -->
                 <q-btn size="lg" text-color="white" round label="" dense unelevated icon="sym_o_logout" @click="processLogout" v-if="$route.name !== 'Login'">
                     <q-tooltip class="bg-black">Déconnexion</q-tooltip>
                 </q-btn>

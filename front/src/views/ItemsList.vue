@@ -14,11 +14,15 @@
                 <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
                     <q-input bg-color="white" v-model="searchString" outlined dense placeholder="Rechercher" @update:model-value="query()">
                         <template v-slot:prepend>
-                            <q-icon name="search" />
+                            <q-icon name="sym_o_search" />
                         </template>
                         <template v-slot:append>
                             <q-spinner color="blue-grey" :thickness="3" v-if="loading" />
+                            <q-btn unelevated icon="sym_o_filter_alt" padding="xs" @click="console.log('filter')"> <!-- color="orange-1" text-color="black" -->
+                                <q-tooltip class="bg-black">Filtrer</q-tooltip>
+                            </q-btn>
                         </template>
+
                     </q-input>
                 </div>
 

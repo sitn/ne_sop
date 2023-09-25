@@ -30,11 +30,19 @@
                             </div>
                         </div>
 
-                        <!-- TITLE TEXT FIELD -->
+
                         <div class="row q-col-gutter-lg q-py-md">
-                            <div class="col">
+                            <!-- TITLE TEXT FIELD -->
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                 <q-input bg-color="white" outlined v-model="item.title" label="Titre" :disable="!edit" />
                             </div>
+                            <!-- AUTHOR SELECT/CREATE FIELD -->
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <q-select bg-color="white" outlined v-model="item.author" :options="authorOptions" option-label="name" option-value="name" label="Auteur" emit-value :disable="!edit">
+
+                                </q-select>
+                            </div>
+
                         </div>
 
                         <!-- CONTENT TEXT AREA FIELD -->
@@ -150,10 +158,10 @@
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <!--
-                                <q-item-section avatar>
-                                    <q-icon name="email" />
-                                </q-item-section>
-                                -->
+                                        <q-item-section avatar>
+                                            <q-icon name="email" />
+                                        </q-item-section>
+                                        -->
                                         <q-item-section>
                                             <q-item-label>{{ scope.opt.name }}</q-item-label>
                                         </q-item-section>
@@ -371,6 +379,7 @@ export default {
             attachementRows: documents.filter(e => e.ressourcetype === 'attachement'),
             attachementColumns: attachementColumns,
             eventsColumns: eventsColumns,
+            authorOptions: entities, //entities.filter(e => e.type.includes("Parlementaire","Groupe politique","Commission parlementaire instituée")),
             serviceOptions: entities.filter(e => e.type === "Service de l'état"),
             formalDocumentModels: templates,
             selectedFormalDocumentModel: -1,

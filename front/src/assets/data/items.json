@@ -9,7 +9,7 @@
         "urgent": false,
         "writtenResponse": false,
         "fight": false,
-        "authors": [],
+        "author": "Groupe PLR",
         "response": "written",
         "comment": "",
         "request": "",
@@ -115,6 +115,7 @@
         "type": "Question",
         "title": "Plan directeur des transports : la révision est-elle à l’horaire ?",
         "status": "En traitement",
+        "author": "Groupe PLR",
         "events": [
             {
                 "eventType": "Dépôt",
@@ -142,6 +143,7 @@
         "type": "Question",
         "title": "L’humusation, ou mourir pour donner la vie",
         "status": "En traitement",
+        "author": "Groupe PLR",
         "events": [
             {
                 "eventType": "Dépôt",
@@ -169,6 +171,7 @@
         "type": "Question",
         "title": "Changement d’affectation de parcelles agricoles : transparence ?",
         "status": "Terminé",
+        "author": "Groupe PLR",
         "events": [
             {
                 "eventType": "Dépôt",
@@ -196,6 +199,7 @@
         "type": "Interpellation",
         "title": "Pâturage et élevage, valorisons notre terroir",
         "status": "En traitement",
+        "author": "Groupe PLR",
         "events": [
             {
                 "eventType": "Dépôt",
@@ -223,6 +227,7 @@
         "type": "Postulat",
         "title": "État des lieux de nos milieux fontinaux",
         "status": "Pas traité",
+        "author": "Groupe PLR",
         "events": [
             {
                 "eventType": "Dépôt",
