@@ -1,20 +1,16 @@
 <template>
-    <div class="row justify-center q-my-lg">
-        <div class="col-xs-12 col-sm-12 col-md-8">
+    <div class="row justify-center q-mb-lg">
+        <!-- <div class="col-xs-12 col-sm-12 col-md-8"> -->
 
-            <!-- <div class="bg-blue-grey-6 text-white text-h5 q-pa-md q-mx-md">{{ title }}</div> -->
-            <div class="bg-grey-2 q-pa-md q-mx-md">
+        <div class="col bg-grey-2 q-pa-md">
 
+            <slot name="content"></slot>
 
-                <!-- <q-form ref="form" greedy> -->
-
-                <slot name="content"></slot>
-
-                <!-- </q-form> -->
-
-            </div>
         </div>
+
+
     </div>
+    <!--  </div> -->
 </template>
 
 <script>
