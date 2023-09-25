@@ -30,7 +30,6 @@
                             </div>
                         </div>
 
-
                         <div class="row q-col-gutter-lg q-py-md">
                             <!-- TITLE TEXT FIELD -->
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -38,11 +37,14 @@
                             </div>
                             <!-- AUTHOR SELECT/CREATE FIELD -->
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                <q-select bg-color="white" outlined v-model="item.author" :options="authorOptions" option-label="name" option-value="name" label="Auteur" emit-value :disable="!edit">
-
+                                <q-select bg-color="white" outlined v-model="item.author" use-input @new-value="createValue" :options="authorOptions" option-label="name" option-value="name" label="Auteur" emit-value :disable="!edit">
+                                    <template v-slot:after>
+                                        <q-btn round unelevated color="blue-grey-8" icon="sym_o_person_add" @click="addEntity()" :disable="!edit">
+                                            <q-tooltip class="bg-black">Ajouter une nouvelle option</q-tooltip>
+                                        </q-btn>
+                                    </template>
                                 </q-select>
                             </div>
-
                         </div>
 
                         <!-- CONTENT TEXT AREA FIELD -->
@@ -51,13 +53,12 @@
                                 <q-input bg-color="white" outlined v-model="item.content" label="Description" type="textarea" :disable="!edit" />
                             </div>
                         </div>
-
+                        <!-- REMOVE/DEV DISPLAY JSON-->
                         <div class="bg-light-blue-1 q-my-md q-pa-md">
                             {{ item }}
                         </div>
                     </template>
                 </FormSection>
-
 
                 <!-- PROCESSING SECTION -->
                 <FormSection title="Traitement">
@@ -66,6 +67,7 @@
 
                         <div class="row q-col-gutter-lg q-py-md">
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <!-- PRIMARY SERVICE SELECT FIELD -->
                                 <q-select bg-color="white" outlined v-model="item.services.lead" :options="serviceOptions" option-label="name" option-value="id" label="Service principal" clearable :disable="!edit">
                                     <template v-slot:option="scope">
                                         <q-item v-bind="scope.itemProps">
@@ -77,6 +79,7 @@
                                 </q-select>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <!-- SUPPORT SERVICE SELECT FIELD -->
                                 <q-select bg-color="white" outlined v-model="item.services.support" :options="serviceOptions" option-label="name" option-value="id" label="Service(s) en appui" multiple clearable :disable="!edit">
                                     <template v-slot:option="scope">
                                         <q-item v-bind="scope.itemProps">
@@ -90,6 +93,8 @@
                         </div>
 
                         <div class="row q-py-md">
+
+                            <!-- URGENT CHECKBOX FIELD -->
                             <q-item tag="label" v-ripple :disable="!edit">
                                 <q-item-section avatar>
                                     <q-checkbox v-model="item.urgent" val="true" color="blue" :disable="!edit" />
@@ -99,6 +104,7 @@
                                     <q-item-label caption>Demande nécessite un traitement prioritaire</q-item-label>
                                 </q-item-section>
                             </q-item>
+                            <!-- WRITTEN RESPONSE CHECKBOX FIELD -->
                             <q-item tag="label" v-ripple :disable="!edit">
                                 <q-item-section avatar>
                                     <q-checkbox v-model="item.writtenResponse" val="true" color="blue" :disable="!edit" />
@@ -112,7 +118,6 @@
 
                     </template>
                 </FormSection>
-
 
                 <!-- EVENTS SECTION -->
                 <FormSection title="Calendrier">
@@ -261,6 +266,24 @@
 
         </Form>
 
+        <!-- ADD NEW ENTITY DIALOG -->
+        <q-dialog v-model="addEntityDialog">
+            <q-card>
+                <q-card-section>
+                    <div class="text-h6">Nouvelle personne ou groupe</div>
+                </q-card-section>
+                <q-card-section class="row items-center">
+
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn flat label="Annuler" color="primary" v-close-popup />
+                    <q-btn flat label="Sauvegarder" color="primary" v-close-popup />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+
+
         <!-- Dialog for creating first model in documents -->
         <q-dialog v-model="showAddFirstDocumentDialog">
             <q-card>
@@ -380,6 +403,7 @@ export default {
             attachementColumns: attachementColumns,
             eventsColumns: eventsColumns,
             authorOptions: entities, //entities.filter(e => e.type.includes("Parlementaire","Groupe politique","Commission parlementaire instituée")),
+            addEntityDialog: false,
             serviceOptions: entities.filter(e => e.type === "Service de l'état"),
             formalDocumentModels: templates,
             selectedFormalDocumentModel: -1,
@@ -401,7 +425,59 @@ export default {
         toggleEdit(val) {
             this.edit = val
         },
+        addEntity() {
+            console.log('Add new entity')
+            this.addEntityDialog = true
+        },
+        createValue(val, done) {
 
+            console.log('createValue')
+            console.log(`includes val:${!this.authorOptions.map((x) => (x.name)).includes(val)}`)
+
+            // Calling done(var) when new-value-mode is not set or "add", or done(var, "add") adds "var" content to the model
+            // and it resets the input textbox to empty string
+            // ----
+            // Calling done(var) when new-value-mode is "add-unique", or done(var, "add-unique") adds "var" content to the model
+            // only if is not already set
+            // and it resets the input textbox to empty string
+            // ----
+            // Calling done(var) when new-value-mode is "toggle", or done(var, "toggle") toggles the model with "var" content
+            // (adds to model if not already in the model, removes from model if already has it)
+            // and it resets the input textbox to empty string
+            // ----
+            // If "var" content is undefined/null, then it doesn't tampers with the model
+            // and only resets the input textbox to empty string
+
+            if (val.length > 0) {
+
+                let newOption = {
+                    "id": "68c42858-b47d-4eb5-85fd-3aa1318b63e4",
+                    "name": val,
+                    "type": "",
+                    "description": "",
+                    "street": "",
+                    "city": "",
+                    "postalCode": "",
+                    "region": "",
+                    "country": "",
+                    "website": "",
+                    "email": "",
+                    "telephone": ""
+                }
+
+                if (!this.authorOptions.map((x) => (x.name)).includes(val)) {
+                    this.authorOptions.push(newOption)
+                }
+
+                done(newOption, 'add-unique')
+
+                // POST NEW VALUE TO DATABASE
+
+            }
+
+            console.log(this.authorOptions)
+
+        },
         async downloadRessource(ressource) {
             let filepath = [
                 import.meta.env.VITE_OP_PATH,
