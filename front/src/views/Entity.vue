@@ -9,89 +9,97 @@
             </q-breadcrumbs>
         </div>
 
-        <!-- Identification -->
-        <FormSection title="Identification">
-            <template v-slot:content>
-                <div class="text-h6">Identification</div>
+        <Form title="Informations générales" :edit="false" @editEvent="toggleEdit">
 
-                <div class="row q-col-gutter-lg q-py-md">
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input bg-color="white" outlined v-model="entity.name" label="Nom" />
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <!-- TYPE SELECT FIELD -->
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="entity.type" :options="entityTypes" label="Type">
-                            </q-select>
+            <template v-slot:body>
+
+                <!-- Identification -->
+                <FormSection title="Identification">
+                    <template v-slot:content>
+                        <div class="text-h6">Identification</div>
+
+                        <div class="row q-col-gutter-lg q-py-md">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <q-input bg-color="white" outlined v-model="entity.name" label="Nom" :disable="!edit" />
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <!-- TYPE SELECT FIELD -->
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <q-select bg-color="white" outlined v-model="entity.type" :options="entityTypes" label="Type" :disable="!edit">
+                                    </q-select>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="row q-col-gutter-lg q-py-md">
-                    <div class="col">
-                        <q-input bg-color="white" outlined v-model="entity.description" label="Description" type="textarea" />
-                    </div>
-                </div>
+                        <div class="row q-col-gutter-lg q-py-md">
+                            <div class="col">
+                                <q-input bg-color="white" outlined v-model="entity.description" label="Description" type="textarea" :disable="!edit" />
+                            </div>
+                        </div>
 
-                <div class="bg-light-blue-1 q-my-md q-pa-md">
-                    {{ entity }}
-                </div>
+                        <div class="bg-light-blue-1 q-my-md q-pa-md">
+                            {{ entity }}
+                        </div>
+                    </template>
+                </FormSection>
+
+                <!-- Address -->
+                <FormSection title="Addresse">
+                    <template v-slot:content>
+                        <div class="text-h6">Addresse</div>
+
+                        <div class="row q-col-gutter-lg q-py-md">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <q-input bg-color="white" outlined v-model="entity.street" label="Rue" :disable="!edit" />
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <q-input bg-color="white" outlined v-model="entity.postalCode" label="Code postal" :disable="!edit" />
+                            </div>
+                        </div>
+
+                        <div class="row q-col-gutter-lg q-py-md">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <q-input bg-color="white" outlined v-model="entity.city" label="Localité" :disable="!edit" />
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <q-input bg-color="white" outlined v-model="entity.region" label="Canton / Région" :disable="!edit" />
+                            </div>
+                        </div>
+                        <div class="row q-col-gutter-lg q-py-md">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <q-input bg-color="white" outlined v-model="entity.country" label="Pays" :disable="!edit" />
+                            </div>
+
+                        </div>
+
+                    </template>
+                </FormSection>
+
+                <FormSection title="Contact">
+                    <template v-slot:content>
+                        <div class="text-h6">Contact</div>
+
+                        <div class="row q-col-gutter-lg q-py-md">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <q-input type="email" bg-color="white" outlined v-model="entity.email" label="Email" :rules="[val => checkEmail(val)]" :disable="!edit" />
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <q-input type="tel" bg-color="white" outlined v-model="entity.telephone" label="Téléphone (format international)" @update:model-value="checkPhoneNumber(this.entity.telephone)" @blur="formatPhoneNumber(this.entity.telephone)" :rules="[val => checkPhoneNumber(val)]" :disable="!edit" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <q-input type="text" bg-color="white" outlined v-model="entity.website" label="Site Internet" :rules="[val => checkWebsite(val)]" :disable="!edit" />
+                            </div>
+                        </div>
+
+                    </template>
+                </FormSection>
+
             </template>
-        </FormSection>
 
-        <!-- Address -->
-        <FormSection title="Addresse">
-            <template v-slot:content>
-                <div class="text-h6">Addresse</div>
-
-                <div class="row q-col-gutter-lg q-py-md">
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input bg-color="white" outlined v-model="entity.street" label="Rue" />
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input bg-color="white" outlined v-model="entity.postalCode" label="Code postal" />
-                    </div>
-                </div>
-
-                <div class="row q-col-gutter-lg q-py-md">
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input bg-color="white" outlined v-model="entity.city" label="Localité" />
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input bg-color="white" outlined v-model="entity.region" label="Canton / Région" />
-                    </div>
-                </div>
-                <div class="row q-col-gutter-lg q-py-md">
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input bg-color="white" outlined v-model="entity.country" label="Pays" />
-                    </div>
-
-                </div>
-
-            </template>
-        </FormSection>
-
-        <FormSection title="Contact">
-            <template v-slot:content>
-                <div class="text-h6">Contact</div>
-
-                <div class="row q-col-gutter-lg q-py-md">
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input type="email" bg-color="white" outlined v-model="entity.email" label="Email" :rules="[val => checkEmail(val)]" />
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input type="tel" bg-color="white" outlined v-model="entity.telephone" label="Téléphone (format international)" @update:model-value="checkPhoneNumber(this.entity.telephone)" @blur="formatPhoneNumber(this.entity.telephone)" :rules="[val => checkPhoneNumber(val)]" />
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <q-input type="text" bg-color="white" outlined v-model="entity.website" label="Site Internet" :rules="[val => checkWebsite(val)]" />
-                    </div>
-                </div>
-
-            </template>
-        </FormSection>
+        </Form>
 
     </div>
 </template>
@@ -99,12 +107,13 @@
 <script>
 import parsePhoneNumber from 'libphonenumber-js'
 import entities from '../assets/data/entities.json'
+import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 
 
 export default {
     name: 'Entity',
-    components: { FormSection },
+    components: { Form, FormSection },
     props: { 'model': Object },
     emits: [],
     setup() {
@@ -115,6 +124,7 @@ export default {
     },
     data() {
         return {
+            edit: false,
             entity: entities.find(e => e.id === this.$route.params.id),
             entityTypes: [
                 "Service de l'état", 'Parlementaire', 'Groupe politique', 'Commission parlementaire instituée', 'Commission parlementaire ad-hoc', 'Autorité (ex: CE, GC, Bureau-GC)', 'Autre'
@@ -140,7 +150,9 @@ export default {
 
     },
     methods: {
-
+        toggleEdit(val) {
+            this.edit = val
+        },
         checkPhoneNumber(val) {
 
             let phoneNumber = parsePhoneNumber(val)
