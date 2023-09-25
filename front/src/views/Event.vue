@@ -10,10 +10,9 @@
         </div>
 
 
-        <Form title="Objets parlementaires" :edit="false" @editEvent="toggleEdit">
+        <Form title="Événement" :edit="false" @editEvent="toggleEdit">
 
             <template v-slot:body>
-
 
                 <!-- IDENTIFICATION SECTION -->
                 <FormSection title="Event">
