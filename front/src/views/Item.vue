@@ -273,7 +273,7 @@
                     <div class="text-h6">Nouvelle personne ou groupe</div>
                 </q-card-section>
                 <q-card-section class="row items-center">
-
+                    <NewEntity></NewEntity>
                 </q-card-section>
 
                 <q-card-actions align="right">
@@ -282,7 +282,6 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
-
 
         <!-- Dialog for creating first model in documents -->
         <q-dialog v-model="showAddFirstDocumentDialog">
@@ -349,7 +348,7 @@ import entities from '../assets/data/entities.json'
 import templates from '../assets/data/templates.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
-
+import NewEntity from "./NewEntity.vue"
 
 const formalDocumentColumns = [
     { name: 'version', align: 'center', label: 'version', field: 'version', sortable: true },
@@ -380,7 +379,7 @@ const eventsColumns = [
 
 export default {
     name: 'Item',
-    components: { Form, FormSection },
+    components: { Form, FormSection, NewEntity },
     props: { 'model': Object }, // 'rows': items
     emits: [],
     setup() {
