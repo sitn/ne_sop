@@ -9,7 +9,7 @@
             </q-breadcrumbs>
         </div>
 
-        <Form title="Informations générales" :edit="false" @editEvent="toggleEdit">
+        <Form title="Objets parlementaires" :edit="false" @editEvent="toggleEdit">
 
             <template v-slot:body>
 
