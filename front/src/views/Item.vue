@@ -9,241 +9,249 @@
             </q-breadcrumbs>
         </div>
 
-        <!-- GENERAL INFORMATION SECTION -->
-        <FormSection title="Informations générales">
-            <template v-slot:content>
-                <div class="text-h6">Informations générales</div>
+        <Form title="Informations générales" :edit="false" @editEvent="toggleEdit">
 
-                <div class="row q-col-gutter-lg q-py-md">
-                    <!-- NO TEXT FIELD -->
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-input bg-color="white" outlined v-model="item.number" label="N°" />
-                    </div>
-                    <!-- TYPE SELECT FIELD -->
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-select bg-color="white" outlined v-model="item.type" :options="objectTypes" label="Type">
-                        </q-select>
-                    </div>
-                </div>
+            <template v-slot:body>
 
-                <!-- TITLE TEXT FIELD -->
-                <div class="row q-col-gutter-lg q-py-md">
-                    <div class="col">
-                        <q-input bg-color="white" outlined v-model="item.title" label="Titre" />
-                    </div>
-                </div>
+                <!-- GENERAL INFORMATION SECTION -->
+                <FormSection title="Informations générales" class="q-mt-none">
+                    <template v-slot:content>
+                        <div class="text-h6">Informations générales</div>
 
-                <!-- CONTENT TEXT AREA FIELD -->
-                <div class="row q-col-gutter-lg q-py-md">
-                    <div class="col">
-                        <q-input bg-color="white" outlined v-model="item.content" label="Description" type="textarea" />
-                    </div>
-                </div>
+                        <div class="row q-col-gutter-lg q-py-md">
+                            <!-- NO TEXT FIELD -->
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <q-input bg-color="white" outlined v-model="item.number" label="N°" :disable="!edit" />
+                            </div>
+                            <!-- TYPE SELECT FIELD -->
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <q-select bg-color="white" outlined v-model="item.type" :options="objectTypes" label="Type" :disable="!edit">
+                                </q-select>
+                            </div>
+                        </div>
 
-                <div class="bg-light-blue-1 q-my-md q-pa-md">
-                    {{ item }}
-                </div>
-            </template>
-        </FormSection>
+                        <!-- TITLE TEXT FIELD -->
+                        <div class="row q-col-gutter-lg q-py-md">
+                            <div class="col">
+                                <q-input bg-color="white" outlined v-model="item.title" label="Titre" :disable="!edit" />
+                            </div>
+                        </div>
 
-        <!-- PROCESSING SECTION -->
-        <FormSection title="Traitement">
-            <template v-slot:content>
-                <div class="text-h6">Traitement</div>
+                        <!-- CONTENT TEXT AREA FIELD -->
+                        <div class="row q-col-gutter-lg q-py-md">
+                            <div class="col">
+                                <q-input bg-color="white" outlined v-model="item.content" label="Description" type="textarea" :disable="!edit" />
+                            </div>
+                        </div>
 
-                <div class="row q-col-gutter-lg q-py-md">
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-select bg-color="white" outlined v-model="item.services.lead" :options="serviceOptions" option-label="name" option-value="id" label="Service principal" clearable>
-                            <template v-slot:option="scope">
-                                <q-item v-bind="scope.itemProps">
-                                    <q-item-section>
-                                        <q-item-label>{{ scope.opt.name }}</q-item-label>
-                                    </q-item-section>
-                                </q-item>
-                            </template>
-                        </q-select>
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <q-select bg-color="white" outlined v-model="item.services.support" :options="serviceOptions" option-label="name" option-value="id" label="Service(s) en appui" multiple clearable>
-                            <template v-slot:option="scope">
-                                <q-item v-bind="scope.itemProps">
-                                    <q-item-section>
-                                        <q-item-label>{{ scope.opt.name }}</q-item-label>
-                                    </q-item-section>
-                                </q-item>
-                            </template>
-                        </q-select>
-                    </div>
-                </div>
-
-                <div class="row q-py-md">
-                    <q-item tag="label" v-ripple>
-                        <q-item-section avatar>
-                            <q-checkbox v-model="item.urgent" val="true" color="blue" />
-                        </q-item-section>
-                        <q-item-section>
-                            <q-item-label>Urgent</q-item-label>
-                            <q-item-label caption>Demande nécessite un traitement prioritaire</q-item-label>
-                        </q-item-section>
-                    </q-item>
-                    <q-item tag="label" v-ripple>
-                        <q-item-section avatar>
-                            <q-checkbox v-model="item.writtenResponse" val="true" color="blue" />
-                        </q-item-section>
-                        <q-item-section>
-                            <q-item-label>Réponse écrite</q-item-label>
-                            <q-item-label caption>Demande nécessite une réponse écrite</q-item-label>
-                        </q-item-section>
-                    </q-item>
-                </div>
-
-            </template>
-        </FormSection>
-
-        <!-- EVENTS SECTION -->
-        <FormSection title="Calendrier">
-            <template v-slot:content>
-                <div class="text-h6">Calendrier</div>
-
-                <q-table :rows="item.events" :columns="eventsColumns" row-key="date" class="q-my-md">
-                    <template v-slot:body="props">
-                        <q-tr :props="props">
-                            <q-td key="date" :props="props">
-                                {{ props.row.date }}
-                            </q-td>
-                            <q-td key="time" :props="props">
-                                {{ props.row.time }}
-                            </q-td>
-                            <q-td key="type" :props="props">
-                                {{ props.row.eventType }}
-                            </q-td>
-                            <q-td key="actions" :props="props">
-                                <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="sym_o_delete">
-                                    <q-tooltip class="bg-black">Supprimer</q-tooltip>
-                                </q-btn>
-                            </q-td>
-                        </q-tr>
+                        <div class="bg-light-blue-1 q-my-md q-pa-md">
+                            {{ item }}
+                        </div>
                     </template>
-                </q-table>
+                </FormSection>
 
 
+                <!-- PROCESSING SECTION -->
+                <FormSection title="Traitement">
+                    <template v-slot:content>
+                        <div class="text-h6">Traitement</div>
 
-                <div class="bg-light-blue-1 q-my-md q-pa-md">
-                    {{ item.events }}
-                </div>
+                        <div class="row q-col-gutter-lg q-py-md">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <q-select bg-color="white" outlined v-model="item.services.lead" :options="serviceOptions" option-label="name" option-value="id" label="Service principal" clearable :disable="!edit">
+                                    <template v-slot:option="scope">
+                                        <q-item v-bind="scope.itemProps">
+                                            <q-item-section>
+                                                <q-item-label>{{ scope.opt.name }}</q-item-label>
+                                            </q-item-section>
+                                        </q-item>
+                                    </template>
+                                </q-select>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <q-select bg-color="white" outlined v-model="item.services.support" :options="serviceOptions" option-label="name" option-value="id" label="Service(s) en appui" multiple clearable :disable="!edit">
+                                    <template v-slot:option="scope">
+                                        <q-item v-bind="scope.itemProps">
+                                            <q-item-section>
+                                                <q-item-label>{{ scope.opt.name }}</q-item-label>
+                                            </q-item-section>
+                                        </q-item>
+                                    </template>
+                                </q-select>
+                            </div>
+                        </div>
 
-            </template>
-        </FormSection>
+                        <div class="row q-py-md">
+                            <q-item tag="label" v-ripple :disable="!edit">
+                                <q-item-section avatar>
+                                    <q-checkbox v-model="item.urgent" val="true" color="blue" :disable="!edit" />
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label>Urgent</q-item-label>
+                                    <q-item-label caption>Demande nécessite un traitement prioritaire</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                            <q-item tag="label" v-ripple :disable="!edit">
+                                <q-item-section avatar>
+                                    <q-checkbox v-model="item.writtenResponse" val="true" color="blue" :disable="!edit" />
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label>Réponse écrite</q-item-label>
+                                    <q-item-label caption>Demande nécessite une réponse écrite</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                        </div>
 
-        <!-- DOCUMENTS SECTION -->
-        <FormSection title="Documents">
-            <template v-slot:content>
-                <div class="text-h6">Documents</div>
+                    </template>
+                </FormSection>
 
-                <div class="q-py-sm q-gutter-md row">
-                    <q-select v-model="selectedFormalDocumentModel" :options="formalDocumentModels" :option-label="'name'" :option-value="'id'" label="Modèle de document" map-options emit-value @update:model-value="updateFormalDocumentModelFilter" style="min-width: 400px" bg-color="white" outlined>
 
-                        <template v-slot:option="scope">
-                            <q-item v-bind="scope.itemProps">
-                                <!--
+                <!-- EVENTS SECTION -->
+                <FormSection title="Calendrier">
+                    <template v-slot:content>
+                        <div class="text-h6">Calendrier</div>
+
+                        <q-table :rows="item.events" :columns="eventsColumns" row-key="date" class="q-my-md">
+                            <template v-slot:body="props">
+                                <q-tr :props="props">
+                                    <q-td key="date" :props="props">
+                                        {{ props.row.date }}
+                                    </q-td>
+                                    <q-td key="time" :props="props">
+                                        {{ props.row.time }}
+                                    </q-td>
+                                    <q-td key="type" :props="props">
+                                        {{ props.row.eventType }}
+                                    </q-td>
+                                    <q-td key="actions" :props="props">
+                                        <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="sym_o_delete" :disable="!edit">
+                                            <q-tooltip class="bg-black">Supprimer</q-tooltip>
+                                        </q-btn>
+                                    </q-td>
+                                </q-tr>
+                            </template>
+                        </q-table>
+
+                        <div class="bg-light-blue-1 q-my-md q-pa-md">
+                            {{ item.events }}
+                        </div>
+
+                    </template>
+                </FormSection>
+
+                <!-- DOCUMENTS SECTION -->
+                <FormSection title="Documents">
+                    <template v-slot:content>
+                        <div class="text-h6">Documents</div>
+
+                        <div class="q-py-sm q-gutter-md row">
+                            <q-select v-model="selectedFormalDocumentModel" :options="formalDocumentModels" :option-label="'name'" :option-value="'id'" label="Modèle de document" map-options emit-value @update:model-value="updateFormalDocumentModelFilter" style="min-width: 400px" bg-color="white" outlined>
+
+                                <template v-slot:option="scope">
+                                    <q-item v-bind="scope.itemProps">
+                                        <!--
                                 <q-item-section avatar>
                                     <q-icon name="email" />
                                 </q-item-section>
                                 -->
-                                <q-item-section>
-                                    <q-item-label>{{ scope.opt.name }}</q-item-label>
-                                </q-item-section>
-                                <q-item-section side>
-                                    <q-badge :color="scope.opt.nbVersions > 0 ? 'green' : 'grey'">
-                                        {{ scope.opt.nbVersions }}
-                                    </q-badge>
-                                </q-item-section>
-                            </q-item>
-                        </template>
-                    </q-select>
+                                        <q-item-section>
+                                            <q-item-label>{{ scope.opt.name }}</q-item-label>
+                                        </q-item-section>
+                                        <q-item-section side>
+                                            <q-badge :color="scope.opt.nbVersions > 0 ? 'green' : 'grey'">
+                                                {{ scope.opt.nbVersions }}
+                                            </q-badge>
+                                        </q-item-section>
+                                    </q-item>
+                                </template>
+                            </q-select>
 
-                    <q-btn color="primary" icon="add" label="ajouter" @click="openAddNewFormalDocumentDialog" :disabled="selectedFormalDocumentModel < 0" />
-                </div>
+                            <q-btn color="primary" icon="add" label="ajouter" @click="openAddNewFormalDocumentDialog" :disabled="selectedFormalDocumentModel < 0" />
+                        </div>
 
-                <div class="q-py-md">
+                        <div class="q-py-md">
 
-                    <q-table :title="`Documents formels (${this.formalDocumentRows.length})`" :rows="formalDocumentRows" :columns="formalDocumentColumns" row-key="name">
-                        <template v-slot:body="props">
-                            <q-tr :props="props">
-                                <q-td key="version" :props="props">
-                                    {{ props.row.version }}
-                                </q-td>
-                                <q-td key="filename" :props="props">
-                                    <a href="#" @click.prevent="downloadRessource(props.row)">
-                                        {{ props.row.filename }}
-                                    </a>
-                                </q-td>
-                                <q-td key="filesize" :props="props">
-                                    {{ props.row.filesize }}
-                                </q-td>
-                                <q-td key="auteur" :props="props">
-                                    {{ props.row.author }}
-                                </q-td>
-                                <q-td key="date" :props="props">
-                                    {{ props.row.date }}
-                                </q-td>
-                                <q-td key="note" :props="props">
-                                    {{ props.row.note }}
-                                </q-td>
-                                <q-td key="action" :props="props">
-                                    <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="sym_o_delete">
-                                        <q-tooltip class="bg-black">Supprimer</q-tooltip>
-                                    </q-btn>
-                                </q-td>
-                            </q-tr>
-                        </template>
-                    </q-table>
-                </div>
+                            <q-table :title="`Documents formels (${this.formalDocumentRows.length})`" :rows="formalDocumentRows" :columns="formalDocumentColumns" row-key="name">
+                                <template v-slot:body="props">
+                                    <q-tr :props="props">
+                                        <q-td key="version" :props="props">
+                                            {{ props.row.version }}
+                                        </q-td>
+                                        <q-td key="filename" :props="props">
+                                            <a href="#" @click.prevent="downloadRessource(props.row)">
+                                                {{ props.row.filename }}
+                                            </a>
+                                        </q-td>
+                                        <q-td key="filesize" :props="props">
+                                            {{ props.row.filesize }}
+                                        </q-td>
+                                        <q-td key="auteur" :props="props">
+                                            {{ props.row.author }}
+                                        </q-td>
+                                        <q-td key="date" :props="props">
+                                            {{ props.row.date }}
+                                        </q-td>
+                                        <q-td key="note" :props="props">
+                                            {{ props.row.note }}
+                                        </q-td>
+                                        <q-td key="action" :props="props">
+                                            <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="sym_o_delete" :disable="!edit">
+                                                <q-tooltip class="bg-black">Supprimer</q-tooltip>
+                                            </q-btn>
+                                        </q-td>
+                                    </q-tr>
+                                </template>
+                            </q-table>
+                        </div>
 
-                <div class="q-py-md">
+                        <div class="q-py-md">
 
-                    <q-table :title="`Pièces jointes (${this.attachementRows.length})`" :rows="attachementRows" :columns="attachementColumns" row-key="name">
-                        <template v-slot:body="props">
-                            <q-tr :props="props">
-                                <q-td key="version" :props="props">
-                                    {{ props.row.version }}
-                                </q-td>
-                                <q-td key="filename" :props="props">
-                                    <a href="#" @click.prevent="downloadRessource(props.row)">
-                                        {{ props.row.filename }}
-                                    </a>
-                                </q-td>
-                                <q-td key="filesize" :props="props">
-                                    {{ props.row.filesize }}
-                                </q-td>
-                                <q-td key="format" :props="props">
-                                    {{ props.row.format }}
-                                </q-td>
-                                <q-td key="auteur" :props="props">
-                                    {{ props.row.author }}
-                                </q-td>
-                                <q-td key="date" :props="props">
-                                    {{ props.row.date }}
-                                </q-td>
-                                <q-td key="note" :props="props">
-                                    {{ props.row.note }}
-                                </q-td>
-                                <q-td key="action" :props="props">
-                                    <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="sym_o_delete">
-                                        <q-tooltip class="bg-black">Supprimer</q-tooltip>
-                                    </q-btn>
-                                </q-td>
-                            </q-tr>
-                        </template>
-                    </q-table>
-                </div>
+                            <q-table :title="`Pièces jointes (${this.attachementRows.length})`" :rows="attachementRows" :columns="attachementColumns" row-key="name">
+                                <template v-slot:body="props">
+                                    <q-tr :props="props">
+                                        <q-td key="version" :props="props">
+                                            {{ props.row.version }}
+                                        </q-td>
+                                        <q-td key="filename" :props="props">
+                                            <a href="#" @click.prevent="downloadRessource(props.row)">
+                                                {{ props.row.filename }}
+                                            </a>
+                                        </q-td>
+                                        <q-td key="filesize" :props="props">
+                                            {{ props.row.filesize }}
+                                        </q-td>
+                                        <q-td key="format" :props="props">
+                                            {{ props.row.format }}
+                                        </q-td>
+                                        <q-td key="auteur" :props="props">
+                                            {{ props.row.author }}
+                                        </q-td>
+                                        <q-td key="date" :props="props">
+                                            {{ props.row.date }}
+                                        </q-td>
+                                        <q-td key="note" :props="props">
+                                            {{ props.row.note }}
+                                        </q-td>
+                                        <q-td key="action" :props="props">
+                                            <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="sym_o_delete" :disable="!edit">
+                                                <q-tooltip class="bg-black">Supprimer</q-tooltip>
+                                            </q-btn>
+                                        </q-td>
+                                    </q-tr>
+                                </template>
+                            </q-table>
+                        </div>
 
-                <div class="bg-light-blue-1 q-my-md q-pa-md">
-                    {{ formalDocumentRowsUnfiltered }}
-                </div>
+                        <div class="bg-light-blue-1 q-my-md q-pa-md">
+                            {{ formalDocumentRowsUnfiltered }}
+                        </div>
+
+                    </template>
+                </FormSection>
 
             </template>
-        </FormSection>
+
+        </Form>
 
         <!-- Dialog for creating first model in documents -->
         <q-dialog v-model="showAddFirstDocumentDialog">
@@ -308,6 +316,7 @@ import items from '../assets/data/items.json'
 import documents from '../assets/data/documents.json'
 import entities from '../assets/data/entities.json'
 import templates from '../assets/data/templates.json'
+import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 
 
@@ -340,7 +349,7 @@ const eventsColumns = [
 
 export default {
     name: 'Item',
-    components: { FormSection },
+    components: { Form, FormSection },
     props: { 'model': Object }, // 'rows': items
     emits: [],
     setup() {
@@ -351,6 +360,7 @@ export default {
     },
     data() {
         return {
+            edit: false,
             item: items.find(e => e.id === this.$route.params.id),
             objectTypes: [
                 'Amendement', 'Interpellation', 'Motion', 'Postulat', 'Projet de lois et décrets', 'Question', 'Rapport', 'Recommandation', 'Resolution'
@@ -379,6 +389,10 @@ export default {
 
     },
     methods: {
+        toggleEdit(val) {
+            this.edit = val
+        },
+
         async downloadRessource(ressource) {
             let filepath = [
                 import.meta.env.VITE_OP_PATH,
