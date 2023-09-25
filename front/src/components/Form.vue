@@ -1,7 +1,7 @@
 <template>
     <div class="row justify-center q-mb-lg">
 
-        <div class="col-sm-12 col-md-8">
+        <div class="col-xs-12 col-sm-12 col-md-8">
 
             <!-- EDIT MODE TOGGLE -->
             <div class="row justify-end q-px-md q-mb-none">
