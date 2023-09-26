@@ -25,7 +25,7 @@
                             </div>
                             <!-- TYPE SELECT FIELD -->
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                <q-select bg-color="white" outlined v-model="item.type" :options="objectTypes" label="Type" :disable="!edit">
+                                <q-select bg-color="white" outlined v-model="item.type" :options="itemTypes" label="Type" :disable="!edit">
                                 </q-select>
                             </div>
                         </div>
@@ -37,12 +37,23 @@
                             </div>
                             <!-- AUTHOR SELECT/CREATE FIELD -->
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                <q-select bg-color="white" outlined v-model="item.author" use-input @new-value="createValue" :options="authorOptions" option-label="name" option-value="name" label="Auteur" emit-value :disable="!edit">
+                                <q-select bg-color="white" outlined v-model="item.author" use-input :options="authorOptions" option-label="name" option-value="name" @filter="filterFn" label="Auteur" emit-value clearable :disable="!edit">
+
+                                    <template v-slot:option="scope">
+                                        <q-item v-bind="scope.itemProps">
+                                            <q-item-section>
+                                                <q-item-label>{{ scope.opt.name }}</q-item-label>
+                                                <q-item-label caption>{{ scope.opt.type }}</q-item-label>
+                                            </q-item-section>
+                                        </q-item>
+                                    </template>
+
                                     <template v-slot:after>
                                         <q-btn round unelevated color="blue-grey-8" icon="sym_o_person_add" @click="addEntity()" :disable="!edit">
                                             <q-tooltip class="bg-black">Ajouter une nouvelle option</q-tooltip>
                                         </q-btn>
                                     </template>
+
                                 </q-select>
                             </div>
                         </div>
@@ -268,19 +279,27 @@
 
         <!-- ADD NEW ENTITY DIALOG -->
         <q-dialog v-model="addEntityDialog">
-            <q-card>
-                <q-card-section>
+
+            <NewEntity @addNewEntity="addNewEntity"></NewEntity>
+
+            <!-- 
+            <q-card style="width: 700px; max-width: 80vw;">
+                <q-card-section class="bg-blue-grey text-white">
                     <div class="text-h6">Nouvelle personne ou groupe</div>
                 </q-card-section>
-                <q-card-section class="row items-center">
+
+                <q-card-section class="row items-center scroll" style="max-height: 80vh">
                     <NewEntity></NewEntity>
                 </q-card-section>
 
                 <q-card-actions align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
-                    <q-btn flat label="Sauvegarder" color="primary" v-close-popup />
+                    <q-btn flat label="Sauvegarder" color="primary" @click="save()" v-close-popup />
                 </q-card-actions>
             </q-card>
+
+            -->
+
         </q-dialog>
 
         <!-- Dialog for creating first model in documents -->
@@ -345,6 +364,7 @@
 import items from '../assets/data/items.json'
 import documents from '../assets/data/documents.json'
 import entities from '../assets/data/entities.json'
+import itemTypes from '../assets/data/item-types.json'
 import templates from '../assets/data/templates.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
@@ -392,18 +412,16 @@ export default {
         return {
             edit: false,
             item: items.find(e => e.id === this.$route.params.id),
-            objectTypes: [
-                'Amendement', 'Interpellation', 'Motion', 'Postulat', 'Projet de lois et décrets', 'Question', 'Rapport', 'Recommandation', 'Resolution'
-            ],
-            formalDocumentRowsUnfiltered: documents.filter(e => e.ressourcetype === 'formal'),
+            itemTypes: itemTypes,
+            formalDocumentRowsUnfiltered: documents.filter((e) => (e.ressourcetype === 'formal')),
             formalDocumentRows: [],
             formalDocumentColumns: formalDocumentColumns,
-            attachementRows: documents.filter(e => e.ressourcetype === 'attachement'),
+            attachementRows: documents.filter((e) => (e.ressourcetype === 'attachement')),
             attachementColumns: attachementColumns,
             eventsColumns: eventsColumns,
             authorOptions: entities, //entities.filter(e => e.type.includes("Parlementaire","Groupe politique","Commission parlementaire instituée")),
             addEntityDialog: false,
-            serviceOptions: entities.filter(e => e.type === "Service de l'état"),
+            serviceOptions: entities.filter((e) => (e.type === "Service de l'état")),
             formalDocumentModels: templates,
             selectedFormalDocumentModel: -1,
             showAddDocumentDialog: false,
@@ -428,55 +446,47 @@ export default {
             console.log('Add new entity')
             this.addEntityDialog = true
         },
-        createValue(val, done) {
+        addNewEntity(val) {
 
-            console.log('createValue')
-            console.log(`includes val:${!this.authorOptions.map((x) => (x.name)).includes(val)}`)
+            console.log('Item.vue | addNewEntity()')
+            console.log(val)
 
-            // Calling done(var) when new-value-mode is not set or "add", or done(var, "add") adds "var" content to the model
-            // and it resets the input textbox to empty string
-            // ----
-            // Calling done(var) when new-value-mode is "add-unique", or done(var, "add-unique") adds "var" content to the model
-            // only if is not already set
-            // and it resets the input textbox to empty string
-            // ----
-            // Calling done(var) when new-value-mode is "toggle", or done(var, "toggle") toggles the model with "var" content
-            // (adds to model if not already in the model, removes from model if already has it)
-            // and it resets the input textbox to empty string
-            // ----
-            // If "var" content is undefined/null, then it doesn't tampers with the model
-            // and only resets the input textbox to empty string
-
-            if (val.length > 0) {
-
-                let newOption = {
-                    "id": "68c42858-b47d-4eb5-85fd-3aa1318b63e4",
-                    "name": val,
-                    "type": "",
-                    "description": "",
-                    "street": "",
-                    "city": "",
-                    "postalCode": "",
-                    "region": "",
-                    "country": "",
-                    "website": "",
-                    "email": "",
-                    "telephone": ""
-                }
-
-                if (!this.authorOptions.map((x) => (x.name)).includes(val)) {
-                    this.authorOptions.push(newOption)
-                }
-
-                done(newOption, 'add-unique')
-
-                // POST NEW VALUE TO DATABASE
-
+            let newOption = {
+                "id": "x",
+                "name": val.name,
+                "type": val.type,
+                "description": val.description,
+                "street": val.street,
+                "city": val.city,
+                "postalCode": val.postalCode,
+                "region": val.region,
+                "country": val.country,
+                "website": val.website,
+                "email": val.email,
+                "telephone": val.telephone,
             }
 
-            console.log(this.authorOptions)
+            if (!this.authorOptions.map((x) => (x.name)).includes(newOption.name)) {
+                entities.push(newOption)
+                // this.authorOptions.push(val)
+                this.item.author = newOption
+                // POST NEW ENTITY TO DATABASE
+
+                console.log('entities')
+                console.log(entities)
+                console.log('authorOptions')
+                console.log(this.authorOptions)
+            }
 
         },
+
+        filterFn(val, update, abort) {
+            update(() => {
+                const needle = val.toLowerCase()
+                this.authorOptions = entities.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
+            })
+        },
+
         async downloadRessource(ressource) {
             let filepath = [
                 import.meta.env.VITE_OP_PATH,
