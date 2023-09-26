@@ -20,6 +20,7 @@
     "ics": "^3.5.0",
     "libphonenumber-js": "^1.10.44",
     "quasar": "^2.12.5",
+    "uuid": "^9.0.1",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },
