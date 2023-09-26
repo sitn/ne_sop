@@ -107,9 +107,9 @@
 <script>
 import parsePhoneNumber from 'libphonenumber-js'
 import entities from '../assets/data/entities.json'
+import entityTypes from '../assets/data/entity-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
-
 
 export default {
     name: 'Entity',
@@ -126,9 +126,7 @@ export default {
         return {
             edit: false,
             entity: entities.find(e => e.id === this.$route.params.id),
-            entityTypes: [
-                "Service de l'état", 'Parlementaire', 'Groupe politique', 'Commission parlementaire instituée', 'Commission parlementaire ad-hoc', 'Autorité (ex: CE, GC, Bureau-GC)', 'Autre'
-            ],
+            entityTypes: entityTypes,
         }
     },
     computed: {
