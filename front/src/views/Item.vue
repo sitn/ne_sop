@@ -361,6 +361,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
 import items from '../assets/data/items.json'
 import documents from '../assets/data/documents.json'
 import entities from '../assets/data/entities.json'
@@ -452,7 +453,7 @@ export default {
             console.log(val)
 
             let newOption = {
-                "id": "x",
+                "id": uuidv4(),
                 "name": val.name,
                 "type": val.type,
                 "description": val.description,
@@ -465,6 +466,9 @@ export default {
                 "email": val.email,
                 "telephone": val.telephone,
             }
+
+            console.log('newOption')
+            console.log(newOption)
 
             if (!this.authorOptions.map((x) => (x.name)).includes(newOption.name)) {
                 entities.push(newOption)
