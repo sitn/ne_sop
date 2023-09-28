@@ -58,8 +58,8 @@
     </div>
 </template>
 
-
 <script>
+import { store } from '../store/store.js'
 import items from '../assets/data/items.json'
 import entities from '../assets/data/entities.json'
 
@@ -75,6 +75,7 @@ export default {
     },
     data() {
         return {
+            store,
             rows: entities,
             loading: false,
             filter: "",
@@ -110,6 +111,9 @@ export default {
         }
     },
     computed: {
+    },
+    created() {
+        store.saveButton = false
     },
     mounted() {
 
