@@ -4,7 +4,7 @@
         <div class="col-xs-12 col-sm-12 col-md-8">
 
             <!-- EDIT MODE TOGGLE -->
-            <div class="row justify-end q-px-md q-mb-none">
+            <div class="row justify-end q-px-md" v-if="toggle">
                 <q-toggle v-model="editMode" @update:model-value="toggleEdit()" label="Modification">
                     <q-tooltip class="bg-black">Activer/Désactiver le mode modification</q-tooltip>
                 </q-toggle>
@@ -25,7 +25,7 @@
 export default {
     name: 'Form',
     components: {},
-    props: { 'title': String, 'edit': Boolean },
+    props: { 'title': String, 'edit': Boolean, 'toggle': Boolean },
     emits: ['editEvent'],
     setup() {
         return {
