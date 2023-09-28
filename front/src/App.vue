@@ -153,12 +153,6 @@
 
                 <router-view></router-view>
 
-                <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="this.store.saveButton">
-                    <q-btn :loading="false" fab icon="sym_o_save" color="amber-14">
-                        <q-tooltip class="bg-black">Enregistrer</q-tooltip>
-                    </q-btn>
-                </q-page-sticky>
-
             </q-page>
         </q-page-container>
     </q-layout>
