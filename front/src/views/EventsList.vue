@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import { store } from '../store/store.js'
 // import items from '../assets/data/items.json'
 import events from '../assets/data/events.json'
 // import * as ics from 'ics'
@@ -96,6 +97,7 @@ export default {
     },
     data() {
         return {
+            store,
             rows: events,
             loading: false,
             filter: "",
@@ -139,6 +141,9 @@ export default {
     },
     computed: {
 
+    },
+    created() {
+        store.saveButton = false
     },
     mounted() {
 
