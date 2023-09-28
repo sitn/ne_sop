@@ -28,7 +28,9 @@
 
                 <!-- ADD NEW ITEM BUTTON -->
                 <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
-                    <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" @click="addItem()" to="/items/new" />
+                    <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" to="/items/new">
+                        <q-tooltip class="bg-black">Ajouter un nouvel objet parlementaire</q-tooltip>
+                    </q-btn>
                 </div>
 
             </div>
@@ -62,11 +64,11 @@
                         </q-td>
                         <!-- DEPOSIT DATE COLUMN -->
                         <q-td key="deposit" :props="props">
-                            {{ props.row.events.find((e) => e.eventType === "Dépôt").date }}
+                            <!-- {{ props.row.events.find((e) => e.eventType === "Dépôt").date }} -->
                         </q-td>
                         <!-- DELAY DATE COLUMN -->
                         <q-td key="delay" :props="props">
-                            {{ props.row.events.find((e) => e.eventType === "Délai").date }}
+                            <!-- {{ props.row.events.find((e) => e.eventType === "Délai").date }} -->
                         </q-td>
                         <!-- ACTIONS COLUMN -->
                         <q-td key="actions" :props="props">
@@ -110,7 +112,7 @@
 
                     <q-card-actions align="right">
                         <q-btn flat label="Annuler" color="primary" v-close-popup />
-                        <q-btn flat label="Supprimer" color="primary" v-close-popup />
+                        <q-btn flat label="Supprimer" color="primary" @click="mydelete()" v-close-popup />
                     </q-card-actions>
                 </q-card>
             </q-dialog>
@@ -121,7 +123,8 @@
 </template>
 
 <script>
-import items from '../assets/data/items.json'
+import { store } from '../store/store.js'
+// import items from '../assets/data/items.json'
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -137,10 +140,12 @@ export default {
     },
     data() {
         return {
+            store,
             searchString: null,
             deleteDialog: false,
+            deleteID: null,
             addDialog: false,
-            rows: items,
+            rows: store.items,
             loading: false,
             /* filter: "filter", */
             pagination: {
@@ -197,10 +202,17 @@ export default {
     },
     computed: {
     },
+    created() {
+    },
     mounted() {
 
     },
     methods: {
+        test() {
+
+            console.log('TEST')
+
+        },
         async query() {
 
             // TODO: REPLACE WITH GET CALL TO DATABASE 
@@ -211,12 +223,12 @@ export default {
             let str = this.searchString.toLowerCase()
             if (this.searchString.length >= 3) {
 
-                this.rows = items.filter((x) => (x.title.toLowerCase().includes(str) || x.number.toLowerCase().includes(str)))
+                this.rows = this.store.items.filter((x) => (x.title.toLowerCase().includes(str) || x.number.toLowerCase().includes(str)))
                 console.log(this.rows)
 
             } else {
 
-                this.rows = items
+                this.rows = this.store.items
 
             }
             this.loading = false
@@ -225,8 +237,18 @@ export default {
         confirmDelete(val) {
 
             this.deleteDialog = true
-            console.log('delete')
+            this.deleteID = val.id
+            console.log('confirmDelete')
             console.log(val)
+
+        },
+        mydelete() {
+            console.log('ItemsList.vue | mydelete()')
+            console.log(this.deleteID)
+            console.log(this.deleteID)
+
+            store.items = store.items.filter((x) => (x.id !== this.deleteID))
+            this.rows = store.items
 
         },
         addItem() {
