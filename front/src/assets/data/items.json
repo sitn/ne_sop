@@ -115,6 +115,10 @@
         "type": "Question",
         "title": "Plan directeur des transports : la révision est-elle à l’horaire ?",
         "status": "En traitement",
+        "content": "",
+        "urgent": true,
+        "writtenResponse": false,
+        "fight": false,
         "author": "Groupe PLR",
         "events": [
             {
@@ -143,6 +147,10 @@
         "type": "Question",
         "title": "L’humusation, ou mourir pour donner la vie",
         "status": "En traitement",
+        "content": "",
+        "urgent": false,
+        "writtenResponse": false,
+        "fight": false,
         "author": "Groupe PLR",
         "events": [
             {
@@ -171,6 +179,10 @@
         "type": "Question",
         "title": "Changement d’affectation de parcelles agricoles : transparence ?",
         "status": "Terminé",
+        "content": "",
+        "urgent": false,
+        "writtenResponse": false,
+        "fight": false,
         "author": "Groupe PLR",
         "events": [
             {
@@ -199,6 +211,10 @@
         "type": "Interpellation",
         "title": "Pâturage et élevage, valorisons notre terroir",
         "status": "En traitement",
+        "content": "",
+        "urgent": true,
+        "writtenResponse": false,
+        "fight": false,
         "author": "Groupe PLR",
         "events": [
             {
@@ -227,6 +243,10 @@
         "type": "Postulat",
         "title": "État des lieux de nos milieux fontinaux",
         "status": "Pas traité",
+        "content": "",
+        "urgent": true,
+        "writtenResponse": false,
+        "fight": false,
         "author": "Groupe PLR",
         "events": [
             {
