@@ -1,0 +1,34 @@
+[
+    {
+        "id": "a30e97ab-d727-4f25-806a-18d89255fa8b",
+        "name": "Nicolas Ruedin",
+        "email": "Nicolas.Ruedin@ne.ch",
+        "admin": true,
+        "active": true,
+        "groups": []
+    },
+    {
+        "id": "2ba0cc96-2795-409b-a0f0-a12c44c2985e",
+        "name": "Lionel Panchaud",
+        "email": "Lionel.Panchaud@ne.ch",
+        "admin": false,
+        "active": true,
+        "groups": []
+    },
+    {
+        "id": "63e11764-3c8d-46d4-9eb5-da5a1b6da3e9",
+        "name": "Jérôme Wessner",
+        "email": "Jerome.Wessner@ne.ch",
+        "admin": false,
+        "active": false,
+        "groups": []
+    },
+    {
+        "id": "3fc1ae0a-b011-4327-96ca-8294d7951b1e",
+        "name": "Utilisateur Test",
+        "email": "",
+        "admin": false,
+        "active": false,
+        "groups": []
+    }
+]
