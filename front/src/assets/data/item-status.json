@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "name": "Terminé",
+        "color": "green"
+    },
+    {
+        "id": 2,
+        "name": "En traitement",
+        "color": "orange"
+    },
+    {
+        "id": 3,
+        "name": "Pas traité",
+        "color": "red"
+    }
+]
