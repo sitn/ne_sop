@@ -41,6 +41,17 @@
                 <!-- TABLE BODY -->
                 <template v-slot:body="props">
                     <q-tr :props="props">
+
+                        <!-- STATUS COLUMN -->
+                        <q-td key="status" :props="props">
+                            <div>
+                                <q-badge color="red" class="q-my-sm" v-if="props.row.urgent">Urgent</q-badge>
+                            </div>
+                            <div>
+                                <q-badge :color="color(props.row.status)" rounded class="q-mr-sm" /> {{ props.row.status }}
+                            </div>
+                        </q-td>
+
                         <!-- NUMBER COLUMN -->
                         <q-td key="number" :props="props">
                             {{ props.row.number }}
@@ -60,6 +71,7 @@
                             }">
                                 {{ props.row.title }}
                             </router-link>
+                            <!-- <q-badge color="red" class="q-mx-sm" v-if="props.row.urgent">Urgent</q-badge> -->
 
                         </q-td>
                         <!-- DEPOSIT DATE COLUMN -->
@@ -156,6 +168,13 @@ export default {
             },
             columns: [
                 {
+                    name: "status",
+                    align: "left",
+                    label: "Statut",
+                    field: "status",
+                    sortable: true,
+                },
+                {
                     name: "number",
                     align: "left",
                     label: "N°",
@@ -208,6 +227,26 @@ export default {
 
     },
     methods: {
+        color(val) {
+
+            /*
+            if (val === 'Terminé') {
+                return 'orange'
+            }
+            */
+
+            switch (val) {
+                case 'Pas Traité':
+                    return 'red'
+                case 'En traitement':
+                    return 'orange'
+                case 'Terminé':
+                    return 'green'
+                default:
+                    return 'grey'
+            }
+
+        },
         test() {
 
             console.log('TEST')
