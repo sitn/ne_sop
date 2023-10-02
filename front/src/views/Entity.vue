@@ -44,7 +44,7 @@
                         </template>
                     </FormSection>
 
-                    <!-- Address -->
+                    <!-- ADDRESS SECTION -->
                     <FormSection title="Addresse">
                         <template v-slot:content>
                             <div class="text-h6">Addresse</div>
@@ -76,6 +76,7 @@
                         </template>
                     </FormSection>
 
+                    <!-- CONTACT SECTION -->
                     <FormSection title="Contact">
                         <template v-slot:content>
                             <div class="text-h6">Contact</div>
@@ -102,6 +103,7 @@
 
             </Form>
 
+            <!-- FLOATING SAVE BUTTON -->
             <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="edit">
                 <q-btn :loading="false" fab icon="sym_o_save" color="amber-14" @click="save()">
                     <q-tooltip class="bg-black">Enregistrer</q-tooltip>
@@ -116,7 +118,6 @@
 <script>
 import { store } from '../store/store.js'
 import parsePhoneNumber from 'libphonenumber-js'
-// import entities from '../assets/data/entities.json'
 import entityTypes from '../assets/data/entity-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
@@ -163,7 +164,12 @@ export default {
 
     },
     methods: {
-        save() {
+        async load() {
+            // TODO: GET ENTITY FROM DATABASE
+            console.log('Entity.vue | load()')
+        },
+        async save() {
+            // TODO: POST ENTITY TO DATABASE
             console.log('Entity.vue | save()')
         },
         toggleEdit(val) {
