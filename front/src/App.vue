@@ -203,5 +203,5 @@ export default {
   
 <style>
 @import './assets/styles/main.css';
-@import './assets/styles/quasar.prod.css';
+@import './assets/styles/quasar.css';
 </style>
