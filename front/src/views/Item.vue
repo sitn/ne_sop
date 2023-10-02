@@ -350,7 +350,7 @@
                 </q-card>
             </q-dialog>
 
-            <q-page-sticky position="bottom-right" :offset="[18, 18]">
+            <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="edit">
                 <q-btn :loading="false" fab icon="sym_o_save" color="amber-14" @click="save()">
                     <q-tooltip class="bg-black">Enregistrer</q-tooltip>
                 </q-btn>
