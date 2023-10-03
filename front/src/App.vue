@@ -165,8 +165,7 @@ import { store } from './store/store.js'
 
 export default {
     name: 'App',
-    components: {
-    },
+    components: {},
     setup() {
         return {
             drawer: ref(false),
