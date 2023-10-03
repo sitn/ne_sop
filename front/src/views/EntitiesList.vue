@@ -29,7 +29,7 @@
 
                 <!-- ADD NEW ITEM BUTTON -->
                 <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
-                    <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" @click="addEntity()" to="/entities/new">
+                    <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" @click="" to="/entities/new">
                         <q-tooltip class="bg-black">Ajouter une nouvelle entité</q-tooltip>
                     </q-btn>
                 </div>
