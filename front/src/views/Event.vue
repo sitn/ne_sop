@@ -67,7 +67,6 @@
 
                             </div>
 
-
                             <div class="row q-col-gutter-lg">
 
                                 <!-- TYPE SELECT FIELD -->
@@ -117,8 +116,8 @@
 </template>
 
 <script>
-import events from '../assets/data/events.json'
-import items from '../assets/data/items.json'
+import { store } from '../store/store.js'
+import { sleep } from '../store/shared.js'
 import eventTypes from '../assets/data/event-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
@@ -136,8 +135,8 @@ export default {
     data() {
         return {
             edit: false,
-            event: events.find(e => e.id === this.$route.params.id),
-            items: items,
+            event: store.events.find(e => e.id === this.$route.params.id),
+            items: store.items,
             eventDate: null,
             eventTime: null,
             eventTypes: eventTypes,
