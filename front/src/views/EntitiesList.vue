@@ -65,10 +65,10 @@
                         <q-td key="actions" :props="props">
                             <div class="float-right">
                                 <q-btn dense round flat color="grey" name="email" @click="console.log(props.row.email)" icon="sym_o_mail" :href="`mailto:${props.row.email}`" v-if="props.row.email !== ''">
-                                    <q-tooltip class="bg-black" v-if="props.row.email !== ''">Envoyer un email: {{ props.row.email }}</q-tooltip>
+                                    <q-tooltip class="bg-black" v-if="props.row.email">Envoyer un email: {{ props.row.email }}</q-tooltip>
                                 </q-btn>
                                 <q-btn dense round flat color="grey" name="phone" @click="console.log(props.row.telephone)" icon="sym_o_call" :href="`tel:${props.row.telephone}`" v-if="props.row.telephone !== ''">
-                                    <q-tooltip class="bg-black" v-if="props.row.telephone !== ''">Appeler: {{ props.row.telephone }}</q-tooltip>
+                                    <q-tooltip class="bg-black" v-if="props.row.telephone">Appeler: {{ props.row.telephone }}</q-tooltip>
                                 </q-btn>
                                 <q-btn dense round flat color="red" name="delete" @click="console.log(props.row.id)" icon="sym_o_delete">
                                     <q-tooltip class="bg-black">Supprimer</q-tooltip>
