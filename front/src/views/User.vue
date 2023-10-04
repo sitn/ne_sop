@@ -33,6 +33,33 @@
                                 </div>
                             </div>
 
+                            <div class="row q-py-md">
+
+                                <!-- ADMIN CHECKBOX FIELD -->
+                                <q-item tag="label" v-ripple :disable="!edit">
+                                    <q-item-section avatar>
+                                        <q-checkbox v-model="user.admin" val="true" color="blue" :disable="!edit" />
+                                    </q-item-section>
+                                    <q-item-section>
+                                        <q-item-label>Administrateur</q-item-label>
+                                        <q-item-label caption>Accès administrateur</q-item-label>
+                                    </q-item-section>
+                                </q-item>
+
+
+                                <!-- ACTIVE CHECKBOX FIELD -->
+                                <q-item tag="label" v-ripple :disable="!edit">
+                                    <q-item-section avatar>
+                                        <q-checkbox v-model="user.active" val="true" color="blue" :disable="!edit" />
+                                    </q-item-section>
+                                    <q-item-section>
+                                        <q-item-label>Actif</q-item-label>
+                                        <q-item-label caption>Compte utilisateur actif</q-item-label>
+                                    </q-item-section>
+                                </q-item>
+
+                            </div>
+
                             <div class="row q-col-gutter-lg q-py-md">
 
                                 <!-- GROUPS SELECT FIELD -->
@@ -72,7 +99,6 @@
                             <div class="text-h6">Groupes</div>
 
 
-
                         </template>
                     </FormSection>
 
@@ -81,7 +107,7 @@
             </Form>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons @save-event="save" @edit-event="setEditMode"></FloatingButtons>
+            <FloatingButtons :edit="false" :wait="wait" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
 
         </q-layout>
     </div>
@@ -89,6 +115,7 @@
 
 <script>
 import { store } from '../store/store.js'
+import { sleep } from '../store/shared.js'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 import FloatingButtons from "../components/FloatingButtons.vue"
@@ -106,6 +133,7 @@ export default {
         return {
             store,
             edit: false,
+            wait: false,
             user: null,
             groupOptions: store.entities.filter((x) => (x.type === "Service de l'état"))
         }
@@ -116,20 +144,20 @@ export default {
         this.user = Object.assign({}, store.users.find(e => e.id === this.$route.params.id))
     },
     mounted() {
-
     },
     methods: {
         async load() {
-            // TODO: GET USER FROM DATABASE
-            console.log('User.vue | load()')
+            // TODO: GET RECORD FROM DATABASE
+            console.log(`${this.$options.name}.vue | load()`)
         },
         async save() {
-
-            // TODO: POST USER TO DATABASE
+            // TODO: POST RECORD TO DATABASE
             console.log(`${this.$options.name}.vue | save()`)
+            this.wait = true
+            await sleep(Math.random() * 1300)
             let ind = store.users.findIndex((e) => (e.id === this.$route.params.id))
             store.users[ind] = Object.assign({}, this.user)
-
+            this.wait = false
         },
         setEditMode(val) {
             console.log(`${this.$options.name}.vue | setEditMode(${val})`)
