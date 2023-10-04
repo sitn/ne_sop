@@ -11,7 +11,7 @@
                 </q-breadcrumbs>
             </div>
 
-            <Form title="Événement" :edit="false" :toggle="true" @editEvent="toggleEdit">
+            <Form title="Événement" :edit="false" :toggle="true" @edit-event="setEditMode">
 
                 <template v-slot:body>
 
@@ -109,12 +109,8 @@
 
             </Form>
 
-            <!-- FLOATING SAVE BUTTON -->
-            <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="edit">
-                <q-btn :loading="false" fab icon="sym_o_save" color="amber-14" @click="save()">
-                    <q-tooltip class="bg-black">Enregistrer</q-tooltip>
-                </q-btn>
-            </q-page-sticky>
+            <!-- FLOATING ACTION BUTTONS -->
+            <FloatingButtons @save-event="save" @edit-event="setEditMode"></FloatingButtons>
 
         </q-layout>
     </div>
@@ -123,19 +119,18 @@
 <script>
 import events from '../assets/data/events.json'
 import items from '../assets/data/items.json'
+import eventTypes from '../assets/data/event-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
-
+import FloatingButtons from "../components/FloatingButtons.vue"
 
 export default {
     name: 'Event',
-    components: { Form, FormSection },
-    props: { 'model': Object },
+    components: { Form, FormSection, FloatingButtons },
+    props: {},
     emits: [],
     setup() {
         return {
-
-            // model: ref(null),
         }
     },
     data() {
@@ -145,26 +140,27 @@ export default {
             items: items,
             eventDate: null,
             eventTime: null,
-            eventTypes: [
-                'Dépôt', 'Demande département', 'Délai', 'Clôture'
-            ],
+            eventTypes: eventTypes,
             linkedItem: null,
         }
     },
     computed: {
     },
     mounted() {
-
     },
     methods: {
         async save() {
-            console.log('Event.vue | save()')
+            // TODO: POST RECORD TO DATABASE
+            console.log(`${this.$options.name}.vue | save()`)
+            // let j = store.entities.findIndex((e) => (e.id === this.$route.params.id))
+            // let k = store.entities.findIndex((e) => (e.id === this.$route.params.id))
+            // store.entities[j].events[k] = Object.assign({}, this.event)
         },
-        toggleEdit(val) {
+        setEditMode(val) {
+            console.log(`${this.$options.name}.vue | setEditMode(${val})`)
             this.edit = val
         },
         setLinkedItem() {
-
 
         }
     }
