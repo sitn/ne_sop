@@ -10,7 +10,7 @@
                 </q-breadcrumbs>
             </div>
 
-            <Form title="Informations générales" :edit="false" :toggle="true" @editEvent="toggleEdit">
+            <Form title="Informations générales" :edit="false" :toggle="true" @edit-event="setEditMode">
 
                 <template v-slot:body>
 
@@ -38,9 +38,18 @@
                                 </div>
                             </div>
 
+                            <!-- TODO REMOVE/DEV DISPLAY JSON-->
                             <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
-                                {{ entity }}
+                                <div>entity</div>
+                                <div>{{ entity }}</div>
                             </div>
+
+                            <!-- TODO REMOVE/DEV DISPLAY JSON-->
+                            <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
+                                <div>store.entity</div>
+                                <div>{{ store.entities.find((e) => (e.id === this.$route.params.id)) }}</div>
+                            </div>
+
                         </template>
                     </FormSection>
 
@@ -103,12 +112,16 @@
 
             </Form>
 
-            <!-- FLOATING SAVE BUTTON -->
+            <!-- FLOATING ACTION BUTTONS -->
+            <FloatingButtons @save-event="save" @edit-event="setEditMode"></FloatingButtons>
+
+            <!-- 
             <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="edit">
                 <q-btn :loading="false" fab icon="sym_o_save" color="amber-14" @click="save()">
                     <q-tooltip class="bg-black">Enregistrer</q-tooltip>
                 </q-btn>
             </q-page-sticky>
+            -->
 
         </q-layout>
 
@@ -121,31 +134,31 @@ import parsePhoneNumber from 'libphonenumber-js'
 import entityTypes from '../assets/data/entity-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
+import FloatingButtons from "../components/FloatingButtons.vue"
 
 export default {
     store,
     name: 'Entity',
-    components: { Form, FormSection },
-    props: { 'model': Object },
+    components: { Form, FormSection, FloatingButtons },
+    props: {},
     emits: [],
     setup() {
         return {
-
-            // model: ref(null),
         }
     },
     data() {
         return {
             store,
             edit: false,
-            entity: store.entities.find(e => e.id === this.$route.params.id),
+            entity: null, // store.entities.find(e => e.id === this.$route.params.id),
             entityTypes: entityTypes,
         }
     },
     computed: {
     },
     created() {
-
+        store.saveButton = true
+        this.entity = Object.assign({}, store.entities.find((e) => (e.id === this.$route.params.id)))
     },
     mounted() {
 
@@ -165,14 +178,17 @@ export default {
     },
     methods: {
         async load() {
-            // TODO: GET ENTITY FROM DATABASE
+            // TODO: GET RECORD FROM DATABASE
             console.log('Entity.vue | load()')
         },
         async save() {
-            // TODO: POST ENTITY TO DATABASE
-            console.log('Entity.vue | save()')
+            // TODO: POST RECORD TO DATABASE
+            console.log(`${this.$options.name}.vue | save()`)
+            let ind = store.entities.findIndex((e) => (e.id === this.$route.params.id))
+            store.entities[ind] = Object.assign({}, this.entity)
         },
-        toggleEdit(val) {
+        setEditMode(val) {
+            console.log(`${this.$options.name}.vue | setEditMode(${val})`)
             this.edit = val
         },
         checkPhoneNumber(val) {
