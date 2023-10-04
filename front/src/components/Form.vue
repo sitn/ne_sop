@@ -1,16 +1,18 @@
 <template>
-    <div class="row justify-center q-mb-lg">
+    <div class="row justify-center q-my-lg">
 
         <div class="col-xs-12 col-sm-12 col-md-8">
 
             <!-- EDIT MODE TOGGLE -->
-            <div class="row justify-end q-px-md" v-if="toggle">
-                <q-toggle v-model="editMode" @update:model-value="toggleEdit()" label="Modification">
+            <!-- 
+            <div class="row justify-end q-pa-xs">
+                <q-toggle v-model="editMode" @update:model-value="toggleEdit()" label="Modification" v-if="toggle === true">
                     <q-tooltip class="bg-black">Activer/Désactiver le mode modification</q-tooltip>
                 </q-toggle>
             </div>
+            -->
 
-            <div class="row justify-centerbg-grey ">
+            <div class="row justify-centerbg-grey">
                 <div class="col">
                     <slot name="body"></slot>
                 </div>
