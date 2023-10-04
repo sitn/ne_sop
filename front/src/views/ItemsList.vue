@@ -98,6 +98,7 @@
             </q-table>
 
             <!-- ADD ITEM DIALOG -->
+            <!-- 
             <q-dialog v-model="addDialog">
                 <q-card>
                     <q-card-section>
@@ -113,6 +114,7 @@
                     </q-card-actions>
                 </q-card>
             </q-dialog>
+            -->
 
             <!-- DELETE ITEM DIALOG -->
             <q-dialog v-model="deleteDialog">
@@ -156,7 +158,7 @@ export default {
             searchString: null,
             deleteDialog: false,
             deleteID: null,
-            addDialog: false,
+            // addDialog: false,
             rows: store.items,
             loading: false,
             /* filter: "filter", */
@@ -236,7 +238,7 @@ export default {
             */
 
             switch (val) {
-                case 'Pas Traité':
+                case 'Pas traité':
                     return 'red'
                 case 'En traitement':
                     return 'orange'
@@ -291,7 +293,7 @@ export default {
 
         },
         addItem() {
-            this.addDialog = true
+            // this.addDialog = true
         }
     }
 
