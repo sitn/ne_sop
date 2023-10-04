@@ -2,7 +2,7 @@
     <div class="">
         <q-layout>
 
-            <!-- Breadcrumbs navigation -->
+            <!-- BREADCRUMBS NAVIGATION -->
             <div class="q-pa-sm q-gutter-sm">
                 <q-breadcrumbs style="font-size: 16px">
                     <q-breadcrumbs-el label="Personnes et groupes" to="/entities" />
@@ -24,11 +24,13 @@
                                     <q-input bg-color="white" outlined v-model="entity.name" label="Nom" :disable="!edit" />
                                 </div>
                                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+
                                     <!-- TYPE SELECT FIELD -->
                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                         <q-select bg-color="white" outlined v-model="entity.type" :options="entityTypes" label="Type" :disable="!edit">
                                         </q-select>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -113,15 +115,7 @@
             </Form>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons @save-event="save" @edit-event="setEditMode"></FloatingButtons>
-
-            <!-- 
-            <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="edit">
-                <q-btn :loading="false" fab icon="sym_o_save" color="amber-14" @click="save()">
-                    <q-tooltip class="bg-black">Enregistrer</q-tooltip>
-                </q-btn>
-            </q-page-sticky>
-            -->
+            <FloatingButtons :edit="false" :wait="wait" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
 
         </q-layout>
 
@@ -130,6 +124,7 @@
 
 <script>
 import { store } from '../store/store.js'
+import { sleep } from '../store/shared.js'
 import parsePhoneNumber from 'libphonenumber-js'
 import entityTypes from '../assets/data/entity-types.json'
 import Form from "../components/Form.vue"
@@ -150,6 +145,7 @@ export default {
         return {
             store,
             edit: false,
+            wait: false,
             entity: null, // store.entities.find(e => e.id === this.$route.params.id),
             entityTypes: entityTypes,
         }
@@ -184,8 +180,11 @@ export default {
         async save() {
             // TODO: POST RECORD TO DATABASE
             console.log(`${this.$options.name}.vue | save()`)
+            this.wait = true
+            await sleep(Math.random() * 1300)
             let ind = store.entities.findIndex((e) => (e.id === this.$route.params.id))
             store.entities[ind] = Object.assign({}, this.entity)
+            this.wait = false
         },
         setEditMode(val) {
             console.log(`${this.$options.name}.vue | setEditMode(${val})`)
