@@ -36,11 +36,14 @@
 
                                     </q-td>
 
+                                    <!-- ADMIN COLUMN -->
+                                    <q-td key="active" :props="props">
+                                        {{ props.row.admin }}
+                                    </q-td>
+
                                     <!-- ACTIVE COLUMN -->
                                     <q-td key="active" :props="props">
-
                                         {{ props.row.active }}
-
                                     </q-td>
 
                                     <!-- ACTIONS COLUMN -->
@@ -76,12 +79,10 @@ import FormSection from "../components/FormSection.vue"
 export default {
     name: 'Admin',
     components: { Form, FormSection },
-    props: { 'model': Object },
+    props: {},
     emits: [],
     setup() {
         return {
-
-            // model: ref(null),
         }
     },
     data() {
@@ -102,6 +103,13 @@ export default {
                     align: "left",
                     label: "Nom",
                     field: "name",
+                    sortable: true,
+                },
+                {
+                    name: "admin",
+                    align: "center",
+                    label: "Admin",
+                    field: "admin",
                     sortable: true,
                 },
                 {
