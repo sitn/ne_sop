@@ -11,5 +11,8 @@ export const store = reactive({
     entities: entities,
     items: items,
     events: items.map((x) => (x.events)).flat(1),
-    users: users
+    users: users,
+    updateEvents() {
+        this.events = this.items.map((x) => (x.events)).flat(1)
+    }
 })
