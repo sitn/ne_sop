@@ -11,7 +11,7 @@
                 </q-breadcrumbs>
             </div>
 
-            <Form title="Objets parlementaires" :edit="true" :toggle="true">
+            <Form title="Objets parlementaires" :edit="true" :toggle="false">
 
                 <template v-slot:body>
 
@@ -45,7 +45,7 @@
                         </template>
                     </FormSection>
 
-                    <!-- Address -->
+                    <!-- ADDRESS SECTION -->
                     <FormSection title="Addresse">
                         <template v-slot:content>
                             <div class="text-h6">Addresse</div>
@@ -77,6 +77,7 @@
                         </template>
                     </FormSection>
 
+                    <!-- CONTACT SECTION -->
                     <FormSection title="Contact">
                         <template v-slot:content>
                             <div class="text-h6">Contact</div>
@@ -104,12 +105,8 @@
 
             </Form>
 
-            <!-- SAVE FLOATING BUTTON -->
-            <q-page-sticky position="bottom-right" :offset="[18, 18]">
-                <q-btn :loading="false" fab icon="sym_o_save" color="amber-14" @click="save()">
-                    <q-tooltip class="bg-black">Enregistrer</q-tooltip>
-                </q-btn>
-            </q-page-sticky>
+            <!-- FLOATING ACTION BUTTONS -->
+            <FloatingButtons :edit="true" :wait="wait" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
 
         </q-layout>
 
@@ -119,67 +116,64 @@
 <script>
 import { v4 as uuidv4 } from 'uuid'
 import { store } from '../store/store.js'
+import { sleep } from '../store/shared.js'
 import parsePhoneNumber from 'libphonenumber-js'
 import entityTypes from '../assets/data/entity-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
-
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+import FloatingButtons from "../components/FloatingButtons.vue"
 
 export default {
     name: 'NewEntity',
-    components: { Form, FormSection },
-    props: { 'model': Object },
-    emits: [''],
+    components: { Form, FormSection, FloatingButtons },
+    props: {},
+    emits: [],
     setup() {
         return {
-
-            // model: ref(null),
         }
     },
     data() {
         return {
             store,
             edit: true,
-            entity: {},
+            wait: false,
+            entity: {
+                "id": uuidv4(),
+                "name": "",
+                "type": "",
+                "description": "",
+                "street": "",
+                "city": "",
+                "postalCode": "",
+                "region": "",
+                "country": "",
+                "website": "",
+                "email": "",
+                "telephone": ""
+            },
             entityTypes: entityTypes,
         }
     },
     computed: {
     },
     mounted() {
-
     },
     methods: {
-        save() {
-
-            console.log('NewEntity.vue | save()')
-
-            let newOption = {
-                "id": uuidv4(),
-                "name": this.entity.name,
-                "type": this.entity.type,
-                "description": this.entity.description,
-                "street": this.entity.street,
-                "city": this.entity.city,
-                "postalCode": this.entity.postalCode,
-                "region": this.entity.region,
-                "country": this.entity.country,
-                "website": this.entity.website,
-                "email": this.entity.email,
-                "telephone": this.entity.telephone,
+        async save() {
+            // TODO - POST NEW RECORD TO DATABASE
+            console.log(`${this.$options.name}.vue | save()`)
+            this.wait = true
+            await sleep(Math.random() * 1300)
+            if (!this.store.entities.map((x) => (x.name)).includes(this.entity.name)) {
+                this.store.entities.push(this.entity)
             }
-
-            if (!this.store.entities.map((x) => (x.name)).includes(newOption.name)) {
-                this.store.entities.push(newOption)
-            }
-
-            // this.store.entities.push(this.entity)
-            // POST NEW VALUE TO DATABASE
-
+            this.wait = false
+        },
+        setEditMode(val) {
+            console.log(`${this.$options.name}.vue | setEditMode(${val})`)
+            this.edit = val
         },
         checkPhoneNumber(val) {
-
             let phoneNumber = parsePhoneNumber(val)
             if (phoneNumber) {
                 val = '+41255555555'
