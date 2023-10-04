@@ -8,6 +8,7 @@
         "content": "",
         "urgent": false,
         "writtenResponse": false,
+        "oralResponse": false,
         "fight": false,
         "author": "Groupe PLR",
         "response": "written",
@@ -15,7 +16,7 @@
         "request": "",
         "documents": [
             {
-                "version": "000",
+                "version": 0,
                 "date": "21.05.2023",
                 "step": "Réception",
                 "type": "Speaking Note",
@@ -87,6 +88,7 @@
         },
         "events": [
             {
+                "id": "",
                 "eventType": "Dépôt",
                 "date": "23.03.2023 10:00:00",
                 "status": "Pas encore traité",
@@ -94,6 +96,7 @@
                 "description": ""
             },
             {
+                "id": "",
                 "eventType": "Délai",
                 "date": "12.06.2023 02:00:00",
                 "status": "En traitement",
@@ -101,6 +104,7 @@
                 "description": ""
             },
             {
+                "id": "",
                 "eventType": "Demande département",
                 "date": "28.03.2023 10:00:00",
                 "status": "En traitement",
@@ -118,10 +122,12 @@
         "content": "",
         "urgent": true,
         "writtenResponse": false,
+        "oralResponse": false,
         "fight": false,
         "author": "Groupe PLR",
         "events": [
             {
+                "id": "",
                 "eventType": "Dépôt",
                 "date": "23.03.2023",
                 "status": "Pas encore traité",
@@ -129,6 +135,7 @@
                 "description": ""
             },
             {
+                "id": "",
                 "eventType": "Délai",
                 "date": "06.05.2023",
                 "status": "En traitement",
@@ -150,10 +157,12 @@
         "content": "",
         "urgent": false,
         "writtenResponse": false,
+        "oralResponse": false,
         "fight": false,
         "author": "Groupe PLR",
         "events": [
             {
+                "id": "",
                 "eventType": "Dépôt",
                 "date": "23.03.2023",
                 "status": "Pas encore traité",
@@ -161,6 +170,7 @@
                 "description": ""
             },
             {
+                "id": "",
                 "eventType": "Délai",
                 "date": "06.05.2023",
                 "status": "En traitement",
@@ -182,10 +192,12 @@
         "content": "",
         "urgent": false,
         "writtenResponse": false,
+        "oralResponse": false,
         "fight": false,
         "author": "Groupe PLR",
         "events": [
             {
+                "id": "",
                 "eventType": "Dépôt",
                 "date": "27.03.2023",
                 "status": "Pas encore traité",
@@ -193,6 +205,7 @@
                 "description": ""
             },
             {
+                "id": "",
                 "eventType": "Délai",
                 "date": "25.08.2023",
                 "status": "En traitement",
@@ -214,10 +227,12 @@
         "content": "",
         "urgent": true,
         "writtenResponse": false,
+        "oralResponse": false,
         "fight": false,
         "author": "Groupe PLR",
         "events": [
             {
+                "id": "",
                 "eventType": "Dépôt",
                 "date": "27.03.2023",
                 "status": "Pas encore traité",
@@ -225,6 +240,7 @@
                 "description": ""
             },
             {
+                "id": "",
                 "eventType": "Délai",
                 "date": "25.08.2023",
                 "status": "En traitement",
@@ -246,10 +262,12 @@
         "content": "",
         "urgent": true,
         "writtenResponse": false,
+        "oralResponse": false,
         "fight": false,
         "author": "Groupe PLR",
         "events": [
             {
+                "id": "",
                 "eventType": "Dépôt",
                 "date": "27.03.2023",
                 "status": "Pas encore traité",
@@ -257,6 +275,7 @@
                 "description": ""
             },
             {
+                "id": "",
                 "eventType": "Délai",
                 "date": "25.08.2023",
                 "status": "En traitement",
