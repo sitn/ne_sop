@@ -11,7 +11,7 @@
                 </q-breadcrumbs>
             </div>
 
-            <Form title="Objets parlementaires" :edit="true" @editEvent="toggleEdit">
+            <Form title="Objets parlementaires" :edit="true" @edit-event="setEditMode">
 
                 <template v-slot:body>
 
@@ -117,6 +117,7 @@
                                         <q-item-label caption>Demande nécessite un traitement prioritaire</q-item-label>
                                     </q-item-section>
                                 </q-item>
+
                                 <!-- WRITTEN RESPONSE CHECKBOX FIELD -->
                                 <q-item tag="label" v-ripple :disable="!edit">
                                     <q-item-section avatar>
@@ -127,6 +128,18 @@
                                         <q-item-label caption>Demande nécessite une réponse écrite</q-item-label>
                                     </q-item-section>
                                 </q-item>
+
+                                <!-- ORAL RESPONSE CHECKBOX FIELD -->
+                                <q-item tag="label" v-ripple :disable="!edit">
+                                    <q-item-section avatar>
+                                        <q-checkbox v-model="item.oralResponse" val="true" color="blue" :disable="!edit" />
+                                    </q-item-section>
+                                    <q-item-section>
+                                        <q-item-label>Réponse orale</q-item-label>
+                                        <q-item-label caption>Demande nécessite une réponse orale</q-item-label>
+                                    </q-item-section>
+                                </q-item>
+
                             </div>
 
                         </template>
@@ -341,11 +354,8 @@
                 </q-card>
             </q-dialog>
 
-            <q-page-sticky position="bottom-right" :offset="[18, 18]">
-                <q-btn :loading="saving" fab icon="sym_o_save" color="amber-14" @click="save()">
-                    <q-tooltip class="bg-black">Enregistrer</q-tooltip>
-                </q-btn>
-            </q-page-sticky>
+            <!-- FLOATING ACTION BUTTONS -->
+            <FloatingButtons :wait="wait" :edit="true" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
 
         </q-layout>
 
@@ -355,16 +365,14 @@
 <script>
 import { v4 as uuidv4 } from 'uuid'
 import { store } from '../store/store.js'
+import { sleep } from '../store/shared.js'
 import documents from '../assets/data/documents.json'
-// import entities from '../assets/data/entities.json'
-
 import itemTypes from '../assets/data/item-types.json'
 import templates from '../assets/data/templates.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
+import FloatingButtons from "../components/FloatingButtons.vue"
 import NewEntityDialog from "./NewEntityDialog.vue"
-
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const formalDocumentColumns = [
     { name: 'version', align: 'center', label: 'version', field: 'version', sortable: true },
@@ -392,10 +400,12 @@ const eventsColumns = [
     { name: "actions", align: "center", label: "", field: "", sortable: false }
 ]
 
+const subset = ["Parlementaire", "Groupe parlementaire", "Autre"]
+const authors = store.entities.filter(e => subset.includes(e.type))
 
 export default {
     name: 'NewItem',
-    components: { Form, FormSection, NewEntityDialog },
+    components: { Form, FormSection, FloatingButtons, NewEntityDialog },
     props: { 'model': Object },
     emits: [],
     setup() {
@@ -410,6 +420,7 @@ export default {
             store,
             saving: false,
             edit: true,
+            wait: false,
             item: {
                 "id": uuidv4(),
                 "number": "",
@@ -419,6 +430,7 @@ export default {
                 "content": "",
                 "urgent": false,
                 "writtenResponse": false,
+                "oralResponse": false,
                 "fight": false,
                 "author": "",
                 "response": "",
@@ -440,7 +452,7 @@ export default {
             attachementRows: documents.filter((e) => (e.ressourcetype === 'attachement')),
             attachementColumns: attachementColumns,
             eventsColumns: eventsColumns,
-            authorOptions: store.entities, //entities.filter(e => e.type.includes("Parlementaire","Groupe politique","Commission parlementaire instituée")),
+            authorOptions: authors, //entities.filter(e => e.type.includes("Parlementaire","Groupe politique","Commission parlementaire instituée")),
             addEntityDialog: false,
             serviceOptions: store.entities.filter((e) => (e.type === "Service de l'état")),
             formalDocumentModels: templates,
@@ -453,10 +465,8 @@ export default {
     computed: {
     },
     beforeCreate() {
-
     },
     created() {
-
     },
     mounted() {
 
@@ -467,16 +477,15 @@ export default {
     },
     methods: {
         async save() {
-            console.log('NewItem.vue | save()')
-
-            this.saving = true
+            // TODO - POST NEW RECORD TO DATABASE
+            console.log(`${this.$options.name}.vue | save()`)
+            this.wait = true
             await sleep(Math.random() * 1300)
-            // POST TO DATABASE
             store.items.push(this.item)
-            this.saving = false
-
+            this.wait = false
         },
-        toggleEdit(val) {
+        setEditMode(val) {
+            console.log(`${this.$options.name}.vue | setEditMode(${val})`)
             this.edit = val
         },
         addEntity() {
@@ -513,10 +522,6 @@ export default {
                 this.item.author = newOption
                 // POST NEW ENTITY TO DATABASE
 
-                // console.log('entities')
-                // console.log(entities)
-                // console.log('authorOptions')
-                // console.log(this.authorOptions)
             }
 
         },
@@ -524,7 +529,7 @@ export default {
         filterFn(val, update, abort) {
             update(() => {
                 const needle = val.toLowerCase()
-                this.authorOptions = this.store.entities.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
+                this.authorOptions = authors.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
             })
         },
 
