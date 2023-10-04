@@ -98,9 +98,18 @@
                                 </div>
                             </div>
 
-                            <div class="bg-light-blue-1 q-my-md q-pa-md">
-                                {{ event }}
+                            <!-- TODO REMOVE/DEV DISPLAY JSON-->
+                            <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
+                                <div>event</div>
+                                <div>{{ event }}</div>
                             </div>
+
+                            <!-- TODO REMOVE/DEV DISPLAY JSON-->
+                            <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
+                                <div>store.event</div>
+                                <div>{{ store.events.find(e => e.id === this.$route.params.id) }}</div>
+                            </div>
+
                         </template>
                     </FormSection>
 
@@ -109,7 +118,7 @@
             </Form>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons @save-event="save" @edit-event="setEditMode"></FloatingButtons>
+            <FloatingButtons :edit="false" :wait="wait" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
 
         </q-layout>
     </div>
@@ -134,8 +143,10 @@ export default {
     },
     data() {
         return {
+            store,
             edit: false,
-            event: store.events.find(e => e.id === this.$route.params.id),
+            wait: false,
+            event: null, // store.events.find(e => e.id === this.$route.params.id),
             items: store.items,
             eventDate: null,
             eventTime: null,
@@ -145,15 +156,27 @@ export default {
     },
     computed: {
     },
+    created() {
+        this.event = Object.assign({}, store.events.find(e => e.id === this.$route.params.id))
+    },
     mounted() {
     },
     methods: {
         async save() {
             // TODO: POST RECORD TO DATABASE
             console.log(`${this.$options.name}.vue | save()`)
-            // let j = store.entities.findIndex((e) => (e.id === this.$route.params.id))
-            // let k = store.entities.findIndex((e) => (e.id === this.$route.params.id))
-            // store.entities[j].events[k] = Object.assign({}, this.event)
+            this.wait = true
+            await sleep(Math.random() * 1300)
+            // store.items.filter((x) => (x.events.findIndex(y => (y.id) === this.event.id))) = this.event
+            // store.items.find((x) => (x.events.findIndex((y) => (y.id === this.event.id))))
+            store.items.forEach((x, j) => {
+                let k = x.events.findIndex(y => (y.id === this.event.id))
+                if (k !== -1) {
+                    store.items[j].events[k] = Object.assign({}, this.event)
+                    store.updateEvents()
+                }
+            })
+            this.wait = false
         },
         setEditMode(val) {
             console.log(`${this.$options.name}.vue | setEditMode(${val})`)
