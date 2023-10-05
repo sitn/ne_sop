@@ -11,8 +11,9 @@ import Item from './views/Item.vue'
 import NewItem from './views/NewItem.vue'
 import Entity from './views/Entity.vue'
 import NewEntity from './views/NewEntity.vue'
-import UsersList from './views/UsersList.vue'
+// import UsersList from './views/UsersList.vue'
 import User from './views/User.vue'
+import NewUser from './views/NewUser.vue'
 import Login from './views/Login.vue'
 import Admin from './views/Admin.vue'
 import Help from './views/Help.vue'
@@ -27,10 +28,11 @@ const routes = [
     { path: '/events', name: 'EventsList', component: EventsList },
     { path: '/events/:id', name: 'Event', component: Event, props: true },
     { path: '/statistics', name: 'Statistics', component: Statistics },
-    { path: '/users', name: 'UsersList', component: UsersList },
-    { path: '/admin/users/:id', name: 'User', component: User, props: true },
+    /* { path: '/users', name: 'UsersList', component: UsersList }, */
     { path: '/login', name: 'Login', component: Login },
     { path: '/admin', name: 'Admin', component: Admin },
+    { path: '/admin/users/:id', name: 'User', component: User, props: true },
+    { path: '/admin/users/new', name: 'NewUser', component: NewUser },
     { path: '/help', name: 'Help', component: Help }
 ]
 
