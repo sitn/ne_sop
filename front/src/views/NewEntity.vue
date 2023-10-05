@@ -106,7 +106,7 @@
             </Form>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="true" :wait="wait" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
+            <FloatingButtons :edit="true" :wait="wait" :buttons="{ 'save': true, 'deletion': false }" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
 
         </q-layout>
 
