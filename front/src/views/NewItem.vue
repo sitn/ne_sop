@@ -355,7 +355,7 @@
             </q-dialog>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :wait="wait" :edit="true" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
+            <FloatingButtons :edit="true" :wait="wait" :buttons="{ 'save': true, 'deletion': false }" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
 
         </q-layout>
 
