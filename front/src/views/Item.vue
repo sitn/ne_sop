@@ -399,7 +399,10 @@
             </Form>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :wait="wait" @save-event="save" @edit-event="setEditMode" ref="floating-buttons"></FloatingButtons>
+            <FloatingButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+
+            <!-- DELETE DIALOG -->
+            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
             <!-- ADD NEW ENTITY DIALOG -->
             <q-dialog v-model="addEntityDialog">
@@ -483,7 +486,7 @@ import FormSection from "../components/FormSection.vue"
 import FloatingButtons from "../components/FloatingButtons.vue"
 import NewEntityDialog from "./NewEntityDialog.vue"
 import NewDocumentDialog from "./NewDocumentDialog.vue"
-
+import DeleteDialog from '../components/DeleteDialog.vue'
 // import NewEventDialog from "./NewEventDialog.vue"
 
 const documentsColumns = [
@@ -523,17 +526,10 @@ const eventsColumns = [
 ]
 
 const subset = ["Parlementaire", "Groupe parlementaire", "Autre"]
-const authors = store.entities.filter(e => subset.includes(e.type))
-
-console.log('store')
-console.log(store)
-
-console.log('authors')
-console.log(authors)
 
 export default {
     name: 'Item',
-    components: { Form, FormSection, FloatingButtons, NewEntityDialog, NewDocumentDialog },
+    components: { Form, FormSection, FloatingButtons, NewEntityDialog, NewDocumentDialog, DeleteDialog },
     props: {},
     emits: [],
     setup() {
@@ -543,9 +539,11 @@ export default {
     data() {
         return {
             store,
+            dialog: { deletion: false },
             edit: false,
             wait: false,
             item: null,
+            index: store.items.findIndex((e) => (e.id === this.$route.params.id)),
             itemTypes: itemTypes,
             formalDocumentRowsUnfiltered: documents.filter((e) => (e.ressourcetype === 'formal')),
             formalDocumentRows: [],
@@ -591,13 +589,18 @@ export default {
             store.items[ind] = Object.assign({}, this.item)
             this.wait = false
         },
+        handleDeletion() {
+            this.dialog.deletion = true
+        },
+        async remove() {
+            // TODO: DELETE RECORD IN DATABASE
+            console.log(`${this.$options.name}.vue | remove()`)
+            store.items.splice(this.index, 1)
+            this.$router.push({ name: 'ItemsList' })
+        },
         setEditMode(val) {
             console.log(`${this.$options.name}.vue | setEditMode(${val})`)
             this.edit = val
-
-            console.log('store')
-            console.log(store)
-
         },
         addEntity() {
             console.log('Item.vue | Add new entity')
