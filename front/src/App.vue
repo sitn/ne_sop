@@ -159,7 +159,6 @@
 </template>
   
 <script>
-/* import objets_parlementaires from './assets/data/objets_parlementaires.json' */
 import { ref } from 'vue'
 import { store } from './store/store.js'
 
@@ -191,15 +190,12 @@ export default {
     },
     methods: {
         processLogout() {
-            // do something here to log out !
             this.$router.push({ name: 'Login' });
         }
-
     }
-
 }
 </script>
-  
+
 <style>
 @import './assets/styles/main.css';
 @import './assets/styles/quasar.css';
