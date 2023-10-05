@@ -115,7 +115,11 @@
             </Form>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="false" :wait="wait" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
+            <FloatingButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+            <!-- <FloatingActionButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @edit-event="setEditMode"></FloatingActionButtons> -->
+
+            <!-- DELETE DIALOG -->
+            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
         </q-layout>
 
@@ -130,11 +134,12 @@ import entityTypes from '../assets/data/entity-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 import FloatingButtons from "../components/FloatingButtons.vue"
+import DeleteDialog from '../components/DeleteDialog.vue'
 
 export default {
     store,
     name: 'Entity',
-    components: { Form, FormSection, FloatingButtons },
+    components: { Form, FormSection, FloatingButtons, DeleteDialog },
     props: {},
     emits: [],
     setup() {
@@ -144,9 +149,11 @@ export default {
     data() {
         return {
             store,
+            dialog: { deletion: false },
             edit: false,
             wait: false,
             entity: null, // store.entities.find(e => e.id === this.$route.params.id),
+            index: store.entities.findIndex((e) => (e.id === this.$route.params.id)),
             entityTypes: entityTypes,
         }
     },
@@ -157,20 +164,6 @@ export default {
         this.entity = Object.assign({}, store.entities.find((e) => (e.id === this.$route.params.id)))
     },
     mounted() {
-
-        // TEST
-        /*
-        const phoneNumber = parsePhoneNumber('+41 32 889 47 72') // , 'CH')
-        console.log(phoneNumber)
-        console.log(phoneNumber.isPossible())
-        console.log(phoneNumber.isValid())
-        console.log(phoneNumber.number)
-        console.log(phoneNumber.country)
-        console.log(phoneNumber.formatInternational())
-        console.log(phoneNumber.formatNational())
-        console.log(phoneNumber.getURI())
-        */
-
     },
     methods: {
         async load() {
@@ -182,9 +175,18 @@ export default {
             console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
             await sleep(Math.random() * 1300)
-            let ind = store.entities.findIndex((e) => (e.id === this.$route.params.id))
-            store.entities[ind] = Object.assign({}, this.entity)
+            // let ind = store.entities.findIndex((e) => (e.id === this.$route.params.id))
+            store.entities[this.index] = Object.assign({}, this.entity)
             this.wait = false
+        },
+        handleDeletion() {
+            this.dialog.deletion = true
+        },
+        async remove() {
+            // TODO: DELETE RECORD IN DATABASE
+            console.log(`${this.$options.name}.vue | remove()`)
+            store.entities.splice(this.index, 1)
+            this.$router.push({ name: 'EntitiesList' })
         },
         setEditMode(val) {
             console.log(`${this.$options.name}.vue | setEditMode(${val})`)
