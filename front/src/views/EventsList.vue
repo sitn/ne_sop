@@ -1,77 +1,81 @@
 <template>
     <div class="">
 
-        <!-- BREADCRUMBS NAVIGATION -->
         <div class="q-pa-sm q-gutter-sm">
+
+            <!-- BREADCRUMBS NAVIGATION -->
             <q-breadcrumbs style="font-size: 16px">
                 <q-breadcrumbs-el label="Calendrier" to="/events" />
             </q-breadcrumbs>
-        </div>
 
-        <!-- EVENTS TABLE -->
-        <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" class="q-my-lg">
-            <!-- TABLE BODY -->
-            <template v-slot:body="props">
-                <q-tr :props="props">
+            <!-- EVENTS TABLE -->
+            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" class="q-my-lg">
+                <!-- TABLE BODY -->
+                <template v-slot:body="props">
+                    <q-tr :props="props">
 
-                    <!-- DATE COLUMN -->
-                    <q-td key="date" :props="props">
+                        <!-- DATE COLUMN -->
+                        <q-td key="date" :props="props">
 
-                        <router-link :to="{
-                            name: 'Event',
-                            params: {
-                                id: props.row.id
-                            }
-                        }">
-                            {{ props.row.date }}
-                        </router-link>
+                            <router-link :to="{
+                                name: 'Event',
+                                params: {
+                                    id: props.row.id
+                                }
+                            }">
+                                {{ props.row.date }}
+                            </router-link>
 
-                    </q-td>
+                        </q-td>
 
-                    <!-- EVEN TYPE COLUMN -->
-                    <q-td key="type" :props="props">
-                        {{ props.row.eventType }}
-                    </q-td>
+                        <!-- EVEN TYPE COLUMN -->
+                        <q-td key="type" :props="props">
+                            {{ props.row.eventType }}
+                        </q-td>
 
-                    <!-- ITEM COLUMN -->
-                    <q-td key="item" :props="props">
+                        <!-- ITEM COLUMN -->
+                        <q-td key="item" :props="props">
 
-                        <router-link :to="{
-                            name: 'Item',
-                            params: {
-                                id: props.row.itemId
-                            }
-                        }">
-                            <div>{{ props.row.itemNumber }} - {{ props.row.itemType }}</div>
+                            <router-link :to="{
+                                name: 'Item',
+                                params: {
+                                    id: props.row.itemId
+                                }
+                            }">
+                                <div>{{ props.row.itemNumber }} - {{ props.row.itemType }}</div>
 
-                        </router-link>
-                        <div>{{ props.row.itemName }}</div>
+                            </router-link>
+                            <div>{{ props.row.itemName }}</div>
 
-                    </q-td>
+                        </q-td>
 
-                    <!-- ACTIONS COLUMN -->
-                    <q-td key="actions" :props="props">
-                        <div class="float-right">
-                            <q-btn dense round flat color="grey" name="calendar" @click="downloadICS(props.row)" icon="sym_o_calendar_add_on">
-                                <q-tooltip class="bg-black">Ajouter au calendrier</q-tooltip>
-                            </q-btn>
-                            <!-- 
+                        <!-- ACTIONS COLUMN -->
+                        <q-td key="actions" :props="props">
+                            <div class="float-right">
+                                <q-btn dense round flat color="grey" name="calendar" @click="downloadICS(props.row)" icon="sym_o_calendar_add_on">
+                                    <q-tooltip class="bg-black">Ajouter au calendrier</q-tooltip>
+                                </q-btn>
+                                <!-- 
                             <q-btn href="data:,I am text file" download="a122.txt" dense round flat color="grey" name="calendar" @click="" icon="sym_o_calendar_add_on">
                                 <q-tooltip class="bg-black">Ajouter au calendrier</q-tooltip>
                             </q-btn>
                             -->
-                            <q-btn dense round flat color="red" name="delete" @click="console.log(props.row.id)" icon="sym_o_delete">
-                                <q-tooltip class="bg-black">Supprimer</q-tooltip>
-                            </q-btn>
-                        </div>
-                    </q-td>
-                </q-tr>
-            </template>
-            <template v-slot:no-data>
-                Aucune objet
-            </template>
-        </q-table>
+                                <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete">
+                                    <q-tooltip class="bg-black">Supprimer</q-tooltip>
+                                </q-btn>
+                            </div>
+                        </q-td>
+                    </q-tr>
+                </template>
+                <template v-slot:no-data>
+                    Aucune objet
+                </template>
+            </q-table>
 
+            <!-- DELETE DIALOG -->
+            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+
+        </div>
     </div>
 </template>
 
@@ -80,27 +84,28 @@ import { store } from '../store/store.js'
 // import items from '../assets/data/items.json'
 import events from '../assets/data/events.json'
 // import * as ics from 'ics'
-import { createEvent } from 'ics';
-
+import { createEvent } from 'ics'
+import DeleteDialog from '../components/DeleteDialog.vue'
 
 //console.log(items.map(e => (e.events)).flat())
 
 export default {
     name: 'EventsList',
-    components: {},
-    props: { 'title': String, 'model': Object }, // 'rows': items
+    components: { DeleteDialog },
+    props: { 'title': String }, // 'rows': items
     emits: [],
     setup() {
-        return {
-            // model: ref(null),
-        }
+        return {}
     },
     data() {
         return {
             store,
+            selected: null,
+            searchString: null,
+            filter: "",
+            dialog: { deletion: false },
             rows: events,
             loading: false,
-            filter: "",
             pagination: {
                 sortBy: "desc",
                 descending: false,
@@ -140,17 +145,21 @@ export default {
         }
     },
     computed: {
-
     },
     created() {
     },
     mounted() {
-
         // console.log(store.items.map((x) => (x.events)).flat(1))
-
     },
     methods: {
-
+        handleDeletion(val) {
+            this.selected = val
+            this.dialog.deletion = true
+        },
+        async remove() {
+            // store.items = store.items.filter((x) => (x.id !== this.selected))
+            // this.rows = store.items
+        },
         async downloadICS(val) {
 
             console.log('download ICS')
@@ -242,5 +251,4 @@ export default {
     }
 }
 </script>
-
 <style scoped></style>
