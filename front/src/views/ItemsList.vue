@@ -85,7 +85,7 @@
                         <!-- ACTIONS COLUMN -->
                         <q-td key="actions" :props="props">
                             <div class="float-right">
-                                <q-btn dense round flat color="red" name="delete" @click="confirmDelete(props.row)" icon="sym_o_delete">
+                                <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete">
                                     <q-tooltip class="bg-black">Supprimer</q-tooltip>
                                 </q-btn>
                             </div>
@@ -116,20 +116,8 @@
             </q-dialog>
             -->
 
-            <!-- DELETE ITEM DIALOG -->
-            <q-dialog v-model="deleteDialog">
-                <q-card>
-                    <q-card-section class="row items-center">
-                        <q-avatar icon="sym_o_delete_forever" color="primary" text-color="white" />
-                        <span class="q-ml-sm">Supprimer dénitivement cet objet et tous les évenements liés?</span>
-                    </q-card-section>
-
-                    <q-card-actions align="right">
-                        <q-btn flat label="Annuler" color="primary" v-close-popup />
-                        <q-btn flat label="Supprimer" color="primary" @click="mydelete()" v-close-popup />
-                    </q-card-actions>
-                </q-card>
-            </q-dialog>
+            <!-- DELETE DIALOG -->
+            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
         </div>
 
@@ -138,13 +126,12 @@
 
 <script>
 import { store } from '../store/store.js'
-// import items from '../assets/data/items.json'
-
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+import { sleep } from '../store/shared.js'
+import DeleteDialog from '../components/DeleteDialog.vue'
 
 export default {
     name: 'ItemsList',
-    components: {},
+    components: { DeleteDialog },
     props: { 'title': String, 'model': Object },
     emits: [],
     setup() {
@@ -155,13 +142,12 @@ export default {
     data() {
         return {
             store,
+            selected: null,
             searchString: null,
-            deleteDialog: false,
-            deleteID: null,
-            // addDialog: false,
+            filter: "",
+            dialog: { deletion: false },
             rows: store.items,
             loading: false,
-            /* filter: "filter", */
             pagination: {
                 sortBy: "desc",
                 descending: false,
@@ -229,14 +215,30 @@ export default {
 
     },
     methods: {
-        color(val) {
-
-            /*
-            if (val === 'Terminé') {
-                return 'orange'
+        async query() {
+            // TODO: REPLACE WITH GET CALL TO DATABASE 
+            this.loading = true
+            await sleep(Math.random() * 1300)
+            let str = this.searchString.toLowerCase()
+            if (this.searchString.length >= 3) {
+                this.rows = this.store.items.filter((x) => (x.title.toLowerCase().includes(str) || x.number.toLowerCase().includes(str)))
+            } else {
+                this.rows = this.store.items
             }
-            */
-
+            this.loading = false
+        },
+        handleDeletion(val) {
+            this.selected = val
+            this.dialog.deletion = true
+        },
+        async remove() {
+            store.items = store.items.filter((x) => (x.id !== this.selected))
+            this.rows = store.items
+        },
+        addItem() {
+            // this.addDialog = true
+        },
+        color(val) {
             switch (val) {
                 case 'Pas traité':
                     return 'red'
@@ -247,54 +249,7 @@ export default {
                 default:
                     return 'grey'
             }
-
         },
-        test() {
-
-            console.log('TEST')
-
-        },
-        async query() {
-
-            // TODO: REPLACE WITH GET CALL TO DATABASE 
-            console.log(`search: ${this.searchString}`)
-            this.loading = true
-            await sleep(Math.random() * 1300)
-
-            let str = this.searchString.toLowerCase()
-            if (this.searchString.length >= 3) {
-
-                this.rows = this.store.items.filter((x) => (x.title.toLowerCase().includes(str) || x.number.toLowerCase().includes(str)))
-                console.log(this.rows)
-
-            } else {
-
-                this.rows = this.store.items
-
-            }
-            this.loading = false
-
-        },
-        confirmDelete(val) {
-
-            this.deleteDialog = true
-            this.deleteID = val.id
-            console.log('confirmDelete')
-            console.log(val)
-
-        },
-        mydelete() {
-            console.log('ItemsList.vue | mydelete()')
-            console.log(this.deleteID)
-            console.log(this.deleteID)
-
-            store.items = store.items.filter((x) => (x.id !== this.deleteID))
-            this.rows = store.items
-
-        },
-        addItem() {
-            // this.addDialog = true
-        }
     }
 
 }
