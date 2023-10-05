@@ -107,7 +107,10 @@
             </Form>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="false" :wait="wait" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
+            <FloatingButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+
+            <!-- DELETE DIALOG -->
+            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
         </q-layout>
     </div>
@@ -119,10 +122,11 @@ import { sleep } from '../store/shared.js'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 import FloatingButtons from "../components/FloatingButtons.vue"
+import DeleteDialog from '../components/DeleteDialog.vue'
 
 export default {
     name: 'User',
-    components: { Form, FormSection, FloatingButtons },
+    components: { Form, FormSection, FloatingButtons, DeleteDialog },
     props: {},
     emits: [],
     setup() {
@@ -132,15 +136,18 @@ export default {
     data() {
         return {
             store,
+            dialog: { deletion: false },
             edit: false,
             wait: false,
             user: null,
+            index: store.users.findIndex((e) => (e.id === this.$route.params.id)),
             groupOptions: store.entities.filter((x) => (x.type === "Service de l'état"))
         }
     },
     computed: {
     },
     created() {
+        console.log(`router id: ${this.$route.params.id}`)
         this.user = Object.assign({}, store.users.find(e => e.id === this.$route.params.id))
     },
     mounted() {
@@ -155,9 +162,18 @@ export default {
             console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
             await sleep(Math.random() * 1300)
-            let ind = store.users.findIndex((e) => (e.id === this.$route.params.id))
-            store.users[ind] = Object.assign({}, this.user)
+            // let ind = store.users.findIndex((e) => (e.id === this.$route.params.id))
+            store.users[this.index] = Object.assign({}, this.user)
             this.wait = false
+        },
+        handleDeletion() {
+            this.dialog.deletion = true
+        },
+        async remove() {
+            // TODO: DELETE RECORD IN DATABASE
+            console.log(`${this.$options.name}.vue | remove()`)
+            store.users.splice(this.index, 1)
+            this.$router.push({ name: 'Admin' })
         },
         setEditMode(val) {
             console.log(`${this.$options.name}.vue | setEditMode(${val})`)
