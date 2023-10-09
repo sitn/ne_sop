@@ -4,7 +4,7 @@
 <template>
     <!-- <div class=""> -->
 
-    <Form title="Utilisateur" :edit="false" :toggle="true" @editEvent="setEditMode">
+    <Form title="">
 
         <template v-slot:body>
 
@@ -73,13 +73,19 @@
                     </div>
 
                     <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
+                        <div>edit</div>
+                        <div>{{ edit }}</div>
+                    </div>
+
+
+                    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
                         <div>user</div>
                         <div>{{ user }}</div>
                     </div>
 
                     <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
                         <div>store.users</div>
-                        <div>{{ store.users.find(e => e.id === this.$route.params.id) }}</div>
+                        <div>{{ store.users }}</div>
                     </div>
 
                 </template>
@@ -103,15 +109,14 @@
 
 <script>
 import { store } from '../store/store.js'
-import { sleep } from '../store/shared.js'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 
 export default {
-    name: 'User',
+    name: 'UserForm',
     components: { Form, FormSection },
-    props: { 'myuser': Object },
-    emits: [],
+    props: { 'edit': Boolean, 'modelValue': Object },
+    emits: ['update:modelValue'],
     setup() {
         return {
         }
@@ -119,38 +124,26 @@ export default {
     data() {
         return {
             store,
-            edit: false,
-            user: null,
-            index: store.users.findIndex((e) => (e.id === this.$route.params.id)),
             groupOptions: store.entities.filter((x) => (x.type === "Service de l'état"))
         }
     },
     computed: {
+        user: {
+            get() {
+                return this.modelValue
+            },
+            set(user) {
+                this.$emit('update:modelValue', user)
+            }
+        }
     },
     created() {
         console.log(`router id: ${this.$route.params.id}`)
-        this.user = Object.assign({}, store.users.find(e => e.id === this.$route.params.id))
+        // this.user = Object.assign({}, store.users.find(e => e.id === this.$route.params.id))
     },
     mounted() {
     },
     methods: {
-        async load() {
-            // TODO: GET RECORD FROM DATABASE
-            console.log(`${this.$options.name}.vue | load()`)
-        },
-        async save() {
-            // TODO: POST RECORD TO DATABASE
-            console.log(`${this.$options.name}.vue | save()`)
-            this.wait = true
-            await sleep(Math.random() * 1300)
-            // let ind = store.users.findIndex((e) => (e.id === this.$route.params.id))
-            store.users[this.index] = Object.assign({}, this.user)
-            this.wait = false
-        },
-        setEditMode(val) {
-            console.log(`${this.$options.name}.vue | setEditMode(${val})`)
-            this.edit = val
-        }
     }
 }
 </script>
