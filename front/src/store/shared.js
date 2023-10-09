@@ -46,3 +46,13 @@ export const checkWebsite = val => {
     }
 
 }
+
+export const checkFilled = val => {
+    return val ? true : 'Choix non-valable'
+}
+
+/*
+checkFilled(val) { 
+            
+},
+*/
