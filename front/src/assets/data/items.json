@@ -16,6 +16,7 @@
         "request": "",
         "documents": [
             {
+                "ressourcetype": "formal",
                 "version": 0,
                 "date": "21.05.2023",
                 "step": "Réception",
@@ -29,14 +30,25 @@
         ],
         "attachements": [
             {
+                "ressourcetype": "attachement",
                 "version": "000",
                 "date": "21.05.2023",
-                "step": "Réception",
-                "type": "Speaking Note",
+                "type": "",
                 "author": "Nicolas Ruedin",
                 "note": "",
                 "format": "PDF",
                 "filesize": "435Ko",
+                "relpath": "/tes/file.pdf"
+            },
+            {
+                "ressourcetype": "attachement",
+                "version": "001",
+                "date": "21.05.2023",
+                "type": "S",
+                "author": "Nicolas Ruedin",
+                "note": "",
+                "format": "PNG",
+                "filesize": "1435Ko",
                 "relpath": "/tes/file.pdf"
             }
         ],
@@ -149,7 +161,8 @@
         "services": {
             "lead": null,
             "support": []
-        }
+        },
+        "attachements": []
     },
     {
         "id": "9b70570a-c30f-4c46-8cf8-ed5906bcdd30",
@@ -163,6 +176,7 @@
         "oralResponse": false,
         "fight": false,
         "author": "Groupe PLR",
+        "attachements": [],
         "events": [
             {
                 "id": "dd3652be-ad69-4f12-b2e0-f108ae4e107f",
@@ -198,6 +212,8 @@
         "oralResponse": false,
         "fight": false,
         "author": "Groupe PLR",
+        "documents": [],
+        "attachements": [],
         "events": [
             {
                 "id": "24a48b5d-fd5a-4a12-a171-f59ad5bf788d",
@@ -233,6 +249,8 @@
         "oralResponse": false,
         "fight": false,
         "author": "Groupe PLR",
+        "documents": [],
+        "attachements": [],
         "events": [
             {
                 "id": "798dab2a-9838-44dd-a170-8fcc79c16e76",
@@ -268,6 +286,8 @@
         "oralResponse": false,
         "fight": false,
         "author": "Groupe PLR",
+        "documents": [],
+        "attachements": [],
         "events": [
             {
                 "id": "e07da214-efc6-41b2-b3fe-5342ffd308b1",
