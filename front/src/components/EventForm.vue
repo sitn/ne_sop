@@ -1,7 +1,9 @@
 <template>
-    <Form>
+    <Form ref="FormContainer" @validation-event="validation">
 
         <template v-slot:body>
+
+            <!-- <q-form ref="form" greedy> -->
 
             <!-- IDENTIFICATION SECTION -->
             <FormSection title="Event">
@@ -25,12 +27,12 @@
                                         </q-popup-proxy>
                                     </q-icon>
                                     <!-- 
-                                    <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy>
-                                            <q-date v-model="event.date"></q-date>
-                                        </q-popup-proxy>
-                                    </q-icon>
-                                    -->
+                                        <q-icon name="event" class="cursor-pointer">
+                                            <q-popup-proxy>
+                                                <q-date v-model="event.date"></q-date>
+                                            </q-popup-proxy>
+                                        </q-icon>
+                                        -->
                                 </template>
                             </q-input>
                         </div>
@@ -59,14 +61,15 @@
 
                         <!-- TYPE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="event.eventType" :options="eventTypes" label="Type" clearable :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="event.eventType" :options="eventTypes" label="Type" :rules="[val => checkFilled(val)]" clearable :disable="!edit">
                             </q-select>
                         </div>
 
                         <!-- LINKED ITEM SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <!-- <q-input bg-color="white" outlined v-model="event.itemNumber" label="Objet lié" /> -->
-                            <q-select bg-color="white" outlined v-model="event.itemNumber" :options="this.store.items" option-label="number" option-value="number" label="Objet lié" @update:model-value="setLinkedItem()" emit-value clearable :disable="!edit">
+                            <!--                             <q-select bg-color="white" outlined v-model="event.itemNumber" :options="this.store.items" option-label="number" option-value="number" label="Objet lié" @update:model-value="setLinkedItem(val)" clearable :disable="!edit"> -->
+                            <q-select bg-color="white" outlined v-model="linkedItem" :options="this.store.items" option-label="number" label="Objet lié" @update:model-value="setLinkedItem(val)" :rules="[val => checkFilled(val)]" clearable :disable="!edit">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section>
@@ -95,11 +98,14 @@
                     <!-- TODO REMOVE/DEV DISPLAY JSON-->
                     <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
                         <div>store.event</div>
-                        <div>{{ store.events.find(e => e.id === this.$route.params.id) }}</div>
+                        <!-- store.events.find(e => e.id === this.$route.params.id) -->
+                        <div>{{ store.events.find(e => e.id === this.event.id) }}</div>
                     </div>
 
                 </template>
             </FormSection>
+
+            <!-- </q-form> -->
 
         </template>
 
@@ -108,6 +114,7 @@
 
 <script>
 import { store } from '../store/store.js'
+import { checkFilled } from '../store/shared.js'
 import eventTypes from '../assets/data/event-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
@@ -116,7 +123,7 @@ export default {
     name: 'EventForm',
     components: { Form, FormSection },
     props: { 'edit': Boolean, 'modelValue': Object },
-    emits: ['update:modelValue'],
+    emits: ['update:modelValue', 'validationEvent'],
     setup() {
         return {
         }
@@ -124,7 +131,9 @@ export default {
     data() {
         return {
             store,
-            eventTypes: eventTypes
+            valid: null,
+            eventTypes: eventTypes,
+            linkedItem: null
         }
     },
     computed: {
@@ -141,8 +150,37 @@ export default {
         console.log(`router id: ${this.$route.params.id}`)
     },
     mounted() {
+        this.validateForm()
+    },
+    updated() {
+        this.validateForm()
     },
     methods: {
+        checkFilled,
+        validation(val) {
+            console.log(`validation: ${val}`)
+            this.$emit('validationEvent', val)
+            this.valid = val
+        },
+        validateForm() {
+            console.log(`${this.$options.name}.vue | validateForm()`)
+            this.$refs.FormContainer.validateForm()
+        },
+        setLinkedItem(val) {
+            console.log('setLinkedItem')
+            console.log(this.linkedItem)
+            if (this.linkedItem) {
+                this.event.itemId = this.linkedItem.id
+                this.event.itemNumber = this.linkedItem.number
+                this.event.itemName = this.linkedItem.title
+                this.event.itemType = this.linkedItem.type
+            } else {
+                this.event.itemId = null
+                this.event.itemNumber = null
+                this.event.itemName = null
+                this.event.itemType = null
+            }
+        }
     }
 }
 </script>
