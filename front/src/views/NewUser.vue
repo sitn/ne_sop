@@ -12,7 +12,7 @@
             </div>
 
             <!-- FORM -->
-            <UserForm v-model="user"></UserForm>
+            <UserForm v-model="user" :edit="edit"></UserForm>
 
             <!-- FLOATING ACTION BUTTONS -->
             <FloatingButtons :edit="true" :wait="wait" :buttons="{ 'save': true, 'deletion': false }" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
 import { store } from '../store/store.js'
 import { sleep } from '../store/shared.js'
 import FloatingButtons from "../components/FloatingButtons.vue"
@@ -39,9 +40,16 @@ export default {
     data() {
         return {
             store,
-            edit: false,
+            edit: true,
             wait: false,
-            user: null,
+            user: {
+                "id": uuidv4(),
+                "name": "",
+                "email": "",
+                "admin": false,
+                "active": true,
+                "groups": []
+            },
             index: store.users.findIndex((e) => (e.id === this.$route.params.id)),
             groupOptions: store.entities.filter((x) => (x.type === "Service de l'état"))
         }
@@ -50,7 +58,15 @@ export default {
     },
     created() {
         console.log(`router id: ${this.$route.params.id}`)
-        this.user = Object.assign({}, store.users.find(e => e.id === this.$route.params.id))
+        // this.user = Object.assign({}, store.users.find(e => e.id === this.$route.params.id))
+        this.user = {
+            "id": uuidv4(),
+            "name": "",
+            "email": "",
+            "admin": false,
+            "active": true,
+            "groups": []
+        }
     },
     mounted() {
     },
@@ -64,7 +80,7 @@ export default {
             console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
             await sleep(Math.random() * 1300)
-            store.users[this.index] = Object.assign({}, this.user)
+            store.users.push(Object.assign({}, this.user))
             this.wait = false
         },
         setEditMode(val) {
