@@ -3,18 +3,11 @@
 
         <div class="col" style="max-width: 880px;"> <!-- -xs-12 col-sm-12 col-md-8 -->
 
-            <!-- EDIT MODE TOGGLE -->
-            <!-- 
-            <div class="row justify-end q-pa-xs">
-                <q-toggle v-model="editMode" @update:model-value="toggleEdit()" label="Modification" v-if="toggle === true">
-                    <q-tooltip class="bg-black">Activer/Désactiver le mode modification</q-tooltip>
-                </q-toggle>
-            </div>
-            -->
-
-            <div class="row justify-centerbg-grey">
+            <div class="row justify-center">
                 <div class="col">
-                    <slot name="body"></slot>
+                    <q-form ref="form" @validation-success="validationSuccess" @validation-error="validationError" greedy>
+                        <slot name="body"></slot>
+                    </q-form>
                 </div>
             </div>
 
@@ -29,7 +22,7 @@ export default {
     name: 'Form',
     components: {},
     props: { 'title': String, 'edit': Boolean, 'toggle': Boolean },
-    emits: ['editEvent'],
+    emits: ['editEvent', 'validationEvent'],
     setup() {
         return {
 
@@ -38,19 +31,42 @@ export default {
     data() {
         return {
             model: null,
-            editMode: this.edit
+            editMode: this.edit,
+            valid: null,
         }
     },
     computed: {
     },
     mounted() {
-
+        // this.validateForm()
+    },
+    updated() {
+        this.validateForm()
     },
     methods: {
+        /*
         toggleEdit() {
             console.log('toggleEdit')
-            this.$emit('editEvent', this.editMode);
-        }
+            this.$emit('editEvent', this.editMode)
+        },
+        */
+        validateForm() {
+            if (this.$refs.hasOwnProperty('form')) {
+                if (this.$refs.form !== null) {
+                    this.$nextTick(() => { this.$refs.form.validate() })
+                }
+            }
+        },
+        validationSuccess() {
+            console.log('validationSuccess')
+            this.valid = true
+            this.$emit('validationEvent', this.valid)
+        },
+        validationError() {
+            console.log('validationError')
+            this.valid = false
+            this.$emit('validationEvent', this.valid)
+        },
     }
 }
 </script>
