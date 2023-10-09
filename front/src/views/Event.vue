@@ -12,14 +12,13 @@
             </div>
 
             <!-- FORM -->
-            <EventForm v-model="event" :edit="edit"></EventForm>
+            <EventForm v-model="event" :edit="edit" ref="EventForm"></EventForm>
 
             <!-- FLOATING ACTION BUTTONS -->
             <FloatingButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
 
             <!-- DELETE DIALOG -->
             <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
-
 
         </q-layout>
     </div>
@@ -28,7 +27,7 @@
 <script>
 import { store } from '../store/store.js'
 import { sleep } from '../store/shared.js'
-import eventTypes from '../assets/data/event-types.json'
+// import eventTypes from '../assets/data/event-types.json'
 import FloatingButtons from "../components/FloatingButtons.vue"
 import DeleteDialog from '../components/DeleteDialog.vue'
 import EventForm from "../components/EventForm.vue"
@@ -49,11 +48,12 @@ export default {
             edit: false,
             wait: false,
             event: null, // store.events.find(e => e.id === this.$route.params.id),
-            items: store.items,
-            eventDate: null,
-            eventTime: null,
-            eventTypes: eventTypes,
-            linkedItem: null,
+            index: store.events.findIndex((e) => (e.id === this.$route.params.id))
+            // items: store.items,
+            // eventDate: null,
+            // eventTime: null,
+            // eventTypes: eventTypes,
+            // linkedItem: null,
         }
     },
     computed: {
@@ -63,8 +63,28 @@ export default {
     },
     mounted() {
     },
+    watch: {
+        someObject: {
+            event(newValue, oldValue) {
+                // Note: `newValue` will be equal to `oldValue` here
+                // on nested mutations as long as the object itself
+                // hasn't been replaced.
+                console.log(`${this.$options.name}.vue | event watcher`)
+            },
+            deep: true
+        }
+    },
     methods: {
+        /*
+        validate() {
+            console.log('this.$refs.EventForm.validateForm()')
+            this.$refs.EventForm.validateForm()
+        },
+        */
         async save() {
+
+            this.$refs.EventForm.validateForm()
+
             // TODO: POST RECORD TO DATABASE
             console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
@@ -78,6 +98,9 @@ export default {
                     store.updateEvents()
                 }
             })
+
+            store.events.push(Object.assign({}, this.event))
+
             this.wait = false
         },
         handleDeletion() {
@@ -86,7 +109,7 @@ export default {
         async remove() {
             // TODO: DELETE RECORD IN DATABASE
             console.log(`${this.$options.name}.vue | remove()`)
-            // store.entities.splice(this.index, 1)
+            store.events.splice(this.index, 1)
             this.$router.push({ name: 'EventsList' })
         },
         setEditMode(val) {
