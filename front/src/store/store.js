@@ -11,11 +11,18 @@ export const store = reactive({
     entities: entities,
     items: items,
     events: items.map((x) => (x.events)).flat(1),
+    documents: items.map((x) => (x.documents)).flat(1),
+    attachements: items.map((x) => (x.attachements)).flat(1),
     users: users,
     updateEvents() {
         this.events = this.items.map((x) => (x.events)).flat(1)
-
         // this.items.forEach((x) => )
-
+    },
+    updateDocuments() {
+        this.documents = this.items.map((x) => (x.documents)).flat(1)
+    },
+    updateAttachements() {
+        this.attachements = this.items.map((x) => (x.attachements)).flat(1)
     }
+
 })
