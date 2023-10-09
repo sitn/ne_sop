@@ -345,7 +345,8 @@
 
                     </div>
 
-                    <q-table :title="`${this.attachementRows.length} fichier(s)`" :rows="attachementRows" :columns="attachementColumns" row-key="name">
+                    <!-- <q-table :title="`${this.attachementRows.length} fichier(s)`" :rows="item.attachementRows" :columns="attachementColumns" row-key="name">  -->
+                    <q-table :title="`${item.attachements.length} fichier(s)`" :rows="item.attachements" :columns="attachementColumns" row-key="name">
                         <template v-slot:body="props">
                             <q-tr :props="props">
                                 <q-td key="version" :props="props">
@@ -391,7 +392,6 @@
     <q-dialog v-model="addEntityDialog">
         <NewEntityDialog @addNewEntity="addNewEntity"></NewEntityDialog>
     </q-dialog>
-
 </template>
 
 <script>
