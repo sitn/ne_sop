@@ -8,6 +8,34 @@
                 <q-breadcrumbs-el label="Calendrier" to="/events" />
             </q-breadcrumbs>
 
+            <!-- SEARCH AND FILTER SECTION -->
+            <div class="row q-col-gutter-md q-px-sm q-mt-xs items-center">
+
+                <!-- SEARCH RECORDS FIELD -->
+                <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
+                    <q-input bg-color="white" v-model="searchString" outlined dense placeholder="Rechercher" @update:model-value="query()">
+                        <template v-slot:prepend>
+                            <q-icon name="sym_o_search" />
+                        </template>
+                        <template v-slot:append>
+                            <q-spinner color="blue-grey" :thickness="3" v-if="loading" />
+                            <!-- FILTER BUTTON -->
+                            <q-btn unelevated icon="sym_o_filter_alt" padding="xs" @click="console.log('filter')"> <!-- color="orange-1" text-color="black" -->
+                                <q-tooltip class="bg-black">Filtrer</q-tooltip>
+                            </q-btn>
+                        </template>
+                    </q-input>
+                </div>
+
+                <!-- ADD NEW RECORD BUTTON -->
+                <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
+                    <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" @click="" to="/events/new">
+                        <q-tooltip class="bg-black">Ajouter un nouvel événement</q-tooltip>
+                    </q-btn>
+                </div>
+
+            </div>
+
             <!-- EVENTS TABLE -->
             <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" class="q-my-lg">
                 <!-- TABLE BODY -->
@@ -82,7 +110,7 @@
 <script>
 import { store } from '../store/store.js'
 // import items from '../assets/data/items.json'
-import events from '../assets/data/events.json'
+// import events from '../assets/data/events.json'
 // import * as ics from 'ics'
 import { createEvent } from 'ics'
 import DeleteDialog from '../components/DeleteDialog.vue'
@@ -104,7 +132,7 @@ export default {
             searchString: null,
             filter: "",
             dialog: { deletion: false },
-            rows: events,
+            rows: store.events,
             loading: false,
             pagination: {
                 sortBy: "desc",
@@ -157,8 +185,8 @@ export default {
             this.dialog.deletion = true
         },
         async remove() {
-            // store.items = store.items.filter((x) => (x.id !== this.selected))
-            // this.rows = store.items
+            store.events = store.events.filter((x) => (x.id !== this.selected))
+            this.rows = store.events
         },
         async downloadICS(val) {
 
