@@ -1,7 +1,7 @@
 <template>
     <div class="row justify-center q-my-lg">
 
-        <div class="col-xs-12 col-sm-12 col-md-8">
+        <div class="col" style="max-width: 880px;"> <!-- -xs-12 col-sm-12 col-md-8 -->
 
             <!-- EDIT MODE TOGGLE -->
             <!-- 
@@ -19,6 +19,7 @@
             </div>
 
         </div>
+
     </div>
 </template>
 
