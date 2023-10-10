@@ -119,7 +119,7 @@ export default {
         setEditMode(val) {
             console.log(`${this.$options.name} | setEditMode(${val})`)
             this.edit = val
-            this.$refs.EventForm.validateForm()
+            // this.$refs.EventForm.validateForm()
         }
     }
 }
