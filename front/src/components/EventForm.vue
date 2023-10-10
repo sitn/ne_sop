@@ -1,5 +1,5 @@
 <template>
-    <Form ref="FormContainer" @validation-event="validation">
+    <Form ref="FormContainer" :model="event" @validation-event="validation">
 
         <template v-slot:body>
 
@@ -150,25 +150,33 @@ export default {
         console.log(`router id: ${this.$route.params.id}`)
     },
     mounted() {
-        this.validateForm()
+        //this.validateForm()
     },
     updated() {
-        this.validateForm()
+        //this.validateForm()
     },
+    /*
+    watch: {
+        event: {
+            handler(newValue, oldValue) {
+                this.validateForm()
+            },
+            deep: true
+        }
+    },
+    */
     methods: {
         checkFilled,
         validation(val) {
-            console.log(`validation: ${val}`)
-            this.$emit('validationEvent', val)
+            console.log(`${this.$options.name} | validation: ${val}`)
             this.valid = val
+            this.$emit('validationEvent', this.valid)
         },
         validateForm() {
-            console.log(`${this.$options.name}.vue | validateForm()`)
-            this.$refs.FormContainer.validateForm()
+            console.log(`${this.$options.name} | validateForm()`)
+            this.$refs.FormContainer.validateForm() // call validation method from the Form component (Form.vue)
         },
-        setLinkedItem(val) {
-            console.log('setLinkedItem')
-            console.log(this.linkedItem)
+        setLinkedItem() {
             if (this.linkedItem) {
                 this.event.itemId = this.linkedItem.id
                 this.event.itemNumber = this.linkedItem.number
