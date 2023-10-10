@@ -1,5 +1,5 @@
 <template>
-    <Form ref="FormContainer" :model="event" @validation-event="validation">
+    <Form ref="FormContainer" :model="event" :edit="edit" @validation-event="validation">
 
         <template v-slot:body>
 
@@ -172,10 +172,12 @@ export default {
             this.valid = val
             this.$emit('validationEvent', this.valid)
         },
+        /*
         validateForm() {
             console.log(`${this.$options.name} | validateForm()`)
             this.$refs.FormContainer.validateForm() // call validation method from the Form component (Form.vue)
         },
+        */
         setLinkedItem() {
             if (this.linkedItem) {
                 this.event.itemId = this.linkedItem.id
