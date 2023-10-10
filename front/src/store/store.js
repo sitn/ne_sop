@@ -8,6 +8,7 @@ import users from '../assets/data/users.json'
 export const store = reactive({
     dev: true,
     session: { "user": "Test user" },
+    valid: null,
     entities: entities,
     items: items,
     events: events, // items.map((x) => (x.events)).flat(1),
