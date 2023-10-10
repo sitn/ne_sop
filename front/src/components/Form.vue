@@ -13,15 +13,20 @@
 
         </div>
 
+        <!-- FLOATING ACTION BUTTONS -->
+        <!-- <FloatingButtons :edit="true" :wait="true" :buttons="{ save: 'active', deletion: 'none' }"></FloatingButtons> -->
+
+
     </div>
 </template>
 
 <script>
+import { store } from '../store/store.js'
 
 export default {
     name: 'Form',
     components: {},
-    props: { 'title': String, 'edit': Boolean, 'toggle': Boolean },
+    props: { 'edit': Boolean, 'model': Object }, // { 'title': String, 'edit': Boolean, 'toggle': Boolean },
     emits: ['editEvent', 'validationEvent'],
     setup() {
         return {
@@ -30,7 +35,6 @@ export default {
     },
     data() {
         return {
-            model: null,
             editMode: this.edit,
             valid: null,
         }
@@ -38,34 +42,43 @@ export default {
     computed: {
     },
     mounted() {
-        // this.validateForm()
+        this.validateForm()
     },
     updated() {
         this.validateForm()
     },
+    watch: {
+        model: {
+            handler(newValue, oldValue) {
+                this.validateForm()
+            },
+            deep: true
+        }
+    },
     methods: {
-        /*
-        toggleEdit() {
-            console.log('toggleEdit')
-            this.$emit('editEvent', this.editMode)
-        },
-        */
         validateForm() {
+            this.$nextTick(() => { this.$refs.form.validate() })
+
+            /*
             if (this.$refs.hasOwnProperty('form')) {
                 if (this.$refs.form !== null) {
                     this.$nextTick(() => { this.$refs.form.validate() })
                 }
             }
+            */
+
         },
         validationSuccess() {
-            console.log('validationSuccess')
+            console.log(`${this.$options.name} | validationSuccess()`)
             this.valid = true
-            this.$emit('validationEvent', this.valid)
+            this.$emit('validationEvent', true)
+            store.valid = true
         },
         validationError() {
-            console.log('validationError')
+            console.log(`${this.$options.name} | validationError()`)
             this.valid = false
-            this.$emit('validationEvent', this.valid)
+            this.$emit('validationEvent', false)
+            store.valid = false
         },
     }
 }
