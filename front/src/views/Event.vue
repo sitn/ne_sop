@@ -11,11 +11,14 @@
                 </q-breadcrumbs>
             </div>
 
+            <div>valid: {{ valid }}</div>
+            <div>store.valid: {{ store.valid }}</div>
+
             <!-- FORM -->
-            <EventForm v-model="event" :edit="edit" ref="EventForm"></EventForm>
+            <EventForm v-model="event" :edit="edit" @validation-event="handleValidation" ref="EventForm"></EventForm>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+            <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
 
             <!-- DELETE DIALOG -->
             <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
@@ -45,15 +48,12 @@ export default {
         return {
             store,
             dialog: { deletion: false },
+            actionButtons: { save: 'active', deletion: 'active' },
             edit: false,
             wait: false,
+            valid: null,
             event: null, // store.events.find(e => e.id === this.$route.params.id),
             index: store.events.findIndex((e) => (e.id === this.$route.params.id))
-            // items: store.items,
-            // eventDate: null,
-            // eventTime: null,
-            // eventTypes: eventTypes,
-            // linkedItem: null,
         }
     },
     computed: {
@@ -62,18 +62,9 @@ export default {
         this.event = Object.assign({}, store.events.find(e => e.id === this.$route.params.id))
     },
     mounted() {
+        store.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
     },
-    watch: {
-        someObject: {
-            event(newValue, oldValue) {
-                // Note: `newValue` will be equal to `oldValue` here
-                // on nested mutations as long as the object itself
-                // hasn't been replaced.
-                console.log(`${this.$options.name}.vue | event watcher`)
-            },
-            deep: true
-        }
-    },
+
     methods: {
         /*
         validate() {
@@ -83,10 +74,8 @@ export default {
         */
         async save() {
 
-            this.$refs.EventForm.validateForm()
-
             // TODO: POST RECORD TO DATABASE
-            console.log(`${this.$options.name}.vue | save()`)
+            console.log(`${this.$options.name} | save()`)
             this.wait = true
             await sleep(Math.random() * 1300)
             // store.items.filter((x) => (x.events.findIndex(y => (y.id) === this.event.id))) = this.event
@@ -95,29 +84,33 @@ export default {
                 let k = x.events.findIndex(y => (y.id === this.event.id))
                 if (k !== -1) {
                     store.items[j].events[k] = Object.assign({}, this.event)
-                    store.updateEvents()
+                    // store.updateEvents()
                 }
             })
-
-            store.events.push(Object.assign({}, this.event))
+            store.events[this.index] = Object.assign({}, this.event)
 
             this.wait = false
+        },
+        handleValidation(val) {
+            this.valid = val
+            this.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
+            // store.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
+            console.log(`${this.$options.name} | handleValidation()`)
+            // this.actionButtons.save = 'disable'
         },
         handleDeletion() {
             this.dialog.deletion = true
         },
         async remove() {
             // TODO: DELETE RECORD IN DATABASE
-            console.log(`${this.$options.name}.vue | remove()`)
+            console.log(`${this.$options.name} | remove()`)
             store.events.splice(this.index, 1)
             this.$router.push({ name: 'EventsList' })
         },
         setEditMode(val) {
-            console.log(`${this.$options.name}.vue | setEditMode(${val})`)
+            console.log(`${this.$options.name} | setEditMode(${val})`)
             this.edit = val
-        },
-        setLinkedItem() {
-
+            this.$refs.EventForm.validateForm()
         }
     }
 }
