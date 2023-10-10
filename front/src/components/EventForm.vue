@@ -151,6 +151,9 @@ export default {
     },
     mounted() {
         //this.validateForm()
+        // 18f57808-5503-406d-b977-10c6625a8627 -> 23.191 "État des lieux de nos milieux fontinaux"
+        this.linkedItem = store.items.find((x) => (x.id === this.event.itemId))
+
     },
     updated() {
         //this.validateForm()
@@ -179,6 +182,9 @@ export default {
         },
         */
         setLinkedItem() {
+
+            console.log(this.linkedItem)
+
             if (this.linkedItem) {
                 this.event.itemId = this.linkedItem.id
                 this.event.itemNumber = this.linkedItem.number
