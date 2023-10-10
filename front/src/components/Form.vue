@@ -50,9 +50,16 @@ export default {
     watch: {
         model: {
             handler(newValue, oldValue) {
+                console.log(`${this.$options.name} | watch`)
                 this.validateForm()
             },
             deep: true
+        },
+        edit: {
+            handler(newValue, oldValue) {
+                console.log(`${this.$options.name} | watch edit`)
+                this.validateForm()
+            }
         }
     },
     methods: {
