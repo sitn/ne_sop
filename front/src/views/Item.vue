@@ -11,10 +11,10 @@
             </div>
 
             <!-- FORM -->
-            <ItemForm v-model="item" :edit="edit"></ItemForm>
+            <ItemForm v-model="item" :edit="edit" ref="ItemForm"></ItemForm>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+            <FloatingButtons :edit="false" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
 
             <!-- DELETE DIALOG -->
             <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
@@ -157,6 +157,7 @@ export default {
         return {
             store,
             dialog: { deletion: false },
+            actionButtons: { save: 'active', deletion: 'active' },
             edit: false,
             wait: false,
             item: null,
@@ -191,6 +192,8 @@ export default {
         this.formalDocumentRows = this.formalDocumentRowsUnfiltered
         this.updateFormalDocumentModelFilter(this.selectedFormalDocumentModel)
         this.updateNumberOfFormalDocumentsByModel()
+
+        store.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
     },
     methods: {
         async load() {
@@ -218,6 +221,7 @@ export default {
         setEditMode(val) {
             console.log(`${this.$options.name}.vue | setEditMode(${val})`)
             this.edit = val
+            this.$refs.ItemForm.validateForm()
         },
         addEntity() {
             console.log('Item.vue | Add new entity')
