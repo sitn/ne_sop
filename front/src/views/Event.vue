@@ -15,7 +15,8 @@
             <div>store.valid: {{ store.valid }}</div>
 
             <!-- FORM -->
-            <EventForm v-model="event" :edit="edit" @validation-event="handleValidation" ref="EventForm"></EventForm>
+            <EventForm v-model="event" :edit="edit" @validation-event="handleValidation"></EventForm>
+            <!-- <EventForm v-model="event" :edit="edit" @validation-event="handleValidation" ref="EventForm"></EventForm> -->
 
             <!-- FLOATING ACTION BUTTONS -->
             <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
@@ -110,7 +111,7 @@ export default {
         setEditMode(val) {
             console.log(`${this.$options.name} | setEditMode(${val})`)
             this.edit = val
-            this.$refs.EventForm.validateForm()
+            // this.$refs.EventForm.validateForm()
         }
     }
 }
