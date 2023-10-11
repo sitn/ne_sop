@@ -1,5 +1,5 @@
 <template>
-    <Form>
+    <Form :model="item" :edit="edit">
 
         <template v-slot:body>
 
@@ -12,12 +12,12 @@
 
                         <!-- REFERENCE NUMBER TEXT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-input bg-color="white" outlined v-model="item.number" label="N°" :disable="!edit" />
+                            <q-input bg-color="white" outlined v-model="item.number" label="N°" :rules="[v => checkFilled(v)]" :disable="!edit" />
                         </div>
 
                         <!-- TYPE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.type" :options="itemTypes" label="Type" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.type" :options="itemTypes" label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
                             </q-select>
                         </div>
 
@@ -27,12 +27,12 @@
 
                         <!-- TITLE TEXT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-input bg-color="white" outlined v-model="item.title" label="Titre" :disable="!edit" />
+                            <q-input bg-color="white" outlined v-model="item.title" label="Titre" :rules="[v => checkFilled(v)]" :disable="!edit" />
                         </div>
 
                         <!-- AUTHOR SELECT/CREATE FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.author" use-input :options="authorOptions" option-label="name" option-value="name" @filter="filterFn" label="Auteur" emit-value clearable :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.author" use-input :options="authorOptions" option-label="name" option-value="name" @filter="filterFn" map-options label="Auteur" emit-value clearable :rules="[v => checkFilled(v)]" :disable="!edit">
 
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
@@ -85,7 +85,7 @@
 
                         <!-- PRIMARY SERVICE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.services.lead" :options="serviceOptions" option-label="name" option-value="id" label="Service principal" clearable :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.services.lead" :options="serviceOptions" option-label="name" option-value="id" label="Service principal" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section>
@@ -389,14 +389,19 @@
     </Form>
 
     <!-- ADD NEW ENTITY DIALOG -->
-    <q-dialog v-model="addEntityDialog">
+    <q-dialog v-model="dialog.newEntity">
         <NewEntityDialog @addNewEntity="addNewEntity"></NewEntityDialog>
+    </q-dialog>
+
+    <!-- ADD NEW EVENT DIALOG -->
+    <q-dialog v-model="dialog.newEvent">
+        <NewEventDialog></NewEventDialog>
     </q-dialog>
 </template>
 
 <script>
 import { store } from '../store/store.js'
-
+import { checkFilled } from '../store/shared.js'
 import documents from '../assets/data/documents.json'
 
 import itemTypes from '../assets/data/item-types.json'
@@ -404,6 +409,7 @@ import templates from '../assets/data/templates.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 import NewEntityDialog from "../views/NewEntityDialog.vue"
+import NewEventDialog from "../views/NewEventDialog.vue"
 
 const documentsColumns = [
     { name: 'version', align: 'center', label: 'version', field: 'version', sortable: true },
@@ -445,7 +451,7 @@ const subset = ["Parlementaire", "Groupe parlementaire", "Autre"]
 
 export default {
     name: 'EntityForm',
-    components: { Form, FormSection, NewEntityDialog },
+    components: { Form, FormSection, NewEntityDialog, NewEventDialog },
     props: { 'edit': Boolean, 'modelValue': Object },
     emits: ['update:modelValue'],
     setup() {
@@ -455,6 +461,7 @@ export default {
     data() {
         return {
             store,
+            dialog: { newEntity: false, newEvent: false, newDocument: false, newAttachement: false },
             itemTypes: itemTypes,
             authorOptions: store.entities.filter(e => subset.includes(e.type)),
             serviceOptions: store.entities.filter((e) => (e.type === "Service de l'état")),
@@ -491,9 +498,13 @@ export default {
     mounted() {
     },
     methods: {
+        checkFilled,
         addEntity() {
             console.log('ItemForm.vue | Add new entity')
-            this.addEntityDialog = true
+            this.dialog.newEntity = true
+        },
+        addEvent() {
+            this.dialog.newEvent = true
         },
         async addNewEntity(val) {
 
