@@ -21,7 +21,7 @@
             <!-- EDIT/VIEW MODE BUTTON -->
             <div class="q-py-xs">
                 <q-btn fab :icon="editMode ? 'sym_o_close' : 'sym_o_edit'" color="blue" @click="switchEdit()">
-                    <q-tooltip class="bg-black">{{ editMode ? 'Visualisation' : 'Modification' }}</q-tooltip>
+                    <q-tooltip class="bg-black">{{ editMode ? 'Quitter' : 'Modification' }}</q-tooltip>
                 </q-btn>
             </div>
 
@@ -39,9 +39,7 @@ export default {
     props: { 'edit': Boolean, 'wait': Boolean, 'buttons': Object },
     emits: ['saveEvent', 'editEvent', 'deleteEvent'],
     setup() {
-        return {
-
-        }
+        return {}
     },
     data() {
         return {
@@ -52,7 +50,8 @@ export default {
         }
     },
     computed: {
-        saveButton() { return { render: ['active', 'disable'].includes(this.buttons.save), disable: !store.valid } },
+        /* saveButton() { return { render: ['active', 'disable'].includes(this.buttons.save), disable: !store.valid } },  */
+        saveButton() { return { render: ['active', 'disable'].includes(this.buttons.save), disable: this.buttons.save === 'disable' } },
         deleteButton() { return { render: ['active', 'disable'].includes(this.buttons.deletion), disable: this.buttons.deletion === 'disable' } }
     },
     mounted() {
