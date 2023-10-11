@@ -97,25 +97,6 @@
                 </template>
             </q-table>
 
-            <!-- ADD ITEM DIALOG -->
-            <!-- 
-            <q-dialog v-model="addDialog">
-                <q-card>
-                    <q-card-section>
-                        <div class="text-h6">Nouvel objet</div>
-                    </q-card-section>
-                    <q-card-section class="row items-center">
-
-                    </q-card-section>
-
-                    <q-card-actions align="right">
-                        <q-btn flat label="Annuler" color="primary" v-close-popup />
-                        <q-btn flat label="Sauvegarder" color="primary" v-close-popup />
-                    </q-card-actions>
-                </q-card>
-            </q-dialog>
-            -->
-
             <!-- DELETE DIALOG -->
             <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
