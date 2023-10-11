@@ -15,7 +15,7 @@
             <UserForm v-model="user" :edit="edit"></UserForm>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+            <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
 
             <!-- DELETE DIALOG -->
             <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
@@ -46,6 +46,7 @@ export default {
         return {
             store,
             dialog: { deletion: false },
+            actionButtons: { save: 'active', deletion: 'active' },
             edit: false,
             wait: false,
             user: null,
