@@ -15,7 +15,7 @@
             <UserForm v-model="user" :edit="edit"></UserForm>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="true" :wait="wait" :buttons="{ 'save': true, 'deletion': false }" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
+            <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
 
         </q-layout>
     </div>
@@ -40,6 +40,7 @@ export default {
     data() {
         return {
             store,
+            // actionButtons: { save: 'active', deletion: 'none' },
             edit: true,
             wait: false,
             user: {
@@ -65,7 +66,16 @@ export default {
             "email": "",
             "admin": false,
             "active": true,
-            "groups": []
+            "groups": [],
+            "valid": false
+        }
+    },
+    computed: {
+        actionButtons() {
+            return {
+                save: this.user.valid ? 'active' : 'disable',
+                deletion: 'none'
+            }
         }
     },
     mounted() {
@@ -82,6 +92,8 @@ export default {
             await sleep(Math.random() * 1300)
             store.users.push(Object.assign({}, this.user))
             this.wait = false
+
+            this.$router.push({ name: 'Admin' })
         },
         setEditMode(val) {
             console.log(`${this.$options.name}.vue | setEditMode(${val})`)
