@@ -177,16 +177,12 @@ export default {
         }
     },
     created() {
-
     },
     mounted() {
-
     },
     computed: {
-
     },
     watch: {
-
     },
     methods: {
         processLogout() {
