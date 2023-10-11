@@ -17,7 +17,7 @@
 
         <q-card-actions align="right">
             <q-btn flat label="Annuler" color="primary" v-close-popup />
-            <q-btn flat label="Sauvegarder" color="primary" @click="save()" v-close-popup />
+            <q-btn flat label="Sauvegarder" color="primary" @click="save()" v-close-popup :disable="!entity.valid" />
         </q-card-actions>
     </q-card>
 </template>
@@ -31,7 +31,7 @@ import EntityForm from "../components/EntityForm.vue"
 export default {
     name: 'NewEntityDialog',
     components: { EntityForm },
-    props: { 'model': Object },
+    props: {},
     emits: ['addNewEntity'],
     setup() {
         return {}
@@ -52,7 +52,8 @@ export default {
                 "country": "",
                 "website": "",
                 "email": "",
-                "telephone": ""
+                "telephone": "",
+                "valid": false
             },
             entityTypes: entityTypes,
         }
@@ -64,7 +65,6 @@ export default {
     methods: {
         save(val) {
 
-            console.log('save:')
             console.log(this.entity)
             this.$emit('addNewEntity', this.entity)
             // this.store.entities.push(this.entity)
