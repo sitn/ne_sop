@@ -11,11 +11,12 @@
                 </q-breadcrumbs>
             </div>
 
-            <div>valid: {{ valid }}</div>
-            <div>store.valid: {{ store.valid }}</div>
+            <!--  <div>valid: {{ valid }}</div> -->
+            <!--  <div>store.valid: {{ store.valid }}</div> -->
 
             <!-- FORM -->
-            <EventForm v-model="event" :edit="edit" @validation-event="handleValidation" ref="EventForm"></EventForm>
+            <EventForm v-model="event" :edit="edit" @validation-event="handleValidation"></EventForm>
+            <!-- <EventForm v-model="event" :edit="edit" @validation-event="handleValidation" ref="EventForm"></EventForm> -->
 
             <!-- FLOATING ACTION BUTTONS -->
             <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
@@ -49,7 +50,7 @@ export default {
         return {
             store,
             dialog: { deletion: false },
-            actionButtons: {}, // save: 'active', deletion: 'none'
+            // actionButtons: {},
             edit: true,
             wait: false,
             valid: null,
@@ -64,16 +65,25 @@ export default {
                 "time": "",
                 "status": "",
                 "statusGrandConseil": "",
-                "description": ""
+                "description": "",
+                "valid": false
             }, // store.events.find(e => e.id === this.$route.params.id),
             index: store.events.findIndex((e) => (e.id === this.$route.params.id))
+        }
+    },
+    computed: {
+        actionButtons() {
+            return {
+                save: this.event.valid ? 'active' : 'disable',
+                deletion: 'none'
+            }
         }
     },
     created() {
     },
     mounted() {
         // this.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
-        store.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
+        // store.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
     },
 
     methods: {
@@ -83,7 +93,7 @@ export default {
 
             // TODO: POST RECORD TO DATABASE
             console.log(`${this.$options.name} | save()`)
-            console.log(`${this.$options.name} | this.$refs.EventForm.valid = ${this.$refs.EventForm.valid}`)
+            // console.log(`${this.$options.name} | this.$refs.EventForm.valid = ${this.$refs.EventForm.valid}`)
 
             this.wait = true
             await sleep(Math.random() * 1300)
@@ -99,6 +109,7 @@ export default {
 
             store.events.push(Object.assign({}, this.event))
             this.wait = false
+            this.$router.push({ name: 'EventsList' })
         },
         handleValidation(val) {
             this.valid = val
