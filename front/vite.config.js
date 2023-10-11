@@ -1,6 +1,7 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
 import { resolve } from 'path'
 
 const projectRootDir = resolve(__dirname)
@@ -9,7 +10,21 @@ const projectRootDir = resolve(__dirname)
 export default defineConfig({
   base: '/front/',
   publicDir: 'public',
-  plugins: [vue()],
+  plugins: [
+    /* vue(),
+    quasar({
+      lang: 'fr',
+    }),
+    */
+    vue({
+      template: { transformAssetUrls }
+    }),
+    quasar({
+      config: {
+        lang: 'fr'
+      }
+    })
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
