@@ -11,8 +11,8 @@
                 </q-breadcrumbs>
             </div>
 
-            <div>valid: {{ valid }}</div>
-            <div>store.valid: {{ store.valid }}</div>
+            <!--  <div>valid: {{ valid }}</div> -->
+            <!--  <div>store.valid: {{ store.valid }}</div> -->
 
             <!-- FORM -->
             <EventForm v-model="event" :edit="edit" @validation-event="handleValidation"></EventForm>
@@ -49,7 +49,7 @@ export default {
         return {
             store,
             dialog: { deletion: false },
-            actionButtons: { save: 'active', deletion: 'active' },
+            // actionButtons: { save: 'active', deletion: 'active' },
             edit: false,
             wait: false,
             valid: null,
@@ -58,6 +58,12 @@ export default {
         }
     },
     computed: {
+        actionButtons() {
+            return {
+                save: this.event.valid ? 'active' : 'disable',
+                deletion: 'none'
+            }
+        }
     },
     created() {
         this.event = Object.assign({}, store.events.find(e => e.id === this.$route.params.id))
@@ -93,8 +99,10 @@ export default {
             this.wait = false
         },
         handleValidation(val) {
+
             this.valid = val
-            this.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
+            //this.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
+
             // store.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
             console.log(`${this.$options.name} | handleValidation()`)
             // this.actionButtons.save = 'disable'
