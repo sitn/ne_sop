@@ -21,7 +21,7 @@
                                 <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                                            <q-date v-model="event.date" mask="MM.DD.YYYY" color="blue-grey" text-color="white">
+                                            <q-date v-model="event.date" mask="DD.MM.YYYY" color="blue-grey" text-color="white">
                                                 <div class="row justify-end">
                                                     <q-btn v-close-popup label="Fermer" color="primary" flat />
                                                 </div>
