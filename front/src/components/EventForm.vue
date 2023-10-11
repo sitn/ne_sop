@@ -1,5 +1,6 @@
 <template>
-    <Form ref="FormContainer" :model="event" :edit="edit" @validation-event="validation">
+    <Form :model="event" :edit="edit" @validation-event="validation">
+        <!-- <Form ref="FormContainer" :model="event" :edit="edit" @validation-event="validation"> -->
 
         <template v-slot:body>
 
@@ -14,14 +15,15 @@
 
                         <!-- DATE INPUT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <!--  <q-input type="date" bg-color="white" outlined v-model="eventDate" label="Date" required /> -->
-                            <q-input bg-color="white" outlined v-model="event.date" label="Date" mask="date" :rules="['date']" :disable="!edit">
+                            <!--  <q-input type="date" bg-color="white" outlined v-model="eventDate" label="Date" required /> mask="MM.DD.YYYY" -->
+                            <!-- <q-input bg-color="white" outlined v-model="event.date" label="Date" mask="date" :rules="['date']" :disable="!edit"> -->
+                            <q-input bg-color="white" outlined v-model="event.date" label="Date (jj.mm.aaaa)" mask="##.##.####" fill-mask :rules="[val => checkDate(val)]" :disable="!edit">
                                 <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                                            <q-date v-model="event.date" color="blue-grey" text-color="white">
+                                            <q-date v-model="event.date" mask="MM.DD.YYYY" color="blue-grey" text-color="white">
                                                 <div class="row justify-end">
-                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    <q-btn v-close-popup label="Fermer" color="primary" flat />
                                                 </div>
                                             </q-date>
                                         </q-popup-proxy>
@@ -40,13 +42,13 @@
                         <!-- TIME INPUT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <!-- <q-input type="time" bg-color="white" outlined v-model="event.time" label="Heure" /> -->
-                            <q-input bg-color="white" outlined v-model="event.time" label="Heure" mask="time" :rules="['time']" :disable="!edit">
+                            <q-input bg-color="white" outlined v-model="event.time" label="Heure (hh:mm)" mask="##:##" fill-mask="" :rules="['time']" :disable="!edit">
                                 <template v-slot:append>
                                     <q-icon name="access_time" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
                                             <q-time v-model="event.time" color="blue-grey" text-color="white">
                                                 <div class="row items-center justify-end">
-                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    <q-btn v-close-popup label="Fermer" color="primary" flat />
                                                 </div>
                                             </q-time>
                                         </q-popup-proxy>
@@ -113,8 +115,9 @@
 </template>
 
 <script>
+import { date } from 'quasar'
 import { store } from '../store/store.js'
-import { checkFilled } from '../store/shared.js'
+import { checkFilled, checkDate } from '../store/shared.js'
 import eventTypes from '../assets/data/event-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
@@ -146,8 +149,16 @@ export default {
             }
         }
     },
+    watch: {
+        event: {
+            handler(newVal, oldVal) {
+                console.log(`valid date: ${date.isValid(newVal.date)}`)
+            },
+            deep: true
+        }
+    },
     created() {
-        console.log(`router id: ${this.$route.params.id}`)
+        console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
     },
     mounted() {
         //this.validateForm()
@@ -170,6 +181,7 @@ export default {
     */
     methods: {
         checkFilled,
+        checkDate,
         validation(val) {
             console.log(`${this.$options.name} | validation: ${val}`)
             this.valid = val
@@ -177,7 +189,7 @@ export default {
         },
         /*
         validateForm() {
-            console.log(`${this.$options.name} | validateForm()`)
+            console.log(`${ this.$options.name } | validateForm()`)
             this.$refs.FormContainer.validateForm() // call validation method from the Form component (Form.vue)
         },
         */
