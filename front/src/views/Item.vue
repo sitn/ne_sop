@@ -157,7 +157,7 @@ export default {
         return {
             store,
             dialog: { deletion: false },
-            actionButtons: { save: 'active', deletion: 'active' },
+            // actionButtons: { save: 'active', deletion: 'active' },
             edit: false,
             wait: false,
             item: null,
@@ -182,6 +182,12 @@ export default {
         }
     },
     computed: {
+        actionButtons() {
+            return {
+                save: this.item.valid ? 'active' : 'disable',
+                deletion: 'none'
+            }
+        }
     },
     created() {
         store.saveButton = true
@@ -193,7 +199,7 @@ export default {
         this.updateFormalDocumentModelFilter(this.selectedFormalDocumentModel)
         this.updateNumberOfFormalDocumentsByModel()
 
-        store.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
+        // store.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
     },
     methods: {
         async load() {
@@ -221,7 +227,7 @@ export default {
         setEditMode(val) {
             console.log(`${this.$options.name}.vue | setEditMode(${val})`)
             this.edit = val
-            this.$refs.ItemForm.validateForm()
+            // this.$refs.ItemForm.validateForm()
         },
         addEntity() {
             console.log('Item.vue | Add new entity')
