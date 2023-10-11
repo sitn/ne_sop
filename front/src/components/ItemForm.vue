@@ -111,6 +111,24 @@
 
                     </div>
 
+                    <div class="row q-col-gutter-lg q-py-md">
+
+                        <!-- STATUS SELECT FIELD -->
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <q-select bg-color="white" outlined v-model="item.status" :options="itemStatus" option-label="name" option-value="id" label="Statut" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                                <template v-slot:option="scope">
+                                    <q-item v-bind="scope.itemProps">
+                                        <q-item-section>
+                                            <q-item-label>{{ scope.opt.name }}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                </template>
+                            </q-select>
+                        </div>
+
+
+                    </div>
+
                     <div class="row q-py-md">
 
                         <!-- URGENT CHECKBOX FIELD -->
@@ -168,30 +186,7 @@
                     </div>
 
                     <!-- EVENTS TABLE -->
-                    <q-table :rows="item.events" :columns="eventsColumns" row-key="date" class="q-my-md">
-                        <template v-slot:body="props">
-                            <q-tr :props="props">
-                                <q-td key="date" :props="props">
-                                    {{ props.row.date }}
-                                </q-td>
-                                <q-td key="time" :props="props">
-                                    {{ props.row.time }}
-                                </q-td>
-                                <q-td key="type" :props="props">
-                                    {{ props.row.eventType }}
-                                </q-td>
-                                <q-td key="actions" :props="props">
-                                    <q-btn dense round flat color="red" name="delete" @click="console.log(props.row)" icon="sym_o_delete" :disable="!edit">
-                                        <q-tooltip class="bg-black">Supprimer</q-tooltip>
-                                    </q-btn>
-                                </q-td>
-                            </q-tr>
-                        </template>
-                    </q-table>
-
-                    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
-                        {{ item.events }}
-                    </div>
+                    <EventsTable :events="item.events" :edit="edit"></EventsTable>
 
                 </template>
             </FormSection>
@@ -395,7 +390,7 @@
 
     <!-- ADD NEW EVENT DIALOG -->
     <q-dialog v-model="dialog.newEvent">
-        <NewEventDialog></NewEventDialog>
+        <NewEventDialog v-model="item"></NewEventDialog>
     </q-dialog>
 </template>
 
@@ -403,13 +398,15 @@
 import { store } from '../store/store.js'
 import { checkFilled } from '../store/shared.js'
 import documents from '../assets/data/documents.json'
-
 import itemTypes from '../assets/data/item-types.json'
+import itemStatus from '../assets/data/item-status.json'
 import templates from '../assets/data/templates.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
+import EventsTable from "../components/EventsTable.vue"
 import NewEntityDialog from "../views/NewEntityDialog.vue"
 import NewEventDialog from "../views/NewEventDialog.vue"
+
 
 const documentsColumns = [
     { name: 'version', align: 'center', label: 'version', field: 'version', sortable: true },
@@ -440,18 +437,11 @@ const attachementColumns = [
     { name: 'action', align: 'left', label: '', field: 'action' }
 ]
 
-const eventsColumns = [
-    { name: "date", align: "left", label: "Date", field: "date", sortable: true },
-    { name: "time", align: "left", label: "Heure", field: "", sortable: true },
-    { name: "type", align: "left", label: "Type", field: "eventType", sortable: true },
-    { name: "actions", align: "right", label: "", field: "", sortable: false }
-]
-
 const subset = ["Parlementaire", "Groupe parlementaire", "Autre"]
 
 export default {
     name: 'EntityForm',
-    components: { Form, FormSection, NewEntityDialog, NewEventDialog },
+    components: { Form, FormSection, NewEntityDialog, NewEventDialog, EventsTable },
     props: { 'edit': Boolean, 'modelValue': Object },
     emits: ['update:modelValue'],
     setup() {
@@ -463,6 +453,7 @@ export default {
             store,
             dialog: { newEntity: false, newEvent: false, newDocument: false, newAttachement: false },
             itemTypes: itemTypes,
+            itemStatus: itemStatus,
             authorOptions: store.entities.filter(e => subset.includes(e.type)),
             serviceOptions: store.entities.filter((e) => (e.type === "Service de l'état")),
             formalDocumentRowsUnfiltered: documents.filter((e) => (e.ressourcetype === 'formal')),
@@ -471,7 +462,6 @@ export default {
             attachementRows: documents.filter((e) => (e.ressourcetype === 'attachement')),
             attachementColumns: attachementColumns,
             documentsColumns: documentsColumns,
-            eventsColumns: eventsColumns,
             addEntityDialog: false,
             addDocumentDialog: false,
             formalDocumentModels: templates,
