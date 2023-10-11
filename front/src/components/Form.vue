@@ -5,7 +5,7 @@
 
             <div class="row justify-center">
                 <div class="col">
-                    <q-form ref="form" @validation-success="validationSuccess" @validation-error="validationError" greedy>
+                    <q-form ref="form" @validation-success="validationSuccess" @validation-error="validationError" greedy no-error-focus>
                         <slot name="body"></slot>
                     </q-form>
                 </div>
@@ -78,14 +78,16 @@ export default {
         validationSuccess() {
             console.log(`${this.$options.name} | validationSuccess()`)
             this.valid = true
-            this.$emit('validationEvent', true)
+            this.model.valid = true
             store.valid = true
+            this.$emit('validationEvent', true)
         },
         validationError() {
             console.log(`${this.$options.name} | validationError()`)
             this.valid = false
-            this.$emit('validationEvent', false)
+            this.model.valid = false
             store.valid = false
+            this.$emit('validationEvent', false)
         },
     }
 }
