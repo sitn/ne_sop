@@ -70,7 +70,7 @@
             </q-dialog>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="true" :wait="wait" :buttons="{ 'save': true, 'deletion': false }" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
+            <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
 
         </q-layout>
 
@@ -128,7 +128,7 @@ export default {
     data() {
         return {
             store,
-            saving: false,
+            // actionButtons: { save: 'active', deletion: 'none' },
             edit: true,
             wait: false,
             item: {
@@ -153,7 +153,8 @@ export default {
                     "lead": null,
                     "support": []
                 },
-                "events": []
+                "events": [],
+                "valid": false
             },
             itemTypes: itemTypes,
             formalDocumentRowsUnfiltered: documents.filter((e) => (e.ressourcetype === 'formal')),
@@ -173,6 +174,12 @@ export default {
         }
     },
     computed: {
+        actionButtons() {
+            return {
+                save: this.item.valid ? 'active' : 'disable',
+                deletion: 'none'
+            }
+        }
     },
     beforeCreate() {
     },
@@ -193,6 +200,8 @@ export default {
             await sleep(Math.random() * 1300)
             store.items.push(this.item)
             this.wait = false
+
+            this.$router.push({ name: 'ItemsList' })
         },
         setEditMode(val) {
             console.log(`${this.$options.name}.vue | setEditMode(${val})`)
