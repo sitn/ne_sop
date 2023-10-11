@@ -15,7 +15,7 @@
             <EntityForm v-model="entity" :edit="edit"></EntityForm>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="edit" :wait="wait" :buttons="{ 'save': true, 'deletion': false }" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
+            <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @edit-event="setEditMode"></FloatingButtons>
 
         </q-layout>
 
@@ -41,6 +41,7 @@ export default {
     data() {
         return {
             store,
+            // actionButtons: { save: 'active', deletion: 'none' },
             edit: true,
             wait: false,
             entity: {
@@ -55,12 +56,19 @@ export default {
                 "country": "",
                 "website": "",
                 "email": "",
-                "telephone": ""
+                "telephone": "",
+                "valid": false
             },
             entityTypes: entityTypes,
         }
     },
     computed: {
+        actionButtons() {
+            return {
+                save: this.entity.valid ? 'active' : 'disable',
+                deletion: 'none'
+            }
+        }
     },
     mounted() {
     },
@@ -74,6 +82,8 @@ export default {
                 this.store.entities.push(this.entity)
             }
             this.wait = false
+
+            this.$router.push({ name: 'EntitiesList' })
         },
         setEditMode(val) {
             console.log(`${this.$options.name}.vue | setEditMode(${val})`)
