@@ -14,7 +14,9 @@
             <EntityForm v-model="entity" :edit="edit"></EntityForm>
 
             <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+            <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+
+            <!-- <FloatingButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons> -->
             <!-- <FloatingActionButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @edit-event="setEditMode"></FloatingActionButtons> -->
 
             <!-- DELETE DIALOG -->
@@ -46,6 +48,7 @@ export default {
         return {
             store,
             dialog: { deletion: false },
+            // actionButtons: { save: 'active', deletion: 'active' },
             edit: false,
             wait: false,
             entity: null, // store.entities.find(e => e.id === this.$route.params.id),
@@ -53,9 +56,15 @@ export default {
         }
     },
     computed: {
+        actionButtons() {
+            return {
+                save: this.entity.valid ? 'active' : 'disable',
+                deletion: 'none'
+            }
+        }
     },
     created() {
-        store.saveButton = true
+        // store.saveButton = true
         this.entity = Object.assign({}, store.entities.find((e) => (e.id === this.$route.params.id)))
     },
     mounted() {
