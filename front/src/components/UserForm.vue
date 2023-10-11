@@ -2,9 +2,7 @@
     https://vuejs.org/guide/components/v-model.html
 -->
 <template>
-    <!-- <div class=""> -->
-
-    <Form title="">
+    <Form :model="user" :edit="edit">
 
         <template v-slot:body>
 
@@ -17,12 +15,12 @@
 
                         <!-- NAME TEXT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-input bg-color="white" outlined v-model="user.name" label="Nom" :disable="!edit" />
+                            <q-input bg-color="white" outlined v-model="user.name" label="Nom" :rules="[v => checkFilled(v)]" :disable="!edit" />
                         </div>
 
                         <!-- EMAIL TEXT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-input bg-color="white" outlined v-model="user.email" label="Email" :disable="!edit" />
+                            <q-input bg-color="white" outlined v-model="user.email" label="Email" :rules="[v => checkEmail(v, false)]" :disable="!edit" />
                         </div>
                     </div>
 
@@ -85,7 +83,7 @@
 
                     <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
                         <div>store.users</div>
-                        <div>{{ store.users }}</div>
+                        <div>{{ store.users.find(e => e.id === this.user.id) }}</div>
                     </div>
 
                 </template>
@@ -103,12 +101,11 @@
         </template>
 
     </Form>
-
-    <!-- </div> -->
 </template>
 
 <script>
 import { store } from '../store/store.js'
+import { checkFilled, checkEmail } from '../store/shared.js'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 
@@ -138,12 +135,13 @@ export default {
         }
     },
     created() {
-        console.log(`router id: ${this.$route.params.id}`)
-        // this.user = Object.assign({}, store.users.find(e => e.id === this.$route.params.id))
+        console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
     },
     mounted() {
     },
     methods: {
+        checkFilled,
+        checkEmail
     }
 }
 </script>
