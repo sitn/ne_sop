@@ -24,6 +24,26 @@
                         </div>
                     </div>
 
+                    <div class="row q-col-gutter-lg q-py-md">
+
+                        <!-- GROUPS SELECT FIELD -->
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <q-select bg-color="white" outlined v-model="user.groups" multiple :options="groupOptions" option-label="name" option-value="name" label="Groupe(s)" emit-value clearable :disable="!edit">
+
+                                <template v-slot:option="scope">
+                                    <q-item v-bind="scope.itemProps">
+                                        <q-item-section>
+                                            <q-item-label>{{ scope.opt.name }}</q-item-label>
+                                            <q-item-label caption>{{ scope.opt.type }}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                </template>
+
+                            </q-select>
+                        </div>
+
+                    </div>
+
                     <div class="row q-py-md">
 
                         <!-- ADMIN CHECKBOX FIELD -->
@@ -50,31 +70,12 @@
 
                     </div>
 
-                    <div class="row q-col-gutter-lg q-py-md">
 
-                        <!-- GROUPS SELECT FIELD -->
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="user.groups" multiple :options="groupOptions" option-label="name" option-value="name" label="Groupe(s)" emit-value clearable :disable="!edit">
-
-                                <template v-slot:option="scope">
-                                    <q-item v-bind="scope.itemProps">
-                                        <q-item-section>
-                                            <q-item-label>{{ scope.opt.name }}</q-item-label>
-                                            <q-item-label caption>{{ scope.opt.type }}</q-item-label>
-                                        </q-item-section>
-                                    </q-item>
-                                </template>
-
-                            </q-select>
-                        </div>
-
-                    </div>
 
                     <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
                         <div>edit</div>
                         <div>{{ edit }}</div>
                     </div>
-
 
                     <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
                         <div>user</div>
@@ -90,13 +91,14 @@
             </FormSection>
 
             <!-- GROUPS SECTION -->
+            <!-- 
             <FormSection title="User">
                 <template v-slot:content>
                     <div class="text-h6">Groupes</div>
 
-
                 </template>
             </FormSection>
+            -->
 
         </template>
 
