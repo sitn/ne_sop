@@ -51,12 +51,37 @@ export const formatPhoneNumber = (val) => {
     console.log(val)
 }
 
+export const checkFile = (val) => {
+    //console.log('checkFile')
+    //console.log(val)
+    if (val) {
+        return true
+    } else {
+        return 'Champ obligatoire'
+    }
+}
+
 export const checkDate = (val) => {
     let mydate = date.extractDate(val, 'DD.MM.YYYY')
-    console.log(val)
+
+    console.log(`val: ${val}`)
+    console.log(date.formatDate(mydate, 'DD.MM.YYYY'))
+    console.log(date.formatDate(mydate, 'YYYY/MM/DD'))
+    console.log(!isNaN(new Date(date.formatDate(mydate, 'YYYY/MM/DD'))))
+
+    // !isNaN(new Date('2322/16/12'))
     console.log(mydate)
-    console.log(date.isValid(mydate))
-    return date.isValid(val) ? true : 'Format non-valable'
+
+    console.log(val.split("."))
+    let dmy = val.split(".")
+    let mymydate = new Date(dmy[2], dmy[1] - 1, dmy[0])
+    console.log(mymydate)
+
+    let newDate = `${dmy[2]}/${dmy[1]}/${dmy[0]}`;
+    console.log(newDate)
+
+    console.log(`date valid: ${date.isValid(mydate)}`)
+    return date.isValid(mydate) ? true : 'Format non-valable'
 }
 
 export const checkTime = (val, allowEmpty = true) => {
@@ -161,4 +186,18 @@ downloadICS(val) {
     })
 
 }
+
 */
+
+// source: https://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
+export const formatBytes = (bytes, decimals = 2) => {
+    if (!+bytes) return '0 Bytes'
+
+    const k = 1024
+    const dm = decimals < 0 ? 0 : decimals
+    const sizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+}
