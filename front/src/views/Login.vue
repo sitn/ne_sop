@@ -12,7 +12,8 @@
 
                         <q-separator />
 
-                        <q-input v-model="username" filled label="Nom d'utilisateur *" style="width: inherit;" lazy-rules :rules="[val => val && val.length > 0 || 'Entrer le nom d\'utilisateur']" />
+                        <!-- <q-input v-model="username" filled label="Nom d'utilisateur *" style="width: inherit;" lazy-rules :rules="[val => val && val.length > 0 || 'Entrer le nom d\'utilisateur']" /> -->
+                        <q-input v-model="username" filled label="Nom d'utilisateur *" style="width: inherit;" lazy-rules :rules="[val => val && val.length > 0 || 'Entrer l\'email']" />
 
                         <q-input v-model="password" filled :type="isPwd ? 'password' : 'text'" label="Mot de passe *" lazy-rules :rules="[val => val && val.length > 0 || 'Entrer le mot de passe']">
 
@@ -24,7 +25,6 @@
 
                         <div class="q-gutter-md" align="right">
                             <q-btn label="connexion" type="submit" color="primary" icon="login" />
-
                         </div>
                     </q-form>
                 </q-card-section>
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { store } from '../store/store.js'
 
 export default {
     name: 'Login',
@@ -46,6 +47,8 @@ export default {
     },
     data() {
         return {
+            store,
+            email: '',
             username: '',
             password: '',
             isPwd: true,
@@ -60,6 +63,8 @@ export default {
     methods: {
         processLogin() {
             this.loginInProgress = true;
+
+            // store.session.user = 
 
             // do something here to log in and remove setTimeout above !
             setTimeout(() => {
