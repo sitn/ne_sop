@@ -77,10 +77,12 @@
                         <!-- DEPOSIT DATE COLUMN -->
                         <q-td key="deposit" :props="props">
                             <!-- {{ props.row.events.find((e) => e.eventType === "Dépôt").date }} -->
+                            {{ getDate(props.row.events, "Dépôt") }}
                         </q-td>
                         <!-- DELAY DATE COLUMN -->
                         <q-td key="delay" :props="props">
                             <!-- {{ props.row.events.find((e) => e.eventType === "Délai").date }} -->
+                            {{ getDate(props.row.events, "Délai") }}
                         </q-td>
                         <!-- ACTIONS COLUMN -->
                         <q-td key="actions" :props="props">
@@ -218,6 +220,14 @@ export default {
         },
         addItem() {
             // this.addDialog = true
+        },
+        getDate(events, type) {
+            let res = events.find((e) => e.eventType === type)
+            if (res) {
+                return res.date
+            } else {
+                return ""
+            }
         },
         color(val) {
             switch (val) {
