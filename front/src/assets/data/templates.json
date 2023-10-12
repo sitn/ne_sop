@@ -1,80 +1,118 @@
 [
     {
         "id": "1",
-        "parent": "Postulat",
+        "category": [
+            "Postulat"
+        ],
         "name": "Prise de position - Motion Postulat (CE)",
         "relpath": "Modele_FicheAccomp_PrisePositionCEMoPo.dotx"
     },
     {
         "id": "2",
-        "parent": "Postulat",
+        "category": [
+            "Postulat"
+        ],
         "name": "Refus Motion Postulat 1",
         "relpath": "Modele_FicheAccomp_RefusMoPo1.dotx"
     },
     {
         "id": "3",
-        "parent": "Postulat",
+        "category": [
+            "Postulat"
+        ],
         "name": "Refus Motion Postulat 2",
         "relpath": "Modele_FicheAccomp_RefusMoPo2.dotx"
     },
     {
         "id": "4",
-        "parent": "Interpellation",
+        "category": [
+            "Interpellation"
+        ],
         "name": "Réponse écrite - Interpellation",
         "relpath": "Modele_FicheAccomp_ReponseEcriteInterpellation.dotx"
     },
     {
         "id": "5",
-        "parent": "Question",
+        "category": [
+            "Question"
+        ],
         "name": "Réponse écrite - Question",
         "relpath": "Modele_FicheAccomp_ReponseEcriteQuestion1.dotx"
     },
     {
         "id": "6",
-        "parent": "Motion",
+        "category": [
+            "Motion"
+        ],
         "name": "Position contre - Motion Postulat (CE)",
         "relpath": "Modele_PositionContre_MoPo.dotx"
     },
     {
         "id": "7",
-        "parent": "Motion",
+        "category": [
+            "Motion"
+        ],
         "name": "Prise de position contre - Motion Postulat (CE)",
         "relpath": "Modele_PrisePositionContre_MoPo.dotx"
     },
     {
         "id": "8",
-        "parent": "Interpellation",
+        "category": [
+            "Interpellation"
+        ],
         "name": "Réponse écrite - Interpellation (CE)",
         "relpath": "Modele_ReponseEcrite_Interpellation.dotx"
     },
     {
         "id": "9",
-        "parent": "Question",
+        "category": [
+            "Question"
+        ],
         "name": "Réponse écrite - Question (CE)",
         "relpath": "Modele_ReponseEcrite_Question.dotx"
     },
     {
         "id": "10",
-        "parent": "Interpellation",
+        "category": [
+            "Interpellation"
+        ],
         "name": "Speaking note - Interpellation (CE)",
         "relpath": "Modele_SpeakingNote_Interpellation.dotx"
     },
     {
         "id": "11",
-        "parent": "Question",
+        "category": [
+            "Question"
+        ],
         "name": "Speaking note - Question (CE)",
         "relpath": "Modele_SpeakingNote_Question.dotx"
     },
     {
         "id": "12",
-        "parent": "Recommandation",
+        "category": [
+            "Recommandation"
+        ],
         "name": "Speaking note - Recommandation (CE)",
         "relpath": "Modele_SpeakingNote_Recommandation.dotx"
     },
     {
         "id": "13",
-        "parent": "Recommandation",
+        "category": [
+            "Recommandation"
+        ],
         "name": "Note (CE)",
+        "relpath": "NoteCE.dotx"
+    },
+    {
+        "id": "14",
+        "category": [
+            "Postulat",
+            "Motion",
+            "Interpellation",
+            "Question",
+            "Recommandation"
+        ],
+        "name": "Autre",
         "relpath": "NoteCE.dotx"
     }
 ]
