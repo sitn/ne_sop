@@ -10,11 +10,13 @@
                     <div class="text-h6">Identification</div>
 
                     <div class="row q-col-gutter-lg q-py-md">
+
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <!-- NAME TEXT FIELD -->
                             <q-input bg-color="white" outlined v-model="entity.name" label="Nom" :rules="[v => checkFilled(v)]" :disable="!edit" />
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <!-- TYPE SELECT FIELD -->
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                 <q-select bg-color="white" outlined v-model="entity.type" :options="entityTypes" label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
@@ -22,8 +24,10 @@
                             </div>
 
                         </div>
+
                     </div>
 
+                    <!-- DESCRIPTION FIELD -->
                     <div class="row q-col-gutter-lg q-py-md">
                         <div class="col">
                             <q-input bg-color="white" outlined v-model="entity.description" label="Description" type="textarea" :disable="!edit" />
