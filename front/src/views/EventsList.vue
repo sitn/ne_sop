@@ -28,11 +28,13 @@
                 </div>
 
                 <!-- ADD NEW RECORD BUTTON -->
+                <!-- 
                 <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
                     <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" @click="" to="/events/new">
                         <q-tooltip class="bg-black">Ajouter un nouvel événement</q-tooltip>
                     </q-btn>
                 </div>
+                -->
 
             </div>
 
@@ -84,10 +86,10 @@
                                     <q-tooltip class="bg-black">Ajouter au calendrier</q-tooltip>
                                 </q-btn>
                                 <!-- 
-                            <q-btn href="data:,I am text file" download="a122.txt" dense round flat color="grey" name="calendar" @click="" icon="sym_o_calendar_add_on">
-                                <q-tooltip class="bg-black">Ajouter au calendrier</q-tooltip>
-                            </q-btn>
-                            -->
+                                <q-btn href="data:,I am text file" download="a122.txt" dense round flat color="grey" name="calendar" @click="" icon="sym_o_calendar_add_on">
+                                    <q-tooltip class="bg-black">Ajouter au calendrier</q-tooltip>
+                                </q-btn>
+                                -->
                                 <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete">
                                     <q-tooltip class="bg-black">Supprimer</q-tooltip>
                                 </q-btn>
@@ -109,10 +111,11 @@
 
 <script>
 import { store } from '../store/store.js'
+import { downloadICS } from '../store/shared.js'
 // import items from '../assets/data/items.json'
 // import events from '../assets/data/events.json'
 // import * as ics from 'ics'
-import { createEvent } from 'ics'
+// import { createEvent } from 'ics'
 import DeleteDialog from '../components/DeleteDialog.vue'
 
 //console.log(items.map(e => (e.events)).flat())
@@ -180,6 +183,7 @@ export default {
         // console.log(store.items.map((x) => (x.events)).flat(1))
     },
     methods: {
+        downloadICS,
         handleDeletion(val) {
             this.selected = val
             this.dialog.deletion = true
@@ -187,95 +191,7 @@ export default {
         async remove() {
             store.events = store.events.filter((x) => (x.id !== this.selected))
             this.rows = store.events
-        },
-        async downloadICS(val) {
-
-            console.log('download ICS')
-            console.log(val)
-
-            // const extract = date => val.date.toISOString().split(/[^0-9]/).slice(0, -1)
-            let date = new Date(val.date)
-            console.log(date)
-
-            let dateArray = [date.getFullYear(), date.getMonth() + 1, date.getDate()]
-            console.log(dateArray)
-
-            let event = {
-                start: dateArray, // Date.parse(val.date), //  [2018, 5, 30, 6, 30],
-                duration: { hours: 1, minutes: 0 },
-                title: `Objet parlementaire ${val.itemNumber}`,
-                description: '',
-                location: '',
-                /*
-                url: 'http://www.bolderboulder.com/',
-                geo: { lat: 40.0095, lon: 105.2669 },
-                categories: ['10k races', 'Memorial Day Weekend', 'Boulder CO'],
-                status: 'CONFIRMED',
-                busyStatus: 'BUSY',
-                organizer: { name: 'Admin', email: 'Race@BolderBOULDER.com' },
-                attendees: [
-                    { name: 'Adam Gibbons', email: 'adam@example.com', rsvp: true, partstat: 'ACCEPTED', role: 'REQ-PARTICIPANT' },
-                    { name: 'Brittany Seaton', email: 'brittany@example2.org', dir: 'https://linkedin.com/in/brittanyseaton', role: 'OPT-PARTICIPANT' }
-                ]
-                */
-            }
-
-            const filename = 'sop.ics'
-            const file = await new Promise((resolve, reject) => {
-                createEvent(event, (error, value) => {
-                    if (error) {
-                        reject(error)
-                    }
-
-                    resolve(new File([value], filename, { type: 'text/calendar' }))
-                })
-            })
-            const url = URL.createObjectURL(file);
-
-            // trying to assign the file URL to a window could cause cross-site
-            // issues so this is a workaround using HTML5
-            const anchor = document.createElement('a');
-            anchor.href = url;
-            anchor.download = filename;
-
-            document.body.appendChild(anchor);
-            anchor.click();
-            document.body.removeChild(anchor);
-
-            URL.revokeObjectURL(url);
-        },
-        /*
-        downloadICS(val) {
-
-            console.log(val)
-
-            let event = {
-                start: [2018, 5, 30, 6, 30],
-                duration: { hours: 6, minutes: 30 },
-                title: 'Bolder Boulder',
-                description: 'Annual 10-kilometer run in Boulder, Colorado',
-                location: 'Folsom Field, University of Colorado (finish line)',
-                url: 'http://www.bolderboulder.com/',
-                geo: { lat: 40.0095, lon: 105.2669 },
-                categories: ['10k races', 'Memorial Day Weekend', 'Boulder CO'],
-                status: 'CONFIRMED',
-                busyStatus: 'BUSY',
-                organizer: { name: 'Admin', email: 'Race@BolderBOULDER.com' },
-
-            }
-
-            ics.createEvent(event, (error, value) => {
-                if (error) {
-                    console.log(error)
-                    return
-                }
-                window.open("data:text/calendar;charset=utf8," + value);
-                console.log(value)
-            })
-
         }
-        */
-
     }
 }
 </script>
