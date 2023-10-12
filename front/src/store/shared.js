@@ -1,9 +1,5 @@
-/*
-export default {
-    foo: function () { alert("foo!") }
-}
-*/
 import parsePhoneNumber from 'libphonenumber-js'
+import { createEvent } from 'ics'
 import { date } from 'quasar'
 
 export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
@@ -49,13 +45,13 @@ export const checkWebsite = (val, allowEmpty = true) => {
 
 }
 
-export const formatPhoneNumber = val => {
+export const formatPhoneNumber = (val) => {
     // this.entity.telephone = '+41255555555'
     console.log('formatPhoneNumber')
     console.log(val)
 }
 
-export const checkDate = val => {
+export const checkDate = (val) => {
     let mydate = date.extractDate(val, 'DD.MM.YYYY')
     console.log(val)
     console.log(mydate)
@@ -63,6 +59,106 @@ export const checkDate = val => {
     return date.isValid(val) ? true : 'Format non-valable'
 }
 
-export const checkFilled = val => {
+export const checkTime = (val, allowEmpty = true) => {
+    let reg = /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/
+    let isValid = reg.test(val) || (allowEmpty && val === '')
+    if (isValid) {
+        return true
+    } else {
+        return 'Format non-valable'
+    }
+}
+
+export const checkFilled = (val) => {
     return val ? true : 'Champ obligatoire'
 }
+
+export const downloadICS = async (val) => {
+
+    console.log('download ICS')
+    console.log(val)
+
+    // const extract = date => val.date.toISOString().split(/[^0-9]/).slice(0, -1)
+    // let date = new Date(val.date)
+    let eventDate = date.extractDate(val.date, 'DD.MM.YYYY')
+    console.log(eventDate)
+
+    let dateArray = [eventDate.getFullYear(), eventDate.getMonth() + 1, eventDate.getDate()]
+    console.log(dateArray)
+
+    let event = {
+        start: dateArray, // Date.parse(val.date), //  [2018, 5, 30, 6, 30],
+        duration: { hours: 1, minutes: 0 },
+        title: `Objet parlementaire ${val.itemNumber}`,
+        description: '',
+        location: '',
+        /*
+        url: 'http://www.bolderboulder.com/',
+        geo: { lat: 40.0095, lon: 105.2669 },
+        categories: ['10k races', 'Memorial Day Weekend', 'Boulder CO'],
+        status: 'CONFIRMED',
+        busyStatus: 'BUSY',
+        organizer: { name: 'Admin', email: 'Race@BolderBOULDER.com' },
+        attendees: [
+            { name: 'Adam Gibbons', email: 'adam@example.com', rsvp: true, partstat: 'ACCEPTED', role: 'REQ-PARTICIPANT' },
+            { name: 'Brittany Seaton', email: 'brittany@example2.org', dir: 'https://linkedin.com/in/brittanyseaton', role: 'OPT-PARTICIPANT' }
+        ]
+        */
+    }
+
+    const filename = 'sop.ics'
+    const file = await new Promise((resolve, reject) => {
+        createEvent(event, (error, value) => {
+            if (error) {
+                reject(error)
+            }
+
+            resolve(new File([value], filename, { type: 'text/calendar' }))
+        })
+    })
+    const url = URL.createObjectURL(file);
+
+    // trying to assign the file URL to a window could cause cross-site
+    // issues so this is a workaround using HTML5
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = filename;
+
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+
+    URL.revokeObjectURL(url);
+}
+
+/*
+downloadICS(val) {
+
+    console.log(val)
+
+    let event = {
+        start: [2018, 5, 30, 6, 30],
+        duration: { hours: 6, minutes: 30 },
+        title: 'Bolder Boulder',
+        description: 'Annual 10-kilometer run in Boulder, Colorado',
+        location: 'Folsom Field, University of Colorado (finish line)',
+        url: 'http://www.bolderboulder.com/',
+        geo: { lat: 40.0095, lon: 105.2669 },
+        categories: ['10k races', 'Memorial Day Weekend', 'Boulder CO'],
+        status: 'CONFIRMED',
+        busyStatus: 'BUSY',
+        organizer: { name: 'Admin', email: 'Race@BolderBOULDER.com' },
+
+    }
+
+    ics.createEvent(event, (error, value) => {
+        if (error) {
+            console.log(error)
+            return
+        }
+        window.open("data:text/calendar;charset=utf8," + value);
+        console.log(value)
+    })
+
+}
+*/
