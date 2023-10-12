@@ -47,8 +47,9 @@
                             <div>
                                 <q-badge color="red" class="q-my-sm" v-if="props.row.urgent">Urgent</q-badge>
                             </div>
-                            <div>
-                                <q-badge :color="color(props.row.status)" rounded class="q-mr-sm" /> {{ props.row.status }}
+                            <div class="row items-center">
+                                <q-badge :color="color(props.row.status)" rounded class="q-mr-sm" />
+                                <div>{{ props.row.status }}</div>
                             </div>
                         </q-td>
 
