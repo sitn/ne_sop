@@ -4,18 +4,14 @@
         <div class="col" style="max-width: 880px;"> <!-- -xs-12 col-sm-12 col-md-8 -->
 
             <div class="row justify-center">
-                <div class="col">
-                    <q-form ref="form" @validation-success="validationSuccess" @validation-error="validationError" greedy no-error-focus>
-                        <slot name="body"></slot>
-                    </q-form>
-                </div>
+                <!-- <div class="col"> -->
+                <q-form ref="form" class="col" @validation-success="validationSuccess" @validation-error="validationError" greedy no-error-focus>
+                    <slot name="body"></slot>
+                </q-form>
+                <!--</div> -->
             </div>
 
         </div>
-
-        <!-- FLOATING ACTION BUTTONS -->
-        <!-- <FloatingButtons :edit="true" :wait="true" :buttons="{ save: 'active', deletion: 'none' }"></FloatingButtons> -->
-
 
     </div>
 </template>
@@ -26,7 +22,7 @@ import { store } from '../store/store.js'
 export default {
     name: 'Form',
     components: {},
-    props: { 'edit': Boolean, 'model': Object }, // { 'title': String, 'edit': Boolean, 'toggle': Boolean },
+    props: { 'edit': Boolean, 'model': Object }, // { 'title': String },
     emits: ['editEvent', 'validationEvent'],
     setup() {
         return {
