@@ -39,23 +39,11 @@
 
                         </div>
 
-                    </template>
-                </FormSection>
-
-                <!-- CONTENT SECTION -->
-                <FormSection title="Contenu">
-                    <template v-slot:content>
-                        <div class="text-h6">Contenu</div>
-
-
-                        <div class="row q-col-gutter-lg q-py-md">
+                        <!-- NOTE TEXT AREA FIELD -->
+                        <div class="row q-col-gutter-lg q-my-sm">
                             <div class="col">
-                                <q-editor v-model="document.content" min-height="15rem" />
+                                <q-input bg-color="white" outlined v-model="document.note" label="Notes" type="textarea" :disable="!edit" />
                             </div>
-                        </div>
-
-                        <div class="bg-light-blue-1 q-my-md q-pa-md">
-                            {{ document }}
                         </div>
 
                     </template>
@@ -68,14 +56,14 @@
 
         <q-card-actions align="right">
             <q-btn flat label="Annuler" color="primary" v-close-popup />
-            <q-btn flat label="Sauvegarder" color="primary" @click="save()" v-close-popup />
+            <q-btn flat label="Confirmer" color="primary" @click="save()" v-close-popup />
         </q-card-actions>
     </q-card>
 </template>
 
 <script>
-import fs from 'fs'
-// import HTMLtoDOCX from '../dist/html-to-docx.esm'
+import { v4 as uuidv4 } from 'uuid'
+import { date } from 'quasar'
 import { store } from '../store/store.js'
 import templates from '../assets/data/templates.json'
 import FormSection from "../components/FormSection.vue"
@@ -83,23 +71,42 @@ import FormSection from "../components/FormSection.vue"
 export default {
     name: 'NewDocumentDialog',
     components: { FormSection },
-    props: { 'model': Object },
+    props: { 'modelValue': Object },
     emits: [],
     setup() {
         return {
-
-            // model: ref(null),
         }
     },
     data() {
         return {
             store,
             edit: true,
-            document: { "title": "", "version": null, "type": null, "author": store.session.user, "note": null, "content": "" },
+            document: {
+                "id": uuidv4(),
+                "filename": "",
+                "filesize": "",
+                "format": "",
+                "title": "",
+                "version": null,
+                "type": null,
+                "date": new Date(),
+                "timestamp": Date.now(),
+                "author": store.session.user,
+                "note": null,
+                "content": ""
+            },
             documentTypes: templates,
         }
     },
     computed: {
+        documents: {
+            get() {
+                return this.modelValue
+            },
+            set(documents) {
+                this.$emit('update:modelValue', documents)
+            }
+        }
     },
     mounted() {
 
@@ -107,10 +114,10 @@ export default {
     methods: {
         async save() {
 
-            // TODO: POST RECORD TO DATABASE
-            console.log('NewDocumentDialog.vue | save()')
-            let ind = store.items.findIndex((e) => (e.id === this.$route.params.id))
-            store.items[ind].documents.push(this.document)
+            this.documents.push(Object.assign({}, this.document))
+            // console.log('NewDocumentDialog.vue | save()')
+            // let ind = store.items.findIndex((e) => (e.id === this.$route.params.id))
+            // store.items[ind].documents.push(this.document)
 
         },
 
