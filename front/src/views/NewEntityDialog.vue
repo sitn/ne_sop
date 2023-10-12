@@ -6,18 +6,14 @@
 
         <q-card-section class="row items-center scroll" style="max-height: 70vh">
 
-            <!-- <div class="col"> -->
-
             <!-- FORM -->
-            <EntityForm v-model="entity" :edit="edit"></EntityForm>
-
-            <!-- </div> -->
+            <EntityForm class="col" v-model="entity" :edit="edit"></EntityForm>
 
         </q-card-section>
 
         <q-card-actions align="right">
             <q-btn flat label="Annuler" color="primary" v-close-popup />
-            <q-btn flat label="Sauvegarder" color="primary" @click="save()" v-close-popup :disable="!entity.valid" />
+            <q-btn flat label="Confirmer" color="primary" @click="save()" v-close-popup :disable="!entity.valid" />
         </q-card-actions>
     </q-card>
 </template>
@@ -64,12 +60,9 @@ export default {
     },
     methods: {
         save(val) {
-
-            console.log(this.entity)
             this.$emit('addNewEntity', this.entity)
             // this.store.entities.push(this.entity)
             // POST NEW VALUE TO DATABASE
-
         }
     }
 }
