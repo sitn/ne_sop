@@ -1,7 +1,7 @@
 <template>
     <q-card style="width: 700px; max-width: 80vw;">
         <q-card-section class="bg-blue-grey text-white">
-            <div class="text-h6">Nouvelle personne ou groupe</div>
+            <div class="text-h6">Nouvel évenement</div>
         </q-card-section>
 
         <q-card-section class="row items-center scroll" style="max-height: 70vh">
@@ -13,7 +13,7 @@
 
         <q-card-actions align="right">
             <q-btn flat label="Annuler" color="primary" v-close-popup />
-            <q-btn flat label="Sauvegarder" color="primary" @click="save()" v-close-popup :disable="!event.valid" />
+            <q-btn flat label="Confirmer" color="primary" @click="save()" v-close-popup :disable="!event.valid" />
         </q-card-actions>
     </q-card>
 </template>
@@ -54,6 +54,15 @@ export default {
         }
     },
     computed: {
+        events: {
+            get() {
+                return this.modelValue
+            },
+            set(events) {
+                this.$emit('update:modelValue', events)
+            }
+        }
+        /*
         item: {
             get() {
                 return this.modelValue
@@ -62,6 +71,7 @@ export default {
                 this.$emit('update:modelValue', item)
             }
         }
+        */
     },
     mounted() {
 
@@ -69,8 +79,9 @@ export default {
     methods: {
         save() {
 
+            this.events.push(Object.assign({}, this.event))
+            // this.item.events.push(Object.assign({}, this.event))
             // store.events.push(Object.assign({}, this.event))
-            this.item.events.push(Object.assign({}, this.event))
             // store.items[1].events.push(Object.assign({}, this.event))
         },
 
