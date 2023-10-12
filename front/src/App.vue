@@ -30,7 +30,7 @@
                 <q-btn size="lg" text-color="white" flat @click="drawer = !drawer" round dense icon="sym_o_menu" :disable="$route.name === 'Login'" />
 
                 <q-toolbar-title class="gt-xs">
-                    <a href="https://www.ne.ch/autorites/DDTE/" target="_blank"><img src="/img/ne_logo_white.svg" alt="Neuchâtel" /></a>
+                    <a href="https://www.ne.ch/autorites/DDTE/" target="_blank"><img src="img/ne_logo_white.svg" alt="Neuchâtel" /></a>
                 </q-toolbar-title>
 
                 <div class="text-center text-body1 gt-sm">DDTE - Suivi des objets parlementaires</div>
