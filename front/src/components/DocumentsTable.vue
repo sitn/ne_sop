@@ -15,7 +15,7 @@
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="filename" :props="props">
-                    {{ props.row.filename }} - {{ props.row.filesize }}
+                    {{ props.row.filename }} ({{ formatBytes(props.row.filesize) }})
                 </q-td>
                 <q-td key="type" :props="props">
                     {{ props.row.type }}
@@ -27,7 +27,7 @@
                     {{ props.row.date }}
                 </q-td>
                 <q-td key="timestamp" :props="props">
-                    {{ date.formatDate(props.row.timestamp, 'YYYY-MM-DDTHH:mm:ss.SSSZ') }}
+                    {{ date.formatDate(props.row.timestamp, 'DD.MM.YYYY HH:mm:ss') }}
                 </q-td>
                 <q-td key="note" :props="props">
                     {{ props.row.note }}
@@ -52,7 +52,7 @@
 
     <!-- ADD NEW DIALOG -->
     <q-dialog v-model="dialog.newDocument">
-        <NewDocumentDialog v-model="documents"></NewDocumentDialog>
+        <NewDocumentDialog v-model="documents" :type="type"></NewDocumentDialog>
     </q-dialog>
 
     <!-- DELETE DIALOG -->
@@ -62,6 +62,7 @@
 <script>
 import { date } from 'quasar'
 import { store } from '../store/store.js'
+import { formatBytes } from '../store/shared.js'
 import NewDocumentDialog from "../views/NewDocumentDialog.vue"
 import DeleteDialog from './DeleteDialog.vue'
 
@@ -73,14 +74,14 @@ const columns = [
     { name: 'type', align: 'left', label: 'Type', field: 'filename', sortable: true },
     { name: 'author', align: 'left', label: 'Ajouté par', field: 'author', sortable: true },
     { name: 'timestamp', align: 'left', label: 'Ajouté le', field: 'timestamp', sortable: true },
-    { name: 'note', align: 'left', label: 'Note', field: 'note', sortable: true },
+    { name: 'note', align: 'left', label: 'Notes', field: 'note', sortable: true },
     { name: 'actions', align: 'right', label: '', field: 'action', sortable: false }
 ]
 
 export default {
     name: 'DocumentsTable',
     components: { NewDocumentDialog, DeleteDialog },
-    props: { 'edit': Boolean, 'modelValue': Object }, //  'events': Object,
+    props: { 'type': String, 'edit': Boolean, 'modelValue': Object }, //  'events': Object,
     emits: ['update:modelValue'],
     setup() {
         return {
@@ -111,6 +112,7 @@ export default {
     },
     methods: {
         // date,
+        formatBytes,
         addDocument() {
             this.dialog.newDocument = true
         },
