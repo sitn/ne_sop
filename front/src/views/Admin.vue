@@ -58,12 +58,12 @@
 
                         <!-- ADMIN COLUMN -->
                         <q-td key="active" :props="props">
-                            {{ props.row.admin }}
+                            {{ props.row.admin ? 'Oui' : 'Non' }}
                         </q-td>
 
                         <!-- ACTIVE COLUMN -->
                         <q-td key="active" :props="props">
-                            {{ props.row.active }}
+                            {{ props.row.active ? 'Oui' : 'Non' }}
                         </q-td>
 
                         <!-- ACTIONS COLUMN -->
