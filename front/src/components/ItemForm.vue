@@ -115,7 +115,7 @@
 
                         <!-- STATUS SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.status" :options="itemStatus" option-label="name" option-value="id" label="Statut" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.status" :options="itemStatus" option-label="name" option-value="name" label="Statut" clearable map-options emit-value :rules="[v => checkFilled(v)]" :disable="!edit">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section side>
@@ -189,7 +189,7 @@
                     <div class="text-h6">Documents</div>
 
                     <!-- DOCUMENTS TABLE -->
-                    <DocumentsTable v-model="item.documents" :edit="edit"></DocumentsTable>
+                    <DocumentsTable v-model="item.documents" :type="item.type" :edit="edit"></DocumentsTable>
 
                 </template>
             </FormSection>
