@@ -19,12 +19,13 @@
                 "ressourcetype": "formal",
                 "version": 0,
                 "date": "21.05.2023",
+                "timestamp": "1697118066810",
                 "step": "Réception",
                 "type": "Speaking Note",
                 "author": "Nicolas Ruedin",
                 "note": "",
                 "format": "DOCX",
-                "filesize": "435Ko",
+                "filesize": "435",
                 "relpath": "\ne"
             }
         ],
@@ -33,22 +34,24 @@
                 "ressourcetype": "attachement",
                 "version": "000",
                 "date": "21.05.2023",
+                "timestamp": "1697118066810",
                 "type": "",
                 "author": "Nicolas Ruedin",
                 "note": "",
                 "format": "PDF",
-                "filesize": "435Ko",
+                "filesize": "435",
                 "relpath": "/tes/file.pdf"
             },
             {
                 "ressourcetype": "attachement",
                 "version": "001",
                 "date": "21.05.2023",
+                "timestamp": "1697118066810",
                 "type": "S",
                 "author": "Nicolas Ruedin",
                 "note": "",
                 "format": "PNG",
-                "filesize": "1435Ko",
+                "filesize": "1435",
                 "relpath": "/tes/file.pdf"
             }
         ],
@@ -140,6 +143,7 @@
         "oralResponse": false,
         "fight": false,
         "author": "Groupe PLR",
+        "documents": [],
         "events": [
             {
                 "id": "bcbe6dc0-a468-4c63-a86d-be4adef29d8c",
@@ -176,6 +180,7 @@
         "oralResponse": false,
         "fight": false,
         "author": "Groupe PLR",
+        "documents": [],
         "attachements": [],
         "events": [
             {
