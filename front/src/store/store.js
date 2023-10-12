@@ -6,7 +6,7 @@ import events from '../assets/data/events.json'
 import users from '../assets/data/users.json'
 
 export const store = reactive({
-    dev: true,
+    dev: false,
     session: { "user": null },
     valid: null,
     entities: entities,
