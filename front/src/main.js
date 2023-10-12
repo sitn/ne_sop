@@ -21,6 +21,7 @@ import Admin from './views/Admin.vue'
 import Help from './views/Help.vue'
 
 const routes = [
+    { path: '/', redirect: '/items' },
     { path: '/items', name: 'ItemsList', component: ItemsList },
     { path: '/items/:id', name: 'Item', component: Item, props: true },
     { path: '/items/new', name: 'NewItem', component: NewItem },
