@@ -21,7 +21,7 @@
             <!-- EDIT/VIEW MODE BUTTON -->
             <div class="q-py-xs">
                 <q-btn fab :icon="editMode ? 'sym_o_close' : 'sym_o_edit'" color="blue" @click="switchEdit()">
-                    <q-tooltip class="bg-black">{{ editMode ? 'Quitter' : 'Modification' }}</q-tooltip>
+                    <q-tooltip class="bg-black">{{ editMode ? 'Fermer' : 'Modifier' }}</q-tooltip>
                 </q-btn>
             </div>
 
