@@ -8,7 +8,7 @@ const projectRootDir = resolve(__dirname)
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/front/',
+  base: '/web/sop/', // /front/
   publicDir: 'public',
   plugins: [
     /* vue(),
@@ -27,7 +27,9 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@assets/*': fileURLToPath(new URL('./src/assets/', import.meta.url)),
+      '@public/*': fileURLToPath(new URL('./public/', import.meta.url)),
     }
   }
 })
