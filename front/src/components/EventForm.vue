@@ -41,8 +41,8 @@
 
                         <!-- TIME INPUT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <!-- <q-input type="time" bg-color="white" outlined v-model="event.time" label="Heure" /> -->
-                            <q-input bg-color="white" outlined v-model="event.time" label="Heure (hh:mm)" mask="##:##" fill-mask="" :rules="['time']" :disable="!edit">
+                            <!-- <q-input type="time" bg-color="white" outlined v-model="event.time" label="Heure" :rules="['time']" /> -->
+                            <q-input bg-color="white" outlined v-model="event.time" label="Heure (hh:mm)" mask="##:##" :rules="[val => checkTime(val, true)]" :disable="!edit">
                                 <template v-slot:append>
                                     <q-icon name="access_time" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
@@ -68,9 +68,8 @@
                         </div>
 
                         <!-- LINKED ITEM SELECT FIELD -->
+                        <!-- 
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <!-- <q-input bg-color="white" outlined v-model="event.itemNumber" label="Objet lié" /> -->
-                            <!--                             <q-select bg-color="white" outlined v-model="event.itemNumber" :options="this.store.items" option-label="number" option-value="number" label="Objet lié" @update:model-value="setLinkedItem(val)" clearable :disable="!edit"> -->
                             <q-select bg-color="white" outlined v-model="linkedItem" :options="this.store.items" option-label="number" label="Objet lié" @update:model-value="setLinkedItem(val)" :rules="[val => checkFilled(val)]" clearable :disable="!edit">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
@@ -82,6 +81,8 @@
                                 </template>
                             </q-select>
                         </div>
+                        -->
+
                     </div>
 
                     <!-- DESCRIPTION TEXT AREA FIELD -->
@@ -117,7 +118,7 @@
 <script>
 import { date } from 'quasar'
 import { store } from '../store/store.js'
-import { checkFilled, checkDate } from '../store/shared.js'
+import { checkFilled, checkDate, checkTime } from '../store/shared.js'
 import eventTypes from '../assets/data/event-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
@@ -182,6 +183,7 @@ export default {
     methods: {
         checkFilled,
         checkDate,
+        checkTime,
         validation(val) {
             console.log(`${this.$options.name} | validation: ${val}`)
             this.valid = val
