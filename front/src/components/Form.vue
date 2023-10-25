@@ -52,26 +52,31 @@ export default {
     watch: {
         formData: {
             handler(newValue, oldValue) {
+                this.validateForm()
                 if (newValue !== oldValue) {
                     store.warning = true
                 }
             },
             deep: true
         },
+        /*
         model: {
             handler(newValue, oldValue) {
-                // console.log(`${this.$options.name} | watch`)
-                // console.log(this.model)
+                console.log(`${this.$options.name} | watch`)
+                console.log(this.model)
                 this.validateForm()
             },
             deep: true
         },
-        edit: {
-            handler(newValue, oldValue) {
-                console.log(`${this.$options.name} | watch edit`)
-                this.validateForm()
-            }
-        }
+        */
+        /*
+         edit: {
+             handler(newValue, oldValue) {
+                 console.log(`${this.$options.name} | watch edit`)
+                 this.validateForm()
+             }
+         }
+         */
     },
     methods: {
         validateForm() {
