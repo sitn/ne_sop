@@ -99,6 +99,9 @@
                             <q-select bg-color="white" outlined v-model="item.services.support" :options="serviceOptions" option-label="name" option-value="id" label="Service(s) en appui" multiple clearable :disable="!edit">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
+                                        <q-item-section side>
+                                            <q-checkbox :model-value="scope.selected" @update:model-value="scope.toggleOption(scope.opt)" />
+                                        </q-item-section>
                                         <q-item-section>
                                             <q-item-label>{{ scope.opt.name }}</q-item-label>
                                         </q-item-section>
