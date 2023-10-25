@@ -9,6 +9,7 @@ export const store = reactive({
     dev: false,
     session: { "user": null },
     valid: null,
+    warning: false,
     entities: entities,
     items: items,
     events: events, // items.map((x) => (x.events)).flat(1),
