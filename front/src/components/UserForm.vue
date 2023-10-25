@@ -72,10 +72,6 @@
 
                     </div>
 
-
-
-
-
                     <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
                         <div>edit</div>
                         <div>{{ edit }}</div>
