@@ -3,6 +3,8 @@ import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router
 import { Quasar } from 'quasar'
 import quasarLang from 'quasar/lang/fr'
 import App from './App.vue'
+import { store } from './store/store.js'
+
 import ItemsList from './views/ItemsList.vue'
 import EntitiesList from './views/EntitiesList.vue'
 import EventsList from './views/EventsList.vue'
@@ -44,6 +46,23 @@ const router = createRouter({
     // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
     history: createWebHashHistory(),
     routes, // short for `routes: routes`
+})
+
+// navigation guards
+router.beforeEach((to, from) => {
+    // ...
+    // explicitly return false to cancel the navigation
+    console.log(`from: ${from}, to: ${to}`)
+    if (store.warning) {
+        alert('Attention - Modifications non enregistrées')
+        //store.warning = true
+        //console.log(`store.warning: ${store.warning}`)
+        //console.log(from)
+        return false
+    } else {
+        return true
+    }
+  
 })
 
 const app = createApp(App)
