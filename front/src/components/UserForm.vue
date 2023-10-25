@@ -23,26 +23,6 @@
                         </div>
                     </div>
 
-                    <div class="row q-col-gutter-lg q-py-md">
-
-                        <!-- GROUPS SELECT FIELD -->
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="user.groups" multiple :options="groupOptions" option-label="name" option-value="name" label="Groupe(s)" emit-value clearable :disable="!edit">
-
-                                <template v-slot:option="scope">
-                                    <q-item v-bind="scope.itemProps">
-                                        <q-item-section>
-                                            <q-item-label>{{ scope.opt.name }}</q-item-label>
-                                            <q-item-label caption>{{ scope.opt.type }}</q-item-label>
-                                        </q-item-section>
-                                    </q-item>
-                                </template>
-
-                            </q-select>
-                        </div>
-
-                    </div>
-
                     <div class="row q-py-md">
 
                         <!-- ADMIN CHECKBOX FIELD -->
@@ -68,6 +48,31 @@
                         </q-item>
 
                     </div>
+
+                    <div class="row q-col-gutter-lg q-py-md">
+
+                        <!-- GROUPS SELECT FIELD -->
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <q-select bg-color="white" outlined v-model="user.groups" multiple :options="groupOptions" option-label="name" option-value="name" label="Groupe(s)" emit-value clearable :disable="!edit">
+
+                                <template v-slot:option="scope">
+                                    <q-item v-bind="scope.itemProps">
+                                        <q-item-section side>
+                                            <q-checkbox :model-value="scope.selected" @update:model-value="scope.toggleOption(scope.opt)" />
+                                        </q-item-section>
+                                        <q-item-section>
+                                            <q-item-label>{{ scope.opt.name }}</q-item-label>
+                                            <q-item-label caption>{{ scope.opt.type }}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                </template>
+
+                            </q-select>
+                        </div>
+
+                    </div>
+
+
 
 
 
