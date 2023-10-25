@@ -1,8 +1,8 @@
 [
     {
         "id": 1,
-        "name": "Terminé",
-        "color": "green"
+        "name": "Pas traité",
+        "color": "red"
     },
     {
         "id": 2,
@@ -11,7 +11,17 @@
     },
     {
         "id": 3,
-        "name": "Pas traité",
-        "color": "red"
+        "name": "Terminé",
+        "color": "green"
+    },
+    {
+        "id": 4,
+        "name": "Rapport à produire",
+        "color": "cyan-7"
+    },
+    {
+        "id": 5,
+        "name": "Retiré",
+        "color": "grey-4"
     }
 ]
