@@ -1,6 +1,6 @@
 <template>
     <!-- FLOATING ACTION BUTTONS -->
-    <q-page-sticky position="bottom-right" :offset="[18, 18]" class="justify-center items-center">
+    <q-page-sticky position="bottom-right" :offset="[18, 18]" class="justify-center items-center z-top">
 
         <div class="column items-center q-py-xs">
 
@@ -28,6 +28,22 @@
         </div>
 
     </q-page-sticky>
+
+    <q-dialog v-model="store.warning" no-focus seamless position="bottom">
+        <q-card class="bg-yellow" style="width: 300px">
+
+            <q-card-section class="row items-center no-wrap">
+
+                <q-avatar size="md" font-size="22px" color="red" text-color="white" icon="front_hand" class="q-mx-md" />
+                <div>
+                    <div class="text-weight-bold">Modification non enregistrée</div>
+                </div>
+
+                <q-space />
+
+            </q-card-section>
+        </q-card>
+    </q-dialog>
 </template>
 
 <script>
@@ -45,6 +61,7 @@ export default {
         return {
             // saveButton: {}, // { render: ['active', 'disable'].includes(this.buttons.save), disable: this.buttons.save === 'disable' },
             // deleteButton: {},// { render: ['active', 'disable'].includes(this.buttons.deletion), disable: this.buttons.deletion === 'disable' },
+            store,
             waitMode: this.wait,
             editMode: this.edit
         }
@@ -84,6 +101,7 @@ export default {
         },
         save() {
             console.log(`${this.$options.name}.vue | saveEvent`)
+            store.warning = false
             this.$emit('saveEvent')
         },
         remove() {
