@@ -46,7 +46,6 @@ export default {
         return {
             store,
             dialog: { deletion: false },
-            actionButtons: { save: 'active', deletion: 'active' },
             edit: false,
             wait: false,
             user: null,
@@ -55,6 +54,12 @@ export default {
         }
     },
     computed: {
+        actionButtons() {
+            return {
+                save: this.user.valid ? 'active' : 'disable',
+                deletion: 'none'
+            }
+        }
     },
     created() {
         console.log(`router id: ${this.$route.params.id}`)
