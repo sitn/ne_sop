@@ -9,9 +9,8 @@
         </div>
 
         <!-- Identification -->
-        <FormSection title="Identification">
+        <FormSection title="Statistiques">
             <template v-slot:content>
-                <div class="text-h6">Statistiques</div>
 
             </template>
         </FormSection>

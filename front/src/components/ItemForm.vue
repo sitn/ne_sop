@@ -6,7 +6,6 @@
             <!-- GENERAL INFORMATION SECTION -->
             <FormSection title="Informations générales" class="q-mt-none">
                 <template v-slot:content>
-                    <div class="text-h6">Informations générales</div>
 
                     <div class="row q-col-gutter-lg q-py-md">
 
@@ -79,7 +78,6 @@
             <!-- PROCESSING SECTION -->
             <FormSection title="Traitement">
                 <template v-slot:content>
-                    <div class="text-h6">Traitement</div>
 
                     <div class="row q-col-gutter-lg q-py-md">
 
@@ -129,7 +127,6 @@
                             </q-select>
                         </div>
 
-
                     </div>
 
                     <div class="row q-py-md">
@@ -173,9 +170,8 @@
             </FormSection>
 
             <!-- EVENTS SECTION -->
-            <FormSection>
+            <FormSection title="Calendrier">
                 <template v-slot:content>
-                    <div class="text-h6">Calendrier</div>
 
                     <!-- EVENTS TABLE -->
                     <EventsTable v-model="item.events" :edit="edit"></EventsTable>
@@ -184,9 +180,8 @@
             </FormSection>
 
             <!-- DOCUMENTS SECTION -->
-            <FormSection>
+            <FormSection title="Documents">
                 <template v-slot:content>
-                    <div class="text-h6">Documents</div>
 
                     <!-- DOCUMENTS TABLE -->
                     <DocumentsTable v-model="item.documents" :type="item.type" :edit="edit"></DocumentsTable>

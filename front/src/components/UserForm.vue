@@ -7,9 +7,8 @@
         <template v-slot:body>
 
             <!-- USER SECTION -->
-            <FormSection title="User">
+            <FormSection title="Utilisateur">
                 <template v-slot:content>
-                    <div class="text-h6">Utilisateur</div>
 
                     <div class="row q-col-gutter-lg q-py-md">
 

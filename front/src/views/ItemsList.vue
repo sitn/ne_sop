@@ -111,6 +111,7 @@
 <script>
 import { store } from '../store/store.js'
 import { sleep } from '../store/shared.js'
+import itemStatus from '../assets/data/item-status.json'
 import DeleteDialog from '../components/DeleteDialog.vue'
 
 export default {
@@ -120,12 +121,12 @@ export default {
     emits: [],
     setup() {
         return {
-            // model: ref(null),
         }
     },
     data() {
         return {
             store,
+            // itemStatus: itemStatus,
             selected: null,
             searchString: null,
             filter: "",
@@ -231,16 +232,7 @@ export default {
             }
         },
         color(val) {
-            switch (val) {
-                case 'Pas traité':
-                    return 'red'
-                case 'En traitement':
-                    return 'orange'
-                case 'Terminé':
-                    return 'green'
-                default:
-                    return 'grey'
-            }
+            return itemStatus.find((x) => (x.name === val)).color
         },
     }
 

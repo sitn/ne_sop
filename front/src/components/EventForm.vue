@@ -7,9 +7,8 @@
             <!-- <q-form ref="form" greedy> -->
 
             <!-- IDENTIFICATION SECTION -->
-            <FormSection title="Event">
+            <FormSection title="Événement">
                 <template v-slot:content>
-                    <div class="text-h6">Événement</div>
 
                     <div class="row q-col-gutter-lg q-py-md">
 

@@ -4,6 +4,7 @@
 
         <div class="col bg-grey-2 q-pa-md">
 
+            <div class="text-h6">{{ title }}</div>
             <slot name="content"></slot>
 
         </div>

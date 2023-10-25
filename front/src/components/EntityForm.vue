@@ -7,7 +7,6 @@
             <!-- IDENTIFICATION SECTION -->
             <FormSection title="Identification">
                 <template v-slot:content>
-                    <div class="text-h6">Identification</div>
 
                     <div class="row q-col-gutter-lg q-py-md">
 
@@ -52,7 +51,6 @@
             <!-- ADDRESS SECTION -->
             <FormSection title="Addresse">
                 <template v-slot:content>
-                    <div class="text-h6">Addresse</div>
 
                     <div class="row q-col-gutter-lg q-py-md">
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -84,7 +82,6 @@
             <!-- CONTACT SECTION -->
             <FormSection title="Contact">
                 <template v-slot:content>
-                    <div class="text-h6">Contact</div>
 
                     <div class="row q-col-gutter-lg q-py-md">
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
