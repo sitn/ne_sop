@@ -129,7 +129,8 @@
                 "statusGrandConseil": "En traitement",
                 "description": ""
             }
-        ]
+        ],
+        "valid": true
     },
     {
         "id": "3fb9fdc3-a235-40ab-a86f-83b0976cd59c",
@@ -166,7 +167,8 @@
             "lead": null,
             "support": []
         },
-        "attachements": []
+        "attachements": [],
+        "valid": true
     },
     {
         "id": "9b70570a-c30f-4c46-8cf8-ed5906bcdd30",
@@ -240,7 +242,8 @@
         "services": {
             "lead": null,
             "support": []
-        }
+        },
+        "valid": true
     },
     {
         "id": "a8940c8d-4fb4-4769-a450-ba13aecbdf3f",
@@ -277,7 +280,8 @@
         "services": {
             "lead": null,
             "support": []
-        }
+        },
+        "valid": true
     },
     {
         "id": "18f57808-5503-406d-b977-10c6625a8627",
@@ -314,6 +318,7 @@
         "services": {
             "lead": null,
             "support": []
-        }
+        },
+        "valid": true
     }
 ]

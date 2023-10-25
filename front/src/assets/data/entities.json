@@ -11,7 +11,8 @@
         "country": "Suisse",
         "website": "",
         "email": "Service.AmenagementTerritoire@ne.ch",
-        "telephone": "+41 32 889 67 40"
+        "telephone": "+41 32 889 67 40",
+        "valid": true
     },
     {
         "id": "649b2776-bcd6-41dc-8e05-4784b9a944fa",
@@ -25,7 +26,8 @@
         "country": "Suisse",
         "website": "",
         "email": "SFFN@ne.ch",
-        "telephone": "+41 32 889 67 60"
+        "telephone": "+41 32 889 67 60",
+        "valid": true
     },
     {
         "id": "704308ac-0823-42aa-abe2-1415d4feef88",
@@ -39,7 +41,8 @@
         "country": "Suisse",
         "website": "",
         "email": "",
-        "telephone": ""
+        "telephone": "",
+        "valid": true
     },
     {
         "id": "e44182c1-1f72-4380-bad3-208849da680a",
@@ -53,7 +56,8 @@
         "country": "Suisse",
         "website": "",
         "email": "sagr@ne.ch",
-        "telephone": "+41 32 889 37 00"
+        "telephone": "+41 32 889 37 00",
+        "valid": true
     },
     {
         "id": "087fd563-6ded-4da9-ac33-57e1ad4a10e8",
@@ -67,7 +71,8 @@
         "country": "Suisse",
         "website": "",
         "email": "service.transports@ne.ch",
-        "telephone": "+41 32 889 67 01"
+        "telephone": "+41 32 889 67 01",
+        "valid": true
     },
     {
         "id": "6ae879cb-5c47-4052-88ce-2591dd5c9a6b",
@@ -81,7 +86,8 @@
         "country": "Suisse",
         "website": "https://www.ne.ch/autorites/DDTE/SCAV/",
         "email": "scav@ne.ch",
-        "telephone": "+41 32 889 68 30"
+        "telephone": "+41 32 889 68 30",
+        "valid": true
     },
     {
         "id": "68c42858-b47d-4eb5-85fd-3aa1318b63e4",
@@ -95,7 +101,8 @@
         "country": "Suisse",
         "website": "https://www.ne.ch/autorites/DDTE/SDTE/",
         "email": "Secretariat.DDTE@ne.ch",
-        "telephone": "+41 32 889 67 00"
+        "telephone": "+41 32 889 67 00",
+        "valid": true
     },
     {
         "id": "9c81c518-8e4f-4077-8952-4270f126d376",
@@ -109,7 +116,8 @@
         "country": "",
         "website": "",
         "email": "",
-        "telephone": ""
+        "telephone": "",
+        "valid": true
     },
     {
         "id": "e7ebaa0e-bb53-457b-afd2-f6280c21a7d2",
@@ -123,7 +131,8 @@
         "country": "",
         "website": "",
         "email": "",
-        "telephone": ""
+        "telephone": "",
+        "valid": true
     },
     {
         "id": "806b53d7-6af2-44ce-8c1a-030bfc86426c",
@@ -137,6 +146,7 @@
         "country": "",
         "website": "",
         "email": "",
-        "telephone": ""
+        "telephone": "",
+        "valid": true
     }
 ]

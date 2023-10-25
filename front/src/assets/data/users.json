@@ -5,7 +5,8 @@
         "email": "Nicolas.Ruedin@ne.ch",
         "admin": true,
         "active": true,
-        "groups": []
+        "groups": [],
+        "valid": true
     },
     {
         "id": "2ba0cc96-2795-409b-a0f0-a12c44c2985e",
@@ -13,7 +14,8 @@
         "email": "Lionel.Panchaud@ne.ch",
         "admin": false,
         "active": true,
-        "groups": []
+        "groups": [],
+        "valid": true
     },
     {
         "id": "63e11764-3c8d-46d4-9eb5-da5a1b6da3e9",
@@ -21,7 +23,8 @@
         "email": "Jerome.Wessner@ne.ch",
         "admin": false,
         "active": false,
-        "groups": []
+        "groups": [],
+        "valid": true
     },
     {
         "id": "3fc1ae0a-b011-4327-96ca-8294d7951b1e",
@@ -29,6 +32,7 @@
         "email": "",
         "admin": false,
         "active": false,
-        "groups": []
+        "groups": [],
+        "valid": true
     }
 ]
