@@ -45,15 +45,36 @@ export default {
     mounted() {
         this.validateForm()
         store.warning = false
+        /*
+        this.$watch(
+            'formData',
+            (newValue, oldValue) => {
+
+                this.validateForm()
+                if (newValue !== oldValue) {
+                    store.warning = true
+                }
+                console.log('watch')
+                console.log(newValue)
+                console.log(oldValue)
+                console.log(`newValue === oldValue = ${newValue === oldValue}`)
+                console.log(store.warning)
+            },
+            {
+                deep: true
+            }
+        )
+        */
     },
     updated() {
         this.validateForm()
     },
     watch: {
+
         formData: {
             handler(newValue, oldValue) {
                 this.validateForm()
-                if (newValue !== oldValue) {
+                if ((newValue !== oldValue)) {
                     store.warning = true
                 }
             },
