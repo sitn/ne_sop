@@ -1,6 +1,7 @@
 <template>
     <div class="row justify-center q-my-lg">
 
+
         <div class="col" style="max-width: 880px;"> <!-- -xs-12 col-sm-12 col-md-8 -->
 
             <div class="row justify-center">
@@ -31,22 +32,36 @@ export default {
     },
     data() {
         return {
+            store,
             editMode: this.edit,
             valid: null,
         }
     },
     computed: {
+        formData() {
+            return Object.assign({}, this.model)
+        }
     },
     mounted() {
         this.validateForm()
+        store.warning = false
     },
     updated() {
         this.validateForm()
     },
     watch: {
+        formData: {
+            handler(newValue, oldValue) {
+                if (newValue !== oldValue) {
+                    store.warning = true
+                }
+            },
+            deep: true
+        },
         model: {
             handler(newValue, oldValue) {
-                console.log(`${this.$options.name} | watch`)
+                // console.log(`${this.$options.name} | watch`)
+                // console.log(this.model)
                 this.validateForm()
             },
             deep: true
