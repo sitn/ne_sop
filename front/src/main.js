@@ -50,19 +50,29 @@ const router = createRouter({
 
 // navigation guards
 router.beforeEach((to, from) => {
+
+    store.navigation.from = from.fullPath
+    store.navigation.to = to.fullPath
     // ...
     // explicitly return false to cancel the navigation
     console.log(`from: ${from}, to: ${to}`)
     if (store.warning) {
-        alert('Attention - Modifications non enregistrées')
+        // alert('Attention - Modifications non enregistrées')
+
+
         //store.warning = true
         //console.log(`store.warning: ${store.warning}`)
-        //console.log(from)
+        console.log(from)
+        console.log(to)
+
+        store.exit = true
         return false
+
+
     } else {
         return true
     }
-  
+
 })
 
 const app = createApp(App)
