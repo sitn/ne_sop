@@ -29,8 +29,9 @@
 
     </q-page-sticky>
 
+    <!-- MODAL WARNING ON UNSAVED CHANGES -->
     <q-dialog v-model="store.warning" no-focus seamless position="bottom">
-        <q-card class="bg-yellow" style="width: 300px">
+        <q-card class="bg-blue-1" style="width: 300px">
 
             <q-card-section class="row items-center no-wrap">
 
@@ -42,6 +43,25 @@
                 <q-space />
 
             </q-card-section>
+        </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="store.exit">
+        <q-card class="bg-yellow">
+
+            <q-card-section class="row justify-center items-center no-wrap q-mt-md q-pa-none">
+                <q-avatar size="xl" font-size="28px" color="red" text-color="white" icon="front_hand" class="row justify-center items-center q-mx-md" />
+            </q-card-section>
+
+            <q-card-section class="row justify-center items-center no-wrap q-ma-none">
+                <div class="text-weight-bold">Modification non enregistrée</div>
+            </q-card-section>
+
+            <q-card-actions align="right">
+                <q-btn outline label="Quitter sans enregistrer" icon="sym_o_close" color="black" @click="exit()" v-close-popup />
+                <q-btn outline label="Enregistrer" icon="sym_o_save" color="black" @click="saveExit()" v-close-popup />
+            </q-card-actions>
+
         </q-card>
     </q-dialog>
 </template>
@@ -99,6 +119,10 @@ export default {
             this.editMode = !this.editMode
             this.$emit('editEvent', this.editMode)
         },
+        saveExit() {
+            this.save()
+            this.exit()
+        },
         save() {
             console.log(`${this.$options.name}.vue | saveEvent`)
             store.warning = false
@@ -107,7 +131,14 @@ export default {
         remove() {
             console.log(`${this.$options.name}.vue | deleteEvent`)
             this.$emit('deleteEvent')
-        }
+        },
+        exit() {
+            // console.log(this.$route)
+            // console.log(`store.navigation.to: ${store.navigation.to}`)
+            this.store.warning = false
+            this.store.exit = false
+            this.$router.push({ path: store.navigation.to })
+        },
     }
 }
 </script>
