@@ -10,6 +10,8 @@ export const store = reactive({
     session: { "user": null },
     valid: null,
     warning: false,
+    exit: false,
+    navigation: { "from": null, "to": null },
     entities: entities,
     items: items,
     events: events, // items.map((x) => (x.events)).flat(1),
