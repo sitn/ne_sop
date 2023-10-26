@@ -177,6 +177,12 @@ export default {
         }
     },
     created() {
+        window.addEventListener('beforeunload', (e) => {
+            if (store.warning) {
+                e.preventDefault()
+                e.returnValue = ''
+            }
+        })
     },
     mounted() {
     },
