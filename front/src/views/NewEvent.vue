@@ -87,7 +87,7 @@ export default {
     },
 
     methods: {
-        async save() {
+        async save(redirectTo) {
 
             // this.$refs.EventForm.validateForm() // VALIDATE FORM
 
@@ -109,7 +109,12 @@ export default {
 
             store.events.push(Object.assign({}, this.event))
             this.wait = false
-            this.$router.push({ name: 'EventsList' })
+
+            if (redirectTo !== null) {
+                this.$router.push({ path: redirectTo })
+            }
+
+            // this.$router.push({ name: 'EventsList' })
         },
         handleValidation(val) {
             this.valid = val
