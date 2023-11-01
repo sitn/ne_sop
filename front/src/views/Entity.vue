@@ -74,7 +74,7 @@ export default {
             // TODO: GET RECORD FROM DATABASE
             console.log('Entity.vue | load()')
         },
-        async save() {
+        async save(redirectTo) {
             // TODO: POST RECORD TO DATABASE
             console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
@@ -82,6 +82,11 @@ export default {
             // let ind = store.entities.findIndex((e) => (e.id === this.$route.params.id))
             store.entities[this.index] = Object.assign({}, this.entity)
             this.wait = false
+
+            if (redirectTo !== null) {
+                this.$router.push({ path: redirectTo })
+            }
+
         },
         handleDeletion() {
             this.dialog.deletion = true
@@ -96,7 +101,8 @@ export default {
             console.log(`${this.$options.name}.vue | setEditMode(${val})`)
             this.edit = val
         }
-    }
+    },
+
 }
 </script>
 
