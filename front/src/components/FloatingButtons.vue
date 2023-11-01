@@ -29,7 +29,7 @@
 
     </q-page-sticky>
 
-    <!-- MODAL WARNING ON UNSAVED CHANGES -->
+    <!-- SEAMLESS BOTTOM DIALOG WARNING ON UNSAVED CHANGES -->
     <q-dialog v-model="store.warning" no-focus seamless position="bottom">
         <q-card class="bg-blue-1" style="width: 300px">
 
@@ -46,6 +46,7 @@
         </q-card>
     </q-dialog>
 
+    <!-- EXIT DIALOG WARNING ON UNSAVED CHANGES -->
     <q-dialog v-model="store.exit">
         <q-card class="bg-yellow">
 
@@ -59,7 +60,7 @@
 
             <q-card-actions align="right">
                 <q-btn outline label="Quitter sans enregistrer" icon="sym_o_close" color="black" @click="exit()" v-close-popup />
-                <q-btn outline label="Enregistrer" icon="sym_o_save" color="black" @click="saveExit()" v-close-popup />
+                <q-btn outline label="Enregistrer" icon="sym_o_save" color="black" @click="save(store.navigation.to)" v-close-popup />
             </q-card-actions>
 
         </q-card>
@@ -68,6 +69,7 @@
 
 <script>
 import { store } from '../store/store.js'
+// import { router } from '../router.js'
 
 export default {
     name: 'FloatingButtons',
@@ -119,22 +121,30 @@ export default {
             this.editMode = !this.editMode
             this.$emit('editEvent', this.editMode)
         },
-        saveExit() {
-            this.save()
-            this.exit()
-        },
-        save() {
+        save(redirect = null) {
+
             console.log(`${this.$options.name}.vue | saveEvent`)
             store.warning = false
-            this.$emit('saveEvent')
+            // this.$emit('saveEvent', { redirect: redirect })
+            this.$emit('saveEvent', redirect)
+
+            /*
+            if (redirect !== null) {
+                this.$router.push({ path: redirect })
+            }
+            */
+
         },
         remove() {
             console.log(`${this.$options.name}.vue | deleteEvent`)
             this.$emit('deleteEvent')
         },
         exit() {
-            // console.log(this.$route)
+            console.log('ROUTER')
+            console.log(this.$router)
+            console.log(this.$route)
             // console.log(`store.navigation.to: ${store.navigation.to}`)
+
             this.store.warning = false
             this.store.exit = false
             this.$router.push({ path: store.navigation.to })
