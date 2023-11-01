@@ -73,7 +73,7 @@ export default {
     mounted() {
     },
     methods: {
-        async save() {
+        async save(redirectTo) {
             // TODO - POST NEW RECORD TO DATABASE
             console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
@@ -83,7 +83,11 @@ export default {
             }
             this.wait = false
 
-            this.$router.push({ name: 'EntitiesList' })
+            if (redirectTo !== null) {
+                this.$router.push({ path: redirectTo })
+            }
+
+            // this.$router.push({ name: 'EntitiesList' })
         },
         setEditMode(val) {
             console.log(`${this.$options.name}.vue | setEditMode(${val})`)
