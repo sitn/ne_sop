@@ -79,7 +79,7 @@ export default {
             this.$refs.EventForm.validateForm()
         },
         */
-        async save() {
+        async save(redirectTo) {
 
             // TODO: POST RECORD TO DATABASE
             console.log(`${this.$options.name} | save()`)
@@ -97,6 +97,11 @@ export default {
             store.events[this.index] = Object.assign({}, this.event)
 
             this.wait = false
+
+            if (redirectTo !== null) {
+                this.$router.push({ path: redirectTo })
+            }
+
         },
         handleValidation(val) {
 
