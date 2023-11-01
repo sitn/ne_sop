@@ -72,7 +72,7 @@ export default {
             // TODO: GET RECORD FROM DATABASE
             console.log(`${this.$options.name}.vue | load()`)
         },
-        async save() {
+        async save(redirectTo) {
             // TODO: POST RECORD TO DATABASE
             console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
@@ -80,6 +80,11 @@ export default {
             // let ind = store.users.findIndex((e) => (e.id === this.$route.params.id))
             store.users[this.index] = Object.assign({}, this.user)
             this.wait = false
+
+            if (redirectTo !== null) {
+                this.$router.push({ path: redirectTo })
+            }
+
         },
         handleDeletion() {
             this.dialog.deletion = true
