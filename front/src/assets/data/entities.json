@@ -1,6 +1,7 @@
 [
     {
-        "id": "178a09eb-d04d-4cc2-94d7-c3e3b53d0580",
+        "id": "1",
+        "uuid": "178a09eb-d04d-4cc2-94d7-c3e3b53d0580",
         "name": "Service de l'aménagement du territoire (SCAT)",
         "type": "Service de l'état",
         "description": "",
@@ -15,7 +16,8 @@
         "valid": true
     },
     {
-        "id": "649b2776-bcd6-41dc-8e05-4784b9a944fa",
+        "id": "2",
+        "uuid": "649b2776-bcd6-41dc-8e05-4784b9a944fa",
         "name": "Service de la faune, des forêts et de la nature (SFFN)",
         "type": "Service de l'état",
         "description": "",
@@ -30,7 +32,8 @@
         "valid": true
     },
     {
-        "id": "704308ac-0823-42aa-abe2-1415d4feef88",
+        "id": "3",
+        "uuid": "704308ac-0823-42aa-abe2-1415d4feef88",
         "name": "Service de l'énergie et de l'environnement (SENE)",
         "type": "Service de l'état",
         "description": "",
@@ -45,7 +48,8 @@
         "valid": true
     },
     {
-        "id": "e44182c1-1f72-4380-bad3-208849da680a",
+        "id": "4",
+        "uuid": "e44182c1-1f72-4380-bad3-208849da680a",
         "name": "Service de l'agriculture (SAGR)",
         "type": "Service de l'état",
         "description": "",
@@ -60,7 +64,8 @@
         "valid": true
     },
     {
-        "id": "087fd563-6ded-4da9-ac33-57e1ad4a10e8",
+        "id": "5",
+        "uuid": "087fd563-6ded-4da9-ac33-57e1ad4a10e8",
         "name": "Service des transports (SCTR)",
         "type": "Service de l'état",
         "description": "",
@@ -75,7 +80,8 @@
         "valid": true
     },
     {
-        "id": "6ae879cb-5c47-4052-88ce-2591dd5c9a6b",
+        "id": "6",
+        "uuid": "6ae879cb-5c47-4052-88ce-2591dd5c9a6b",
         "name": "Service de la consommation et des affaires vétérinaires (SCAV)",
         "type": "Service de l'état",
         "description": "",
@@ -90,7 +96,8 @@
         "valid": true
     },
     {
-        "id": "68c42858-b47d-4eb5-85fd-3aa1318b63e4",
+        "id": "7",
+        "uuid": "68c42858-b47d-4eb5-85fd-3aa1318b63e4",
         "name": "Département du développement territorial et de l'environnement (DDTE)",
         "type": "Service de l'état",
         "description": "",
@@ -105,7 +112,8 @@
         "valid": true
     },
     {
-        "id": "9c81c518-8e4f-4077-8952-4270f126d376",
+        "id": "8",
+        "uuid": "9c81c518-8e4f-4077-8952-4270f126d376",
         "name": "Groupe PLR",
         "type": "Groupe parlementaire",
         "description": "",
@@ -120,7 +128,8 @@
         "valid": true
     },
     {
-        "id": "e7ebaa0e-bb53-457b-afd2-f6280c21a7d2",
+        "id": "9",
+        "uuid": "e7ebaa0e-bb53-457b-afd2-f6280c21a7d2",
         "name": "Patrick Erard",
         "type": "Parlementaire",
         "description": "",
@@ -135,7 +144,8 @@
         "valid": true
     },
     {
-        "id": "806b53d7-6af2-44ce-8c1a-030bfc86426c",
+        "id": "10",
+        "uuid": "806b53d7-6af2-44ce-8c1a-030bfc86426c",
         "name": "Jonathan Doe",
         "type": "Autre",
         "description": "",
