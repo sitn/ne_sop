@@ -1,5 +1,7 @@
-# Dependency directories
+# Directories
 node_modules/
+src/store/item-types.js
+src/store/entity-types.js
 
 # Files
 package-lock.json
