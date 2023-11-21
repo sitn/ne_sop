@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div class="" v-if="loaded">
         <q-layout>
 
             <!-- BREADCRUMBS NAVIGATION -->
@@ -47,6 +47,7 @@ export default {
     data() {
         return {
             store,
+            loaded: false,
             dialog: { deletion: false },
             // actionButtons: { save: 'active', deletion: 'active' },
             edit: false,
@@ -56,23 +57,67 @@ export default {
         }
     },
     computed: {
+
         actionButtons() {
             return {
                 save: this.entity.valid ? 'active' : 'disable',
                 deletion: 'none'
             }
         }
+
     },
-    created() {
+    beforeCreate() {
+
+    },
+    async created() {
+
+        
+
+        try {
+
+            const id = this.$route.params.id
+            const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            this.entity = await response.json()
+            this.loaded = true
+            console.log(this.entity)
+
+        } catch (error) {
+            console.error(error)
+        }
+
+        // store.getEntity(this.$route.params.id)
         // store.saveButton = true
-        this.entity = Object.assign({}, store.entities.find((e) => (e.id === this.$route.params.id)))
+        // this.entity = Object.assign({}, store.entities.find((e) => (e.id === this.$route.params.id)))
+        //store.getEntity(this.$route.params.id)
+        // this.entity = await store.entity
+        //console.log(store.entities.find((e) => (e.id === this.$route.params.id)))
+        // this.load(this.$route.params.id)
+
     },
     mounted() {
+        //store.getEntity(this.$route.params.id)
+        //this.entity = store.entity
+
     },
     methods: {
-        async load() {
+        async load(id) {
             // TODO: GET RECORD FROM DATABASE
             console.log('Entity.vue | load()')
+            try {
+
+                const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}`, {
+                    method: 'GET',
+                    redirect: 'follow'
+                })
+                this.entity = await response.json()
+                console.log(this.entity)
+
+            } catch (error) {
+                console.error(error)
+            }
         },
         async save(redirectTo) {
             // TODO: POST RECORD TO DATABASE
