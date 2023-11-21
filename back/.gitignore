@@ -1,0 +1,8 @@
+# Directories
+pyvenv/
+.vscode/
+ne_sop_backend/db.sqlite
+ne_sop_backend/ne_sop_api/__pycache__/
+ne_sop_backend/ne_sop_api/migrations/
+ne_sop_backend/ne_sop_api/tests.py
+ne_sop_backend/ne_sop_backend/__pycache__/
