@@ -18,8 +18,17 @@
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <!-- TYPE SELECT FIELD -->
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                <q-select bg-color="white" outlined v-model="entity.type" :options="entityTypes" label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+
+                                <q-select bg-color="white" outlined v-model="entity.type" :options="store.entityTypes" option-label="name" option-value="id" label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                                    <template v-slot:option="scope">
+                                        <q-item v-bind="scope.itemProps">
+                                            <q-item-section>
+                                                <q-item-label>{{ scope.opt.name }}</q-item-label>
+                                            </q-item-section>
+                                        </q-item>
+                                    </template>
                                 </q-select>
+
                             </div>
 
                         </div>
@@ -43,6 +52,12 @@
                     <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
                         <div>store.entity</div>
                         <div>{{ store.entities.find(e => e.id === this.entity.id) }}</div>
+                    </div>
+
+                    <!-- TODO REMOVE/DEV DISPLAY JSON-->
+                    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
+                        <div>store.entityTypes</div>
+                        <div>{{ store.entityTypes }}</div>
                     </div>
 
                 </template>
@@ -130,7 +145,7 @@ export default {
     data() {
         return {
             store,
-            entityTypes: entityTypes,
+            entityTypes: null,
         }
     },
     computed: {
@@ -147,6 +162,7 @@ export default {
         console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
     },
     mounted() {
+        this.store.getEntityTypes()
     },
     methods: {
         checkFilled,
