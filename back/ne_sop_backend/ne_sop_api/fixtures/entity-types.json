@@ -1,0 +1,30 @@
+[
+    {
+        "model": "ne_sop_api.EntityType",
+        "pk": 1,
+        "fields": {
+            "name": "Service de l'état"
+        }
+    },
+    {
+        "model": "ne_sop_api.EntityType",
+        "pk": 2,
+        "fields": {
+            "name": "Parlementaire"
+        }
+    },
+    {
+        "model": "ne_sop_api.EntityType",
+        "pk": 3,
+        "fields": {
+            "name": "Groupe parlementaire"
+        }
+    },
+    {
+        "model": "ne_sop_api.EntityType",
+        "pk": 4,
+        "fields": {
+            "name": "Autre"
+        }
+    }
+]

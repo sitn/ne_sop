@@ -1,0 +1,37 @@
+[
+    {
+        "model": "ne_sop_api.EventType",
+        "pk": 1,
+        "fields": {
+            "name": "Dépôt objet"
+        }
+    },
+    {
+        "model": "ne_sop_api.EventType",
+        "pk": 2,
+        "fields": {
+            "name": "Délai interne/interservice"
+        }
+    },
+    {
+        "model": "ne_sop_api.EventType",
+        "pk": 3,
+        "fields": {
+            "name": "Délai retour secrétariat général"
+        }
+    },
+    {
+        "model": "ne_sop_api.EventType",
+        "pk": 4,
+        "fields": {
+            "name": "Validation chef-fe Département"
+        }
+    },
+    {
+        "model": "ne_sop_api.EventType",
+        "pk": 5,
+        "fields": {
+            "name": "Séance du CE prévue"
+        }
+    }
+]

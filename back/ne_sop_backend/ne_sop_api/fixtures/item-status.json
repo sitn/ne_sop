@@ -1,0 +1,42 @@
+[
+    {
+        "model": "ne_sop_api.ItemStatus",
+        "pk": 1,
+        "fields": {
+            "name": "Pas traité",
+            "color": "red"
+        }
+    },
+    {
+        "model": "ne_sop_api.ItemStatus",
+        "pk": 2,
+        "fields": {
+            "name": "En traitement",
+            "color": "orange"
+        }
+    },
+    {
+        "model": "ne_sop_api.ItemStatus",
+        "pk": 3,
+        "fields": {
+            "name": "Terminé",
+            "color": "green"
+        }
+    },
+    {
+        "model": "ne_sop_api.ItemStatus",
+        "pk": 4,
+        "fields": {
+            "name": "Rapport à produire",
+            "color": "cyan-7"
+        }
+    },
+    {
+        "model": "ne_sop_api.ItemStatus",
+        "pk": 5,
+        "fields": {
+            "name": "Retiré",
+            "color": "grey-4"
+        }
+    }
+]
