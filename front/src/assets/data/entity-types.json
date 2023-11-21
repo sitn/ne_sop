@@ -1,6 +1,18 @@
 [
-    "Service de l'état",
-    "Parlementaire",
-    "Groupe parlementaire",
-    "Autre"
+    {
+        "id": 1,
+        "name": "Service de l'état"
+    },
+    {
+        "id": 2,
+        "name": "Parlementaire"
+    },
+    {
+        "id": 3,
+        "name": "Groupe parlementaire"
+    },
+    {
+        "id": 4,
+        "name": "Autre"
+    }
 ]
