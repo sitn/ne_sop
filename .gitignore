@@ -1,2 +1,5 @@
 # Dependency directories
 .vite/
+back/pyvenv/
+back/.vscode
+back/ne_sop_backend/
