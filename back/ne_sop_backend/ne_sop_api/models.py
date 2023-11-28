@@ -93,7 +93,7 @@ class ItemStatus(models.Model):
 
 
 class Item(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     number = models.CharField(max_length=30, blank=True, default="")
     title = models.CharField(max_length=512, blank=True, default="")
@@ -101,6 +101,8 @@ class Item(models.Model):
     # type = models.CharField(choices=ITEM_TYPES, default="", max_length=100)
     type = models.ForeignKey("ItemType", null=True, on_delete=models.SET_NULL)
     status = models.ForeignKey("ItemStatus", null=True, on_delete=models.SET_NULL)
+    content = models.TextField(max_length=600, blank=True, default="")
+    urgent = models.BooleanField(default=False)
     valid = models.BooleanField(default=True)
 
     class Meta:
@@ -121,7 +123,7 @@ class EventType(models.Model):
 
 
 class Event(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     date = models.DateField()
     time = models.TimeField()
