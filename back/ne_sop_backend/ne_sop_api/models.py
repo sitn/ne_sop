@@ -97,13 +97,25 @@ class Item(models.Model):
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     number = models.CharField(max_length=30, blank=True, default="")
     title = models.CharField(max_length=512, blank=True, default="")
-    author = models.ForeignKey("Entity", null=True, on_delete=models.SET_NULL)
+
+    author = models.ForeignKey(
+        "Entity", related_name="author", null=True, on_delete=models.SET_NULL
+    )
+
     # type = models.CharField(choices=ITEM_TYPES, default="", max_length=100)
     type = models.ForeignKey("ItemType", null=True, on_delete=models.SET_NULL)
     status = models.ForeignKey("ItemStatus", null=True, on_delete=models.SET_NULL)
+    # events = models.ForeignKey("Event", many=True, null=True, on_delete=models.SET_NULL)
     content = models.TextField(max_length=600, blank=True, default="")
     urgent = models.BooleanField(default=False)
+    writtenresponse = models.BooleanField(default=False)
+    oralresponse = models.BooleanField(default=False)
     valid = models.BooleanField(default=True)
+
+    lead = models.ForeignKey(
+        "Entity", related_name="lead", null=True, on_delete=models.SET_NULL
+    )
+    support = models.ManyToManyField(Entity, related_name="support")
 
     class Meta:
         ordering = ["created"]
@@ -127,7 +139,7 @@ class Event(models.Model):
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     date = models.DateField()
     time = models.TimeField()
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, related_name="events", on_delete=models.CASCADE)
     type = models.ForeignKey(EventType, null=True, on_delete=models.SET_NULL)
     description = models.CharField(max_length=500, blank=True, default="")
     valid = models.BooleanField(default=True)
