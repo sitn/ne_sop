@@ -37,9 +37,9 @@ export default {
             store,
             edit: true,
             entity: {
-                "id": uuidv4(),
                 "name": "",
                 "type": "",
+                "type_id": "",
                 "description": "",
                 "street": "",
                 "city": "",
@@ -60,6 +60,7 @@ export default {
     },
     methods: {
         save(val) {
+
             this.$emit('addNewEntity', this.entity)
             // this.store.entities.push(this.entity)
             // POST NEW VALUE TO DATABASE
