@@ -37,7 +37,7 @@
             </div>
 
             <!-- ENTITIES TABLE -->
-            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" class="q-my-lg">
+            <q-table title="" :rows="store.entities" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="store.loading" :filter="filter" @request="" class="q-my-lg">
 
                 <!-- TABLE BODY -->
                 <template v-slot:body="props">
@@ -84,6 +84,12 @@
                 </template>
             </q-table>
 
+            <!-- TODO REMOVE/DEV DISPLAY JSON-->
+            <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
+                <div>store.entities</div>
+                <div>{{ store.entities }}</div>
+            </div>
+
         </div>
 
         <!-- DELETE DIALOG -->
@@ -104,7 +110,6 @@ export default {
     emits: [],
     setup() {
         return {
-            // model: ref(null),
         }
     },
     data() {
@@ -114,9 +119,10 @@ export default {
             searchString: null,
             filter: "",
             dialog: { deletion: false },
-            rows: store.entities,
+            rows: [],
             loading: false,
             pagination: {
+                rowsNumber: 17, // TODO: REPLACE BY QUERY TO DATABASE
                 sortBy: "desc",
                 descending: false,
                 page: 1,
@@ -149,20 +155,66 @@ export default {
     },
     computed: {
     },
+    beforeCreate() {
+        store.getEntities("", 1, 20)
+    },
     created() {
+        this.rows = this.store.entities
     },
     mounted() {
+
     },
     methods: {
+        didi() {
+            console.log('didi')
+        },
+        async onRequest(props) {
+            const { page, rowsPerPage, sortBy, descending } = props.pagination
+            const filter = props.filter
+
+            loading.value = true
+
+            // emulate server
+            setTimeout(() => {
+                // update rowsCount with appropriate value
+                pagination.value.rowsNumber = getRowsNumberCount(filter)
+
+                // get all rows if "All" (0) is selected
+                const fetchCount = rowsPerPage === 0 ? pagination.value.rowsNumber : rowsPerPage
+
+                // calculate starting row of data
+                const startRow = (page - 1) * rowsPerPage
+
+                // fetch data from "server"
+                const returnedData = fetchFromServer(startRow, fetchCount, filter, sortBy, descending)
+
+                // clear out existing data and add new
+                rows.value.splice(0, rows.value.length, ...returnedData)
+
+                // don't forget to update local pagination object
+                this.pagination.page = page
+                this.rowsPerPage = rowsPerPage
+                this.sortBy = 'desc' // sortBy
+                this.descending = false // descending
+
+                // ...and turn of loading indicator
+                this.loading = false
+            }, 1500)
+        },
         async query() {
-            // TODO: REPLACE WITH GET CALL TO DATABASE 
+
+            // TODO: REPLACE WITH GET CALL TO API 
             console.log(`search: ${this.searchString}`)
             this.loading = true
-            await sleep(Math.random() * 1300)
+            // await sleep(Math.random() * 1300)
             let str = this.searchString.toLowerCase()
+
             if (this.searchString.length >= 3) {
-                this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
+                this.store.getEntities(str, 1, this.pagination.rowsPerPage)
+                this.rows = this.store.entities
+                // this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
             } else {
+                this.store.getEntities("", 1, this.pagination.rowsPerPage)
                 this.rows = this.store.entities
             }
             this.loading = false
@@ -172,7 +224,12 @@ export default {
             this.dialog.deletion = true
         },
         async remove() {
-            store.entities = store.entities.filter((x) => (x.id !== this.selected))
+            // TODO: REPLACE WITH GET CALL TO API 
+
+            // store.entities = store.entities.filter((x) => (x.id !== this.selected))
+            console.log(`delete ${this.selected}`)
+            this.store.deleteEntity(this.selected)
+
             this.rows = store.entities
         }
     }
