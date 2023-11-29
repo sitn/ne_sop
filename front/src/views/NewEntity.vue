@@ -45,9 +45,9 @@ export default {
             edit: true,
             wait: false,
             entity: {
-                "id": uuidv4(),
                 "name": "",
                 "type": "",
+                "type_id": "",
                 "description": "",
                 "street": "",
                 "city": "",
@@ -58,7 +58,7 @@ export default {
                 "email": "",
                 "telephone": "",
                 "valid": false
-            },
+            }, //  "id": uuidv4(),
             entityTypes: entityTypes,
         }
     },
@@ -77,10 +77,14 @@ export default {
             // TODO - POST NEW RECORD TO DATABASE
             console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
+
+            /*
             await sleep(Math.random() * 1300)
             if (!this.store.entities.map((x) => (x.name)).includes(this.entity.name)) {
                 this.store.entities.push(this.entity)
-            }
+            }*/
+            store.addEntity(this.entity)
+
             this.wait = false
 
             if (redirectTo !== null) {
