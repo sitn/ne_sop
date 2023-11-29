@@ -19,7 +19,7 @@
                             <!-- TYPE SELECT FIELD -->
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 
-                                <q-select bg-color="white" outlined v-model="entity.type" :options="store.entityTypes" option-label="name" option-value="id" label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                                <q-select bg-color="white" outlined v-model="entity.type" :options="store.entityTypes" option-label="name" option-value="id" emit-value map-options label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
                                     <template v-slot:option="scope">
                                         <q-item v-bind="scope.itemProps">
                                             <q-item-section>
