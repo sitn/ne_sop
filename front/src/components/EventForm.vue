@@ -62,7 +62,7 @@
 
                         <!-- TYPE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="event.eventType" :options="eventTypes" label="Type" :rules="[val => checkFilled(val)]" clearable :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="event.eventType" :options="store.eventTypes" option-label="name" option-value="id" emit-value map-options label="Type" :rules="[val => checkFilled(val)]" clearable :disable="!edit">
                             </q-select>
                         </div>
 
@@ -135,7 +135,7 @@ export default {
         return {
             store,
             valid: null,
-            eventTypes: eventTypes,
+            eventTypes: store.eventTypes,
             linkedItem: null
         }
     },
@@ -164,6 +164,7 @@ export default {
         //this.validateForm()
         // 18f57808-5503-406d-b977-10c6625a8627 -> 23.191 "État des lieux de nos milieux fontinaux"
         this.linkedItem = store.items.find((x) => (x.id === this.event.itemId))
+        this.store.getEventTypes()
 
     },
     updated() {
