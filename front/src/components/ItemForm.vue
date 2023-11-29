@@ -249,6 +249,8 @@ export default {
         console.log(`router id: ${this.$route.params.id}`)
     },
     mounted() {
+        store.getItemTypes()
+        // store.
     },
     methods: {
         checkFilled,
@@ -280,10 +282,15 @@ export default {
             console.log(newOption)
 
             if (!this.authorOptions.map((x) => (x.name)).includes(newOption.name)) {
-                store.entities.push(newOption)
+
+                // DEV: ADD NEW ENTITY TO LOCAL JSON
+                // store.entities.push(newOption)
+
+                // PRODUCTION: POST NEW ENTITY TO DATABASE
+                store.addEntity(newOption)
+
                 // this.authorOptions.push(val)
                 this.item.author = newOption
-                // POST NEW ENTITY TO DATABASE
 
                 console.log('authorOptions')
                 console.log(this.authorOptions)
