@@ -1,0 +1,54 @@
+[
+    {
+        "model": "ne_sop_api.Event",
+        "pk": 1,
+        "fields": {
+            "uuid": "439ea952-b9a6-4d30-9157-e96f9253c1e0",
+            "date": "2023-03-23",
+            "time": "11:00:00",
+            "type": 1,
+            "item": 1,
+            "description": "",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Event",
+        "pk": 2,
+        "fields": {
+            "uuid": "202e48bc-dc17-46c9-bacc-fd0b57135783",
+            "date": "2023-06-12",
+            "time": "10:00:00",
+            "type": 2,
+            "item": 1,
+            "description": "",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Event",
+        "pk": 3,
+        "fields": {
+            "uuid": "c6e60a7e-c844-4f69-b233-942b1a7d575d",
+            "date": "2023-07-05",
+            "time": "12:00:00",
+            "type": 3,
+            "item": 1,
+            "description": "",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Event",
+        "pk": 4,
+        "fields": {
+            "uuid": "bcbe6dc0-a468-4c63-a86d-be4adef29d8c",
+            "date": "2023-02-22",
+            "time": "11:00:00",
+            "type": 1,
+            "item": 2,
+            "description": "",
+            "valid": true
+        }
+    }
+]
