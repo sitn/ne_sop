@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # external packages
     "rest_framework",
     "drf_spectacular",
+    "corsheaders",
     # internal apps
     "ne_sop_api",
 ]
@@ -52,6 +53,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # CORS
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = "ne_sop_backend.urls"
@@ -140,3 +144,8 @@ SPECTACULAR_SETTINGS = {
     "COMPONENT_SPLIT_REQUEST": True,
     "SERVE_INCLUDE_SCHEMA": False,
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+]
