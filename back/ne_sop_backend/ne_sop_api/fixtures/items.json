@@ -1,0 +1,43 @@
+[
+    {
+        "model": "ne_sop_api.Item",
+        "pk": 1,
+        "fields": {
+            "uuid": "178a09eb-d04d-4cc2-94d7-c3e3b53d0580",
+            "number": "23.339",
+            "type": 5,
+            "title": "Les PFAS ne vont pas faire pshchitt",
+            "status": 3,
+            "urgent": false,
+            "writtenresponse": false,
+            "oralresponse": false,
+            "author": 8,
+            "lead": 1,
+            "support": [
+                2,
+                3
+            ],
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Item",
+        "pk": 2,
+        "fields": {
+            "uuid": "178a09eb-d04d-4cc2-94d7-c3e3b53d0580",
+            "number": "23.34",
+            "type": 5,
+            "title": "Plan directeur des transports : la révision est-elle à l’horaire ?",
+            "status": 2,
+            "urgent": false,
+            "writtenresponse": false,
+            "oralresponse": false,
+            "author": 10,
+            "lead": 2,
+            "support": [
+                4
+            ],
+            "valid": true
+        }
+    }
+]
