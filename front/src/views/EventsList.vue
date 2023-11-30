@@ -39,7 +39,7 @@
             </div>
 
             <!-- EVENTS TABLE -->
-            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" class="q-my-lg">
+            <q-table title="" :rows="store.events" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" class="q-my-lg">
                 <!-- TABLE BODY -->
                 <template v-slot:body="props">
                     <q-tr :props="props">
@@ -60,22 +60,25 @@
 
                         <!-- EVEN TYPE COLUMN -->
                         <q-td key="type" :props="props">
-                            {{ props.row.eventType }}
+                            {{ props.row.type.name }}
                         </q-td>
 
                         <!-- ITEM COLUMN -->
                         <q-td key="item" :props="props">
 
+
                             <router-link :to="{
                                 name: 'Item',
                                 params: {
-                                    id: props.row.itemId
+                                    id: props.row.item.id
                                 }
                             }">
-                                <div>{{ props.row.itemNumber }} - {{ props.row.itemType }}</div>
+                                <div>{{ props.row.item.number }} - {{ props.row.item.type.name }}</div>
 
                             </router-link>
-                            <div>{{ props.row.itemName }}</div>
+
+                            <div>{{ props.row.item.title }}</div>
+
 
                         </q-td>
 
@@ -101,6 +104,12 @@
                     Aucune objet
                 </template>
             </q-table>
+
+            <!-- TODO REMOVE/DEV DISPLAY JSON-->
+            <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
+                <div>store.events</div>
+                <div>{{ store.events }}</div>
+            </div>
 
             <!-- DELETE DIALOG -->
             <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
@@ -135,7 +144,7 @@ export default {
             searchString: null,
             filter: "",
             dialog: { deletion: false },
-            rows: store.events,
+            rows: [], // store.events,
             loading: false,
             pagination: {
                 sortBy: "desc",
@@ -155,14 +164,14 @@ export default {
                     name: "type",
                     align: "left",
                     label: "Type",
-                    field: "eventType",
+                    field: "type",
                     sortable: true,
                 },
                 {
                     name: "item",
                     align: "left",
                     label: "Objet",
-                    field: "",
+                    field: "item",
                     sortable: true,
                 },
                 {
@@ -176,6 +185,9 @@ export default {
         }
     },
     computed: {
+    },
+    beforeCreate() {
+        store.getEvents(1, 20)
     },
     created() {
     },
