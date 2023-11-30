@@ -36,7 +36,7 @@
             </div>
 
             <!-- ITEMS TABLE -->
-            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" class="q-my-lg"> <!-- :filter="filter" -->
+            <q-table title="" :rows="store.items" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" class="q-my-lg"> <!-- :filter="filter" -->
 
                 <!-- TABLE BODY -->
                 <template v-slot:body="props">
@@ -44,13 +44,16 @@
 
                         <!-- STATUS COLUMN -->
                         <q-td key="status" :props="props">
+
                             <div>
                                 <q-badge color="red" class="q-my-sm" v-if="props.row.urgent">Urgent</q-badge>
                             </div>
                             <div class="row items-center">
-                                <q-badge :color="color(props.row.status)" rounded class="q-mr-sm" />
-                                <div>{{ props.row.status }}</div>
+                                <q-badge :color="props.row.status.color" rounded class="q-mr-sm" />
+                                <!-- <q-badge :color="color(props.row.status.color)" rounded class="q-mr-sm" /> -->
+                                <div>{{ props.row.status.name }}</div>
                             </div>
+
                         </q-td>
 
                         <!-- NUMBER COLUMN -->
@@ -99,6 +102,12 @@
                     Aucune objet
                 </template>
             </q-table>
+
+            <!-- TODO REMOVE/DEV DISPLAY JSON-->
+            <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
+                <div>store.items</div>
+                <div>{{ store.items }}</div>
+            </div>
 
             <!-- DELETE DIALOG -->
             <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
@@ -194,6 +203,9 @@ export default {
     },
     computed: {
     },
+    beforeCreate() {
+        store.getItems("", 1, 20)
+    },
     created() {
     },
     mounted() {
@@ -203,11 +215,14 @@ export default {
         async query() {
             // TODO: REPLACE WITH GET CALL TO DATABASE 
             this.loading = true
-            await sleep(Math.random() * 1300)
+            // await sleep(Math.random() * 1300)
             let str = this.searchString.toLowerCase()
             if (this.searchString.length >= 3) {
-                this.rows = this.store.items.filter((x) => (x.title.toLowerCase().includes(str) || x.number.toLowerCase().includes(str)))
+                this.store.getItems(str, 1, this.pagination.rowsPerPage)
+                this.rows = this.store.entities
+                // this.rows = this.store.items.filter((x) => (x.title.toLowerCase().includes(str) || x.number.toLowerCase().includes(str)))
             } else {
+                this.store.getItems("", 1, this.pagination.rowsPerPage)
                 this.rows = this.store.items
             }
             this.loading = false
