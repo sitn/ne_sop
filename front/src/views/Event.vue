@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div class="" v-if="!store.loading">
 
         <q-layout>
 
@@ -7,7 +7,8 @@
             <div class="q-pa-sm q-gutter-sm">
                 <q-breadcrumbs style="font-size: 16px">
                     <q-breadcrumbs-el label="Calendrier" to="/events" />
-                    <q-breadcrumbs-el :label="event.date" />
+                    <q-breadcrumbs-el :label="store.event.date" />
+                    <!--  <q-breadcrumbs-el :label="event.date" />-->
                 </q-breadcrumbs>
             </div>
 
@@ -15,7 +16,9 @@
             <!--  <div>store.valid: {{ store.valid }}</div> -->
 
             <!-- FORM -->
-            <EventForm v-model="event" :edit="edit" @validation-event="handleValidation"></EventForm>
+            <EventForm v-model="store.event" :edit="edit"></EventForm>
+            <!-- <EventForm v-model="store.event" :edit="edit" @validation-event="handleValidation"></EventForm> -->
+            <!-- <EventForm v-model="event" :edit="edit" @validation-event="handleValidation"></EventForm> -->
             <!-- <EventForm v-model="event" :edit="edit" @validation-event="handleValidation" ref="EventForm"></EventForm> -->
 
             <!-- FLOATING ACTION BUTTONS -->
@@ -53,23 +56,27 @@ export default {
             edit: false,
             wait: false,
             valid: null,
-            event: null, // store.events.find(e => e.id === this.$route.params.id),
+            event: store.event, // store.events.find(e => e.id === this.$route.params.id),
             index: store.events.findIndex((e) => (e.id === this.$route.params.id))
         }
     },
     computed: {
         actionButtons() {
             return {
-                save: this.event.valid ? 'active' : 'disable',
+                save: store.event.valid ? 'active' : 'disable', // this.event.valid ? 'active' : 'disable'
                 deletion: 'none'
             }
         }
     },
+    beforeCreate() {
+        store.getEvent(this.$route.params.id)
+    },
     created() {
-        this.event = Object.assign({}, store.events.find(e => e.id === this.$route.params.id))
+        store.getEvent(this.$route.params.id)
+        // this.event = Object.assign({}, store.events.find(e => e.id === this.$route.params.id))
     },
     mounted() {
-        store.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
+        // TODO: store.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
     },
 
     methods: {
