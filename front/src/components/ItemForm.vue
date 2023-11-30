@@ -16,9 +16,17 @@
 
                         <!-- TYPE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.type" :options="itemTypes" label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.type" :options="store.itemTypes" option-label="name" option-value="id" emit-value map-options label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                                <template v-slot:option="scope">
+                                    <q-item v-bind="scope.itemProps">
+                                        <q-item-section>
+                                            <q-item-label>{{ scope.opt.name }}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                </template>
                             </q-select>
                         </div>
+
 
                     </div>
 
@@ -31,7 +39,7 @@
 
                         <!-- AUTHOR SELECT/CREATE FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.author" use-input :options="authorOptions" option-label="name" option-value="name" @filter="filterFn" map-options label="Auteur" emit-value clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.author" use-input :options="authorOptions" option-label="name" option-value="id" emit-value map-options @filter="filterFn" label="Auteur" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
 
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
@@ -50,6 +58,7 @@
 
                             </q-select>
                         </div>
+
 
                     </div>
 
@@ -83,7 +92,7 @@
 
                         <!-- PRIMARY SERVICE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.services.lead" :options="serviceOptions" option-label="name" option-value="id" label="Service principal" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.lead" :options="serviceOptions" option-label="name" option-value="id" emit-value map-options label="Service principal" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section>
@@ -96,7 +105,7 @@
 
                         <!-- SUPPORT SERVICE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.services.support" :options="serviceOptions" option-label="name" option-value="id" label="Service(s) en appui" multiple clearable :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.support" :options="serviceOptions" option-label="name" option-value="id" emit-value map-options label="Service(s) en appui" multiple clearable :disable="!edit">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section side>
@@ -110,13 +119,14 @@
                             </q-select>
                         </div>
 
+
                     </div>
 
                     <div class="row q-col-gutter-lg q-py-md">
 
                         <!-- STATUS SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.status" :options="itemStatus" option-label="name" option-value="name" label="Statut" clearable map-options emit-value :rules="[v => checkFilled(v)]" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.status" :options="itemStatus" option-label="name" option-value="id" emit-value map-options label="Statut" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section side>
@@ -148,7 +158,7 @@
                         <!-- WRITTEN RESPONSE CHECKBOX FIELD -->
                         <q-item tag="label" v-ripple :disable="!edit">
                             <q-item-section avatar>
-                                <q-checkbox v-model="item.writtenResponse" val="true" color="blue" :disable="!edit" />
+                                <q-checkbox v-model="item.writtenresponse" val="true" color="blue" :disable="!edit" />
                             </q-item-section>
                             <q-item-section>
                                 <q-item-label>Réponse écrite</q-item-label>
@@ -159,7 +169,7 @@
                         <!-- ORAL RESPONSE CHECKBOX FIELD -->
                         <q-item tag="label" v-ripple :disable="!edit">
                             <q-item-section avatar>
-                                <q-checkbox v-model="item.oralResponse" val="true" color="blue" :disable="!edit" />
+                                <q-checkbox v-model="item.oralresponse" val="true" color="blue" :disable="!edit" />
                             </q-item-section>
                             <q-item-section>
                                 <q-item-label>Réponse orale</q-item-label>
@@ -177,7 +187,7 @@
                 <template v-slot:content>
 
                     <!-- EVENTS TABLE -->
-                    <EventsTable v-model="item.events" :edit="edit"></EventsTable>
+                    <!-- <EventsTable v-model="item.events" :edit="edit"></EventsTable> -->
 
                 </template>
             </FormSection>
@@ -187,7 +197,7 @@
                 <template v-slot:content>
 
                     <!-- DOCUMENTS TABLE -->
-                    <DocumentsTable v-model="item.documents" :type="item.type" :edit="edit"></DocumentsTable>
+                    <!-- <DocumentsTable v-model="item.documents" :type="item.type" :edit="edit"></DocumentsTable> -->
 
                 </template>
             </FormSection>
@@ -205,8 +215,8 @@
 <script>
 import { store } from '../store/store.js'
 import { checkFilled } from '../store/shared.js'
-import itemTypes from '../assets/data/item-types.json'
-import itemStatus from '../assets/data/item-status.json'
+// import itemTypes from '../assets/data/item-types.json'
+// import itemStatus from '../assets/data/item-status.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 import EventsTable from "../components/EventsTable.vue"
@@ -228,10 +238,10 @@ export default {
         return {
             store,
             dialog: { newEntity: false, newEvent: false, newDocument: false },
-            itemTypes: itemTypes,
-            itemStatus: itemStatus,
-            authorOptions: store.entities.filter(e => subset.includes(e.type)),
-            serviceOptions: store.entities.filter((e) => (e.type === "Service de l'état")),
+            itemTypes: null, // itemTypes,
+            itemStatus: [], // itemStatus,
+            authorOptions: [], // store.entities.filter(e => subset.includes(e.type)),
+            serviceOptions: [], // store.entities.filter((e) => (e.type === "Service de l'état")),
             addEntityDialog: false
         }
     },
@@ -241,22 +251,54 @@ export default {
                 return this.modelValue
             },
             set(item) {
-                this.$emit('update:modelValue', item)
+                // this.$emit('update:modelValue', item)
             }
         }
     },
-    created() {
-        console.log(`router id: ${this.$route.params.id}`)
+    beforeCreate() {
+        store.getItemTypes()
+    },
+    async created() {
+        // console.log(`router id: ${this.$route.params.id}`)
+        // this.itemTypes = await this.getItemTypes()
+        // this.itemStatus = await this.getItemStatus()
+        this.serviceOptions = await this.searchEntity("", 1)
+        this.authorOptions = await this.searchEntity("", 2)
+        this.itemStatus = await this.store.getItemStatus()
     },
     mounted() {
-        store.getItemTypes()
-        // store.
+
     },
     methods: {
         checkFilled,
         addEntity() {
             console.log('ItemForm.vue | Add new entity')
             this.dialog.newEntity = true
+        },
+        async init() {
+
+            this.serviceOptions = await this.searchEntity("", 1)
+            this.authorOptions = await this.searchEntity("", 2)
+        },
+        async searchEntity(searchString = "", type = []) {
+
+            // TODO: REPLACE WITH GET CALL TO API 
+
+            // await sleep(Math.random() * 1300)
+            let str = searchString.toLowerCase()
+            let result = ""
+
+            if (str.length >= 3) {
+                // this.store.getEntities(str, 1, this.pagination.rowsPerPage)
+                result = await this.store.searchEntities(str, type, 1, 5)
+                // this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
+            } else {
+                // this.store.getEntities("", 1, this.pagination.rowsPerPage)
+                result = await this.store.searchEntities("", type, 1, 20)
+            }
+
+            return result
+
         },
         async addNewEntity(val) {
 
@@ -298,11 +340,12 @@ export default {
 
         },
         filterFn(val, update, abort) {
-            update(() => {
+            update(async () => {
                 // TODO - GET RECORDS FROM DATABASE
-                const needle = val.toLowerCase()
+                const str = val.toLowerCase()
                 // this.authorOptions = entities.filter((v) => v.name.toLowerCase().indexOf(needle) > -1)
-                this.authorOptions = store.entities.filter((e) => subset.includes(e.type)).filter((v) => v.name.toLowerCase().indexOf(needle) > -1)
+                // this.authorOptions = store.entities.filter((e) => subset.includes(e.type)).filter((v) => v.name.toLowerCase().indexOf(str) > -1)
+                this.authorOptions = await this.searchEntity(str, [2, 3])
             })
         }
     }
