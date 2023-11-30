@@ -17,6 +17,7 @@ from ne_sop_api.serializers import (
     ItemTypeSerializer,
     ItemStatusSerializer,
     EventSerializer,
+    EventListSerializer,
     EventTypeSerializer,
     TemplateSerializer,
     UserSerializer,
@@ -26,17 +27,33 @@ from ne_sop_api.paginations import (
     CustomPagination,
 )
 
-
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework import viewsets
+from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
-
 from django.core.paginator import Paginator
 
-# %% Root view
+# %% FILTERS -----------------------------------------------------------------------------------
+
+
+""" class ItemFilter(django_filters.FilterSet):
+    q = django_filters.CharFilter(method="my_custom_filter", label="Search")
+
+    class Meta:
+        model = Item
+        fields = ["q"]
+
+    def my_custom_filter(self, queryset, name, value):
+        return queryset.filter(
+            Q(loc__icontains=value)
+            | Q(loc_mansioned__icontains=value)
+            | Q(loc_country__icontains=value)
+            | Q(loc_modern__icontains=value)
+        )
+ """
 
 
 # %% Users
@@ -75,36 +92,13 @@ class EntityTypeViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-""" class EntityListViewSet(generics.ListCreateAPIView):
-
-    queryset = User.objects.all()
-    pagination_class = CustomPagination """
-
-
-class EntityListViewSet(generics.ListCreateAPIView):
-    # queryset = Entity.objects.all()
-    serializer_class = EntitySerializer
-    pagination_class = CustomPagination
-
-    def get_queryset(self):
-        """
-        Optionally restricts the returned purchases to a given user,
-        by filtering against a `username` query parameter in the URL.
-        """
-        queryset = Entity.objects.all()
-        name = self.request.query_params.get("name")
-        if name is not None:
-            queryset = queryset.filter(name__icontains=name)
-        # return super().get_queryset()  # queryset
-        return queryset
-
-
 class EntityViewSet(viewsets.ViewSet):
     """
     Entities viewset
     """
 
     serializer_class = EntitySerializer
+    search_fields = ["name", "email", "telephone"]
 
     # queryset = Entity.objects.all()
     # name = self.request.query_params.get("name")
@@ -119,8 +113,10 @@ class EntityViewSet(viewsets.ViewSet):
         """
         queryset = Entity.objects.all()
         name = self.request.query_params.get("name")
+        # type = self.request.query_params.get("type")
         if name is not None:
             queryset = queryset.filter(name__icontains=name)
+
         # return super().get_queryset()  # queryset
         return queryset
 
@@ -130,14 +126,22 @@ class EntityViewSet(viewsets.ViewSet):
         tags=["Entities"],
     )
     def list(self, request):
-        queryset = Entity.objects.all()
+        filter = filters.SearchFilter()
+        queryset = filter.filter_queryset(request, Entity.objects.all(), self)
+
+        # queryset = Entity.objects.all()
         # name = request.query_params.get("name")
         name = request.GET.get("name", "")
+        type = request.query_params.get("type")
         page = int(request.GET.get("page", "1"))
         size = int(request.GET.get("size", "10"))
 
         if name is not None:
             queryset = queryset.filter(name__icontains=name)
+
+        # if type # is not None:
+        if type:
+            queryset = queryset.filter(type__in=type.split(","))
 
         paginator = Paginator(queryset.order_by("id"), size)
         queryset = paginator.page(page)
@@ -253,13 +257,38 @@ class ItemViewSet(viewsets.ViewSet):
 
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
+    search_fields = ["title", "number"]
 
     @extend_schema(
         responses=ItemSerializer,
         tags=["Items"],
     )
     def list(self, request):
-        serializer = ItemSerializer(self.queryset, many=True)
+        filter = filters.SearchFilter()
+        queryset = filter.filter_queryset(request, Item.objects.all(), self)
+
+        # queryset = Item.objects.all()
+        # name = request.query_params.get("name")
+        title = request.query_params.get("title", "")
+        number = request.GET.get("number", "")
+        page = int(request.GET.get("page", "1"))
+        size = int(request.GET.get("size", "10"))
+
+        if title is not None:
+            queryset = queryset.filter(title__icontains=title)
+
+        if number is not None:
+            queryset = queryset.filter(number__icontains=number)
+
+        paginator = Paginator(queryset.order_by("id"), size)
+        queryset = paginator.page(page)
+
+        # paginator = Paginator(queryset, per_page=2)
+        # page_object = paginator.get_page(page)
+        # context = {"page_obj": page_object}
+
+        serializer = ItemSerializer(queryset, many=True)
+        # serializer = ItemSerializer(self.queryset, many=True)
         return Response(serializer.data)
 
     @extend_schema(
@@ -333,7 +362,15 @@ class EventViewSet(viewsets.ViewSet):
         tags=["Events"],
     )
     def list(self, request):
-        serializer = EventSerializer(self.queryset, many=True)
+        queryset = Event.objects.all()
+
+        page = int(request.GET.get("page", "1"))
+        size = int(request.GET.get("size", "10"))
+
+        paginator = Paginator(queryset.order_by("id"), size)
+        queryset = paginator.page(page)
+        serializer = EventListSerializer(queryset, many=True)
+
         return Response(serializer.data)
 
     @extend_schema(
@@ -389,3 +426,31 @@ class TemplateViewSet(viewsets.ViewSet):
     def list(self, request):
         serializer = TemplateSerializer(self.queryset, many=True)
         return Response(serializer.data)
+
+
+# %% GENERICS ------------------------------------------------------------------------
+
+
+# %% ENTITY
+class EntityListViewSet(generics.ListCreateAPIView):
+    # queryset = Entity.objects.all()
+    serializer_class = EntitySerializer
+    pagination_class = CustomPagination
+    search_fields = ["name", "email", "telephone"]
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned purchases to a given user,
+        by filtering against a `username` query parameter in the URL.
+        """
+        queryset = Entity.objects.all()
+        name = self.request.query_params.get("name")
+        if name is not None:
+            queryset = queryset.filter(name__icontains=name)
+        # return super().get_queryset()  # queryset
+        return queryset
+
+
+# %% EVENT
+
+# %% ITEM
