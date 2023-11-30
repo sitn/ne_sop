@@ -37,7 +37,7 @@
             </div>
 
             <!-- ENTITIES TABLE -->
-            <q-table title="" :rows="store.entities" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="store.loading" :filter="filter" @request="" class="q-my-lg">
+            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" @request="" class="q-my-lg">
 
                 <!-- TABLE BODY -->
                 <template v-slot:body="props">
@@ -155,11 +155,16 @@ export default {
     },
     computed: {
     },
-    beforeCreate() {
-        store.getEntities("", 1, 20)
+    async beforeCreate() {
+        // store.getEntities("", 1, 20)
+        // this.rows = await store.searchEntities("", [], this.pagination.page, this.pagination.rowsPerPage)
     },
-    created() {
-        this.rows = this.store.entities
+    async created() {
+        this.loading = true
+        this.rows = await store.searchEntities("", "", this.pagination.page, this.pagination.rowsPerPage) // .then(console.log(this.rows))
+        // this.loading = await this.rows.length == 0 ? true : false
+        this.loading = false
+
     },
     mounted() {
 
@@ -206,16 +211,19 @@ export default {
             // TODO: REPLACE WITH GET CALL TO API 
             console.log(`search: ${this.searchString}`)
             this.loading = true
+
             // await sleep(Math.random() * 1300)
             let str = this.searchString.toLowerCase()
 
             if (this.searchString.length >= 3) {
-                this.store.getEntities(str, 1, this.pagination.rowsPerPage)
-                this.rows = this.store.entities
+                //this.store.getEntities(str, 1, this.pagination.rowsPerPage)
+                //this.rows = this.store.entities
+                this.rows = await store.searchEntities(str, "", this.pagination.page, this.pagination.rowsPerPage) // .then(console.log(this.rows))
                 // this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
             } else {
-                this.store.getEntities("", 1, this.pagination.rowsPerPage)
-                this.rows = this.store.entities
+                this.rows = await store.searchEntities(str, "", this.pagination.page, this.pagination.rowsPerPage)
+                // this.store.getEntities("", 1, this.pagination.rowsPerPage)
+                // this.rows = this.store.entities
             }
             this.loading = false
         },
