@@ -1,17 +1,17 @@
 <template>
-    <div class="">
+    <div class="" v-if="!store.loading">
         <q-layout>
 
             <!-- BREADCRUMBS NAVIGATION -->
             <div class="q-pa-sm q-gutter-sm">
                 <q-breadcrumbs style="font-size: 16px">
                     <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
-                    <q-breadcrumbs-el :label="item.number.toString()" />
+                    <q-breadcrumbs-el :label="store.item.number.toString()" />
                 </q-breadcrumbs>
             </div>
 
             <!-- FORM -->
-            <ItemForm v-model="item" :edit="edit" ref="ItemForm"></ItemForm>
+            <ItemForm v-model="store.item" :edit="edit" ref="ItemForm"></ItemForm>
 
             <!-- FLOATING ACTION BUTTONS -->
             <FloatingButtons :edit="false" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
@@ -58,7 +58,7 @@ export default {
             // actionButtons: { save: 'active', deletion: 'active' },
             edit: false,
             wait: false,
-            item: null,
+            item: store.item, // null,
             index: store.items.findIndex((e) => (e.id === this.$route.params.id)),
             itemTypes: itemTypes,
             authorOptions: store.entities.filter(e => subset.includes(e.type)), // authors,
@@ -74,9 +74,18 @@ export default {
             }
         }
     },
+    beforeCreate() {
+        store.getItem(this.$route.params.id)
+    },
     created() {
         // store.saveButton = true
-        this.item = Object.assign({}, store.items.find((e) => (e.id === this.$route.params.id)))
+        // this.item = Object.assign({}, store.items[0])
+        this.item = Object.assign({}, store.items.find((e) => (e.id === 1)))
+        //this.item = Object.assign({}, store.items.find((e) => (e.id === this.$route.params.id)))
+        console.log(`id: ${this.$route.params.id}`)
+        console.log(store.items)
+        console.log('this.item')
+        console.log(this.item)
     },
     mounted() {
     },
