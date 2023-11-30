@@ -1,6 +1,7 @@
 [
     {
-        "id": "63741922-4818-4252-ab28-19e31f972260",
+        "id": 1,
+        "uuid": "63741922-4818-4252-ab28-19e31f972260",
         "number": "23.339",
         "type": "Question",
         "title": "Les PFAS ne vont pas faire pshchitt",
@@ -133,7 +134,8 @@
         "valid": true
     },
     {
-        "id": "3fb9fdc3-a235-40ab-a86f-83b0976cd59c",
+        "id": 2,
+        "uuid": "3fb9fdc3-a235-40ab-a86f-83b0976cd59c",
         "number": "23.34",
         "type": "Question",
         "title": "Plan directeur des transports : la révision est-elle à l’horaire ?",
@@ -171,7 +173,8 @@
         "valid": true
     },
     {
-        "id": "9b70570a-c30f-4c46-8cf8-ed5906bcdd30",
+        "id": 3,
+        "uuid": "9b70570a-c30f-4c46-8cf8-ed5906bcdd30",
         "number": "23.341",
         "type": "Question",
         "title": "L’humusation, ou mourir pour donner la vie",
@@ -208,7 +211,8 @@
         }
     },
     {
-        "id": "64873d4c-266d-4a81-8ced-a68ef9707ee7",
+        "id": 4,
+        "uuid": "64873d4c-266d-4a81-8ced-a68ef9707ee7",
         "number": "23.352",
         "type": "Question",
         "title": "Changement d’affectation de parcelles agricoles : transparence ?",
@@ -246,7 +250,8 @@
         "valid": true
     },
     {
-        "id": "a8940c8d-4fb4-4769-a450-ba13aecbdf3f",
+        "id": 5,
+        "uuid": "a8940c8d-4fb4-4769-a450-ba13aecbdf3f",
         "number": "23.19",
         "type": "Interpellation",
         "title": "Pâturage et élevage, valorisons notre terroir",
@@ -284,7 +289,8 @@
         "valid": true
     },
     {
-        "id": "18f57808-5503-406d-b977-10c6625a8627",
+        "id": 6,
+        "uuid": "18f57808-5503-406d-b977-10c6625a8627",
         "number": "23.191",
         "type": "Postulat",
         "title": "État des lieux de nos milieux fontinaux",
