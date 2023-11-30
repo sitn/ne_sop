@@ -62,7 +62,7 @@
 
                         <!-- TYPE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="event.eventType" :options="store.eventTypes" option-label="name" option-value="id" emit-value map-options label="Type" :rules="[val => checkFilled(val)]" clearable :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="event.type" :options="eventTypes" option-label="name" option-value="id" emit-value map-options label="Type" :rules="[val => checkFilled(val)]" clearable :disable="!edit">
                             </q-select>
                         </div>
 
@@ -135,7 +135,7 @@ export default {
         return {
             store,
             valid: null,
-            eventTypes: store.eventTypes,
+            eventTypes: [], // store.eventTypes,
             linkedItem: null
         }
     },
@@ -157,8 +157,10 @@ export default {
             deep: true
         }
     },
-    created() {
-        console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
+    async created() {
+
+        this.eventTypes = await this.store.getEventTypes()
+        // console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
     },
     mounted() {
         //this.validateForm()
