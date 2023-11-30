@@ -158,17 +158,21 @@ class ItemStatusSerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     type = ItemTypeSerializer(read_only=True)
+
     type_id = serializers.PrimaryKeyRelatedField(
         source="type",
         queryset=ItemType.objects.all(),
         write_only=True,
     )
+
     status = ItemStatusSerializer(read_only=True)
+
     status_id = serializers.PrimaryKeyRelatedField(
         source="status",
         queryset=ItemStatus.objects.all(),
         write_only=True,
     )
+
     author = EntitySerializer(read_only=True)
     author_id = serializers.PrimaryKeyRelatedField(
         source="author",
@@ -226,12 +230,73 @@ class ItemSerializer(serializers.ModelSerializer):
         ]
 
 
+class NestedItemSerializer(serializers.ModelSerializer):
+    type = ItemTypeSerializer(read_only=True)
+
+    type_id = serializers.PrimaryKeyRelatedField(
+        source="type",
+        queryset=ItemType.objects.all(),
+        write_only=True,
+    )
+
+    status = ItemStatusSerializer(read_only=True)
+
+    status_id = serializers.PrimaryKeyRelatedField(
+        source="status",
+        queryset=ItemStatus.objects.all(),
+        write_only=True,
+    )
+
+    author = EntitySerializer(read_only=True)
+    author_id = serializers.PrimaryKeyRelatedField(
+        source="author",
+        queryset=Entity.objects.all(),
+        write_only=True,
+    )
+
+    class Meta:
+        model = Item
+        fields = [
+            "id",
+            "uuid",
+            "number",
+            "title",
+            "type",
+            "type_id",
+            "status",
+            "status_id",
+            "author",
+            "author_id",
+            "valid",
+        ]
+
+
 # %% EVENT
 
 
-class EventSerializer(serializers.ModelSerializer):
-    type = serializers.PrimaryKeyRelatedField(queryset=EventType.objects.all())
+class EventListSerializer(serializers.ModelSerializer):
+    # type = serializers.PrimaryKeyRelatedField(queryset=EventType.objects.all())
+    # type = serializers.StringRelatedField()
+    type = EventTypeSerializer(read_only=True)
+    item = NestedItemSerializer(read_only=True)
 
+    class Meta:
+        model = Event
+        fields = [
+            "id",
+            "uuid",
+            "date",
+            "time",
+            "type",
+            "item",
+            "description",
+            "valid",
+        ]
+
+
+class EventSerializer(serializers.ModelSerializer):
+    # type = serializers.PrimaryKeyRelatedField(queryset=EventType.objects.all())
+    type = EventTypeSerializer(read_only=True)
     """
     type = EventTypeSerializer(read_only=True)
     type_id = serializers.PrimaryKeyRelatedField(
@@ -240,8 +305,8 @@ class EventSerializer(serializers.ModelSerializer):
         write_only=True,
     )
     """
-
-    item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
+    item = NestedItemSerializer(read_only=True)
+    # item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
     """
     item = ItemSerializer(read_only=True)
     item_id = serializers.PrimaryKeyRelatedField(
@@ -259,9 +324,7 @@ class EventSerializer(serializers.ModelSerializer):
             "date",
             "time",
             "type",
-            "type_id",
             "item",
-            "item_id",
             "description",
             "valid",
         ]
