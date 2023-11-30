@@ -20,22 +20,42 @@ export const store = reactive({
     entities: [], // entities,
     entity: null,
     itemTypes: null,
-    items: items,
+    items: [], // items,
     events: [], // events, // items.map((x) => (x.events)).flat(1),
+    event: null,
     documents: items.map((x) => (x.documents)).flat(1),
     attachements: items.map((x) => (x.attachements)).flat(1),
     users: users,
     /* ITEMS */
-    async getItems() {
+    async getItems(search = "", page = 1, size = 10) {
         try {
 
             this.loading = true
-            const response = await fetch('http://127.0.0.1:8000/api/item/', {
+            const response = await fetch(`http://127.0.0.1:8000/api/item?page=${page}&size=${size}&search=${search}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
             this.items = await response.json()
+            console.log(this.items)
             this.loading = false
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    async getItem(id) {
+        try {
+
+            this.loading = true
+            console.log(`loading: ${this.loading}`)
+            const response = await fetch(`http://127.0.0.1:8000/api/item/${id}`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            this.item = await response.json()
+            console.log(this.item)
+            this.loading = false
+            console.log(`loading: ${this.loading}`)
 
         } catch (error) {
             console.error(error)
@@ -44,13 +64,13 @@ export const store = reactive({
     async getItemTypes() {
         try {
 
-            this.loading = true
+            // this.loading = true
             const response = await fetch('http://127.0.0.1:8000/api/item-type/', {
                 method: 'GET',
                 redirect: 'follow'
             })
             this.itemTypes = await response.json()
-            this.loading = false
+            // this.loading = false
 
         } catch (error) {
             console.error(error)
@@ -175,11 +195,11 @@ export const store = reactive({
     },
     // query parameters, number of results, page, filters
     // API - GET ALL RECORDS
-    async getEntities(name = "", page = 1, size = 10) {
+    async getEntities(search = "", page = 1, size = 10) {
         try {
 
             this.loading = false
-            const response = await fetch(`http://127.0.0.1:8000/api/entity?page=${page}&size=${size}&name=${name}`, {
+            const response = await fetch(`http://127.0.0.1:8000/api/entity?page=${page}&size=${size}&search=${search}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -227,10 +247,10 @@ export const store = reactive({
         }
     },
     /* EVENTS */
-    async getEvents() {
+    async getEvents(page = 1, size = 10) {
         try {
 
-            const response = await fetch('http://127.0.0.1:8000/api/event/', {
+            const response = await fetch(`http://127.0.0.1:8000/api/event?page=${page}&size=${size}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -240,7 +260,23 @@ export const store = reactive({
             console.error(error)
         }
     },
-    async getEventTypes() {
+    async getEvent(id) {
+        try {
+
+            this.loading = true
+            const response = await fetch(`http://127.0.0.1:8000/api/event/${id}`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            this.event = await response.json()
+            console.log(this.event)
+            this.loading = false
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    async getEventTypes1() {
         try {
 
             const response = await fetch('http://127.0.0.1:8000/api/event-type/', {
@@ -277,5 +313,66 @@ export const store = reactive({
         this.attachements = this.items.map((x) => (x.attachements)).flat(1)
     },
 
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    async searchEntities(search = "", type, page = 1, size = 10) {
+        try {
+
+            await sleep(1300)
+            const response = await fetch(`http://127.0.0.1:8000/api/entity?page=${page}&size=${size}&search=${search}&type=${type}`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            const result = await response.json()
+            return result
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    async getEntities3() {
+        try {
+
+            const response = await fetch(`http://127.0.0.1:8000/api/item-status`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            const result = await response.json()
+            return result
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+
+
+
+    async getItemStatus() {
+        try {
+
+            const response = await fetch(`http://127.0.0.1:8000/api/item-status`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    async getEventTypes() {
+        try {
+
+            const response = await fetch('http://127.0.0.1:8000/api/event-type/', {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
 
 })
