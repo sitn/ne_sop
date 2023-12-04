@@ -5,6 +5,7 @@ src/store/entity-types.js
 
 # Files
 package-lock.json
+*.json.bak
 
 # dotenv environment variable files
 .env

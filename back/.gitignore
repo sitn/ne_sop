@@ -1,8 +1,18 @@
 # Directories
 pyvenv/
+venv/
 .vscode/
 ne_sop_backend/db.sqlite3
 ne_sop_backend/ne_sop_api/__pycache__/
 ne_sop_backend/ne_sop_api/migrations/
 ne_sop_backend/ne_sop_api/tests.py
 ne_sop_backend/ne_sop_backend/__pycache__/
+
+# environment file
+.env
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
