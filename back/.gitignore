@@ -4,7 +4,6 @@ venv/
 .vscode/
 ne_sop_backend/db.sqlite3
 ne_sop_backend/ne_sop_api/__pycache__/
-ne_sop_backend/ne_sop_api/migrations/
 ne_sop_backend/ne_sop_api/tests.py
 ne_sop_backend/ne_sop_backend/__pycache__/
 
@@ -13,6 +12,7 @@ ne_sop_backend/ne_sop_backend/__pycache__/
 
 # Django stuff:
 *.log
+*.pyc
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
