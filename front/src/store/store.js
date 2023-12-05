@@ -1,11 +1,11 @@
 // store.js
 import { reactive } from 'vue'
-import { EntityTypes } from './entity-types.js'
-import entities from '../assets/data/entities.json'
+// import { EntityTypes } from './entity-types.js'
+// import entities from '../assets/data/entities.json'
 import items from '../assets/data/items.json'
-import events from '../assets/data/events.json'
+// import events from '../assets/data/events.json'
 import users from '../assets/data/users.json'
-import { sleep } from '../store/shared.js'
+// import { sleep } from '../store/shared.js'
 // import { router } from '../router.js'
 
 export const store = reactive({

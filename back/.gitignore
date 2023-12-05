@@ -1,6 +1,6 @@
 # Directories
 pyvenv/
-.venv/
+venv/
 .vscode/
 ne_sop_backend/db.sqlite3
 ne_sop_backend/ne_sop_api/__pycache__/

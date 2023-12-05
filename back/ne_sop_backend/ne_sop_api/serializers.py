@@ -269,13 +269,13 @@ class EventSerializer(serializers.ModelSerializer):
 
 # %% TEMPLATE
 class TemplateSerializer(serializers.ModelSerializer):
-    parents = ItemTypeSerializer()
+    item_types = ItemTypeSerializer()
 
     class Meta:
         model = Template
         fields = [
             "id",
             "name",
-            "parents",
+            "item_types",
             "valid",
         ]

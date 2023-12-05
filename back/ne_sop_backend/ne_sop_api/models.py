@@ -157,6 +157,8 @@ class Document(models.Model):
     date = models.DateField()
     note = models.CharField(max_length=500, blank=True, default="")
     valid = models.BooleanField(default=True)
+    relpath = models.CharField(default=None, max_length=200)
+    version = models.PositiveIntegerField(default=None)
 
     class Meta:
         ordering = ["created"]
@@ -168,8 +170,9 @@ class Document(models.Model):
 class Template(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=100, blank=True, default="")
-    parents = models.ManyToManyField(ItemType)
+    item_types = models.ManyToManyField(ItemType)
     valid = models.BooleanField(default=True)
+    relpath = models.CharField(default=None, max_length=400)
 
     class Meta:
         ordering = ["created"]

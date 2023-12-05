@@ -60,7 +60,6 @@
 <script>
 import { store } from '../store/store.js'
 import { checkFilled, checkFile } from '../store/shared.js'
-import templates from '../assets/data/templates.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 
@@ -76,7 +75,7 @@ export default {
     data() {
         return {
             store,
-            documentTypes: templates.filter((x) => (x.category.includes(this.type))),
+            documentTypes: [],
             valid: null,
         }
     },
@@ -92,11 +91,11 @@ export default {
     },
     created() {
         console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
+        this.getTemplatesByItemType(this.type);
+        
+        
     },
     mounted() {
-        // console.log(templates)
-        // console.log(templates.map((x) => (x.category)))
-        console.log(templates.filter((x) => (x.category.includes(this.type))))
     },
     updated() {
     },
@@ -115,7 +114,22 @@ export default {
                 this.document.filesize = this.document.file.size
                 console.log(this.document.filesize)
             }
+        },
+
+        async getTemplatesByItemType(type) {
+        try {
+
+            console.log("this.type =", type)
+            const response = await fetch('http://127.0.0.1:8000/api/templates_by_itemtype?itemtype=' + type, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            this.documentTypes = await response.json()
+            
+        } catch (error) {
+            console.error(error)
         }
+    },
     }
 }
 </script>

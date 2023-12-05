@@ -33,6 +33,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
+from rest_framework.decorators import api_view
 
 from django.core.paginator import Paginator
 
@@ -389,3 +390,24 @@ class TemplateViewSet(viewsets.ViewSet):
     def list(self, request):
         serializer = TemplateSerializer(self.queryset, many=True)
         return Response(serializer.data)
+
+
+@api_view(['GET'])
+def templatesByItemtype_list(request):
+    """
+    List all templates filtered by item_type.
+    """
+    itemtype = request.query_params.get('itemtype') if 'itemtype' in request.query_params else None
+    
+    templates = Template.objects
+
+    if itemtype is not None:
+        print('itemtype =', itemtype)
+        templates = templates.filter(item_types__name=itemtype)
+
+    templates = templates.all()
+    serializer = TemplateSerializer(templates, many=True)
+
+    print(templates)
+
+    return Response(serializer.data)
