@@ -61,7 +61,7 @@ Open [http://localhost:5173/web/sop/#/login](http://localhost:5173/web/sop/#/log
 
 # Deployment
 ## Backend
-In your back directory, make your backend a python pyckage by running the following:
+Follow Installation steps.
 
 ## Frontend
 In your front directory, run the following to create the `dist` directory:
