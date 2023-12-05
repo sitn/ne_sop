@@ -83,12 +83,15 @@ export default {
             if (!this.store.entities.map((x) => (x.name)).includes(this.entity.name)) {
                 this.store.entities.push(this.entity)
             }*/
-            store.addEntity(this.entity)
+            let message = await store.addEntity(this.entity)
+            if (message) {
+                console.log(message)
+                this.wait = false
 
-            this.wait = false
+                if (redirectTo !== null) {
+                    this.$router.push({ path: redirectTo })
+                }
 
-            if (redirectTo !== null) {
-                this.$router.push({ path: redirectTo })
             }
 
             // this.$router.push({ name: 'EntitiesList' })
