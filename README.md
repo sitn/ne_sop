@@ -29,7 +29,7 @@ pip install -r requirements.txt
 
 3. Copy the file `.env.template` to `.env` and complete it with your configuration settings.
 
-4. Run your backend server.
+4. Move to your backend server.
 ```
 cd .\ne_sop_backend\
 ```
