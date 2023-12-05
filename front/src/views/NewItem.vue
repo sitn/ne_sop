@@ -49,32 +49,32 @@ export default {
             edit: true,
             wait: false,
             item: {
-                "id": uuidv4(),
                 "number": "",
                 "type": "",
                 "title": "",
                 "status": "",
-                "content": "",
+                "description": "",
                 "urgent": false,
-                "writtenResponse": false,
-                "oralResponse": false,
+                "writtenresponse": false,
+                "oralresponse": false,
                 "fight": false,
-                "author": "",
+                "author": [],
+                "lead": [],
+                "support": [],
+                "events": [],
                 "response": "",
                 "comment": "",
                 "request": "",
                 "documents": [],
                 "attachements": [],
-                "servicesAlt": [],
                 "services": {
                     "lead": null,
                     "support": []
                 },
-                "events": [],
                 "valid": false
             },
             itemTypes: itemTypes,
-            authorOptions: authors, //entities.filter(e => e.type.includes("Parlementaire","Groupe politique","Commission parlementaire instituée")),
+            authorOptions: [], // authors, //entities.filter(e => e.type.includes("Parlementaire","Groupe politique","Commission parlementaire instituée")),
             addEntityDialog: false,
             serviceOptions: store.entities.filter((e) => (e.type === "Service de l'état"))
         }
@@ -98,12 +98,21 @@ export default {
             // TODO - POST NEW RECORD TO DATABASE
             console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
-            await sleep(Math.random() * 1300)
-            store.items.push(this.item)
-            this.wait = false
 
-            if (redirectTo !== null) {
-                this.$router.push({ path: redirectTo })
+            // await sleep(Math.random() * 1300)
+            // store.items.push(this.item)
+
+            let message = await store.addItem(this.item)
+            if (message) {
+                console.log(message)
+                this.wait = false
+
+                console.log(`redirectTo ${redirectTo}`)
+                if (redirectTo !== null) {
+
+                    this.$router.push({ path: redirectTo })
+                }
+
             }
 
             // this.$router.push({ name: 'ItemsList' })
