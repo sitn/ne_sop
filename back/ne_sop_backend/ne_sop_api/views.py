@@ -36,8 +36,21 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view
 
 from django.core.paginator import Paginator
+from rest_framework.decorators import api_view
+from django.http import HttpResponse
+
 
 # %% Root view
+
+# %% test backend
+@api_view(['GET'])
+def test_api(request):
+    """
+    Test backend
+    """
+    html = "<h1>Congratulations !</h1>"
+    html += "<h2>It works</h2>"
+    return HttpResponse(content=html, status=200)
 
 
 # %% Users
