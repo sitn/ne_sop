@@ -36,7 +36,7 @@
             </div>
 
             <!-- ITEMS TABLE -->
-            <q-table title="" :rows="store.items" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" class="q-my-lg"> <!-- :filter="filter" -->
+            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" class="q-my-lg"> <!-- :filter="filter" -->
 
                 <!-- TABLE BODY -->
                 <template v-slot:body="props">
@@ -62,7 +62,7 @@
                         </q-td>
                         <!-- TYPE COLUMN -->
                         <q-td key="type" :props="props">
-                            {{ props.row.type }}
+                            {{ props.row.type.name }}
                         </q-td>
                         <!-- TITLE COLUMN -->
                         <q-td key="title" :props="props">
@@ -140,7 +140,7 @@ export default {
             searchString: null,
             filter: "",
             dialog: { deletion: false },
-            rows: store.items,
+            rows: [],
             loading: false,
             pagination: {
                 sortBy: "desc",
@@ -204,9 +204,12 @@ export default {
     computed: {
     },
     beforeCreate() {
-        store.getItems("", 1, 20)
     },
-    created() {
+    async created() {
+        // store.getItems("", 1, 20)
+        this.loading = true
+        this.rows = await store.getItems("", this.pagination.page, this.pagination.rowsPerPage) // .then(console.log(this.rows))
+        this.loading = false
     },
     mounted() {
 
@@ -218,12 +221,14 @@ export default {
             // await sleep(Math.random() * 1300)
             let str = this.searchString.toLowerCase()
             if (this.searchString.length >= 3) {
-                this.store.getItems(str, 1, this.pagination.rowsPerPage)
-                this.rows = this.store.entities
+                this.rows = await store.getItems(str, this.pagination.page, this.pagination.rowsPerPage)
+                // this.store.getItems(str, 1, this.pagination.rowsPerPage)
+                // this.rows = this.store.entities
                 // this.rows = this.store.items.filter((x) => (x.title.toLowerCase().includes(str) || x.number.toLowerCase().includes(str)))
             } else {
-                this.store.getItems("", 1, this.pagination.rowsPerPage)
-                this.rows = this.store.items
+                this.rows = await store.getItems("", this.pagination.page, this.pagination.rowsPerPage)
+                // this.store.getItems("", 1, this.pagination.rowsPerPage)
+                // this.rows = this.store.items
             }
             this.loading = false
         },
@@ -232,8 +237,18 @@ export default {
             this.dialog.deletion = true
         },
         async remove() {
-            store.items = store.items.filter((x) => (x.id !== this.selected))
-            this.rows = store.items
+            // TODO: REPLACE WITH GET CALL TO API 
+            // store.items = store.items.filter((x) => (x.id !== this.selected))
+            // this.rows = store.items
+
+            console.log(`delete ${this.selected}`)
+            let message = await store.deleteItem(this.selected)
+            if (message) {
+                this.rows = this.rows.filter((x) => (x.id !== this.selected))
+            }
+            console.log(message)
+
+
         },
         addItem() {
             // this.addDialog = true
