@@ -111,6 +111,7 @@ class EntityListSerializer(serializers.ModelSerializer):
 
 
 class EntitySerializer(serializers.ModelSerializer):
+
     """
     type = EntityTypeSerializer(read_only=True)
     type_id = serializers.PrimaryKeyRelatedField(
@@ -156,32 +157,85 @@ class ItemStatusSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ItemSerializer(serializers.ModelSerializer):
+class ItemListSerializer(serializers.ModelSerializer):
+    
     type = ItemTypeSerializer(read_only=True)
+    status = ItemStatusSerializer(read_only=True)
+    author = serializers.StringRelatedField()
+    lead = serializers.StringRelatedField()
 
+    # support = serializers.StringRelatedField()
+
+    class Meta:
+        model = Item
+        fields = [
+            "id",
+            "uuid",
+            "number",
+            "title",
+            "type",
+            "status",
+            "urgent",
+            "writtenresponse",
+            "oralresponse",
+            "author",
+            "lead",
+            "support",
+            "events",
+            "valid",
+        ]
+
+class ItemSerializer(serializers.ModelSerializer):
+    
+    
+    type = serializers.PrimaryKeyRelatedField(queryset=ItemType.objects.all(),)
+    
+    """" 
+    type = ItemTypeSerializer(read_only=True)
     type_id = serializers.PrimaryKeyRelatedField(
         source="type",
         queryset=ItemType.objects.all(),
         write_only=True,
     )
+    """
 
+    status = serializers.PrimaryKeyRelatedField(
+        queryset=ItemStatus.objects.all(),
+    )
+
+    """
     status = ItemStatusSerializer(read_only=True)
-
     status_id = serializers.PrimaryKeyRelatedField(
         source="status",
         queryset=ItemStatus.objects.all(),
         write_only=True,
     )
+    """
 
+    author = serializers.PrimaryKeyRelatedField(
+        queryset=Entity.objects.all(),
+    )
+    """
     author = EntitySerializer(read_only=True)
     author_id = serializers.PrimaryKeyRelatedField(
         source="author",
         queryset=Entity.objects.all(),
         write_only=True,
     )
+    """
 
+    lead = serializers.PrimaryKeyRelatedField(
+        queryset=Entity.objects.all(),
+    )
+    """
     lead = EntitySerializer(read_only=True)
+    """
+
+
+    """
     support = EntitySerializer(many=True, read_only=True)
+    """
+
     """
     lead_id = serializers.PrimaryKeyRelatedField(
         source="lead",
@@ -205,7 +259,9 @@ class ItemSerializer(serializers.ModelSerializer):
      source="events",
     """
 
+    """ 
     events = NestedEventerializer(many=True, read_only=True)
+    """
 
     class Meta:
         model = Item
@@ -215,20 +271,20 @@ class ItemSerializer(serializers.ModelSerializer):
             "number",
             "title",
             "type",
-            "type_id",
+            # "type_id",
             "status",
-            "status_id",
+            "description",
+            # "status_id",
             "urgent",
             "writtenresponse",
             "oralresponse",
             "author",
-            "author_id",
+            # "author_id",
             "lead",
             "support",
             "events",
             "valid",
         ]
-
 
 class NestedItemSerializer(serializers.ModelSerializer):
     type = ItemTypeSerializer(read_only=True)
@@ -295,8 +351,12 @@ class EventListSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
-    # type = serializers.PrimaryKeyRelatedField(queryset=EventType.objects.all())
-    type = EventTypeSerializer(read_only=True)
+    """
+    type = serializers.PrimaryKeyRelatedField(
+        queryset=EventType.objects.all(),
+    )
+    """
+
     """
     type = EventTypeSerializer(read_only=True)
     type_id = serializers.PrimaryKeyRelatedField(
@@ -305,7 +365,7 @@ class EventSerializer(serializers.ModelSerializer):
         write_only=True,
     )
     """
-    item = NestedItemSerializer(read_only=True)
+    # item = NestedItemSerializer(read_only=True)
     # item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
     """
     item = ItemSerializer(read_only=True)
