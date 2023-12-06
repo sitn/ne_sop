@@ -54,11 +54,12 @@ export const store = reactive({
     //////////////////////////////////////////////////////////////////////////////////////////////
 
     // GET LIST OF ENTITIES
-    async getEntities(search = "", type = [], page = 1, size = 10) {
+    async getEntities(search = "", type = [], page = 1, size = 10, sortBy = "", descending = "false") {
         try {
 
             // await sleep(1300)
-            const response = await fetch(`http://127.0.0.1:8000/api/entity?page=${page}&size=${size}&search=${search}&type=${type}`, {
+            console.log(`http://127.0.0.1:8000/api/entity?page=${page}&size=${size}&search=${search}&type=${type}&sortby=${sortBy}&descending=${descending}`)
+            const response = await fetch(`http://127.0.0.1:8000/api/entity?page=${page}&size=${size}&search=${search}&type=${type}&sortby=${sortBy}&descending=${descending}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -142,8 +143,6 @@ export const store = reactive({
             // .then(result => console.log(result))
             // .catch(error => console.log('error', error))
 
-            // res = await response.json()
-            // console.log(res)
 
             // this.entities = await response.json()
             // console.log(this.entities)
@@ -168,16 +167,6 @@ export const store = reactive({
             // console.log(`loading: ${this.loading}`)
             return await response.json()
 
-            /*
-                .then(response => response.json())
-                .then(result => {
-                    console.log(result)
-                    this.entities = this.entities.filter((x) => (x.id !== id))
-                })
-    
-                .catch(error => console.log('error', error))
-            */
-
         } catch (error) {
             console.error(error)
         }
@@ -192,7 +181,6 @@ export const store = reactive({
                 redirect: 'follow'
             })
             return await response.json()
-            // this.entityTypes = await response.json()
 
         } catch (error) {
             console.error(error)
@@ -200,17 +188,15 @@ export const store = reactive({
     },
 
     // GET LIST OF ITEMS
-    async getItems(search = "", page = 1, size = 10) {
+    async getItems(search = "", page = 1, size = 10, sortBy = "", descending = "false") {
         try {
 
-            // this.loading = true
-            const response = await fetch(`http://127.0.0.1:8000/api/item?page=${page}&size=${size}&search=${search}`, {
+            const response = await fetch(`http://127.0.0.1:8000/api/item?page=${page}&size=${size}&sortby=${sortBy}&descending=${descending}&search=${search}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
             return await response.json()
             // this.items = await response.json()
-            //this.loading = false
 
         } catch (error) {
             console.error(error)
