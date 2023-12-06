@@ -113,9 +113,13 @@ class Item(models.Model):
     valid = models.BooleanField(default=True)
 
     lead = models.ForeignKey(
-        "Entity", related_name="lead", null=True, on_delete=models.SET_NULL,
+        "Entity",
+        related_name="lead",
+        blank=False,
+        null=True,
+        on_delete=models.SET_NULL,
     )
-    support = models.ManyToManyField(Entity, related_name="support")
+    support = models.ManyToManyField(Entity, blank=True, related_name="support")
 
     class Meta:
         ordering = ["created"]
