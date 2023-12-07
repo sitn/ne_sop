@@ -16,7 +16,7 @@
 
                         <!-- TYPE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.type" :options="store.itemTypes" option-label="name" option-value="id" emit-value map-options label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.type" :options="itemTypes" option-label="name" option-value="id" emit-value map-options label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section>
@@ -39,6 +39,7 @@
 
                         <!-- AUTHOR SELECT/CREATE FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+
                             <q-select bg-color="white" outlined v-model="item.author" use-input :options="authorOptions" option-label="name" option-value="id" emit-value map-options @filter="filterFn" label="Auteur" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
 
                                 <template v-slot:option="scope">
@@ -57,15 +58,16 @@
                                 </template>
 
                             </q-select>
+
                         </div>
 
 
                     </div>
 
-                    <!-- CONTENT TEXT AREA FIELD -->
+                    <!-- DESCRIPTION TEXT AREA FIELD -->
                     <div class="row q-col-gutter-lg q-py-md">
                         <div class="col">
-                            <q-input bg-color="white" outlined v-model="item.content" label="Description" type="textarea" :disable="!edit" />
+                            <q-input bg-color="white" outlined v-model="item.description" label="Description" type="textarea" :disable="!edit" />
                         </div>
                     </div>
 
@@ -105,7 +107,7 @@
 
                         <!-- SUPPORT SERVICE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.support" :options="serviceOptions" option-label="name" option-value="id" emit-value map-options label="Service(s) en appui" multiple clearable :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.support" :options="serviceOptions" option-label="name" option-value="id" emit-value map-options label="Service(s) en appui" multiple clearable @clear="reset()" :disable="!edit">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section side>
@@ -187,6 +189,7 @@
                 <template v-slot:content>
 
                     <!-- EVENTS TABLE -->
+                    <EventsTable v-model="events" :item="item.id" :edit="edit"></EventsTable>
                     <!-- <EventsTable v-model="item.events" :edit="edit"></EventsTable> -->
 
                 </template>
@@ -223,7 +226,7 @@ import EventsTable from "../components/EventsTable.vue"
 import DocumentsTable from "../components/DocumentsTable.vue"
 import NewEntityDialog from "../views/NewEntityDialog.vue"
 
-const subset = ["Parlementaire", "Groupe parlementaire", "Autre"]
+// const subset = ["Parlementaire", "Groupe parlementaire", "Autre"]
 
 export default {
     name: 'EntityForm',
@@ -238,11 +241,12 @@ export default {
         return {
             store,
             dialog: { newEntity: false, newEvent: false, newDocument: false },
-            itemTypes: null, // itemTypes,
+            itemTypes: [], // itemTypes,
             itemStatus: [], // itemStatus,
             authorOptions: [], // store.entities.filter(e => subset.includes(e.type)),
             serviceOptions: [], // store.entities.filter((e) => (e.type === "Service de l'état")),
-            addEntityDialog: false
+            events: [],
+            // addEntityDialog: false
         }
     },
     computed: {
@@ -251,34 +255,40 @@ export default {
                 return this.modelValue
             },
             set(item) {
-                // this.$emit('update:modelValue', item)
+                this.$emit('update:modelValue', item)
             }
         }
     },
     beforeCreate() {
-        store.getItemTypes()
+        // store.getItemTypes()
     },
     async created() {
         // console.log(`router id: ${this.$route.params.id}`)
-        // this.itemTypes = await this.getItemTypes()
-        // this.itemStatus = await this.getItemStatus()
-        this.serviceOptions = await this.searchEntity("", 1)
-        this.authorOptions = await this.searchEntity("", 2)
-        this.itemStatus = await this.store.getItemStatus()
+        let data1 = await store.getEntities("", 1, 1, 20, "name", "false")
+        this.serviceOptions = data1.results
+        console.log('this.serviceOptions')
+        console.log(this.serviceOptions)
+
+        let data2 = await store.getEntities("", [2, 3], 1, 20, "name", "false")
+        this.authorOptions = data2.results
+
+        this.itemStatus = await store.getItemStatus()
+        this.itemTypes = await store.getItemTypes()
+        // this.events = await store.getEvents("", this.item.id, 1, 20) // search = "", item = "", page = 1, size = 10
+
+
     },
-    mounted() {
+    async mounted() {
 
     },
     methods: {
         checkFilled,
+        reset() {
+            this.item.support = []
+        },
         addEntity() {
             console.log('ItemForm.vue | Add new entity')
             this.dialog.newEntity = true
-        },
-        async init() {
-
-            this.serviceOptions = await this.searchEntity("", 1)
-            this.authorOptions = await this.searchEntity("", 2)
         },
         async searchEntity(searchString = "", type = []) {
 
@@ -290,11 +300,11 @@ export default {
 
             if (str.length >= 3) {
                 // this.store.getEntities(str, 1, this.pagination.rowsPerPage)
-                result = await this.store.searchEntities(str, type, 1, 5)
                 // this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
+                result = await store.getEntities(str, type, 1, 5, "name", "false").results
             } else {
                 // this.store.getEntities("", 1, this.pagination.rowsPerPage)
-                result = await this.store.searchEntities("", type, 1, 20)
+                result = await store.getEntities("", type, 1, 20, "name", "false").results
             }
 
             return result
@@ -302,45 +312,22 @@ export default {
         },
         async addNewEntity(val) {
 
-            console.log('Item.vue | addNewEntity()')
-            console.log(val)
+            console.log(`${this.$options.name} | addNewEntity()`)
 
-            let newOption = {
-                "id": val.id, // uuidv4(),
-                "name": val.name,
-                "type": val.type,
-                "description": val.description,
-                "street": val.street,
-                "city": val.city,
-                "postalCode": val.postalCode,
-                "region": val.region,
-                "country": val.country,
-                "website": val.website,
-                "email": val.email,
-                "telephone": val.telephone,
-            }
+            let newEntity = await store.addEntity(val)
+            // this.authorOptions = await store.getEntities("", [2, 3], 1, 50)
+            this.authorOptions = [await store.getEntity(newEntity.id)]
 
-            console.log('newOption')
-            console.log(newOption)
+            // this.authorOptions = [newEntity]
+            // this.authorOptions = this.authorOptions.unshift(newEntity)
+            console.log(this.authorOptions)
 
-            if (!this.authorOptions.map((x) => (x.name)).includes(newOption.name)) {
-
-                // DEV: ADD NEW ENTITY TO LOCAL JSON
-                // store.entities.push(newOption)
-
-                // PRODUCTION: POST NEW ENTITY TO DATABASE
-                store.addEntity(newOption)
-
-                // this.authorOptions.push(val)
-                this.item.author = newOption
-
-                console.log('authorOptions')
-                console.log(this.authorOptions)
-            }
+            this.item.author = await newEntity.id
 
         },
         filterFn(val, update, abort) {
             update(async () => {
+                console.log('filterFn')
                 // TODO - GET RECORDS FROM DATABASE
                 const str = val.toLowerCase()
                 // this.authorOptions = entities.filter((v) => v.name.toLowerCase().indexOf(needle) > -1)
