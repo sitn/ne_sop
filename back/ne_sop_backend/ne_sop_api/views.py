@@ -14,6 +14,7 @@ from ne_sop_api.serializers import (
     EntityListSerializer,
     EntityTypeSerializer,
     ItemSerializer,
+    NewItemSerializer,
     ItemListSerializer,
     ItemTypeSerializer,
     ItemStatusSerializer,
@@ -494,3 +495,23 @@ class EntityListViewSet(generics.ListCreateAPIView):
             queryset = queryset.filter(name__icontains=name)
         # return super().get_queryset()  # queryset
         return queryset
+
+
+class NewItemViewSet(viewsets.ViewSet):
+    """
+    New Item viewset
+    """
+
+    serializer_class = NewItemSerializer
+
+    @extend_schema(
+        tags=["Items"],
+    )
+    def create(self, request):
+        serializer = NewItemSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            # return Response({"msg": "Item created"}, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
