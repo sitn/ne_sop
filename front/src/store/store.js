@@ -307,11 +307,11 @@ export const store = reactive({
 
 
     // GET LIST OF EVENTS
-    async getEvents(search = "", item = "", page = 1, size = 10) {
+    async getEvents(search = "", item = "", page = 1, size = 10, sortBy = "", descending = "false") {
         try {
 
-            await sleep(1300)
-            const response = await fetch(`http://127.0.0.1:8000/api/event?page=${page}&size=${size}&item=${item}&search=${search}`, {
+            // await sleep(1300)
+            const response = await fetch(`http://127.0.0.1:8000/api/event?page=${page}&size=${size}&sortby=${sortBy}&descending=${descending}&item=${item}&search=${search}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
