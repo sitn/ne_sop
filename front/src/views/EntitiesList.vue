@@ -37,7 +37,7 @@
             </div>
 
             <!-- ENTITIES TABLE -->
-            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" @request="" class="q-my-lg">
+            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" @request="onRequest" binary-state-sort class="q-my-lg">
 
                 <!-- TABLE BODY -->
                 <template v-slot:body="props">
@@ -119,14 +119,15 @@ export default {
             searchString: null,
             filter: "",
             dialog: { deletion: false },
+            data: null,
             rows: [],
             loading: false,
             pagination: {
-                rowsNumber: 17, // TODO: REPLACE BY QUERY TO DATABASE
-                sortBy: "desc",
+                rowsNumber: 0,
+                sortBy: "type",
                 descending: false,
                 page: 1,
-                rowsPerPage: 20,
+                rowsPerPage: 25,
             },
             columns: [
                 {
@@ -156,55 +157,46 @@ export default {
     computed: {
     },
     async beforeCreate() {
-        // store.getEntities("", 1, 20)
-        // this.rows = await store.searchEntities("", [], this.pagination.page, this.pagination.rowsPerPage)
     },
     async created() {
         this.loading = true
-        this.rows = await store.searchEntities("", "", this.pagination.page, this.pagination.rowsPerPage) // .then(console.log(this.rows))
-        // this.loading = await this.rows.length == 0 ? true : false
+        this.data = await store.getEntities("", "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+        this.rows = this.data.results // await store.getEntities("", "", this.pagination.page, this.pagination.rowsPerPage) // .then(console.log(this.rows))
+        this.pagination.rowsNumber = this.data.nrows
         this.loading = false
-
     },
     mounted() {
-
     },
     methods: {
-        didi() {
-            console.log('didi')
-        },
         async onRequest(props) {
-            const { page, rowsPerPage, sortBy, descending } = props.pagination
-            const filter = props.filter
 
-            loading.value = true
+            this.loading = true
 
-            // emulate server
-            setTimeout(() => {
-                // update rowsCount with appropriate value
-                pagination.value.rowsNumber = getRowsNumberCount(filter)
+            console.log('onRequest')
+            console.log(props.pagination)
+            let { page, rowsPerPage, sortBy, descending } = props.pagination
+            // let filter = props.filter
 
-                // get all rows if "All" (0) is selected
-                const fetchCount = rowsPerPage === 0 ? pagination.value.rowsNumber : rowsPerPage
+            console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
 
-                // calculate starting row of data
-                const startRow = (page - 1) * rowsPerPage
+            rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage // rowsPerPage
 
-                // fetch data from "server"
-                const returnedData = fetchFromServer(startRow, fetchCount, filter, sortBy, descending)
+            this.data = await store.getEntities("", "", page, rowsPerPage, sortBy, descending)
+            this.rows = this.data.results
 
-                // clear out existing data and add new
-                rows.value.splice(0, rows.value.length, ...returnedData)
+            // update pagination object
+            this.pagination = props.pagination
 
-                // don't forget to update local pagination object
-                this.pagination.page = page
-                this.rowsPerPage = rowsPerPage
-                this.sortBy = 'desc' // sortBy
-                this.descending = false // descending
+            /*
+            this.pagination.rowsNumber = this.data.nrows
+            this.pagination.page = page
+            this.pagination.rowsPerPage = rowsPerPage
+            this.pagination.sortBy = sortBy
+            this.pagination.descending = descending
+            */
 
-                // ...and turn of loading indicator
-                this.loading = false
-            }, 1500)
+            this.loading = false
+
         },
         async query() {
 
@@ -218,13 +210,16 @@ export default {
             if (this.searchString.length >= 3) {
                 //this.store.getEntities(str, 1, this.pagination.rowsPerPage)
                 //this.rows = this.store.entities
-                this.rows = await store.searchEntities(str, "", this.pagination.page, this.pagination.rowsPerPage) // .then(console.log(this.rows))
+                this.data = await store.getEntities(str, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending) // .then(console.log(this.rows))
+
                 // this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
             } else {
-                this.rows = await store.searchEntities(str, "", this.pagination.page, this.pagination.rowsPerPage)
+                this.data = await store.getEntities("", "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+
                 // this.store.getEntities("", 1, this.pagination.rowsPerPage)
                 // this.rows = this.store.entities
             }
+            this.rows = this.data.results
             this.loading = false
         },
         handleDeletion(val) {
@@ -235,10 +230,14 @@ export default {
             // TODO: REPLACE WITH GET CALL TO API 
 
             // store.entities = store.entities.filter((x) => (x.id !== this.selected))
+            // this.rows = store.entities
             console.log(`delete ${this.selected}`)
-            this.store.deleteEntity(this.selected)
+            let message = await store.deleteEntity(this.selected)
+            if (message) {
+                this.rows = this.rows.filter((x) => (x.id !== this.selected))
+            }
+            console.log(message)
 
-            this.rows = store.entities
         }
     }
 }
