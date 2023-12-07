@@ -127,7 +127,7 @@ export const store = reactive({
                 "valid": true
             }
             */
-
+            await sleep(1300)
             const response = await fetch(`http://127.0.0.1:8000/api/entity/`, {
                 method: 'POST',
                 headers: {
