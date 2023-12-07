@@ -148,8 +148,8 @@ export default {
             rows: [],
             loading: false,
             pagination: {
-                sortBy: "desc",
-                descending: false,
+                sortBy: "date",
+                descending: true,
                 page: 1,
                 rowsPerPage: 20,
             },
