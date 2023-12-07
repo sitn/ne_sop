@@ -6,12 +6,12 @@
             <div class="q-pa-sm q-gutter-sm">
                 <q-breadcrumbs style="font-size: 16px">
                     <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
-                    <q-breadcrumbs-el :label="store.item.number.toString()" />
+                    <q-breadcrumbs-el :label="item.number.toString()" />
                 </q-breadcrumbs>
             </div>
 
             <!-- FORM -->
-            <ItemForm v-model="store.item" :edit="edit" ref="ItemForm"></ItemForm>
+            <ItemForm v-model="item" :edit="edit" ref="ItemForm"></ItemForm>
 
             <!-- FLOATING ACTION BUTTONS -->
             <FloatingButtons :edit="false" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
@@ -30,11 +30,11 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid'
+// import { v4 as uuidv4 } from 'uuid'
 import { store } from '../store/store.js'
 import { sleep } from '../store/shared.js'
 import documents from '../assets/data/documents.json'
-import itemTypes from '../assets/data/item-types.json'
+// import itemTypes from '../assets/data/item-types.json'
 import ItemForm from "../components/ItemForm.vue"
 import FloatingButtons from "../components/FloatingButtons.vue"
 import NewEntityDialog from "./NewEntityDialog.vue"
@@ -58,12 +58,12 @@ export default {
             // actionButtons: { save: 'active', deletion: 'active' },
             edit: false,
             wait: false,
-            item: store.item, // null,
+            item: null, // store.item, // null,
             index: store.items.findIndex((e) => (e.id === this.$route.params.id)),
-            itemTypes: itemTypes,
-            authorOptions: store.entities.filter(e => subset.includes(e.type)), // authors,
+            // itemTypes: itemTypes,
+            // authorOptions: [], // store.entities.filter(e => subset.includes(e.type)), // authors,
             addEntityDialog: false,
-            serviceOptions: store.entities.filter((e) => (e.type === "Service de l'état")),
+            // serviceOptions: [], // store.entities.filter((e) => (e.type === "Service de l'état")),
         }
     },
     computed: {
@@ -74,14 +74,22 @@ export default {
             }
         }
     },
-    beforeCreate() {
-        store.getItem(this.$route.params.id)
+    async beforeCreate() {
+
     },
-    created() {
+    async created() {
+
+        this.store.loading = true
+        this.item = await store.getItem(this.$route.params.id)
+
+        this.store.loading = false
+
         // store.saveButton = true
         // this.item = Object.assign({}, store.items[0])
-        this.item = Object.assign({}, store.items.find((e) => (e.id === 1)))
         //this.item = Object.assign({}, store.items.find((e) => (e.id === this.$route.params.id)))
+
+        // this.item = Object.assign({}, store.items.find((e) => (e.id === 1)))
+
         console.log(`id: ${this.$route.params.id}`)
         console.log(store.items)
         console.log('this.item')
@@ -96,11 +104,19 @@ export default {
         },
         async save(redirectTo) {
 
-            console.log(`${this.$options.name}.vue | save()`)
-
-            // saveTo(store.items, this.$route.params.id, this.item, store.navigation.to)
 
             // TODO: POST RECORD TO DATABASE
+            let message = await store.updateItem(this.$route.params.id, this.item)
+            if (message) {
+                this.wait = false
+                console.log(message)
+
+                if (redirectTo !== null) {
+                    this.$router.push({ path: redirectTo })
+                }
+            }
+
+            /*
             console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
             await sleep(Math.random() * 1300)
@@ -110,11 +126,6 @@ export default {
 
             if (redirectTo !== null) {
                 this.$router.push({ path: redirectTo })
-            }
-
-            /*
-            if (redirect === true) {
-                this.$router.push({ path: store.navigation.to })
             }
             */
 
@@ -139,36 +150,13 @@ export default {
         },
         async addNewEntity(val) {
 
-            console.log('Item.vue | addNewEntity()')
-            console.log(val)
+            console.log(`${this.$options.name} | addNewEntity()`)
 
-            let newOption = {
-                "id": uuidv4(),
-                "name": val.name,
-                "type": val.type,
-                "description": val.description,
-                "street": val.street,
-                "city": val.city,
-                "postalCode": val.postalCode,
-                "region": val.region,
-                "country": val.country,
-                "website": val.website,
-                "email": val.email,
-                "telephone": val.telephone,
-            }
-
-            console.log('newOption')
-            console.log(newOption)
-
-            if (!this.authorOptions.map((x) => (x.name)).includes(newOption.name)) {
-                store.entities.push(newOption)
-                // this.authorOptions.push(val)
-                this.item.author = newOption
-                // POST NEW ENTITY TO DATABASE
-
-                console.log('authorOptions')
-                console.log(this.authorOptions)
-            }
+            let newEntity = await store.addEntity(val)
+            this.authorOptions.unshift(newEntity)
+            console.log(this.authorOptions)
+            // this.authorOptions = await store.getEntities("", [2, 3], 1, 50)
+            this.item.author = newEntity.id
 
         },
         filterFn(val, update, abort) {
@@ -176,7 +164,9 @@ export default {
                 // TODO - GET RECORDS FROM DATABASE
                 const needle = val.toLowerCase()
                 // this.authorOptions = entities.filter((v) => v.name.toLowerCase().indexOf(needle) > -1)
+
                 this.authorOptions = store.entities.filter((e) => subset.includes(e.type)).filter((v) => v.name.toLowerCase().indexOf(needle) > -1)
+
             })
         }
     }
