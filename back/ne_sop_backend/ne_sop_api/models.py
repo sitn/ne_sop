@@ -121,6 +121,10 @@ class Item(models.Model):
     )
     support = models.ManyToManyField(Entity, blank=True, related_name="support")
 
+    # events = models.ManyToManyField(Event, blank=True, related_name="support")
+
+    # events = models.ManyToOneRel
+
     class Meta:
         ordering = ["created"]
 
