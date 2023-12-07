@@ -39,7 +39,7 @@
             </div>
 
             <!-- EVENTS TABLE -->
-            <q-table title="" :rows="store.events" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" class="q-my-lg">
+            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" @request="onRequest" binary-state-sort class="q-my-lg">
                 <!-- TABLE BODY -->
                 <template v-slot:body="props">
                     <q-tr :props="props">
@@ -144,7 +144,8 @@ export default {
             searchString: null,
             filter: "",
             dialog: { deletion: false },
-            rows: [], // store.events,
+            data: null,
+            rows: [],
             loading: false,
             pagination: {
                 sortBy: "desc",
@@ -187,22 +188,88 @@ export default {
     computed: {
     },
     beforeCreate() {
-        store.getEvents(1, 20)
     },
-    created() {
+    async created() {
+
+        this.loading = true
+        this.data = await store.getEvents("", "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+        this.rows = this.data.results
+        this.pagination.rowsNumber = this.data.nrows
+        this.loading = false
+
     },
     mounted() {
-        // console.log(store.items.map((x) => (x.events)).flat(1))
+
     },
     methods: {
         downloadICS,
+        async onRequest(props) {
+
+            this.loading = true
+
+            console.log('onRequest')
+            console.log(props.pagination)
+            let { page, rowsPerPage, sortBy, descending } = props.pagination
+            // let filter = props.filter
+            console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
+
+            rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage // rowsPerPage
+
+            this.data = await store.getEvents("", "", page, rowsPerPage, sortBy, descending)
+            this.rows = this.data.results
+
+            // update pagination object
+            this.pagination = props.pagination
+
+            /*
+            this.pagination.rowsNumber = this.data.nrows
+            this.pagination.page = page
+            this.pagination.rowsPerPage = rowsPerPage
+            this.pagination.sortBy = sortBy
+            this.pagination.descending = descending
+            */
+
+            this.loading = false
+
+        },
+        async query() {
+
+            // TODO: REPLACE WITH GET CALL TO API 
+            console.log(`search: ${this.searchString}`)
+            this.loading = true
+
+            // await sleep(Math.random() * 1300)
+            let str = this.searchString.toLowerCase()
+
+            if (this.searchString.length >= 3) {
+                //this.store.getEntities(str, 1, this.pagination.rowsPerPage)
+                //this.rows = this.store.entities
+                this.data = await store.getEvents(str, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+                // this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
+            } else {
+                this.data = await store.getEvents("", "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+                // this.store.getEntities("", 1, this.pagination.rowsPerPage)
+                // this.rows = this.store.entities
+            }
+            this.rows = this.data.results
+            this.loading = false
+        },
         handleDeletion(val) {
             this.selected = val
             this.dialog.deletion = true
         },
         async remove() {
-            store.events = store.events.filter((x) => (x.id !== this.selected))
-            this.rows = store.events
+            // TODO: REPLACE WITH GET CALL TO API 
+            // store.events = store.events.filter((x) => (x.id !== this.selected))
+            // this.rows = store.events
+
+            console.log(`delete ${this.selected}`)
+            let message = await store.deleteEvent(this.selected)
+            if (message) {
+                this.rows = this.rows.filter((x) => (x.id !== this.selected))
+            }
+            console.log(message)
+
         }
     }
 }
