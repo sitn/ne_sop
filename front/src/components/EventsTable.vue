@@ -104,9 +104,17 @@ export default {
             this.dialog.deletion = true
         },
         async remove() {
+            // TODO: REPLACE WITH GET CALL TO API
+            console.log(`delete ${this.selected}`)
+            let message = await store.deleteEvent(this.selected)
+            if (message) {
+                this.events = this.events.filter((x) => (x.id !== this.selected))
+            }
+            console.log(message)
+
             // store.events = store.events.filter((x) => (x.id !== this.selected))
             // this.rows = store.events
-            this.events = this.events.filter((x) => (x.id !== this.selected))
+            // this.events = this.events.filter((x) => (x.id !== this.selected))
         }
     }
 }
