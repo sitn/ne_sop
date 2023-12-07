@@ -23,10 +23,7 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid'
 import { store } from '../store/store.js'
-import { sleep } from '../store/shared.js'
-import entityTypes from '../assets/data/entity-types.json'
 import FloatingButtons from "../components/FloatingButtons.vue"
 import EntityForm from "../components/EntityForm.vue"
 
@@ -41,25 +38,22 @@ export default {
     data() {
         return {
             store,
-            // actionButtons: { save: 'active', deletion: 'none' },
             edit: true,
             wait: false,
             entity: {
                 "name": "",
                 "type": "",
-                "type_id": "",
                 "description": "",
                 "street": "",
                 "city": "",
-                "postalCode": "",
+                "postalcode": "",
                 "region": "",
                 "country": "",
                 "website": "",
                 "email": "",
                 "telephone": "",
                 "valid": false
-            }, //  "id": uuidv4(),
-            entityTypes: entityTypes,
+            },
         }
     },
     computed: {
