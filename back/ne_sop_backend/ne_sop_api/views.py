@@ -14,6 +14,7 @@ from ne_sop_api.serializers import (
     EntityListSerializer,
     EntityTypeSerializer,
     ItemSerializer,
+    ItemListSerializer,
     ItemTypeSerializer,
     ItemStatusSerializer,
     EventSerializer,
@@ -27,6 +28,7 @@ from ne_sop_api.paginations import (
     CustomPagination,
 )
 
+from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework import viewsets
@@ -35,25 +37,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
 from django.core.paginator import Paginator
-
-# %% FILTERS -----------------------------------------------------------------------------------
-
-
-""" class ItemFilter(django_filters.FilterSet):
-    q = django_filters.CharFilter(method="my_custom_filter", label="Search")
-
-    class Meta:
-        model = Item
-        fields = ["q"]
-
-    def my_custom_filter(self, queryset, name, value):
-        return queryset.filter(
-            Q(loc__icontains=value)
-            | Q(loc_mansioned__icontains=value)
-            | Q(loc_country__icontains=value)
-            | Q(loc_modern__icontains=value)
-        )
- """
 
 
 # %% Users
@@ -100,12 +83,6 @@ class EntityViewSet(viewsets.ViewSet):
     serializer_class = EntitySerializer
     search_fields = ["name", "email", "telephone"]
 
-    # queryset = Entity.objects.all()
-    # name = self.request.query_params.get("name")
-
-    # queryset = Entity.objects.all()
-    # queryset = queryset.filter(name__icontains=name)
-
     def get_queryset(self):
         """
         Optionally restricts the returned purchases to a given user,
@@ -133,8 +110,18 @@ class EntityViewSet(viewsets.ViewSet):
         # name = request.query_params.get("name")
         name = request.GET.get("name", "")
         type = request.query_params.get("type")
-        page = int(request.GET.get("page", "1"))
-        size = int(request.GET.get("size", "10"))
+        page = int(request.query_params.get("page", "1"))
+        size = int(request.query_params.get("size", "10"))
+        sortby = request.query_params.get("sortby", "id")
+        descending = request.query_params.get("descending", "false")
+
+        # all_fields = Entity._meta.fields
+
+        if sortby not in ["id", "name", "type"]:
+            sortby = "id"
+
+        if descending not in ["true", "false"]:
+            descending = "false"
 
         if name is not None:
             queryset = queryset.filter(name__icontains=name)
@@ -143,8 +130,14 @@ class EntityViewSet(viewsets.ViewSet):
         if type:
             queryset = queryset.filter(type__in=type.split(","))
 
-        paginator = Paginator(queryset.order_by("id"), size)
+        if descending == "true":
+            paginator = Paginator(queryset.order_by(Lower(sortby).desc()), size)
+        else:
+            paginator = Paginator(queryset.order_by(Lower(sortby).asc()), size)
+
         queryset = paginator.page(page)
+        nrows = paginator.count
+        npages = paginator.num_pages
 
         # paginator = Paginator(queryset, per_page=2)
         # page_object = paginator.get_page(page)
@@ -152,19 +145,17 @@ class EntityViewSet(viewsets.ViewSet):
 
         serializer = EntityListSerializer(queryset, many=True)
 
-        # queryset = self.filter_queryset(self.get_queryset())
-        # page = self.paginate_queryset(queryset)
-        # serializer = EntitySerializer(queryset, many=True)
-
-        ## serializer = EntitySerializer(self.get_queryset(), many=True)
-
-        # if page is not None:
-        #    serializer = self.get_serializer(page, many=True)
-        #    return self.get_paginated_response(serializer.data)
-
-        # serializer = self.get_serializer(queryset, many=True)
-
-        return Response(serializer.data)
+        # return Response(serializer.data)
+        return Response(
+            {
+                "page": page,
+                "npages": npages,
+                "nrows": nrows,
+                "sortby": sortby,
+                "descending": descending,
+                "results": serializer.data,
+            }
+        )
 
     @extend_schema(
         tags=["Entities"],
@@ -173,9 +164,8 @@ class EntityViewSet(viewsets.ViewSet):
         serializer = EntitySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(
-                {"msg": "New entity created"}, status=status.HTTP_201_CREATED
-            )
+            # return Response({"msg": "New entity created"}, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
@@ -267,12 +257,19 @@ class ItemViewSet(viewsets.ViewSet):
         filter = filters.SearchFilter()
         queryset = filter.filter_queryset(request, Item.objects.all(), self)
 
-        # queryset = Item.objects.all()
-        # name = request.query_params.get("name")
         title = request.query_params.get("title", "")
-        number = request.GET.get("number", "")
-        page = int(request.GET.get("page", "1"))
-        size = int(request.GET.get("size", "10"))
+        number = request.query_params.get("number", "")
+        page = int(request.query_params.get("page", "1"))
+        size = int(request.query_params.get("size", "10"))
+        sortby = request.query_params.get("sortby", "id")
+        descending = request.query_params.get("descending", "false")
+
+        # all_fields = Entity._meta.fields
+        if sortby not in ["id", "number", "title", "type", "status", "urgent"]:
+            sortby = "id"
+
+        if descending not in ["true", "false"]:
+            descending = "false"
 
         if title is not None:
             queryset = queryset.filter(title__icontains=title)
@@ -280,16 +277,30 @@ class ItemViewSet(viewsets.ViewSet):
         if number is not None:
             queryset = queryset.filter(number__icontains=number)
 
-        paginator = Paginator(queryset.order_by("id"), size)
+        if descending == "true":
+            paginator = Paginator(queryset.order_by(Lower(sortby).desc()), size)
+        else:
+            paginator = Paginator(queryset.order_by(Lower(sortby).asc()), size)
+
         queryset = paginator.page(page)
+        nrows = paginator.count
+        npages = paginator.num_pages
 
-        # paginator = Paginator(queryset, per_page=2)
-        # page_object = paginator.get_page(page)
-        # context = {"page_obj": page_object}
-
-        serializer = ItemSerializer(queryset, many=True)
+        # serializer = ItemSerializer(queryset, many=True)
+        serializer = ItemListSerializer(queryset, many=True)
         # serializer = ItemSerializer(self.queryset, many=True)
-        return Response(serializer.data)
+
+        # return Response(serializer.data)
+        return Response(
+            {
+                "page": page,
+                "npages": npages,
+                "nrows": nrows,
+                "sortby": sortby,
+                "descending": descending,
+                "results": serializer.data,
+            }
+        )
 
     @extend_schema(
         tags=["Items"],
@@ -298,7 +309,9 @@ class ItemViewSet(viewsets.ViewSet):
         serializer = ItemSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"msg": "Item created"}, status=status.HTTP_201_CREATED)
+            # return Response({"msg": "Item created"}, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
@@ -356,22 +369,54 @@ class EventViewSet(viewsets.ViewSet):
 
     queryset = Event.objects.all()
     serializer_class = EventSerializer
+    search_fields = ["date", "item__number", "item__title"]
 
     @extend_schema(
         responses=EventSerializer,
         tags=["Events"],
     )
     def list(self, request):
-        queryset = Event.objects.all()
+        filter = filters.SearchFilter()
+        queryset = filter.filter_queryset(request, Event.objects.all(), self)
 
-        page = int(request.GET.get("page", "1"))
-        size = int(request.GET.get("size", "10"))
+        # queryset = Event.objects.all()
+        item = request.query_params.get("item", None)
+        page = int(request.query_params.get("page", "1"))
+        size = int(request.query_params.get("size", "10"))
+        sortby = request.query_params.get("sortby", "id")
+        descending = request.query_params.get("descending", "false")
 
-        paginator = Paginator(queryset.order_by("id"), size)
+        if sortby not in ["id", "date", "type", "item"]:
+            sortby = "id"
+
+        if descending not in ["true", "false"]:
+            descending = "false"
+
+        if len(item):
+            queryset = queryset.filter(item__exact=item)
+
+        if descending == "true":
+            paginator = Paginator(queryset.order_by(Lower(sortby).desc()), size)
+        else:
+            paginator = Paginator(queryset.order_by(Lower(sortby).asc()), size)
+
         queryset = paginator.page(page)
+        nrows = paginator.count
+        npages = paginator.num_pages
+
         serializer = EventListSerializer(queryset, many=True)
 
-        return Response(serializer.data)
+        # return Response(serializer.data)
+        return Response(
+            {
+                "page": page,
+                "npages": npages,
+                "nrows": nrows,
+                "sortby": sortby,
+                "descending": descending,
+                "results": serializer.data,
+            }
+        )
 
     @extend_schema(
         tags=["Events"],
@@ -428,10 +473,10 @@ class TemplateViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-# %% GENERICS ------------------------------------------------------------------------
+# %% TESTS  ------------------------------------------------------------------------
 
 
-# %% ENTITY
+# %% ENTITY (USING DJANGO GENERICS)
 class EntityListViewSet(generics.ListCreateAPIView):
     # queryset = Entity.objects.all()
     serializer_class = EntitySerializer
@@ -449,8 +494,3 @@ class EntityListViewSet(generics.ListCreateAPIView):
             queryset = queryset.filter(name__icontains=name)
         # return super().get_queryset()  # queryset
         return queryset
-
-
-# %% EVENT
-
-# %% ITEM
