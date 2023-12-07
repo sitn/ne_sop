@@ -166,7 +166,7 @@ export default {
         //this.validateForm()
         // 18f57808-5503-406d-b977-10c6625a8627 -> 23.191 "État des lieux de nos milieux fontinaux"
         this.linkedItem = store.items.find((x) => (x.id === this.event.itemId))
-        this.store.getEventTypes()
+        // this.store.getEventTypes()
 
     },
     updated() {
