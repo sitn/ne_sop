@@ -117,19 +117,19 @@ export default {
         },
 
         async getTemplatesByItemType(type) {
-        try {
+            try {
 
-            console.log("this.type =", type)
-            const response = await fetch('http://127.0.0.1:8000/api/templates_by_itemtype?itemtype=' + type, {
-                method: 'GET',
-                redirect: 'follow'
-            })
-            this.documentTypes = await response.json()
-            
-        } catch (error) {
-            console.error(error)
-        }
-    },
+                console.log("this.type =", type)
+                const response = await fetch('http://127.0.0.1:8000/api/template-types?itemtype=' + type, {
+                    method: 'GET',
+                    redirect: 'follow'
+                })
+                this.documentTypes = await response.json()
+                
+            } catch (error) {
+                console.error(error)
+            }
+        },
     }
 }
 </script>

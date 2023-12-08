@@ -23,7 +23,6 @@ from ne_sop_api import views
 urlpatterns = [
     path("api/test", views.test_api),
     path("admin/", admin.site.urls),
-    path("api/templates_by_itemtype", views.templatesByItemtype_list),
     path("", include("ne_sop_api.urls")),
 ]
 

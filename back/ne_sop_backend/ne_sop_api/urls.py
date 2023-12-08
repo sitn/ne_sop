@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 # from rest_framework.urlpatterns import format_suffix_patterns
 from ne_sop_api import views
@@ -15,6 +15,7 @@ router.register(r"entity-type", views.EntityTypeViewSet, basename="entity-type")
 router.register(r"event", views.EventViewSet, basename="event")
 router.register(r"event-type", views.EventTypeViewSet, basename="event-type")
 router.register(r"template", views.TemplateViewSet, basename="template")
+router.register(r"template-types", views.TemplateTypeViewSet, basename="template-types")
 router.register(r"user", views.UserViewSet, basename="user")
 
 urlpatterns = [
@@ -30,6 +31,10 @@ urlpatterns = [
         "api/entitylist/",
         views.EntityListViewSet.as_view(),
         name="entitylist",
+    ),
+    re_path(
+        r'^api/fileupload/(?P<filename>[^/]+)$',
+        views.FileUploadView.as_view(),
     ),
     path(
         "api/schema/",

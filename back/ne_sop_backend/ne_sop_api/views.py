@@ -29,16 +29,19 @@ from ne_sop_api.paginations import (
 
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
-from rest_framework import viewsets
+from rest_framework import viewsets, views
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view
+# from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
 
 from django.core.paginator import Paginator
-from rest_framework.decorators import api_view
 from django.http import HttpResponse
 
+from pathlib import Path, PurePath
+import os
+import shutil
 
 # %% Root view
 
@@ -401,26 +404,52 @@ class TemplateViewSet(viewsets.ViewSet):
         tags=["Templates"],
     )
     def list(self, request):
+        
         serializer = TemplateSerializer(self.queryset, many=True)
         return Response(serializer.data)
 
 
-@api_view(['GET'])
-def templatesByItemtype_list(request):
+class TemplateTypeViewSet(viewsets.ViewSet):
     """
-    List all templates filtered by item_type.
+    Template types viewset
     """
-    itemtype = request.query_params.get('itemtype') if 'itemtype' in request.query_params else None
     
-    templates = Template.objects
+    queryset = Template.objects.all()
+    serializer_class = TemplateSerializer
+    
+    @extend_schema(
+        responses=TemplateSerializer,
+        tags=["Template type"],
+    )
 
-    if itemtype is not None:
-        print('itemtype =', itemtype)
-        templates = templates.filter(item_types__name=itemtype)
+    def list(self, request):
+        itemtype = request.query_params.get('itemtype') if 'itemtype' in request.query_params else None
+    
+        templates = Template.objects
+        if itemtype is not None:
+            templates = templates.filter(item_types__name=itemtype)
+        templates = templates.all()
 
-    templates = templates.all()
-    serializer = TemplateSerializer(templates, many=True)
+        serializer = TemplateSerializer(templates, many=True)
+        
+        return Response(serializer.data)
 
-    print(templates)
 
-    return Response(serializer.data)
+class FileUploadView(views.APIView):
+    # parser_classes = [MultiPartParser]
+
+    def put(self, request, filename, format=None):
+        file_obj = request.FILES['file']
+        item_id = request.data['item_id'] if 'item_id' in request.data else None
+
+        root_dir = os.environ['NESOP_OP_PATH']
+        op = Item.objects.filter(id=item_id).first()
+        filepath = PurePath(root_dir, str(op.created.year), op.number, filename)
+
+        if not os.path.exists(Path(filepath).resolve().parent):
+            os.makedirs(Path(filepath).resolve().parent)
+
+        with open(filepath, 'wb') as output_file:
+            shutil.copyfileobj(file_obj.file, output_file)
+
+        return Response(status=204)

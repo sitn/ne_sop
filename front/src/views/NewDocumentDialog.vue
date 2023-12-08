@@ -70,9 +70,26 @@ export default {
     methods: {
         async save() {
             this.documents.push(Object.assign({}, this.document))
-            // console.log('NewDocumentDialog.vue | save()')
-            // let ind = store.items.findIndex((e) => (e.id === this.$route.params.id))
-            // store.items[ind].documents.push(this.document)
+            
+            let formData = new FormData()
+            formData.append('file', this.document.file)
+            formData.append('item_id', this.$route.params.id)
+
+
+            try {
+                console.log("I'm in the try to send the request containing a binary file")
+    
+                const response = await fetch('http://127.0.0.1:8000/api/fileupload/' + this.document.filename, {
+                    method: 'PUT',
+                    body: formData,
+                    redirect: 'follow'
+                })
+                await response
+                
+            } catch (error) {
+                console.error(error)
+            }
+            
         }
     }
 }
