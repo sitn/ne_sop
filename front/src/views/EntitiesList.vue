@@ -205,12 +205,11 @@ export default {
             this.loading = true
 
             // await sleep(Math.random() * 1300)
-            let str = this.searchString.toLowerCase()
 
             if (this.searchString.length >= 3) {
                 //this.store.getEntities(str, 1, this.pagination.rowsPerPage)
                 //this.rows = this.store.entities
-                this.data = await store.getEntities(str, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending) // .then(console.log(this.rows))
+                this.data = await store.getEntities(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending) // .then(console.log(this.rows))
 
                 // this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
             } else {
@@ -234,7 +233,9 @@ export default {
             console.log(`delete ${this.selected}`)
             let message = await store.deleteEntity(this.selected)
             if (message) {
-                this.rows = this.rows.filter((x) => (x.id !== this.selected))
+                this.data = await store.getEntities(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+                this.rows = this.data.results
+                // this.rows = this.rows.filter((x) => (x.id !== this.selected))
             }
             console.log(message)
 
