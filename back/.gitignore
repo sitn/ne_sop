@@ -1,5 +1,6 @@
 # Directories
 pyvenv/
+venv/
 .venv/
 .vscode/
 ne_sop_backend/db.sqlite3
