@@ -4,8 +4,6 @@
 
         <template v-slot:body>
 
-            <!-- <q-form ref="form" greedy> -->
-
             <!-- IDENTIFICATION SECTION -->
             <FormSection title="Événement">
                 <template v-slot:content>
@@ -107,8 +105,6 @@
                 </template>
             </FormSection>
 
-            <!-- </q-form> -->
-
         </template>
 
     </Form>
@@ -118,14 +114,13 @@
 import { date } from 'quasar'
 import { store } from '../store/store.js'
 import { checkFilled, checkDate, checkTime } from '../store/shared.js'
-import eventTypes from '../assets/data/event-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 
 export default {
     name: 'EventForm',
     components: { Form, FormSection },
-    props: { 'edit': Boolean, 'modelValue': Object },
+    props: { 'edit': Boolean, 'modelValue': Object, 'mode': String },
     emits: ['update:modelValue', 'validationEvent'],
     setup() {
         return {
@@ -135,8 +130,7 @@ export default {
         return {
             store,
             valid: null,
-            eventTypes: [], // store.eventTypes,
-            linkedItem: null
+            eventTypes: [],
         }
     },
     computed: {
@@ -150,12 +144,14 @@ export default {
         }
     },
     watch: {
+        /*
         event: {
             handler(newVal, oldVal) {
                 console.log(`valid date: ${date.isValid(newVal.date)}`)
             },
             deep: true
         }
+        */
     },
     async created() {
 
@@ -163,14 +159,6 @@ export default {
         // console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
     },
     mounted() {
-        //this.validateForm()
-        // 18f57808-5503-406d-b977-10c6625a8627 -> 23.191 "État des lieux de nos milieux fontinaux"
-        this.linkedItem = store.items.find((x) => (x.id === this.event.itemId))
-        // this.store.getEventTypes()
-
-    },
-    updated() {
-        //this.validateForm()
     },
     /*
     watch: {
@@ -191,28 +179,6 @@ export default {
             this.valid = val
             this.$emit('validationEvent', this.valid)
         },
-        /*
-        validateForm() {
-            console.log(`${ this.$options.name } | validateForm()`)
-            this.$refs.FormContainer.validateForm() // call validation method from the Form component (Form.vue)
-        },
-        */
-        setLinkedItem() {
-
-            console.log(this.linkedItem)
-
-            if (this.linkedItem) {
-                this.event.itemId = this.linkedItem.id
-                this.event.itemNumber = this.linkedItem.number
-                this.event.itemName = this.linkedItem.title
-                this.event.itemType = this.linkedItem.type
-            } else {
-                this.event.itemId = null
-                this.event.itemNumber = null
-                this.event.itemName = null
-                this.event.itemType = null
-            }
-        }
     }
 }
 </script>
