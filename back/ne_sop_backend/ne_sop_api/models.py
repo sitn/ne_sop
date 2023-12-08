@@ -156,7 +156,7 @@ class Event(models.Model):
         ordering = ["created"]
 
     def __str__(self):
-        return self.date
+        return str(self.date) + " - " + str(self.type)
 
 
 class Document(models.Model):
