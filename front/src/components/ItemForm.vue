@@ -40,6 +40,8 @@
                         <!-- AUTHOR SELECT/CREATE FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 
+                            <!--  <q-select bg-color="white" outlined v-model="item.author" :options="authorOptions" option-label="name" option-value="id" emit-value map-options label="Auteur" clearable :rules="[v => checkFilled(v)]" :disable="!edit"> -->
+
                             <q-select bg-color="white" outlined v-model="item.author" use-input :options="authorOptions" option-label="name" option-value="id" emit-value map-options @filter="filterFn" label="Auteur" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
 
                                 <template v-slot:option="scope">
@@ -189,8 +191,8 @@
                 <template v-slot:content>
 
                     <!-- EVENTS TABLE -->
-                    <EventsTable v-model="events" :item="item.id" :edit="edit"></EventsTable>
-                    <!-- <EventsTable v-model="item.events" :edit="edit"></EventsTable> -->
+                    <!-- <EventsTable v-model="events" :item="item.id" :edit="edit"></EventsTable> -->
+                    <EventsTable v-model="item.events" :mode="mode" :edit="edit"></EventsTable>
 
                 </template>
             </FormSection>
@@ -231,7 +233,7 @@ import NewEntityDialog from "../views/NewEntityDialog.vue"
 export default {
     name: 'EntityForm',
     components: { Form, FormSection, NewEntityDialog, EventsTable, DocumentsTable },
-    props: { 'edit': Boolean, 'modelValue': Object },
+    props: { 'edit': Boolean, 'modelValue': Object, 'mode': String },
     emits: ['update:modelValue'],
     setup() {
         return {
@@ -241,12 +243,12 @@ export default {
         return {
             store,
             dialog: { newEntity: false, newEvent: false, newDocument: false },
-            itemTypes: [], // itemTypes,
-            itemStatus: [], // itemStatus,
-            authorOptions: [], // store.entities.filter(e => subset.includes(e.type)),
-            serviceOptions: [], // store.entities.filter((e) => (e.type === "Service de l'état")),
+            itemTypes: [],
+            itemStatus: [],
+            authorOptions: [],
+            serviceOptions: [],
             events: [],
-            // addEntityDialog: false
+            documents: [],
         }
     },
     computed: {
@@ -260,7 +262,6 @@ export default {
         }
     },
     beforeCreate() {
-        // store.getItemTypes()
     },
     async created() {
         // console.log(`router id: ${this.$route.params.id}`)
@@ -271,11 +272,12 @@ export default {
 
         let data2 = await store.getEntities("", [2, 3], 1, 20, "name", "false")
         this.authorOptions = data2.results
+        console.log("this.authorOptions")
+        console.log(this.authorOptions)
 
         this.itemStatus = await store.getItemStatus()
         this.itemTypes = await store.getItemTypes()
         // this.events = await store.getEvents("", this.item.id, 1, 20) // search = "", item = "", page = 1, size = 10
-
 
     },
     async mounted() {
@@ -296,18 +298,18 @@ export default {
 
             // await sleep(Math.random() * 1300)
             let str = searchString.toLowerCase()
-            let result = ""
+            let data = ""
 
             if (str.length >= 3) {
                 // this.store.getEntities(str, 1, this.pagination.rowsPerPage)
                 // this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
-                result = await store.getEntities(str, type, 1, 5, "name", "false").results
+                data = await store.getEntities(str, type, 1, 5, "name", "false")
             } else {
                 // this.store.getEntities("", 1, this.pagination.rowsPerPage)
-                result = await store.getEntities("", type, 1, 20, "name", "false").results
+                data = await store.getEntities("", type, 1, 20, "name", "false")
             }
 
-            return result
+            return data.results
 
         },
         async addNewEntity(val) {
