@@ -11,7 +11,7 @@
             </div>
 
             <!-- FORM -->
-            <ItemForm v-model="item" :edit="edit" ref="ItemForm"></ItemForm>
+            <ItemForm v-model="item" :mode="mode" :edit="edit" ref="ItemForm"></ItemForm>
 
             <!-- FLOATING ACTION BUTTONS -->
             <FloatingButtons :edit="false" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
@@ -32,15 +32,15 @@
 <script>
 // import { v4 as uuidv4 } from 'uuid'
 import { store } from '../store/store.js'
-import { sleep } from '../store/shared.js'
-import documents from '../assets/data/documents.json'
+// import { sleep } from '../store/shared.js'
+// import documents from '../assets/data/documents.json'
 // import itemTypes from '../assets/data/item-types.json'
 import ItemForm from "../components/ItemForm.vue"
 import FloatingButtons from "../components/FloatingButtons.vue"
 import NewEntityDialog from "./NewEntityDialog.vue"
 import DeleteDialog from '../components/DeleteDialog.vue'
 
-const subset = ["Parlementaire", "Groupe parlementaire", "Autre"]
+// const subset = ["Parlementaire", "Groupe parlementaire", "Autre"]
 
 export default {
     name: 'Item',
@@ -56,6 +56,7 @@ export default {
             store,
             dialog: { deletion: false },
             // actionButtons: { save: 'active', deletion: 'active' },
+            mode: "update",
             edit: false,
             wait: false,
             item: null, // store.item, // null,
@@ -159,6 +160,7 @@ export default {
             this.item.author = newEntity.id
 
         },
+        /*
         filterFn(val, update, abort) {
             update(() => {
                 // TODO - GET RECORDS FROM DATABASE
@@ -169,6 +171,8 @@ export default {
 
             })
         }
+        */
+
     }
 }
 </script>
