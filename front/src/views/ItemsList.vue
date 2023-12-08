@@ -252,9 +252,8 @@ export default {
             // TODO: REPLACE WITH GET CALL TO DATABASE 
             this.loading = true
             // await sleep(Math.random() * 1300)
-            let str = this.searchString.toLowerCase()
             if (this.searchString.length >= 3) {
-                this.data = await store.getItems(str, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+                this.data = await store.getItems(this.searchString, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             } else {
                 this.data = await store.getItems("", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             }
@@ -272,7 +271,9 @@ export default {
             console.log(`delete ${this.selected}`)
             let message = await store.deleteItem(this.selected)
             if (message) {
-                this.rows = this.rows.filter((x) => (x.id !== this.selected))
+                this.data = await store.getItems(this.searchString, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+                this.rows = this.data.results
+                // this.rows = this.rows.filter((x) => (x.id !== this.selected))
             }
             console.log(message)
 
