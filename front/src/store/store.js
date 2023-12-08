@@ -16,31 +16,16 @@ export const store = reactive({
     warning: false,
     exit: false,
     navigation: { "from": null, "to": null },
-    entityTypes: null,
-    entities: [], // entities,
+    entities: [],
     entity: null,
     itemTypes: null,
-    items: [], // items,
-    events: [], // events, // items.map((x) => (x.events)).flat(1),
+    items: [],
+    events: [],
     event: null,
     documents: items.map((x) => (x.documents)).flat(1),
     attachements: items.map((x) => (x.attachements)).flat(1),
     users: users,
     // query parameters, number of results, page, filters
-    // API - GET ALL RECORDS
-    async getTemplates() {
-        try {
-
-            const response = await fetch('http://127.0.0.1:8000/api/template/', {
-                method: 'GET',
-                redirect: 'follow'
-            })
-            this.templates = await response.json()
-
-        } catch (error) {
-            console.error(error)
-        }
-    },
     updateEvents() {
         this.events = this.items.map((x) => (x.events)).flat(1)
     },
@@ -243,7 +228,8 @@ export const store = reactive({
     async addItem(data) {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/item/`, {
+            // http://127.0.0.1:8000/api/item/
+            const response = await fetch(`http://127.0.0.1:8000/api/new-item/`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -408,4 +394,21 @@ export const store = reactive({
             console.error(error)
         }
     },
+
+    /*
+    async getTemplates() {
+        try {
+
+            const response = await fetch('http://127.0.0.1:8000/api/template/', {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            this.templates = await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    */
+
 })
