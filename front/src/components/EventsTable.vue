@@ -11,7 +11,7 @@
     </div>
 
     <!-- EVENTS TABLE -->
-    <q-table :rows="events" :columns="columns" row-key="date" class="q-my-md">
+    <q-table :rows="events" :columns="columns" row-key="date" @request="onRequest" binary-state-sort class="q-my-md">
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="date" :props="props">
@@ -66,7 +66,7 @@ const columns = [
 export default {
     name: 'EventsTable',
     components: { NewEventDialog, DeleteDialog },
-    props: { 'edit': Boolean, 'modelValue': Object }, //  'events': Object,
+    props: { 'item': Number, 'edit': Boolean, 'modelValue': Object, 'mode': String }, //  'events': Object,
     emits: ['update:modelValue'],
     setup() {
         return {
@@ -77,7 +77,16 @@ export default {
             store,
             selected: null,
             dialog: { newEvent: false, deletion: false },
+            data: null,
+            rows: [],
             columns: columns,
+            loading: false,
+            pagination: {
+                sortBy: "date",
+                descending: false,
+                page: 1,
+                rowsPerPage: 20,
+            },
         }
     },
     computed: {
@@ -90,12 +99,57 @@ export default {
             }
         }
     },
-    created() {
+    async created() {
+
+        console.log(`${this.$options.name} | mode: ${this.mode}`)
+
+        if (this.mode === "update") {
+            this.loading = true
+            this.data = await store.getEvents("", this.item, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+            this.rows = this.data.results
+            this.pagination.rowsNumber = this.data.nrows
+            this.loading = false
+        }
+
     },
     mounted() {
     },
     methods: {
         downloadICS,
+        async onRequest(props) {
+
+
+            // Create mode
+            if (this.mode === "create") {
+
+
+            }
+
+            // Update mode
+            if (this.mode === "update") {
+
+                this.loading = true
+
+                console.log('onRequest')
+                console.log(props.pagination)
+                let { page, rowsPerPage, sortBy, descending } = props.pagination
+                // let filter = props.filter
+                console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
+
+                rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage
+
+                this.data = await store.getEvents("", this.item, page, rowsPerPage, sortBy, descending)
+                this.rows = this.data.results
+
+                // update pagination object
+                this.pagination = props.pagination
+
+                this.loading = false
+
+            }
+
+
+        },
         addEvent() {
             this.dialog.newEvent = true
         },
@@ -104,9 +158,25 @@ export default {
             this.dialog.deletion = true
         },
         async remove() {
+
+            // TODO: REPLACE WITH GET CALL TO API
+
+            // Delete event in local JSON
+            // this.events = this.events.filter((x) => (x.id !== this.selected))
+
+            /*
+            // Delete event in DB
+            console.log(`delete ${this.selected}`)
+            let message = await store.deleteEvent(this.selected)
+            if (message) {
+                this.events = this.events.filter((x) => (x.id !== this.selected))
+            }
+            console.log(message)
+            */
+
             // store.events = store.events.filter((x) => (x.id !== this.selected))
             // this.rows = store.events
-            this.events = this.events.filter((x) => (x.id !== this.selected))
+
         }
     }
 }

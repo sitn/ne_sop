@@ -19,7 +19,7 @@
                             <!-- TYPE SELECT FIELD -->
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 
-                                <q-select bg-color="white" outlined v-model="entity.type" :options="store.entityTypes" option-label="name" option-value="id" emit-value map-options label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                                <q-select bg-color="white" outlined v-model="entity.type" :options="entityTypes" option-label="name" option-value="id" emit-value map-options label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
                                     <template v-slot:option="scope">
                                         <q-item v-bind="scope.itemProps">
                                             <q-item-section>
@@ -129,7 +129,7 @@
 <script>
 import { store } from '../store/store.js'
 import { checkFilled, checkPhoneNumber, formatPhoneNumber, checkEmail, checkWebsite } from '../store/shared.js'
-import entityTypes from '../assets/data/entity-types.json'
+// import entityTypes from '../assets/data/entity-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 
@@ -145,7 +145,7 @@ export default {
     data() {
         return {
             store,
-            entityTypes: null,
+            entityTypes: [],
         }
     },
     computed: {
@@ -158,11 +158,15 @@ export default {
             }
         }
     },
-    created() {
+    async beforeCreate() {
+
+    },
+    async created() {
+        this.entityTypes = await this.store.getEntityTypes()
         console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
     },
     mounted() {
-        this.store.getEntityTypes()
+
     },
     methods: {
         checkFilled,
