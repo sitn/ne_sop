@@ -36,7 +36,7 @@
             </div>
 
             <!-- ITEMS TABLE -->
-            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" class="q-my-lg"> <!-- :filter="filter" -->
+            <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" @request="onRequest" binary-state-sort class="q-my-lg"> <!-- :filter="filter" -->
 
                 <!-- TABLE BODY -->
                 <template v-slot:body="props">
@@ -44,13 +44,15 @@
 
                         <!-- STATUS COLUMN -->
                         <q-td key="status" :props="props">
+
                             <div>
                                 <q-badge color="red" class="q-my-sm" v-if="props.row.urgent">Urgent</q-badge>
                             </div>
                             <div class="row items-center">
-                                <q-badge :color="color(props.row.status)" rounded class="q-mr-sm" />
-                                <div>{{ props.row.status }}</div>
+                                <q-badge :color="props.row.status.color" rounded class="q-mr-sm" />
+                                <div>{{ props.row.status.name }}</div>
                             </div>
+
                         </q-td>
 
                         <!-- NUMBER COLUMN -->
@@ -59,7 +61,7 @@
                         </q-td>
                         <!-- TYPE COLUMN -->
                         <q-td key="type" :props="props">
-                            {{ props.row.type }}
+                            {{ props.row.type.name }}
                         </q-td>
                         <!-- TITLE COLUMN -->
                         <q-td key="title" :props="props">
@@ -100,6 +102,12 @@
                 </template>
             </q-table>
 
+            <!-- TODO REMOVE/DEV DISPLAY JSON-->
+            <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
+                <div>store.items</div>
+                <div>{{ store.items }}</div>
+            </div>
+
             <!-- DELETE DIALOG -->
             <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
@@ -110,7 +118,7 @@
 
 <script>
 import { store } from '../store/store.js'
-import { sleep } from '../store/shared.js'
+// import { sleep } from '../store/shared.js'
 import itemStatus from '../assets/data/item-status.json'
 import DeleteDialog from '../components/DeleteDialog.vue'
 
@@ -131,13 +139,15 @@ export default {
             searchString: null,
             filter: "",
             dialog: { deletion: false },
-            rows: store.items,
+            data: null,
+            rows: [],
             loading: false,
             pagination: {
-                sortBy: "desc",
+                rowsNumber: 0,
+                sortBy: "number",
                 descending: false,
                 page: 1,
-                rowsPerPage: 20,
+                rowsPerPage: 25,
             },
             columns: [
                 {
@@ -194,22 +204,60 @@ export default {
     },
     computed: {
     },
-    created() {
+    beforeCreate() {
+    },
+    async created() {
+
+        this.loading = true
+        this.data = await store.getItems("", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+        this.rows = this.data.results // await store.getEntities("", "", this.pagination.page, this.pagination.rowsPerPage) // .then(console.log(this.rows))
+        this.pagination.rowsNumber = this.data.nrows
+        this.loading = false
+
     },
     mounted() {
 
     },
     methods: {
+        async onRequest(props) {
+
+            console.log('onRequest')
+            this.loading = true
+
+            let { page, rowsPerPage, sortBy, descending } = props.pagination
+            // let filter = props.filter
+
+            console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
+
+            rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage // rowsPerPage
+
+            this.data = await store.getItems("", page, rowsPerPage, sortBy, descending)
+            this.rows = this.data.results
+
+            // update pagination object
+            this.pagination = props.pagination
+
+            /*
+            this.pagination.rowsNumber = this.data.nrows
+            this.pagination.page = page
+            this.pagination.rowsPerPage = rowsPerPage
+            this.pagination.sortBy = sortBy
+            this.pagination.descending = descending
+            */
+
+            this.loading = false
+
+        },
         async query() {
             // TODO: REPLACE WITH GET CALL TO DATABASE 
             this.loading = true
-            await sleep(Math.random() * 1300)
-            let str = this.searchString.toLowerCase()
+            // await sleep(Math.random() * 1300)
             if (this.searchString.length >= 3) {
-                this.rows = this.store.items.filter((x) => (x.title.toLowerCase().includes(str) || x.number.toLowerCase().includes(str)))
+                this.data = await store.getItems(this.searchString, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             } else {
-                this.rows = this.store.items
+                this.data = await store.getItems("", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             }
+            this.rows = this.data.results
             this.loading = false
         },
         handleDeletion(val) {
@@ -217,8 +265,18 @@ export default {
             this.dialog.deletion = true
         },
         async remove() {
-            store.items = store.items.filter((x) => (x.id !== this.selected))
-            this.rows = store.items
+            // TODO: REPLACE WITH GET CALL TO API 
+            // store.items = store.items.filter((x) => (x.id !== this.selected))
+            // this.rows = store.items
+            console.log(`delete ${this.selected}`)
+            let message = await store.deleteItem(this.selected)
+            if (message) {
+                this.data = await store.getItems(this.searchString, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+                this.rows = this.data.results
+                // this.rows = this.rows.filter((x) => (x.id !== this.selected))
+            }
+            console.log(message)
+
         },
         addItem() {
             // this.addDialog = true
@@ -230,9 +288,6 @@ export default {
             } else {
                 return ""
             }
-        },
-        color(val) {
-            return itemStatus.find((x) => (x.name === val)).color
         },
     }
 

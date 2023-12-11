@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div class="" v-if="!store.loading">
 
         <q-layout>
 
@@ -8,6 +8,7 @@
                 <q-breadcrumbs style="font-size: 16px">
                     <q-breadcrumbs-el label="Calendrier" to="/events" />
                     <q-breadcrumbs-el :label="event.date" />
+                    <!--  <q-breadcrumbs-el :label="store.event.date" />-->
                 </q-breadcrumbs>
             </div>
 
@@ -15,7 +16,9 @@
             <!--  <div>store.valid: {{ store.valid }}</div> -->
 
             <!-- FORM -->
-            <EventForm v-model="event" :edit="edit" @validation-event="handleValidation"></EventForm>
+            <EventForm v-model="event" :edit="edit"></EventForm>
+            <!-- <EventForm v-model="store.event" :edit="edit" @validation-event="handleValidation"></EventForm> -->
+            <!-- <EventForm v-model="event" :edit="edit" @validation-event="handleValidation"></EventForm> -->
             <!-- <EventForm v-model="event" :edit="edit" @validation-event="handleValidation" ref="EventForm"></EventForm> -->
 
             <!-- FLOATING ACTION BUTTONS -->
@@ -30,7 +33,7 @@
 
 <script>
 import { store } from '../store/store.js'
-import { sleep } from '../store/shared.js'
+// import { sleep } from '../store/shared.js'
 // import eventTypes from '../assets/data/event-types.json'
 import FloatingButtons from "../components/FloatingButtons.vue"
 import DeleteDialog from '../components/DeleteDialog.vue'
@@ -53,23 +56,31 @@ export default {
             edit: false,
             wait: false,
             valid: null,
-            event: null, // store.events.find(e => e.id === this.$route.params.id),
+            event: null, // store.event, // store.events.find(e => e.id === this.$route.params.id),
             index: store.events.findIndex((e) => (e.id === this.$route.params.id))
         }
     },
     computed: {
         actionButtons() {
             return {
-                save: this.event.valid ? 'active' : 'disable',
+                save: this.event.valid ? 'active' : 'disable', //   store.event.valid ? 'active' : 'disable'
                 deletion: 'none'
             }
         }
     },
-    created() {
-        this.event = Object.assign({}, store.events.find(e => e.id === this.$route.params.id))
+    beforeCreate() {
+    },
+    async created() {
+
+        this.store.loading = true
+        this.event = await store.getEvent(this.$route.params.id)
+        this.store.loading = false
+
+        // store.getEvent(this.$route.params.id)
+        // this.event = Object.assign({}, store.events.find(e => e.id === this.$route.params.id))
     },
     mounted() {
-        store.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
+        // TODO: store.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
     },
 
     methods: {
@@ -82,16 +93,24 @@ export default {
         async save(redirectTo) {
 
             // TODO: POST RECORD TO DATABASE
+            let message = await store.updateEvent(this.$route.params.id, this.event)
+            if (message) {
+                this.wait = false
+                console.log(message)
+
+                if (redirectTo !== null) {
+                    this.$router.push({ path: redirectTo })
+                }
+            }
+
+            /*
             console.log(`${this.$options.name} | save()`)
             this.wait = true
             await sleep(Math.random() * 1300)
-            // store.items.filter((x) => (x.events.findIndex(y => (y.id) === this.event.id))) = this.event
-            // store.items.find((x) => (x.events.findIndex((y) => (y.id === this.event.id))))
             store.items.forEach((x, j) => {
                 let k = x.events.findIndex(y => (y.id === this.event.id))
                 if (k !== -1) {
                     store.items[j].events[k] = Object.assign({}, this.event)
-                    // store.updateEvents()
                 }
             })
             store.events[this.index] = Object.assign({}, this.event)
@@ -101,6 +120,7 @@ export default {
             if (redirectTo !== null) {
                 this.$router.push({ path: redirectTo })
             }
+            */
 
         },
         handleValidation(val) {

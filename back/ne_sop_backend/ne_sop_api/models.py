@@ -106,16 +106,24 @@ class Item(models.Model):
     type = models.ForeignKey("ItemType", null=True, on_delete=models.SET_NULL)
     status = models.ForeignKey("ItemStatus", null=True, on_delete=models.SET_NULL)
     # events = models.ForeignKey("Event", many=True, null=True, on_delete=models.SET_NULL)
-    content = models.TextField(max_length=600, blank=True, default="")
+    description = models.TextField(max_length=600, blank=True, default="")
     urgent = models.BooleanField(default=False)
     writtenresponse = models.BooleanField(default=False)
     oralresponse = models.BooleanField(default=False)
     valid = models.BooleanField(default=True)
 
     lead = models.ForeignKey(
-        "Entity", related_name="lead", null=True, on_delete=models.SET_NULL
+        "Entity",
+        related_name="lead",
+        blank=False,
+        null=True,
+        on_delete=models.SET_NULL,
     )
-    support = models.ManyToManyField(Entity, related_name="support")
+    support = models.ManyToManyField(Entity, blank=True, related_name="support")
+
+    # events = models.ManyToManyField(Event, blank=True, related_name="support")
+
+    # events = models.ManyToOneRel
 
     class Meta:
         ordering = ["created"]
@@ -148,7 +156,7 @@ class Event(models.Model):
         ordering = ["created"]
 
     def __str__(self):
-        return self.date
+        return str(self.date) + " - " + str(self.type)
 
 
 class Template(models.Model):

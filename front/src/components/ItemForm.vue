@@ -16,9 +16,17 @@
 
                         <!-- TYPE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.type" :options="itemTypes" label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.type" :options="itemTypes" option-label="name" option-value="id" emit-value map-options label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                                <template v-slot:option="scope">
+                                    <q-item v-bind="scope.itemProps">
+                                        <q-item-section>
+                                            <q-item-label>{{ scope.opt.name }}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                </template>
                             </q-select>
                         </div>
+
 
                     </div>
 
@@ -31,7 +39,10 @@
 
                         <!-- AUTHOR SELECT/CREATE FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.author" use-input :options="authorOptions" option-label="name" option-value="name" @filter="filterFn" map-options label="Auteur" emit-value clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+
+                            <!--  <q-select bg-color="white" outlined v-model="item.author" :options="authorOptions" option-label="name" option-value="id" emit-value map-options label="Auteur" clearable :rules="[v => checkFilled(v)]" :disable="!edit"> -->
+
+                            <q-select bg-color="white" outlined v-model="item.author" use-input :options="authorOptions" option-label="name" option-value="id" emit-value map-options @filter="filterFn" label="Auteur" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
 
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
@@ -49,14 +60,16 @@
                                 </template>
 
                             </q-select>
+
                         </div>
+
 
                     </div>
 
-                    <!-- CONTENT TEXT AREA FIELD -->
+                    <!-- DESCRIPTION TEXT AREA FIELD -->
                     <div class="row q-col-gutter-lg q-py-md">
                         <div class="col">
-                            <q-input bg-color="white" outlined v-model="item.content" label="Description" type="textarea" :disable="!edit" />
+                            <q-input bg-color="white" outlined v-model="item.description" label="Description" type="textarea" :disable="!edit" />
                         </div>
                     </div>
 
@@ -83,7 +96,7 @@
 
                         <!-- PRIMARY SERVICE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.services.lead" :options="serviceOptions" option-label="name" option-value="id" label="Service principal" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.lead" :options="serviceOptions" option-label="name" option-value="id" emit-value map-options label="Service principal" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section>
@@ -96,7 +109,7 @@
 
                         <!-- SUPPORT SERVICE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.services.support" :options="serviceOptions" option-label="name" option-value="id" label="Service(s) en appui" multiple clearable :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.support" :options="serviceOptions" option-label="name" option-value="id" emit-value map-options label="Service(s) en appui" multiple clearable @clear="reset()" :disable="!edit">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section side>
@@ -110,13 +123,14 @@
                             </q-select>
                         </div>
 
+
                     </div>
 
                     <div class="row q-col-gutter-lg q-py-md">
 
                         <!-- STATUS SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.status" :options="itemStatus" option-label="name" option-value="name" label="Statut" clearable map-options emit-value :rules="[v => checkFilled(v)]" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.status" :options="itemStatus" option-label="name" option-value="id" emit-value map-options label="Statut" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section side>
@@ -148,7 +162,7 @@
                         <!-- WRITTEN RESPONSE CHECKBOX FIELD -->
                         <q-item tag="label" v-ripple :disable="!edit">
                             <q-item-section avatar>
-                                <q-checkbox v-model="item.writtenResponse" val="true" color="blue" :disable="!edit" />
+                                <q-checkbox v-model="item.writtenresponse" val="true" color="blue" :disable="!edit" />
                             </q-item-section>
                             <q-item-section>
                                 <q-item-label>Réponse écrite</q-item-label>
@@ -159,7 +173,7 @@
                         <!-- ORAL RESPONSE CHECKBOX FIELD -->
                         <q-item tag="label" v-ripple :disable="!edit">
                             <q-item-section avatar>
-                                <q-checkbox v-model="item.oralResponse" val="true" color="blue" :disable="!edit" />
+                                <q-checkbox v-model="item.oralresponse" val="true" color="blue" :disable="!edit" />
                             </q-item-section>
                             <q-item-section>
                                 <q-item-label>Réponse orale</q-item-label>
@@ -177,7 +191,8 @@
                 <template v-slot:content>
 
                     <!-- EVENTS TABLE -->
-                    <EventsTable v-model="item.events" :edit="edit"></EventsTable>
+                    <!-- <EventsTable v-model="events" :item="item.id" :edit="edit"></EventsTable> -->
+                    <EventsTable v-model="item.events" :mode="mode" :edit="edit"></EventsTable>
 
                 </template>
             </FormSection>
@@ -187,7 +202,7 @@
                 <template v-slot:content>
 
                     <!-- DOCUMENTS TABLE -->
-                    <DocumentsTable v-model="item.documents" :type="item.type" :edit="edit"></DocumentsTable>
+                    <!-- <DocumentsTable v-model="item.documents" :type="item.type" :edit="edit"></DocumentsTable> -->
 
                 </template>
             </FormSection>
@@ -205,20 +220,20 @@
 <script>
 import { store } from '../store/store.js'
 import { checkFilled } from '../store/shared.js'
-import itemTypes from '../assets/data/item-types.json'
-import itemStatus from '../assets/data/item-status.json'
+// import itemTypes from '../assets/data/item-types.json'
+// import itemStatus from '../assets/data/item-status.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 import EventsTable from "../components/EventsTable.vue"
 import DocumentsTable from "../components/DocumentsTable.vue"
 import NewEntityDialog from "../views/NewEntityDialog.vue"
 
-const subset = ["Parlementaire", "Groupe parlementaire", "Autre"]
+// const subset = ["Parlementaire", "Groupe parlementaire", "Autre"]
 
 export default {
     name: 'EntityForm',
     components: { Form, FormSection, NewEntityDialog, EventsTable, DocumentsTable },
-    props: { 'edit': Boolean, 'modelValue': Object },
+    props: { 'edit': Boolean, 'modelValue': Object, 'mode': String },
     emits: ['update:modelValue'],
     setup() {
         return {
@@ -228,11 +243,12 @@ export default {
         return {
             store,
             dialog: { newEntity: false, newEvent: false, newDocument: false },
-            itemTypes: itemTypes,
-            itemStatus: itemStatus,
-            authorOptions: store.entities.filter(e => subset.includes(e.type)),
-            serviceOptions: store.entities.filter((e) => (e.type === "Service de l'état")),
-            addEntityDialog: false
+            itemTypes: [],
+            itemStatus: [],
+            authorOptions: [],
+            serviceOptions: [],
+            events: [],
+            documents: [],
         }
     },
     computed: {
@@ -245,64 +261,80 @@ export default {
             }
         }
     },
-    created() {
-        console.log(`router id: ${this.$route.params.id}`)
+    beforeCreate() {
     },
-    mounted() {
-        store.getItemTypes()
-        // store.
+    async created() {
+        // console.log(`router id: ${this.$route.params.id}`)
+        let data1 = await store.getEntities("", 1, 1, 20, "name", "false")
+        this.serviceOptions = data1.results
+        console.log('this.serviceOptions')
+        console.log(this.serviceOptions)
+
+        let data2 = await store.getEntities("", [2, 3], 1, 20, "name", "false")
+        this.authorOptions = data2.results
+        console.log("this.authorOptions")
+        console.log(this.authorOptions)
+
+        this.itemStatus = await store.getItemStatus()
+        this.itemTypes = await store.getItemTypes()
+        // this.events = await store.getEvents("", this.item.id, 1, 20) // search = "", item = "", page = 1, size = 10
+
+    },
+    async mounted() {
+
     },
     methods: {
         checkFilled,
+        reset() {
+            this.item.support = []
+        },
         addEntity() {
             console.log('ItemForm.vue | Add new entity')
             this.dialog.newEntity = true
         },
+        async searchEntity(searchString = "", type = []) {
+
+            // TODO: REPLACE WITH GET CALL TO API 
+
+            // await sleep(Math.random() * 1300)
+            let str = searchString.toLowerCase()
+            let data = ""
+
+            if (str.length >= 3) {
+                // this.store.getEntities(str, 1, this.pagination.rowsPerPage)
+                // this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
+                data = await store.getEntities(str, type, 1, 5, "name", "false")
+            } else {
+                // this.store.getEntities("", 1, this.pagination.rowsPerPage)
+                data = await store.getEntities("", type, 1, 20, "name", "false")
+            }
+
+            return data.results
+
+        },
         async addNewEntity(val) {
 
-            console.log('Item.vue | addNewEntity()')
-            console.log(val)
+            console.log(`${this.$options.name} | addNewEntity()`)
 
-            let newOption = {
-                "id": val.id, // uuidv4(),
-                "name": val.name,
-                "type": val.type,
-                "description": val.description,
-                "street": val.street,
-                "city": val.city,
-                "postalCode": val.postalCode,
-                "region": val.region,
-                "country": val.country,
-                "website": val.website,
-                "email": val.email,
-                "telephone": val.telephone,
-            }
+            let newEntity = await store.addEntity(val)
+            // this.authorOptions = await store.getEntities("", [2, 3], 1, 50)
+            this.authorOptions = [await store.getEntity(newEntity.id)]
 
-            console.log('newOption')
-            console.log(newOption)
+            // this.authorOptions = [newEntity]
+            // this.authorOptions = this.authorOptions.unshift(newEntity)
+            console.log(this.authorOptions)
 
-            if (!this.authorOptions.map((x) => (x.name)).includes(newOption.name)) {
-
-                // DEV: ADD NEW ENTITY TO LOCAL JSON
-                // store.entities.push(newOption)
-
-                // PRODUCTION: POST NEW ENTITY TO DATABASE
-                store.addEntity(newOption)
-
-                // this.authorOptions.push(val)
-                this.item.author = newOption
-
-                console.log('authorOptions')
-                console.log(this.authorOptions)
-            }
+            this.item.author = await newEntity.id
 
         },
         filterFn(val, update, abort) {
-            update(() => {
+            update(async () => {
+                console.log('filterFn')
                 // TODO - GET RECORDS FROM DATABASE
-                const needle = val.toLowerCase()
+                const str = val.toLowerCase()
                 // this.authorOptions = entities.filter((v) => v.name.toLowerCase().indexOf(needle) > -1)
-                this.authorOptions = store.entities.filter((e) => subset.includes(e.type)).filter((v) => v.name.toLowerCase().indexOf(needle) > -1)
+                // this.authorOptions = store.entities.filter((e) => subset.includes(e.type)).filter((v) => v.name.toLowerCase().indexOf(str) > -1)
+                this.authorOptions = await this.searchEntity(str, [2, 3])
             })
         }
     }

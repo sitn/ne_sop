@@ -23,10 +23,7 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid'
 import { store } from '../store/store.js'
-import { sleep } from '../store/shared.js'
-import entityTypes from '../assets/data/entity-types.json'
 import FloatingButtons from "../components/FloatingButtons.vue"
 import EntityForm from "../components/EntityForm.vue"
 
@@ -41,25 +38,22 @@ export default {
     data() {
         return {
             store,
-            // actionButtons: { save: 'active', deletion: 'none' },
             edit: true,
             wait: false,
             entity: {
                 "name": "",
                 "type": "",
-                "type_id": "",
                 "description": "",
                 "street": "",
                 "city": "",
-                "postalCode": "",
+                "postalcode": "",
                 "region": "",
                 "country": "",
                 "website": "",
                 "email": "",
                 "telephone": "",
                 "valid": false
-            }, //  "id": uuidv4(),
-            entityTypes: entityTypes,
+            },
         }
     },
     computed: {
@@ -83,12 +77,15 @@ export default {
             if (!this.store.entities.map((x) => (x.name)).includes(this.entity.name)) {
                 this.store.entities.push(this.entity)
             }*/
-            store.addEntity(this.entity)
+            let message = await store.addEntity(this.entity)
+            if (message) {
+                console.log(message)
+                this.wait = false
 
-            this.wait = false
+                if (redirectTo !== null) {
+                    this.$router.push({ path: redirectTo })
+                }
 
-            if (redirectTo !== null) {
-                this.$router.push({ path: redirectTo })
             }
 
             // this.$router.push({ name: 'EntitiesList' })
