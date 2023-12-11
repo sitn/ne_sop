@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid'
+// import { v4 as uuidv4 } from 'uuid'
 import { store } from '../store/store.js'
 import EventForm from "../components/EventForm.vue"
 
@@ -49,8 +49,8 @@ export default {
                 "date": "",
                 "time": "",
                 "type": "",
-                "status": "",
-                "item": null,
+                // "status": "",
+                // "item": null,
                 "description": "",
                 "valid": false
             }
