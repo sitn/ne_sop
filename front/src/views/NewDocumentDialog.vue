@@ -74,13 +74,14 @@ export default {
             let formData = new FormData()
             formData.append('file', this.document.file)
             formData.append('item_id', this.$route.params.id)
+            formData.append('template_id', this.document.type)
+            formData.append('note', this.document.note)
 
 
             try {
-                console.log("I'm in the try to send the request containing a binary file")
     
                 const response = await fetch('http://127.0.0.1:8000/api/fileupload/' + this.document.filename, {
-                    method: 'PUT',
+                    method: 'POST',
                     body: formData,
                     redirect: 'follow'
                 })

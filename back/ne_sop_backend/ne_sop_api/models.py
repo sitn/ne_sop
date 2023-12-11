@@ -151,22 +151,6 @@ class Event(models.Model):
         return self.date
 
 
-class Document(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
-    date = models.DateField()
-    note = models.CharField(max_length=500, blank=True, default="")
-    valid = models.BooleanField(default=True)
-    relpath = models.CharField(default=None, max_length=200)
-    version = models.PositiveIntegerField(default=None)
-
-    class Meta:
-        ordering = ["created"]
-
-    def __str__(self):
-        return self.date
-
-
 class Template(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=100, blank=True, default="")
@@ -179,6 +163,23 @@ class Template(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Document(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
+    template = models.ForeignKey(Template, null=True, on_delete=models.SET_NULL)
+    note = models.CharField(max_length=500, blank=True, default="")
+    valid = models.BooleanField(default=True)
+    relpath = models.CharField(default=None, max_length=200)
+    version = models.PositiveIntegerField(default=None)
+    item = models.ForeignKey(Item, related_name="document", on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ["created"]
+
+    def __str__(self):
+        return self.filename
 
 
 """

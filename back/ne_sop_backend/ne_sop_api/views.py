@@ -1,23 +1,26 @@
 from ne_sop_api.models import (
+    Document,
     Entity,
     EntityType,
-    Item,
-    ItemType,
-    ItemStatus,
     Event,
     EventType,
+    Item,
+    ItemStatus,
+    ItemType,
     Template,
     User,
 )
 from ne_sop_api.serializers import (
+    DocumentSerializer,
     EntitySerializer,
     EntityListSerializer,
     EntityTypeSerializer,
+    EventSerializer,
+    FileSerializer,
+    EventTypeSerializer,
     ItemSerializer,
     ItemTypeSerializer,
     ItemStatusSerializer,
-    EventSerializer,
-    EventTypeSerializer,
     TemplateSerializer,
     UserSerializer,
 )
@@ -34,12 +37,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view
-# from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
+# from rest_framework.parsers import FileUploadParser #, MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser
 
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 
 from pathlib import Path, PurePath
+from datetime import datetime
 import os
 import shutil
 
@@ -129,6 +134,9 @@ class EntityViewSet(viewsets.ViewSet):
     # queryset = Entity.objects.all()
     # queryset = queryset.filter(name__icontains=name)
 
+    @extend_schema(
+        tags=["Entities"],
+    )
     def get_queryset(self):
         """
         Optionally restricts the returned purchases to a given user,
@@ -142,8 +150,6 @@ class EntityViewSet(viewsets.ViewSet):
         return queryset
 
     @extend_schema(
-        request=EntitySerializer,
-        responses={201: EntitySerializer},
         tags=["Entities"],
     )
     def list(self, request):
@@ -409,6 +415,24 @@ class TemplateViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
+class DocumentViewSet(viewsets.ViewSet):
+    """
+    Documents viewset
+    """
+
+    queryset = Document.objects.all()
+    serializer_class = DocumentSerializer
+
+    # @extend_schema(
+    #     responses=DocumentSerializer,
+    #     tags=["Documents"],
+    # )
+    # def list(self, request):
+        
+    #     serializer = TemplateSerializer(self.queryset, many=True)
+    #     return Response(serializer.data)
+
+
 class TemplateTypeViewSet(viewsets.ViewSet):
     """
     Template types viewset
@@ -436,15 +460,29 @@ class TemplateTypeViewSet(viewsets.ViewSet):
 
 
 class FileUploadView(views.APIView):
-    # parser_classes = [MultiPartParser]
+    parser_classes = [MultiPartParser]
 
-    def put(self, request, filename, format=None):
+    @extend_schema(
+        responses=DocumentSerializer,
+        tags=["Documents"],
+    )
+    def post(self, request, filename):
+        serializer = FileSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                data=serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         file_obj = request.FILES['file']
         item_id = request.data['item_id'] if 'item_id' in request.data else None
+        template_id = request.data['template_id'] if 'template_id' in request.data else None
+        note = request.data['note'] if 'note' in request.data else None
 
         root_dir = os.environ['NESOP_OP_PATH']
         op = Item.objects.filter(id=item_id).first()
-        filepath = PurePath(root_dir, str(op.created.year), op.number, filename)
+        relpath = PurePath(str(op.created.year), op.number, filename)
+        filepath = PurePath(root_dir, relpath)
 
         if not os.path.exists(Path(filepath).resolve().parent):
             os.makedirs(Path(filepath).resolve().parent)
@@ -452,4 +490,22 @@ class FileUploadView(views.APIView):
         with open(filepath, 'wb') as output_file:
             shutil.copyfileobj(file_obj.file, output_file)
 
-        return Response(status=204)
+        documents = Document.objects.filter(
+            item=item_id,
+            template=template_id
+        ).all().order_by("-version")
+
+        version = 1
+        if len(documents) > 0:
+            version = documents[0].version + 1
+
+        document = Document()
+        document.template = template_id
+        document.note = note
+        document.relpath = relpath
+        document.version = version
+        document.item_id = item_id
+
+        document.save()
+
+        return Response({"msg": "Document created"}, status=status.HTTP_201_CREATED)
