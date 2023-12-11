@@ -21,7 +21,7 @@
                     {{ props.row.time }}
                 </q-td>
                 <q-td key="type" :props="props">
-                    {{ props.row.eventType }}
+                    {{ getEventTypeName(props.row.type) }}
                 </q-td>
                 <q-td key="actions" :props="props">
                     <div class="float-right">
@@ -77,6 +77,7 @@ export default {
             store,
             selected: null,
             dialog: { newEvent: false, deletion: false },
+            eventTypes: [],
             data: null,
             rows: [],
             columns: columns,
@@ -103,6 +104,19 @@ export default {
 
         console.log(`${this.$options.name} | mode: ${this.mode}`)
 
+        this.eventTypes = await this.store.getEventTypes()
+
+        console.log('this.eventTypes')
+        console.log(this.eventTypes)
+        console.log(this.getEventTypeName(1))
+
+
+        if (this.mode === "create") {
+
+
+
+        }
+
         if (this.mode === "update") {
             this.loading = true
             this.data = await store.getEvents("", this.item, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
@@ -118,14 +132,13 @@ export default {
         downloadICS,
         async onRequest(props) {
 
-
-            // Create mode
+            // Create mode (modifies JSON data locally in component)
             if (this.mode === "create") {
 
 
             }
 
-            // Update mode
+            // Update mode (modifies data remotely in database)
             if (this.mode === "update") {
 
                 this.loading = true
@@ -161,6 +174,12 @@ export default {
 
             // TODO: REPLACE WITH GET CALL TO API
 
+            // Create mode (modifies JSON data locally in component)
+            if (this.mode === "create") {
+
+                this.events = this.events.filter((x) => (x.id !== this.selected))
+            }
+
             // Delete event in local JSON
             // this.events = this.events.filter((x) => (x.id !== this.selected))
 
@@ -177,6 +196,9 @@ export default {
             // store.events = store.events.filter((x) => (x.id !== this.selected))
             // this.rows = store.events
 
+        },
+        getEventTypeName(id) {
+            return this.eventTypes.find((x) => x.id == id).name
         }
     }
 }
