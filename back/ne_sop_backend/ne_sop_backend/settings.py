@@ -14,18 +14,17 @@ from pathlib import Path, PurePath
 from dotenv import load_dotenv
 import os
 
-
-# from dotenv import load_dotenv
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables
+load_dotenv(PurePath(Path(BASE_DIR).resolve().parent, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-xsj(@@iob17bj%dzzcu7ol7+7+vb=2(fxy$dbeeh$_$0a%a_pc"
+SECRET_KEY = os.environ['NESOP_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -141,6 +140,10 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    'DATETIME_FORMAT': "%d.%m.%Y %H:%M:%S",
+    'DATETIME_INPUT_FORMATS': "%Y-%m-%d %H:%M:%S",
+    'DATE_FORMAT': "%d.%m.%Y",
+    'DATE_INPUT_FORMAT': "%Y-%m-%d",
 }
 
 SPECTACULAR_SETTINGS = {
