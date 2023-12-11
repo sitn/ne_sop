@@ -68,3 +68,17 @@ In your front directory, run the following to create the `dist` directory:
 ```
 vite build
 ```
+
+# Swagger
+All views are synthetised in a swagger which is based on the python [`drf.spectacular`](https://drf-spectacular.readthedocs.io/en/latest/index.html) library.
+To create the `schema.yml` file, activate your virtual environment, go into `back\ne_sop_backend` and run:
+```
+python ./manage.py spectacular --color --file schema.yml
+```
+
+Then launch the service using the following command line:
+```
+docker run -p 80:8080 -e SWAGGER_JSON=/schema.yml -v ${PWD}/schema.yml:/schema.yml swaggerapi/swagger-ui
+```
+
+You can access the swagger using this url: [http://127.0.0.1:8000/api/schema/docs/](http://127.0.0.1:8000/api/schema/docs/)
