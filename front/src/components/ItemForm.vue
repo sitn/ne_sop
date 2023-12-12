@@ -202,6 +202,7 @@
                 <template v-slot:content>
 
                     <!-- DOCUMENTS TABLE -->
+                    <DocumentsTable v-model="documents" :type="item.type" :edit="edit"></DocumentsTable>
                     <!-- <DocumentsTable v-model="item.documents" :type="item.type" :edit="edit"></DocumentsTable> -->
 
                 </template>
@@ -279,6 +280,8 @@ export default {
         this.itemTypes = await store.getItemTypes()
         // this.events = await store.getEvents("", this.item.id, 1, 20) // search = "", item = "", page = 1, size = 10
 
+        this.getDocuments();
+
     },
     async mounted() {
 
@@ -336,6 +339,23 @@ export default {
                 // this.authorOptions = store.entities.filter((e) => subset.includes(e.type)).filter((v) => v.name.toLowerCase().indexOf(str) > -1)
                 this.authorOptions = await this.searchEntity(str, [2, 3])
             })
+        },
+
+        async getDocuments() {
+            // this.documents.push(Object.assign({}, this.document))
+            
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/document?item_id=' + this.$route.params.id, {
+                    method: 'GET',
+                    redirect: 'follow'
+                })
+                this.documents = await response.json()
+                console.log("this.documents = ", this.documents)
+                
+            } catch (error) {
+                console.error(error)
+            }
+            
         }
     }
 }

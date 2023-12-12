@@ -17,6 +17,7 @@ router.register(r"event", views.EventViewSet, basename="event")
 router.register(r"event-type", views.EventTypeViewSet, basename="event-type")
 router.register(r"template", views.TemplateViewSet, basename="template")
 router.register(r"template-types", views.TemplateTypeViewSet, basename="template-types")
+router.register(r"document", views.DocumentViewSet, basename="document")
 router.register(r"user", views.UserViewSet, basename="user")
 
 urlpatterns = [

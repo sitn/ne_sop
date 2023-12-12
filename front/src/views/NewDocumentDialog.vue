@@ -69,7 +69,7 @@ export default {
     },
     methods: {
         async save() {
-            this.documents.push(Object.assign({}, this.document))
+            // this.documents.push(Object.assign({}, this.document))
             
             let formData = new FormData()
             formData.append('file', this.document.file)

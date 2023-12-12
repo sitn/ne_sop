@@ -405,9 +405,11 @@ class TemplateSerializer(serializers.ModelSerializer):
         ]
 
 
-class DocumentSerializer(serializers.ModelSerializer):
-    item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
-    template = serializers.PrimaryKeyRelatedField(queryset=Template.objects.all())
+class DocumentByItemSerializer(serializers.ModelSerializer):
+    template = serializers.SlugRelatedField(
+        queryset=Template.objects.all(),
+        slug_field='name',
+    )
     class Meta:
         model = Document
         fields = [
@@ -418,7 +420,7 @@ class DocumentSerializer(serializers.ModelSerializer):
             "valid",
             "relpath",
             "version",
-            "item",
+            "filename",
         ]
 
 class FileSerializer(serializers.Serializer):

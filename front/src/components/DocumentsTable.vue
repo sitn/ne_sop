@@ -17,17 +17,17 @@
                 <q-td key="filename" :props="props">
                     {{ props.row.filename }} ({{ formatBytes(props.row.filesize) }})
                 </q-td>
-                <q-td key="type" :props="props">
-                    {{ props.row.type }}
+                <q-td key="template" :props="props">
+                    {{ props.row.template }}
                 </q-td>
-                <q-td key="author" :props="props">
+                <!-- <q-td key="author" :props="props">
                     {{ props.row.author }}
-                </q-td>
-                <q-td key="date" :props="props">
+                </q-td> -->
+                <!-- <q-td key="date" :props="props">
                     {{ props.row.date }}
-                </q-td>
-                <q-td key="timestamp" :props="props">
-                    {{ date.formatDate(props.row.timestamp, 'DD.MM.YYYY HH:mm:ss') }}
+                </q-td> -->
+                <q-td key="created" :props="props">
+                    {{ date.formatDate(props.row.created, 'DD.MM.YYYY HH:mm:ss') }}
                 </q-td>
                 <q-td key="note" :props="props">
                     {{ props.row.note }}
@@ -71,9 +71,9 @@ const columns = [
     // { name: 'filesize', align: 'left', label: 'Taille', field: 'filesize', sortable: true },
     // { name: 'format', align: 'left', label: 'Format', field: 'format', sortable: true },
     // { name: 'version', align: 'center', label: 'version', field: 'version', sortable: true },
-    { name: 'type', align: 'left', label: 'Type', field: 'filename', sortable: true },
-    { name: 'author', align: 'left', label: 'Ajouté par', field: 'author', sortable: true },
-    { name: 'timestamp', align: 'left', label: 'Ajouté le', field: 'timestamp', sortable: true },
+    { name: 'template', align: 'left', label: 'Type', field: 'template', sortable: true },
+    // { name: 'author', align: 'left', label: 'Ajouté par', field: 'author', sortable: true },
+    { name: 'created', align: 'left', label: 'Ajouté le', field: 'created', sortable: true },
     { name: 'note', align: 'left', label: 'Notes', field: 'note', sortable: true },
     { name: 'actions', align: 'right', label: '', field: 'action', sortable: false }
 ]

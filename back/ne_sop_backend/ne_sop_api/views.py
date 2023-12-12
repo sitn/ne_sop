@@ -11,7 +11,7 @@ from ne_sop_api.models import (
     User,
 )
 from ne_sop_api.serializers import (
-    DocumentSerializer,
+    DocumentByItemSerializer,
     EntitySerializer,
     EntityListSerializer,
     EntityTypeSerializer,
@@ -506,17 +506,23 @@ class DocumentViewSet(viewsets.ViewSet):
     Documents viewset
     """
 
-    queryset = Document.objects.all()
-    serializer_class = DocumentSerializer
+    # queryset = Document.objects.all()
+    # serializer_class = DocumentByItemSerializer
 
-    # @extend_schema(
-    #     responses=DocumentSerializer,
-    #     tags=["Documents"],
-    # )
-    # def list(self, request):
-        
-    #     serializer = TemplateSerializer(self.queryset, many=True)
-    #     return Response(serializer.data)
+    @extend_schema(
+        responses=DocumentByItemSerializer,
+        tags=["Documents"],
+    )
+    def list(self, request):
+        item_id = request.query_params.get('item_id') if 'item_id' in request.query_params else None
+
+        documents = Document.objects
+        if item_id is not None:
+            documents = documents.filter(item_id=item_id)
+        documents = documents.all().order_by('template', '-version')
+
+        serializer = DocumentByItemSerializer(documents, many=True)
+        return Response(serializer.data)
 
 
 class TemplateTypeViewSet(viewsets.ViewSet):
@@ -533,11 +539,11 @@ class TemplateTypeViewSet(viewsets.ViewSet):
     )
 
     def list(self, request):
-        itemtype = request.query_params.get('itemtype') if 'itemtype' in request.query_params else None
+        itemtype_id = request.query_params.get('itemtype_id') if 'itemtype_id' in request.query_params else None
     
         templates = Template.objects
-        if itemtype is not None:
-            templates = templates.filter(item_types__name=itemtype)
+        if itemtype_id is not None:
+            templates = templates.filter(item_types__id=itemtype_id)
         templates = templates.all()
 
         serializer = TemplateSerializer(templates, many=True)
@@ -549,7 +555,7 @@ class FileUploadView(views.APIView):
     parser_classes = [MultiPartParser]
 
     @extend_schema(
-        responses=DocumentSerializer,
+        responses=FileSerializer,
         tags=["Documents"],
     )
     def post(self, request, filename):
@@ -586,7 +592,7 @@ class FileUploadView(views.APIView):
             version = documents[0].version + 1
 
         document = Document()
-        document.template = template_id
+        document.template_id = template_id
         document.note = note
         document.relpath = relpath
         document.version = version

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
+from pathlib import Path
 
 ENTITY_TYPES = [
     ("SERVICE_ETAT", "Service de l'état"),
@@ -185,6 +186,10 @@ class Document(models.Model):
 
     class Meta:
         ordering = ["created"]
+
+    @property
+    def filename(self):
+        return Path(self.relpath).name
 
     def __str__(self):
         return self.filename
