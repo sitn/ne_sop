@@ -45,7 +45,7 @@ from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser
 from rest_framework import filters
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 
 from pathlib import Path, PurePath
 from datetime import datetime
@@ -601,7 +601,29 @@ class FileUploadView(views.APIView):
         document.save()
 
         return Response({"msg": "Document created"}, status=status.HTTP_201_CREATED)
-    
+
+class FileDownloadView(views.APIView):
+
+    queryset = Document.objects.all()
+
+    @extend_schema(
+        tags=["Documents"],
+    )
+    def get(self, request, pk=None, format=None):
+        print('pk =', pk)
+        document = get_object_or_404(self.queryset, pk=pk)
+
+        root_dir = os.environ['NESOP_OP_PATH']
+        filepath = PurePath(root_dir, document.relpath)
+        print('filepath = ', filepath)
+        filepath = open(filepath, 'rb')
+
+        response = FileResponse(filepath, filename=document.filename, as_attachment=True)
+        headers = response.headers
+        headers['Content-Type'] = 'application/download'
+        headers['Accept-Ranges'] = 'bite'
+        response['Content-Disposition'] = f'attachment; filename={document.filename}'
+        return response
 
 
 

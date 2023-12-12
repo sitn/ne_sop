@@ -34,7 +34,7 @@
                 </q-td>
                 <q-td key="actions" :props="props">
                     <div class="float-right">
-                        <q-btn dense round flat color="grey" name="edit" @click="console.log(props.row)" icon="sym_o_download" :disable="!edit">
+                        <q-btn dense round flat color="grey" name="edit" @click="downloadRessource(props.row)" icon="sym_o_download" :disable="!edit">
                             <q-tooltip class="bg-black">Télécharger</q-tooltip>
                         </q-btn>
                         <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete" :disable="!edit">
@@ -124,14 +124,20 @@ export default {
             this.documents = this.documents.filter((x) => (x.id !== this.selected))
         },
         async downloadRessource(ressource) {
-            let filepath = [
-                import.meta.env.VITE_OP_PATH,
-                '20' + this.item.number.split('.')[0],
-                this.item.number.split('.')[1],
-                ressource.filename
-            ].join('\\')
-            console.log('filepath', 'file:///' + filepath)
-            // window.open('file://' +  filepath, "_blank")
+            try {
+
+                window.open(
+                    'http://127.0.0.1:8000/api/filedownload/' + ressource.id,
+                    {
+                        method: 'GET',
+                        redirect: 'follow'
+                    }
+                )
+                
+            } catch (error) {
+                console.error(error)
+            }
+  
         },
     }
 }

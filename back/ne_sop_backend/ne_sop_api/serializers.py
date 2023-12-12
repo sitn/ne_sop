@@ -413,12 +413,13 @@ class DocumentByItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
         fields = [
+            "id",
             "created",
-            "uuid",
+            # "uuid",
             "template",
             "note",
-            "valid",
-            "relpath",
+            # "valid",
+            # "relpath",
             "version",
             "filename",
         ]

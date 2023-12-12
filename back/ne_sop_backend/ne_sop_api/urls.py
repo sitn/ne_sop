@@ -38,6 +38,10 @@ urlpatterns = [
         r'^api/fileupload/(?P<filename>[^/]+)$',
         views.FileUploadView.as_view(),
     ),
+    re_path(
+        r'^api/filedownload/(?P<pk>[^/]+)$',
+        views.FileDownloadView.as_view(),
+    ),
     path(
         "api/schema/",
         SpectacularAPIView.as_view(),
