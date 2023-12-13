@@ -51,7 +51,7 @@ def test_api(request):
     Test backend
     """
     html = "<h1>Congratulations !</h1>"
-    html += "<h2>It works</h2>"
+    html += f"<h2>Hello {request.user}, It works</h2>"
     return HttpResponse(content=html, status=200)
 
 
