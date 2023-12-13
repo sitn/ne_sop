@@ -6,7 +6,7 @@ export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export const checkPhoneNumber = (val, allowEmpty = true) => {
 
-    if (allowEmpty && val === '') {
+    if (allowEmpty && (val === '' || val === null)) {
         return true
     }
 
@@ -22,7 +22,7 @@ export const checkPhoneNumber = (val, allowEmpty = true) => {
 export const checkEmail = (val, allowEmpty = true) => {
 
     let reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
-    let isValid = reg.test(val) || (allowEmpty && val === '')
+    let isValid = reg.test(val) || (allowEmpty && (val === '' || val === null))
 
     if (isValid) {
         return true
@@ -35,7 +35,7 @@ export const checkEmail = (val, allowEmpty = true) => {
 export const checkWebsite = (val, allowEmpty = true) => {
 
     let reg = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
-    let isValid = reg.test(val) || (allowEmpty && val === '')
+    let isValid = reg.test(val) || (allowEmpty && (val === '' || val === null))
 
     if (isValid) {
         return true
@@ -86,7 +86,7 @@ export const checkDate = (val) => {
 
 export const checkTime = (val, allowEmpty = true) => {
     let reg = /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/
-    let isValid = reg.test(val) || (allowEmpty && val === '')
+    let isValid = reg.test(val) || (allowEmpty && (val === '' || val === null))
     if (isValid) {
         return true
     } else {
