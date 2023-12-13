@@ -73,7 +73,7 @@ export const store = reactive({
     // UPDATE ENTITY
     async updateEntity(id, data) {
         try {
-
+            await sleep(1000)
             const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}/`, {
                 method: 'PUT',
                 headers: {
@@ -95,24 +95,7 @@ export const store = reactive({
     async addEntity(data) {
         try {
 
-            /*
-            data = {
-                "name": "Didi 9",
-                "type_id": 2,
-                "type": "sfdsf",
-                "description": "",
-                "street": "Château Rue de la Collégiale 12",
-                "city": "Neuchâtel",
-                "postalcode": "2002",
-                "region": "Neuchâtel",
-                "country": "Suisse",
-                "website": "https://www.ne.ch/autorites/DDTE/SDTE/",
-                "email": "Secretariat.DDTE@ne.ch",
-                "telephone": "+41 32 889 67 00",
-                "valid": true
-            }
-            */
-            await sleep(1300)
+            await sleep(1000)
             const response = await fetch(`http://127.0.0.1:8000/api/entity/`, {
                 method: 'POST',
                 headers: {
@@ -123,14 +106,6 @@ export const store = reactive({
             })
 
             return await response.json()
-
-            // .then(response => response.json())
-            // .then(result => console.log(result))
-            // .catch(error => console.log('error', error))
-
-
-            // this.entities = await response.json()
-            // console.log(this.entities)
 
         } catch (error) {
             console.error(error)
@@ -143,7 +118,7 @@ export const store = reactive({
         // this.loading = true
         try {
 
-            console.log(`loading: ${this.loading}`)
+            await sleep(1000)
             const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}`, {
                 method: 'DELETE',
                 redirect: 'follow'
@@ -192,7 +167,7 @@ export const store = reactive({
     async getItem(id) {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/item/${id}`, {
+            const response = await fetch(`http://127.0.0.1:8000/api/new-item/${id}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -206,8 +181,8 @@ export const store = reactive({
     // UPDATE ITEM
     async updateItem(id, data) {
         try {
-
-            const response = await fetch(`http://127.0.0.1:8000/api/item/${id}/`, {
+            await sleep(1000)
+            const response = await fetch(`http://127.0.0.1:8000/api/new-item/${id}/`, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
@@ -229,6 +204,7 @@ export const store = reactive({
         try {
 
             // http://127.0.0.1:8000/api/item/
+            await sleep(1000)
             const response = await fetch(`http://127.0.0.1:8000/api/new-item/`, {
                 method: 'POST',
                 headers: {
