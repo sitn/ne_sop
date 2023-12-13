@@ -90,3 +90,4 @@ docker run -p 80:8080 -e SWAGGER_JSON=/schema.yml -v ${PWD}/schema.yml:/schema.y
 ```
 
 You can access the swagger using this url: [http://127.0.0.1:8000/api/schema/docs/](http://127.0.0.1:8000/api/schema/docs/)
+
