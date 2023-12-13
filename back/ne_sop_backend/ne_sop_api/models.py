@@ -170,6 +170,10 @@ class Template(models.Model):
     class Meta:
         ordering = ["created"]
 
+    @property
+    def filename(self):
+        return Path(self.relpath).name
+
     def __str__(self):
         return self.name
 

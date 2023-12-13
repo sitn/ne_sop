@@ -11,7 +11,7 @@
     </div>
 
     <!-- DOCUMENTS TABLE -->
-    <q-table :rows="documents" :columns="columns" row-key="date" class="q-my-md">
+    <q-table :rows="store.documents" :columns="columns" row-key="date" class="q-my-md">
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="filename" :props="props">
@@ -37,7 +37,7 @@
                         <q-btn dense round flat color="grey" name="edit" @click="downloadRessource(props.row)" icon="sym_o_download" :disable="!edit">
                             <q-tooltip class="bg-black">Télécharger</q-tooltip>
                         </q-btn>
-                        <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete" :disable="!edit">
+                        <q-btn dense round flat color="red" name="delete" @click="deleteRessource(props.row)" icon="sym_o_delete" :disable="!edit">
                             <q-tooltip class="bg-black">Supprimer</q-tooltip>
                         </q-btn>
                     </div>
@@ -137,7 +137,24 @@ export default {
             } catch (error) {
                 console.error(error)
             }
-  
+        },
+        async deleteRessource(ressource) {
+            try {
+
+                const response = await fetch('http://127.0.0.1:8000/api/document/' + ressource.id,
+                    {
+                        method: 'DELETE',
+                        redirect: 'follow'
+                    }
+                )
+
+                await response.json()
+
+                store.getDocuments(this.$route.params.id)
+                
+            } catch (error) {
+                console.error(error)
+            }
         },
     }
 }

@@ -22,7 +22,7 @@ export const store = reactive({
     items: [],
     events: [],
     event: null,
-    documents: items.map((x) => (x.documents)).flat(1),
+    documents: [], // documents: items.map((x) => (x.documents)).flat(1),
     attachements: items.map((x) => (x.attachements)).flat(1),
     users: users,
     // query parameters, number of results, page, filters
@@ -410,5 +410,22 @@ export const store = reactive({
         }
     },
     */
+
+    async getDocuments(item_id) {
+        // this.documents.push(Object.assign({}, this.document))
+        
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/document?item_id=' + item_id, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            this.documents = await response.json()
+            return this.documents
+            
+        } catch (error) {
+            console.error(error)
+        }
+        
+    }
 
 })

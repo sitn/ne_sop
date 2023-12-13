@@ -47,8 +47,9 @@ from rest_framework import filters
 from django.core.paginator import Paginator
 from django.http import HttpResponse, FileResponse
 
+from ne_sop_api.utils import Utils
+
 from pathlib import Path, PurePath
-from datetime import datetime
 import os
 import shutil
 
@@ -506,7 +507,7 @@ class DocumentViewSet(viewsets.ViewSet):
     Documents viewset
     """
 
-    # queryset = Document.objects.all()
+    queryset = Document.objects.all()
     # serializer_class = DocumentByItemSerializer
 
     @extend_schema(
@@ -523,6 +524,21 @@ class DocumentViewSet(viewsets.ViewSet):
 
         serializer = DocumentByItemSerializer(documents, many=True)
         return Response(serializer.data)
+
+
+    @extend_schema(
+        tags=["Documents"],
+    )
+    def destroy(self, request, pk=None):
+        document = get_object_or_404(self.queryset, pk=pk)
+
+        root_dir = os.environ['NESOP_OP_PATH']
+        filepath = Path( PurePath(root_dir, document.relpath) )
+        if filepath.exists():
+            os.remove(filepath)
+
+        document.delete()
+        return Response({"msg": "Document deleted"})
 
 
 class TemplateTypeViewSet(viewsets.ViewSet):
@@ -571,10 +587,29 @@ class FileUploadView(views.APIView):
         template_id = request.data['template_id'] if 'template_id' in request.data else None
         note = request.data['note'] if 'note' in request.data else None
 
+        documents = Document.objects.filter(
+            item=item_id,
+            template=template_id
+        ).all().order_by("-version")
+        
+        version = 1
+        if len(documents) > 0:
+            version = documents[0].version + 1
+
+        file_extension = filename.rsplit('.', 1)[1]
+
+        if int(template_id) != int( os.environ['NESOP_TEMPLATE_AUTRE_ID'] ):
+            template = Template.objects.filter(id=template_id).first()
+            filename = template.filename
+
+        filename = filename.rsplit('.', 1)[0] + f'_v{version}.' + file_extension
+
         root_dir = os.environ['NESOP_OP_PATH']
         op = Item.objects.filter(id=item_id).first()
         relpath = PurePath(str(op.created.year), op.number, filename)
         filepath = PurePath(root_dir, relpath)
+
+        filepath = Utils.iterateFilename(filepath)
 
         if not os.path.exists(Path(filepath).resolve().parent):
             os.makedirs(Path(filepath).resolve().parent)
@@ -582,14 +617,6 @@ class FileUploadView(views.APIView):
         with open(filepath, 'wb') as output_file:
             shutil.copyfileobj(file_obj.file, output_file)
 
-        documents = Document.objects.filter(
-            item=item_id,
-            template=template_id
-        ).all().order_by("-version")
-
-        version = 1
-        if len(documents) > 0:
-            version = documents[0].version + 1
 
         document = Document()
         document.template_id = template_id

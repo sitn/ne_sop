@@ -86,6 +86,8 @@ export default {
                     redirect: 'follow'
                 })
                 await response
+
+                store.getDocuments(this.$route.params.id)
                 
             } catch (error) {
                 console.error(error)
