@@ -23,16 +23,6 @@ urlpatterns = [
     # path("", include(router.urls)),
     path("api/", include(router.urls)),
     path(
-        "api/entity/<uuid:uuid>/",
-        views.EntityViewSet.as_view(actions={"get": "retrieve"}),
-        name="entity-uuid",
-    ),
-    path(
-        "api/entitylist/",
-        views.EntityListViewSet.as_view(),
-        name="entitylist",
-    ),
-    path(
         "api/schema/",
         SpectacularAPIView.as_view(),
         name="schema",
@@ -44,6 +34,18 @@ urlpatterns = [
     ),
 ]
 
+"""
+    path(
+        "api/entity/<uuid:uuid>/",
+        views.EntityViewSet.as_view(actions={"get": "retrieve"}),
+        name="entity-uuid",
+    ),
+    path(
+        "api/entitylist/",
+        views.EntityListViewSet.as_view(),
+        name="entitylist",
+    ),
+"""
 
 """     path(
         "api/entitylist/",
