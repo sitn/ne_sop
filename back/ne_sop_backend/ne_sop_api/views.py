@@ -11,6 +11,7 @@ from ne_sop_api.models import (
 )
 from ne_sop_api.serializers import (
     EntitySerializer,
+    NewEntitySerializer,
     EntityListSerializer,
     EntityTypeSerializer,
     ItemSerializer,
@@ -44,8 +45,9 @@ from django.http import HttpResponse
 
 # %% Root view
 
+
 # %% test backend
-@api_view(['GET'])
+@api_view(["GET"])
 def test_api(request):
     """
     Test backend
@@ -517,7 +519,62 @@ class NewItemViewSet(viewsets.ViewSet):
     New Item viewset
     """
 
+    queryset = Item.objects.all()
     serializer_class = NewItemSerializer
+    search_fields = ["title", "number"]
+
+    @extend_schema(
+        responses=NewItemSerializer,
+        tags=["Items"],
+    )
+    def list(self, request):
+        filter = filters.SearchFilter()
+        queryset = filter.filter_queryset(request, Item.objects.all(), self)
+
+        title = request.query_params.get("title", "")
+        number = request.query_params.get("number", "")
+        page = int(request.query_params.get("page", "1"))
+        size = int(request.query_params.get("size", "10"))
+        sortby = request.query_params.get("sortby", "id")
+        descending = request.query_params.get("descending", "false")
+
+        # all_fields = Entity._meta.fields
+        if sortby not in ["id", "number", "title", "type", "status", "urgent"]:
+            sortby = "id"
+
+        if descending not in ["true", "false"]:
+            descending = "false"
+
+        if title is not None:
+            queryset = queryset.filter(title__icontains=title)
+
+        if number is not None:
+            queryset = queryset.filter(number__icontains=number)
+
+        if descending == "true":
+            paginator = Paginator(queryset.order_by(Lower(sortby).desc()), size)
+        else:
+            paginator = Paginator(queryset.order_by(Lower(sortby).asc()), size)
+
+        queryset = paginator.page(page)
+        nrows = paginator.count
+        npages = paginator.num_pages
+
+        # serializer = ItemSerializer(queryset, many=True)
+        serializer = ItemListSerializer(queryset, many=True)
+        # serializer = ItemSerializer(self.queryset, many=True)
+
+        # return Response(serializer.data)
+        return Response(
+            {
+                "page": page,
+                "npages": npages,
+                "nrows": nrows,
+                "sortby": sortby,
+                "descending": descending,
+                "results": serializer.data,
+            }
+        )
 
     @extend_schema(
         tags=["Items"],
@@ -530,3 +587,160 @@ class NewItemViewSet(viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        tags=["Items"],
+    )
+    def retrieve(self, request, pk=None):
+        item = get_object_or_404(self.queryset, pk=pk)
+        serializer = NewItemSerializer(item)
+        return Response(serializer.data)
+
+    @extend_schema(
+        tags=["Items"],
+    )
+    def update(self, request, pk=None):
+        item = get_object_or_404(self.queryset, pk=pk)
+        serializer = NewItemSerializer(item, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        tags=["Items"],
+    )
+    def destroy(self, request, pk=None):
+        item = get_object_or_404(self.queryset, pk=pk)
+        item.delete()
+        return Response({"msg": "Item deleted"})
+
+
+class NewEntityViewSet(viewsets.ViewSet):
+    """
+    Entities viewset
+    """
+
+    serializer_class = NewEntitySerializer
+    search_fields = ["name", "email", "telephone"]
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned purchases to a given user,
+        by filtering against a `username` query parameter in the URL.
+        """
+        queryset = Entity.objects.all()
+        name = self.request.query_params.get("name")
+        # type = self.request.query_params.get("type")
+        if name is not None:
+            queryset = queryset.filter(name__icontains=name)
+
+        # return super().get_queryset()  # queryset
+        return queryset
+
+    @extend_schema(
+        request=EntitySerializer,
+        responses={201: EntitySerializer},
+        tags=["Entities"],
+    )
+    def list(self, request):
+        filter = filters.SearchFilter()
+        queryset = filter.filter_queryset(request, Entity.objects.all(), self)
+
+        # queryset = Entity.objects.all()
+        # name = request.query_params.get("name")
+        name = request.GET.get("name", "")
+        type = request.query_params.get("type")
+        page = int(request.query_params.get("page", "1"))
+        size = int(request.query_params.get("size", "10"))
+        sortby = request.query_params.get("sortby", "id")
+        descending = request.query_params.get("descending", "false")
+
+        # all_fields = Entity._meta.fields
+
+        if sortby not in ["id", "name", "type"]:
+            sortby = "id"
+
+        if descending not in ["true", "false"]:
+            descending = "false"
+
+        if name is not None:
+            queryset = queryset.filter(name__icontains=name)
+
+        # if type # is not None:
+        if type:
+            queryset = queryset.filter(type__in=type.split(","))
+
+        if descending == "true":
+            paginator = Paginator(queryset.order_by(Lower(sortby).desc()), size)
+        else:
+            paginator = Paginator(queryset.order_by(Lower(sortby).asc()), size)
+
+        queryset = paginator.page(page)
+        nrows = paginator.count
+        npages = paginator.num_pages
+
+        # paginator = Paginator(queryset, per_page=2)
+        # page_object = paginator.get_page(page)
+        # context = {"page_obj": page_object}
+
+        serializer = EntityListSerializer(queryset, many=True)
+
+        # return Response(serializer.data)
+        return Response(
+            {
+                "page": page,
+                "npages": npages,
+                "nrows": nrows,
+                "sortby": sortby,
+                "descending": descending,
+                "results": serializer.data,
+            }
+        )
+
+    @extend_schema(
+        tags=["Entities"],
+    )
+    def create(self, request):
+        serializer = NewEntitySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            # return Response({"msg": "New entity created"}, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        tags=["Entities"],
+    )
+    def retrieve(self, request, pk=None):
+        queryset = Entity.objects.all()
+        # entity = get_object_or_404(self.queryset, pk=pk)
+        # entity = get_object_or_404(self.get_queryset(), pk=pk)
+        entity = get_object_or_404(queryset, pk=pk)
+        serializer = NewEntitySerializer(entity)
+        return Response(serializer.data)
+
+    @extend_schema(
+        tags=["Entities"],
+    )
+    def update(self, request, pk=None):
+        queryset = Entity.objects.all()
+        # entity = get_object_or_404(self.queryset, pk=pk)
+        # entity = get_object_or_404(self.get_queryset(), pk=pk)
+        entity = get_object_or_404(queryset, pk=pk)
+        serializer = NewEntitySerializer(entity, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        tags=["Entities"],
+    )
+    def destroy(self, request, pk=None):
+        queryset = Entity.objects.all()
+        entity = get_object_or_404(queryset, pk=pk)
+        # entity = get_object_or_404(self.queryset, pk=pk)
+        # entity = get_object_or_404(self.get_queryset, pk=pk)
+        entity.delete()
+        return Response({"msg": "Entity deleted"})
