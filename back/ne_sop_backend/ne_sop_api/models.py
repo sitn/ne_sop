@@ -146,7 +146,7 @@ class Event(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     date = models.DateField()
-    time = models.TimeField()
+    time = models.TimeField(null=True)
     item = models.ForeignKey(Item, related_name="events", on_delete=models.CASCADE)
     type = models.ForeignKey(EventType, null=True, on_delete=models.SET_NULL)
     description = models.CharField(max_length=500, blank=True, default="")
