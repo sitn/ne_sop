@@ -16,9 +16,6 @@
             <!-- FLOATING ACTION BUTTONS -->
             <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
 
-            <!-- <FloatingButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons> -->
-            <!-- <FloatingActionButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @edit-event="setEditMode"></FloatingActionButtons> -->
-
             <!-- DELETE DIALOG -->
             <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
@@ -29,7 +26,6 @@
 
 <script>
 import { store } from '../store/store.js'
-// import { sleep } from '../store/shared.js'
 import FloatingButtons from "../components/FloatingButtons.vue"
 import DeleteDialog from '../components/DeleteDialog.vue'
 import EntityForm from "../components/EntityForm.vue"
