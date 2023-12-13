@@ -19,9 +19,7 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid'
 import { store } from '../store/store.js'
-import entityTypes from '../assets/data/entity-types.json'
 import EntityForm from "../components/EntityForm.vue"
 
 export default {
@@ -39,11 +37,10 @@ export default {
             entity: {
                 "name": "",
                 "type": "",
-                "type_id": "",
                 "description": "",
                 "street": "",
                 "city": "",
-                "postalCode": "",
+                "postalcode": "",
                 "region": "",
                 "country": "",
                 "website": "",
@@ -51,19 +48,22 @@ export default {
                 "telephone": "",
                 "valid": false
             },
-            entityTypes: entityTypes,
         }
     },
     computed: {
     },
     mounted() {
+
     },
     methods: {
-        save(val) {
+        save() {
 
+            // TODO POST NEW VALUE TO DATABASE
+            console.log(`${this.$options.name} | save()`)
             this.$emit('addNewEntity', this.entity)
-            // this.store.entities.push(this.entity)
-            // POST NEW VALUE TO DATABASE
+            // let newEntity = await store.addEntity(this.entity)
+            // await this.$emit('addNewEntity', newEntity)
+
         }
     }
 }

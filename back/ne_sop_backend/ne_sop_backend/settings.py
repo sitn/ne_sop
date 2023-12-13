@@ -10,17 +10,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
-from pathlib import Path
+
+from pathlib import Path, PurePath
+from dotenv import load_dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables
+load_dotenv(PurePath(Path(BASE_DIR).resolve().parent, ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-xsj(@@iob17bj%dzzcu7ol7+7+vb=2(fxy$dbeeh$_$0a%a_pc"
+SECRET_KEY = os.environ["NESOP_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -124,8 +129,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -136,6 +142,12 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    "DATETIME_FORMAT": "%d.%m.%Y %H:%M:%S",
+    "DATETIME_INPUT_FORMATS": ["%d.%m.%Y %H:%M:%S"],
+    "DATE_FORMAT": "%d.%m.%Y",
+    "DATE_INPUT_FORMATS": ["%d.%m.%Y"],
+    "TIME_FORMAT": "%H:%M",
+    "TIME_INPUT_FORMATS": ["%H:%M"],
 }
 
 SPECTACULAR_SETTINGS = {

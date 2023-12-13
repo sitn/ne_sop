@@ -1,9 +1,9 @@
 // store.js
 import { reactive } from 'vue'
-import { EntityTypes } from './entity-types.js'
-import entities from '../assets/data/entities.json'
+// import { EntityTypes } from './entity-types.js'
+// import entities from '../assets/data/entities.json'
 import items from '../assets/data/items.json'
-import events from '../assets/data/events.json'
+// import events from '../assets/data/events.json'
 import users from '../assets/data/users.json'
 import { sleep } from '../store/shared.js'
 // import { router } from '../router.js'
@@ -16,51 +16,82 @@ export const store = reactive({
     warning: false,
     exit: false,
     navigation: { "from": null, "to": null },
-    entityTypes: null,
-    entities: [], // entities,
+    entities: [],
     entity: null,
     itemTypes: null,
-    items: items,
-    events: [], // events, // items.map((x) => (x.events)).flat(1),
+    items: [],
+    events: [],
+    event: null,
     documents: items.map((x) => (x.documents)).flat(1),
     attachements: items.map((x) => (x.attachements)).flat(1),
     users: users,
-    /* ITEMS */
-    async getItems() {
+    // query parameters, number of results, page, filters
+    updateEvents() {
+        this.events = this.items.map((x) => (x.events)).flat(1)
+    },
+    updateDocuments() {
+        this.documents = this.items.map((x) => (x.documents)).flat(1)
+    },
+    updateAttachements() {
+        this.attachements = this.items.map((x) => (x.attachements)).flat(1)
+    },
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    // GET LIST OF ENTITIES
+    async getEntities(search = "", type = [], page = 1, size = 10, sortBy = "", descending = "false") {
         try {
 
-            this.loading = true
-            const response = await fetch('http://127.0.0.1:8000/api/item/', {
+            // await sleep(1300)
+            console.log(`http://127.0.0.1:8000/api/entity?page=${page}&size=${size}&search=${search}&type=${type}&sortby=${sortBy}&descending=${descending}`)
+            const response = await fetch(`http://127.0.0.1:8000/api/entity?page=${page}&size=${size}&search=${search}&type=${type}&sortby=${sortBy}&descending=${descending}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            this.items = await response.json()
-            this.loading = false
+            return await response.json()
 
         } catch (error) {
             console.error(error)
         }
     },
-    async getItemTypes() {
+
+    // GET ENTITY DETAILS
+    async getEntity(id) {
         try {
 
-            this.loading = true
-            const response = await fetch('http://127.0.0.1:8000/api/item-type/', {
+            const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            this.itemTypes = await response.json()
-            this.loading = false
+            return await response.json()
 
         } catch (error) {
             console.error(error)
         }
     },
-    async setReady(obj, val) {
-        this.loading = val
-        console.log(`loading: ${this.loading}`)
+
+    // UPDATE ENTITY
+    async updateEntity(id, data) {
+        try {
+
+            const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}/`, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+                redirect: 'follow',
+            })
+
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+
     },
-    /* ENTITIES */
+
+    // ADD ENTITY
     async addEntity(data) {
         try {
 
@@ -81,7 +112,7 @@ export const store = reactive({
                 "valid": true
             }
             */
-
+            await sleep(1300)
             const response = await fetch(`http://127.0.0.1:8000/api/entity/`, {
                 method: 'POST',
                 headers: {
@@ -90,12 +121,13 @@ export const store = reactive({
                 body: JSON.stringify(data),
                 redirect: 'follow',
             })
-                .then(response => response.json())
-                .then(result => console.log(result))
-                .catch(error => console.log('error', error))
 
-            // res = await response.json()
-            // console.log(res)
+            return await response.json()
+
+            // .then(response => response.json())
+            // .then(result => console.log(result))
+            // .catch(error => console.log('error', error))
+
 
             // this.entities = await response.json()
             // console.log(this.entities)
@@ -105,114 +137,27 @@ export const store = reactive({
         }
 
     },
-    async updateEntity(id, data) {
-        console.log('store.updateEntity()')
-        console.log(data)
-        try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}/`, {
-                method: 'PUT',
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-                redirect: 'follow',
-            })
-                .then(response => response.json())
-                .then(result => {
-                    console.log('result')
-                    console.log(result)
-                })
-                .catch(error => console.log('error', error))
-
-        } catch (error) {
-            console.error(error)
-        }
-
-    },
-    async getEntity(id) {
-        try {
-
-            this.loading = true
-            console.log(`loading: ${this.loading}`)
-            const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}`, {
-                method: 'GET',
-                redirect: 'follow'
-            })
-            this.entity = await response.json()
-            console.log(this.entity)
-            // await this.setReady(this.entity, false)
-            this.loading = false
-            console.log(`loading: ${this.loading}`)
-            // 
-
-        } catch (error) {
-            console.error(error)
-        }
-    },
+    // DELETE ENTITY
     async deleteEntity(id) {
+        // this.loading = true
         try {
 
-            this.loading = true
             console.log(`loading: ${this.loading}`)
             const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}`, {
                 method: 'DELETE',
                 redirect: 'follow'
             })
-                .then(response => response.json())
-                .then(result => {
-                    console.log(result)
-                    this.entities = this.entities.filter((x) => (x.id !== id))
-                })
-                .catch(error => console.log('error', error))
-
-            this.loading = false
-            console.log(`loading: ${this.loading}`)
+            // this.loading = false
+            // console.log(`loading: ${this.loading}`)
+            return await response.json()
 
         } catch (error) {
             console.error(error)
         }
     },
-    // query parameters, number of results, page, filters
-    // API - GET ALL RECORDS
-    async getEntities(name = "", page = 1, size = 10) {
-        try {
 
-            this.loading = false
-            const response = await fetch(`http://127.0.0.1:8000/api/entity?page=${page}&size=${size}&name=${name}`, {
-                method: 'GET',
-                redirect: 'follow'
-            })
-            this.entities = await response.json()
-                .then(
-                    this.loading = false
-                )
-            console.log(this.entities)
-
-        } catch (error) {
-            console.error(error)
-        }
-    },
-    async getEntities2() {
-
-        let h = new Headers()
-        h.append('Content-Type', 'application/json')
-
-        let url = `http://127.0.0.1:8000/api/entity/`
-        let req = new Request(url, {
-            method: 'GET',
-            headers: h
-        })
-
-        fetch(`http://127.0.0.1:8000/api/entity/`)
-            .then(res => res.json())
-            .then(data => {
-                this.entities = data
-                this.loading = false
-            })
-            .catch(error => console.warn('error', error))
-
-    },
+    // GET ENTITY TYPES
     async getEntityTypes() {
         try {
 
@@ -220,26 +165,222 @@ export const store = reactive({
                 method: 'GET',
                 redirect: 'follow'
             })
-            this.entityTypes = await response.json()
+            return await response.json()
 
         } catch (error) {
             console.error(error)
         }
     },
-    /* EVENTS */
-    async getEvents() {
+
+    // GET LIST OF ITEMS
+    async getItems(search = "", page = 1, size = 10, sortBy = "", descending = "false") {
         try {
 
-            const response = await fetch('http://127.0.0.1:8000/api/event/', {
+            const response = await fetch(`http://127.0.0.1:8000/api/item?page=${page}&size=${size}&sortby=${sortBy}&descending=${descending}&search=${search}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            this.events = await response.json()
+            return await response.json()
+            // this.items = await response.json()
 
         } catch (error) {
             console.error(error)
         }
     },
+
+    // GET ITEM DETAILS
+    async getItem(id) {
+        try {
+
+            const response = await fetch(`http://127.0.0.1:8000/api/item/${id}`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+    // UPDATE ITEM
+    async updateItem(id, data) {
+        try {
+
+            const response = await fetch(`http://127.0.0.1:8000/api/item/${id}/`, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+                redirect: 'follow',
+            })
+
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+
+    },
+
+    // ADD NEW ITEM
+    async addItem(data) {
+        try {
+
+            // http://127.0.0.1:8000/api/item/
+            const response = await fetch(`http://127.0.0.1:8000/api/new-item/`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+                redirect: 'follow',
+            })
+
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+
+    },
+
+    // DELETE ITEM
+    async deleteItem(id) {
+        try {
+
+            const response = await fetch(`http://127.0.0.1:8000/api/item/${id}`, {
+                method: 'DELETE',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+    // GET ITEM TYPES
+    async getItemTypes() {
+        try {
+
+            const response = await fetch(`http://127.0.0.1:8000/api/item-type`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+    // GET ITEM STATUS
+    async getItemStatus() {
+        try {
+
+            const response = await fetch(`http://127.0.0.1:8000/api/item-status`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+
+    // GET LIST OF EVENTS
+    async getEvents(search = "", item = "", page = 1, size = 10, sortBy = "", descending = "false") {
+        try {
+
+            // await sleep(1300)
+            const response = await fetch(`http://127.0.0.1:8000/api/event?page=${page}&size=${size}&sortby=${sortBy}&descending=${descending}&item=${item}&search=${search}`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+    // GET EVENT DETAILS
+    async getEvent(id) {
+        try {
+
+            const response = await fetch(`http://127.0.0.1:8000/api/event/${id}`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+    // UPDATE EVENT
+    async updateEvent(id, data) {
+        try {
+
+            const response = await fetch(`http://127.0.0.1:8000/api/event/${id}/`, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+                redirect: 'follow',
+            })
+
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+
+    },
+
+    // ADD NEW EVENT
+    async addEvent(data) {
+        try {
+
+            const response = await fetch(`http://127.0.0.1:8000/api/event/`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+                redirect: 'follow',
+            })
+
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+
+    },
+
+    // DELETE EVENT
+    async deleteEvent(id) {
+        try {
+
+            const response = await fetch(`http://127.0.0.1:8000/api/event/${id}`, {
+                method: 'DELETE',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+    // GET EVENT TYPES
     async getEventTypes() {
         try {
 
@@ -247,12 +388,14 @@ export const store = reactive({
                 method: 'GET',
                 redirect: 'follow'
             })
-            this.eventTypes = await response.json()
+            return await response.json()
 
         } catch (error) {
             console.error(error)
         }
     },
+
+    /*
     async getTemplates() {
         try {
 
@@ -266,16 +409,6 @@ export const store = reactive({
             console.error(error)
         }
     },
-    updateEvents() {
-        this.events = this.items.map((x) => (x.events)).flat(1)
-        // this.items.forEach((x) => )
-    },
-    updateDocuments() {
-        this.documents = this.items.map((x) => (x.documents)).flat(1)
-    },
-    updateAttachements() {
-        this.attachements = this.items.map((x) => (x.attachements)).flat(1)
-    },
-
+    */
 
 })
