@@ -129,7 +129,6 @@
 <script>
 import { store } from '../store/store.js'
 import { checkFilled, checkPhoneNumber, formatPhoneNumber, checkEmail, checkWebsite } from '../store/shared.js'
-// import entityTypes from '../assets/data/entity-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 
@@ -158,15 +157,9 @@ export default {
             }
         }
     },
-    async beforeCreate() {
-
-    },
     async created() {
         this.entityTypes = await this.store.getEntityTypes()
         console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
-    },
-    mounted() {
-
     },
     methods: {
         checkFilled,

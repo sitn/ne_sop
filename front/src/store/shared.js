@@ -6,7 +6,7 @@ export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export const checkPhoneNumber = (val, allowEmpty = true) => {
 
-    if (allowEmpty && val === '') {
+    if (allowEmpty && (val === '' || val === null)) {
         return true
     }
 
@@ -22,7 +22,7 @@ export const checkPhoneNumber = (val, allowEmpty = true) => {
 export const checkEmail = (val, allowEmpty = true) => {
 
     let reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
-    let isValid = reg.test(val) || (allowEmpty && val === '')
+    let isValid = reg.test(val) || (allowEmpty && (val === '' || val === null))
 
     if (isValid) {
         return true
@@ -35,7 +35,7 @@ export const checkEmail = (val, allowEmpty = true) => {
 export const checkWebsite = (val, allowEmpty = true) => {
 
     let reg = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
-    let isValid = reg.test(val) || (allowEmpty && val === '')
+    let isValid = reg.test(val) || (allowEmpty && (val === '' || val === null))
 
     if (isValid) {
         return true
@@ -64,29 +64,29 @@ export const checkFile = (val) => {
 export const checkDate = (val) => {
     let mydate = date.extractDate(val, 'DD.MM.YYYY')
 
-    console.log(`val: ${val}`)
-    console.log(date.formatDate(mydate, 'DD.MM.YYYY'))
-    console.log(date.formatDate(mydate, 'YYYY/MM/DD'))
-    console.log(!isNaN(new Date(date.formatDate(mydate, 'YYYY/MM/DD'))))
+    // console.log(`val: ${val}`)
+    // console.log(date.formatDate(mydate, 'DD.MM.YYYY'))
+    // console.log(date.formatDate(mydate, 'YYYY/MM/DD'))
+    // console.log(!isNaN(new Date(date.formatDate(mydate, 'YYYY/MM/DD'))))
 
     // !isNaN(new Date('2322/16/12'))
-    console.log(mydate)
+    // console.log(mydate)
 
-    console.log(val.split("."))
+    // console.log(val.split("."))
     let dmy = val.split(".")
     let mymydate = new Date(dmy[2], dmy[1] - 1, dmy[0])
-    console.log(mymydate)
+    // console.log(mymydate)
 
     let newDate = `${dmy[2]}/${dmy[1]}/${dmy[0]}`;
-    console.log(newDate)
+    // console.log(newDate)
 
-    console.log(`date valid: ${date.isValid(mydate)}`)
+    // console.log(`date valid: ${date.isValid(mydate)}`)
     return date.isValid(mydate) ? true : 'Format non-valable'
 }
 
 export const checkTime = (val, allowEmpty = true) => {
     let reg = /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/
-    let isValid = reg.test(val) || (allowEmpty && val === '')
+    let isValid = reg.test(val) || (allowEmpty && (val === '' || val === null))
     if (isValid) {
         return true
     } else {
