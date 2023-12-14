@@ -28,66 +28,23 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 
-# %% EVENT
+# %% EVENT TYPE
 class EventTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventType
         fields = "__all__"
 
 
-class NestedEventerializer(serializers.ModelSerializer):
-    type = EventTypeSerializer(read_only=True)
-    type_id = serializers.PrimaryKeyRelatedField(
-        source="type",
-        queryset=EventType.objects.all(),
-        write_only=True,
-    )
-
-    class Meta:
-        model = Event
-        fields = [
-            "id",
-            "uuid",
-            "date",
-            "time",
-            "type",
-            "type_id",
-            "item",
-            "description",
-            "valid",
-        ]
-
-
-# %% ENTITY
+# %% ENTITY TYPE
 class EntityTypeSerializer(serializers.ModelSerializer):
-    # name = serializers.CharField(source="name")
-
     class Meta:
         model = EntityType
         fields = ("id", "name")
-        # fields = "__all__"
 
 
-"""         fields = (
-            [
-                "name",
-            ],
-        ) """
-
-
+# %% ENTITY LIST
 class EntityListSerializer(serializers.ModelSerializer):
-    """
-    type = EntityTypeSerializer(read_only=True)
-    type_id = serializers.PrimaryKeyRelatedField(
-        source="type",
-        queryset=EntityType.objects.all(),
-        write_only=True,
-    )
-    """
-
     type = serializers.StringRelatedField()
-    # type = EntityTypeSerializer(read_only=True)
-    # type = serializers.PrimaryKeyRelatedField(queryset=EntityType.objects.all())
 
     class Meta:
         model = Entity
@@ -106,21 +63,12 @@ class EntityListSerializer(serializers.ModelSerializer):
             "website",
             "email",
             "telephone",
-            "valid",  # "type_id",
+            "valid",
         ]
 
 
+# %% ENTITY
 class EntitySerializer(serializers.ModelSerializer):
-
-    """
-    type = EntityTypeSerializer(read_only=True)
-    type_id = serializers.PrimaryKeyRelatedField(
-        source="type",
-        queryset=EntityType.objects.all(),
-        write_only=True,
-    )
-    """
-
     type = serializers.PrimaryKeyRelatedField(queryset=EntityType.objects.all())
 
     class Meta:
@@ -140,30 +88,30 @@ class EntitySerializer(serializers.ModelSerializer):
             "website",
             "email",
             "telephone",
-            "valid",  # "type_id",
+            "valid",
         ]
 
 
-# %% ITEM
+# %% ITEM TYPE
 class ItemTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItemType
         fields = "__all__"
 
 
+# %% ITEM STATUS
 class ItemStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItemStatus
         fields = "__all__"
 
 
+# %% ITEM LIST
 class ItemListSerializer(serializers.ModelSerializer):
     type = ItemTypeSerializer(read_only=True)
     status = ItemStatusSerializer(read_only=True)
     author = serializers.StringRelatedField()
     lead = serializers.StringRelatedField()
-
-    # support = serializers.StringRelatedField()
 
     class Meta:
         model = Item
@@ -185,82 +133,23 @@ class ItemListSerializer(serializers.ModelSerializer):
         ]
 
 
+# %% ITEM
 class ItemSerializer(serializers.ModelSerializer):
     type = serializers.PrimaryKeyRelatedField(
         queryset=ItemType.objects.all(),
     )
 
-    """" 
-    type = ItemTypeSerializer(read_only=True)
-    type_id = serializers.PrimaryKeyRelatedField(
-        source="type",
-        queryset=ItemType.objects.all(),
-        write_only=True,
-    )
-    """
-
     status = serializers.PrimaryKeyRelatedField(
         queryset=ItemStatus.objects.all(),
     )
 
-    """
-    status = ItemStatusSerializer(read_only=True)
-    status_id = serializers.PrimaryKeyRelatedField(
-        source="status",
-        queryset=ItemStatus.objects.all(),
-        write_only=True,
-    )
-    """
-
     author = serializers.PrimaryKeyRelatedField(
         queryset=Entity.objects.all(),
     )
-    """
-    author = EntitySerializer(read_only=True)
-    author_id = serializers.PrimaryKeyRelatedField(
-        source="author",
-        queryset=Entity.objects.all(),
-        write_only=True,
-    )
-    """
 
     lead = serializers.PrimaryKeyRelatedField(
         queryset=Entity.objects.all(),
     )
-    """
-    lead = EntitySerializer(read_only=True)
-    """
-
-    """
-    support = EntitySerializer(many=True, read_only=True)
-    """
-
-    """
-    lead_id = serializers.PrimaryKeyRelatedField(
-        source="lead",
-        queryset=Entity.objects.all(),
-        write_only=True,
-    )
-    """
-
-    """
-    events = serializers.PrimaryKeyRelatedField(
-        many=True,
-        read_only=True,
-    )
-    """
-
-    """
-    events = serializers.PrimaryKeyRelatedField(
-        many=True,
-        queryset=Event.objects.all(),
-     )
-     source="events",
-    """
-
-    """
-    events = NestedEventerializer(many=True, read_only=True)
-    """
 
     class Meta:
         model = Item
@@ -270,15 +159,12 @@ class ItemSerializer(serializers.ModelSerializer):
             "number",
             "title",
             "type",
-            # "type_id",
             "status",
             "description",
-            # "status_id",
             "urgent",
             "writtenresponse",
             "oralresponse",
             "author",
-            # "author_id",
             "lead",
             "support",
             "events",
@@ -327,12 +213,8 @@ class NestedItemSerializer(serializers.ModelSerializer):
         ]
 
 
-# %% EVENT
-
-
+# %% EVENT LIST
 class EventListSerializer(serializers.ModelSerializer):
-    # type = serializers.PrimaryKeyRelatedField(queryset=EventType.objects.all())
-    # type = serializers.StringRelatedField()
     type = EventTypeSerializer(read_only=True)
     item = NestedItemSerializer(read_only=True)
 
@@ -350,32 +232,8 @@ class EventListSerializer(serializers.ModelSerializer):
         ]
 
 
+# %% EVENT
 class EventSerializer(serializers.ModelSerializer):
-    """
-    type = serializers.PrimaryKeyRelatedField(
-        queryset=EventType.objects.all(),
-    )
-    """
-
-    """
-    type = EventTypeSerializer(read_only=True)
-    type_id = serializers.PrimaryKeyRelatedField(
-        source="type",
-        queryset=EventType.objects.all(),
-        write_only=True,
-    )
-    """
-    # item = NestedItemSerializer(read_only=True)
-    # item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
-    """
-    item = ItemSerializer(read_only=True)
-    item_id = serializers.PrimaryKeyRelatedField(
-        source="item",
-        queryset=Item.objects.all(),
-        write_only=True,
-    )
-    """
-
     class Meta:
         model = Event
         fields = [
@@ -408,6 +266,14 @@ class TemplateSerializer(serializers.ModelSerializer):
 
 
 class NewEventSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False, read_only=False)
+
+    uuid = serializers.UUIDField(required=False, read_only=False)
+
+    type = serializers.PrimaryKeyRelatedField(
+        queryset=EventType.objects.all(),
+    )
+
     class Meta:
         model = Event
         fields = [
@@ -482,3 +348,80 @@ class NewItemSerializer(serializers.ModelSerializer):
                 Event.objects.create(item=item, **event)
 
         return item
+
+    def update(self, instance, validated_data):
+        new_events = validated_data.pop("events")
+        support = validated_data.pop("support", None)
+
+        instance.number = validated_data.get("number", instance.number)
+        instance.type = validated_data.get("type", instance.type)
+        instance.title = validated_data.get("title", instance.title)
+        instance.status = validated_data.get("status", instance.status)
+        instance.description = validated_data.get("description", instance.description)
+        instance.urgent = validated_data.get("urgent", instance.urgent)
+        instance.writtenresponse = validated_data.get(
+            "writtenresponse", instance.writtenresponse
+        )
+        instance.oralresponse = validated_data.get(
+            "oralresponse", instance.oralresponse
+        )
+        instance.author = validated_data.get("author", instance.author)
+        instance.lead = validated_data.get("lead", instance.lead)
+        instance.support.set(support)
+        instance.valid = validated_data.get("valid", instance.valid)
+
+        # for key, value in validated_data.items():
+        #    setattr(instance, key, value)
+
+        instance.save()
+
+        # get all events related to item
+        old_events = Event.objects.filter(item=instance.id)
+
+        # delete all events related to item (and then replace them)
+        # old_events.delete()
+
+        """
+        old_events_list = list((instance.events).all())
+
+        id_old_events = Event.objects.filter(item=instance.pk).values_list(
+            "id", flat=True
+        )
+        print("## id_old_events ---------------------------------------------------")
+        print(id_old_events)
+
+        print("## id_new_events ---------------------------------------------------")
+        print(id_new_events)
+        """
+
+        # for id in id_old_events:
+        #    if id not in id_new_events:
+        #        Event.objects.get(id=id, item=instance).delete()
+
+        id_new_events = [event.get("id", None) for event in new_events]
+        for event in old_events:
+            if event.id not in id_new_events:
+                event.delete()
+
+        for new_event in new_events:
+            event_id = new_event.get("id", None)
+
+            # IF EVENT ALREADY EXISTS, UPDATE IT
+            if event_id:
+                print("Update (event exists)")
+                event_instance = Event.objects.get(id=event_id, item=instance)
+                event_instance.date = new_event.get("date", event_instance.date)
+                event_instance.time = new_event.get("time", event_instance.time)
+                event_instance.type = new_event.get("type", event_instance.type)
+                event_instance.description = new_event.get(
+                    "description", event_instance.description
+                )
+                event_instance.valid = new_event.get("valid", event_instance.valid)
+                event_instance.save()
+
+            # IF EVENT DOES NOT EXISTS, CREATE IT
+            else:
+                print("CREATE (event does not exist)")
+                Event.objects.create(item=instance, **new_event)
+
+        return instance
