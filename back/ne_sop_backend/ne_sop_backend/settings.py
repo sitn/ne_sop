@@ -32,6 +32,12 @@ DEBUG = False
 
 ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
 
+CSRF_TRUSTED_ORIGINS = []
+
+for host in ALLOWED_HOSTS:
+    CSRF_TRUSTED_ORIGINS.append(f'http://{host}')
+    CSRF_TRUSTED_ORIGINS.append(f'https://{host}')
+
 
 # Application definition
 

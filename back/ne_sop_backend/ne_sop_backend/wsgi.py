@@ -14,9 +14,9 @@ root="D:/applications/NESOP/prepub/back"
 
 sys.path = [
     root + "/ne_sop_backend",
-    root + "/.venv/Scripts",
-    root + "/.venv/Lib",
-    root + "/.venv/Lib/site-packages",
+    root + "/venv/Scripts",
+    root + "/venv/Lib",
+    root + "/venv/Lib/site-packages",
     ] + sys.path
 
 
