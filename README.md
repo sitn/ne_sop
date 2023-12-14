@@ -47,29 +47,37 @@ Then open [http://127.0.0.1:8000/api/test](http://127.0.0.1:8000/api/test) in yo
 
 
 ## Frontend
-Move to front directory.
-```
-cd ..\..\front\
-```
 
+In a new terminal, move to front directory and install
+
+```
+cd front
+npm i
+```
 
 Run your server with vite.
+
 ```
 vite
 ```
+
 Open [http://localhost:5173/web/sop/#/login](http://localhost:5173/web/sop/#/login) in your browser. You should see the login page of your application.
 
 # Deployment
+
 ## Backend
+
 Follow Installation steps.
 
 ## Frontend
 In your front directory, run the following to create the `dist` directory:
+
 ```
 vite build
 ```
 
 # Swagger
+
 All views are synthetised in a swagger which is based on the python [`drf.spectacular`](https://drf-spectacular.readthedocs.io/en/latest/index.html) library.
 To create the `schema.yml` file, activate your virtual environment, go into `back\ne_sop_backend` and run:
 ```
