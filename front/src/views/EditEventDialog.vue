@@ -8,7 +8,6 @@
 
             <!-- FORM -->
             <EventForm class="col" v-model="event" :edit="edit"></EventForm>
-            <!-- <EventForm class="col" v-model="event" :edit="edit"></EventForm> -->
 
         </q-card-section>
 
@@ -20,15 +19,14 @@
 </template>
 
 <script>
-// import { v4 as uuidv4 } from 'uuid'
 import { store } from '../store/store.js'
 import EventForm from "../components/EventForm.vue"
 
 export default {
     name: 'EditEventDialog',
     components: { EventForm },
-    props: { 'modelValue': Object }, // 'event': Object 
-    emits: ['update:modelValue'], // 'update:event'
+    props: { 'modelValue': Object },
+    emits: ['update:modelValue'],
     data() {
         return {
             store,
@@ -37,30 +35,12 @@ export default {
             valid: false,
         }
     },
-    computed: {
-        /*
-        event: {
-            get() {
-                return this.modelValue
-            },
-            
-            set(event) {
-                // this.$emit('update:modelValue', event)
-            }
-        }
-        */
-    },
     created() {
-
+        // console.log(`${this.$options.name}.vue | created()`)
         this.event = Object.assign({}, this.modelValue) // assign a copy of the model value, to bypass reactivity
-        // this.myevent = Object.assign({}, this.event)
-        console.log(`${this.$options.name}.vue | created()`)
     },
     methods: {
         save() {
-
-            // this.$emit('update:event', this.myevent)
-            // console.log('update:event')
 
             Object.assign(this.modelValue, this.event)
             this.$emit('update:modelValue', this.modelValue)
