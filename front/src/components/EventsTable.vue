@@ -11,7 +11,7 @@
     </div>
 
     <!-- EVENTS TABLE -->
-    <q-table :rows="events" :columns="columns" row-key="date" @request="onRequest" binary-state-sort class="q-my-md" v-if="eventTypes.length > 0"> <!-- v-if="this.eventTypes.length > 0" -->
+    <q-table :rows="events" :columns="columns" row-key="date" @request="onRequest" binary-state-sort class="q-my-md" v-if="eventTypes.length > 0">
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="date" :props="props">
@@ -48,17 +48,17 @@
     </div>
 
     <!-- ADD NEW EVENT DIALOG -->
-    <q-dialog v-model="dialog.newEvent">
+    <q-dialog v-model="dialog.add">
         <NewEventDialog v-model="events"></NewEventDialog>
     </q-dialog>
 
     <!-- EDIT EVENT DIALOG -->
-    <q-dialog v-model="dialog.edition">
+    <q-dialog v-model="dialog.edit">
         <EditEventDialog v-model="selected"></EditEventDialog>
     </q-dialog>
 
     <!-- DELETE EVENT DIALOG -->
-    <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+    <DeleteDialog v-model="dialog.delete" @delete-event="remove" />
 </template>
 
 <script>
@@ -79,17 +79,13 @@ const columns = [
 export default {
     name: 'EventsTable',
     components: { NewEventDialog, EditEventDialog, DeleteDialog },
-    props: { 'item': Number, 'edit': Boolean, 'modelValue': Object, 'mode': String }, //  'events': Object,
+    props: { 'item': Number, 'edit': Boolean, 'modelValue': Object },
     emits: ['update:modelValue'],
-    setup() {
-        return {
-        }
-    },
     data() {
         return {
             store,
             selected: null,
-            dialog: { newEvent: false, deletion: false, edition: false },
+            dialog: { add: false, delete: false, edit: false },
             eventTypes: [],
             data: null,
             rows: [],
@@ -116,103 +112,51 @@ export default {
     },
     async created() {
 
-        console.log(`${this.$options.name} | mode: ${this.mode}`)
-
         this.eventTypes = await this.store.getEventTypes()
         this.render = true
-
-        /*
-        if (this.mode === "update") {
-            this.loading = true
-            this.data = await store.getEvents("", this.item, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-            this.rows = this.data.results
-            this.pagination.rowsNumber = this.data.nrows
-            this.loading = false
-        }
-        */
-
-
-        if (this.mode === "create") {
-
-            this.loading = true
-            this.data = await store.getEvents("", this.item, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-            this.rows = this.data.results
-            this.pagination.rowsNumber = this.data.nrows
-            this.loading = false
-
-            console.log('this.eventTypes')
-            console.log(this.eventTypes)
-            console.log(this.getEventTypeName(1))
-
-        }
-
-    },
-    mounted() {
+        this.loading = true
+        this.data = await store.getEvents("", this.item, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+        this.rows = this.data.results
+        this.pagination.rowsNumber = this.data.nrows
+        this.loading = false
 
     },
     methods: {
         downloadICS,
         async onRequest(props) {
 
-            // Create mode (modifies JSON data locally in component)
-            if (this.mode === "create") {
+            this.loading = true
 
+            console.log('onRequest')
+            console.log(props.pagination)
+            let { page, rowsPerPage, sortBy, descending } = props.pagination
+            // let filter = props.filter
+            console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
 
-            }
+            rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage
 
-            // Update mode (modifies data remotely in database)
-            if (this.mode === "update") {
+            this.data = await store.getEvents("", this.item, page, rowsPerPage, sortBy, descending)
+            this.rows = this.data.results
 
-                this.loading = true
-
-                console.log('onRequest')
-                console.log(props.pagination)
-                let { page, rowsPerPage, sortBy, descending } = props.pagination
-                // let filter = props.filter
-                console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
-
-                rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage
-
-                this.data = await store.getEvents("", this.item, page, rowsPerPage, sortBy, descending)
-                this.rows = this.data.results
-
-                // update pagination object
-                this.pagination = props.pagination
-
-                this.loading = false
-
-            }
-
+            // update pagination object
+            this.pagination = props.pagination
+            this.loading = false
 
         },
         addEvent() {
-            this.dialog.newEvent = true
+            this.dialog.add = true
         },
         handleDeletion(val) {
             this.selected = val
-            this.dialog.deletion = true
+            this.dialog.delete = true
         },
         handleEdition(val) {
             this.selected = val
-            console.log('handleEdition')
-            console.log(this.selected)
-            this.dialog.edition = true
+            this.dialog.edit = true
         },
         async remove() {
 
-            // TODO: REPLACE WITH GET CALL TO API
-
-            // Create mode (modifies JSON data locally in component)
-            if (this.mode === "create") {
-
-                this.events = this.events.filter((x) => (x.id !== this.selected))
-            }
-
-            if (this.mode === "update") {
-
-                // Delete event in local JSON
-                this.events = this.events.filter((x) => (x.id !== this.selected))
-            }
+            this.events = this.events.filter((x) => (x.id !== this.selected))
 
             /*
             // Delete event in DB
