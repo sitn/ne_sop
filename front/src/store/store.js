@@ -5,7 +5,6 @@ import { sleep } from '../store/shared.js'
 
 export const store = reactive({
     dev: true,
-    // valid: null,
     loading: true,
     warning: false,
     exit: false,
