@@ -64,23 +64,23 @@ export const checkFile = (val) => {
 export const checkDate = (val) => {
     let mydate = date.extractDate(val, 'DD.MM.YYYY')
 
-    console.log(`val: ${val}`)
-    console.log(date.formatDate(mydate, 'DD.MM.YYYY'))
-    console.log(date.formatDate(mydate, 'YYYY/MM/DD'))
-    console.log(!isNaN(new Date(date.formatDate(mydate, 'YYYY/MM/DD'))))
+    // console.log(`val: ${val}`)
+    // console.log(date.formatDate(mydate, 'DD.MM.YYYY'))
+    // console.log(date.formatDate(mydate, 'YYYY/MM/DD'))
+    // console.log(!isNaN(new Date(date.formatDate(mydate, 'YYYY/MM/DD'))))
 
     // !isNaN(new Date('2322/16/12'))
-    console.log(mydate)
+    // console.log(mydate)
 
-    console.log(val.split("."))
+    // console.log(val.split("."))
     let dmy = val.split(".")
     let mymydate = new Date(dmy[2], dmy[1] - 1, dmy[0])
-    console.log(mymydate)
+    // console.log(mymydate)
 
     let newDate = `${dmy[2]}/${dmy[1]}/${dmy[0]}`;
-    console.log(newDate)
+    // console.log(newDate)
 
-    console.log(`date valid: ${date.isValid(mydate)}`)
+    // console.log(`date valid: ${date.isValid(mydate)}`)
     return date.isValid(mydate) ? true : 'Format non-valable'
 }
 
