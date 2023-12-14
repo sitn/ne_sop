@@ -73,7 +73,6 @@ export default {
                 "attachements": [],
                 "valid": false
             },
-            index: store.items.findIndex((e) => (e.id === this.$route.params.id)),
             addEntityDialog: false,
         }
     },

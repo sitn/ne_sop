@@ -18,7 +18,7 @@
                         </template>
                         <template v-slot:append>
                             <q-spinner color="blue-grey" :thickness="3" v-if="loading" />
-                            <q-btn unelevated icon="sym_o_filter_alt" padding="xs" @click="console.log('filter')"> <!-- color="orange-1" text-color="black" -->
+                            <q-btn unelevated icon="sym_o_filter_alt" padding="xs" @click="console.log('filter')">
                                 <q-tooltip class="bg-black">Filtrer</q-tooltip>
                             </q-btn>
                         </template>
@@ -74,17 +74,14 @@
                             }">
                                 {{ props.row.title }}
                             </router-link>
-                            <!-- <q-badge color="red" class="q-mx-sm" v-if="props.row.urgent">Urgent</q-badge> -->
 
                         </q-td>
                         <!-- DEPOSIT DATE COLUMN -->
                         <q-td key="deposit" :props="props">
-                            <!-- {{ props.row.events.find((e) => e.eventType === "Dépôt").date }} -->
                             {{ getDate(props.row.events, "Dépôt") }}
                         </q-td>
                         <!-- DELAY DATE COLUMN -->
                         <q-td key="delay" :props="props">
-                            <!-- {{ props.row.events.find((e) => e.eventType === "Délai").date }} -->
                             {{ getDate(props.row.events, "Délai") }}
                         </q-td>
                         <!-- ACTIONS COLUMN -->
@@ -102,12 +99,6 @@
                 </template>
             </q-table>
 
-            <!-- TODO REMOVE/DEV DISPLAY JSON-->
-            <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
-                <div>store.items</div>
-                <div>{{ store.items }}</div>
-            </div>
-
             <!-- DELETE DIALOG -->
             <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
@@ -118,8 +109,6 @@
 
 <script>
 import { store } from '../store/store.js'
-// import { sleep } from '../store/shared.js'
-import itemStatus from '../assets/data/item-status.json'
 import DeleteDialog from '../components/DeleteDialog.vue'
 
 export default {
@@ -127,16 +116,11 @@ export default {
     components: { DeleteDialog },
     props: { 'title': String, 'model': Object },
     emits: [],
-    setup() {
-        return {
-        }
-    },
     data() {
         return {
             store,
-            // itemStatus: itemStatus,
             selected: null,
-            searchString: null,
+            searchString: "",
             filter: "",
             dialog: { deletion: false },
             data: null,
@@ -202,56 +186,34 @@ export default {
             ],
         }
     },
-    computed: {
-    },
-    beforeCreate() {
-    },
     async created() {
 
         this.loading = true
         this.data = await store.getItems("", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-        this.rows = this.data.results // await store.getEntities("", "", this.pagination.page, this.pagination.rowsPerPage) // .then(console.log(this.rows))
+        this.rows = this.data.results
         this.pagination.rowsNumber = this.data.nrows
         this.loading = false
-
-    },
-    mounted() {
 
     },
     methods: {
         async onRequest(props) {
 
-            console.log('onRequest')
             this.loading = true
 
             let { page, rowsPerPage, sortBy, descending } = props.pagination
             // let filter = props.filter
-
-            console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
-
-            rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage // rowsPerPage
-
+            rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage
             this.data = await store.getItems("", page, rowsPerPage, sortBy, descending)
             this.rows = this.data.results
 
             // update pagination object
             this.pagination = props.pagination
-
-            /*
-            this.pagination.rowsNumber = this.data.nrows
-            this.pagination.page = page
-            this.pagination.rowsPerPage = rowsPerPage
-            this.pagination.sortBy = sortBy
-            this.pagination.descending = descending
-            */
-
             this.loading = false
 
         },
         async query() {
-            // TODO: REPLACE WITH GET CALL TO DATABASE 
+
             this.loading = true
-            // await sleep(Math.random() * 1300)
             if (this.searchString.length >= 3) {
                 this.data = await store.getItems(this.searchString, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             } else {
@@ -259,35 +221,35 @@ export default {
             }
             this.rows = this.data.results
             this.loading = false
+
         },
         handleDeletion(val) {
+
             this.selected = val
             this.dialog.deletion = true
+
         },
         async remove() {
-            // TODO: REPLACE WITH GET CALL TO API 
-            // store.items = store.items.filter((x) => (x.id !== this.selected))
-            // this.rows = store.items
-            console.log(`delete ${this.selected}`)
+
+            this.loading = true
+            // console.log(`delete ${this.selected}`)
             let message = await store.deleteItem(this.selected)
             if (message) {
                 this.data = await store.getItems(this.searchString, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
                 this.rows = this.data.results
-                // this.rows = this.rows.filter((x) => (x.id !== this.selected))
             }
-            console.log(message)
+            this.loading = false
 
         },
-        addItem() {
-            // this.addDialog = true
-        },
         getDate(events, type) {
+
             let res = events.find((e) => e.eventType === type)
             if (res) {
                 return res.date
             } else {
                 return ""
             }
+
         },
     }
 

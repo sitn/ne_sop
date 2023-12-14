@@ -95,13 +95,6 @@
                         <div>{{ event }}</div>
                     </div>
 
-                    <!-- TODO REMOVE/DEV DISPLAY JSON-->
-                    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
-                        <div>store.event</div>
-                        <!-- store.events.find(e => e.id === this.$route.params.id) -->
-                        <div>{{ store.events.find(e => e.id === this.event.id) }}</div>
-                    </div>
-
                 </template>
             </FormSection>
 

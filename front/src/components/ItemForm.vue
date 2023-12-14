@@ -79,12 +79,6 @@
                         <div>{{ item }}</div>
                     </div>
 
-                    <!-- TODO REMOVE/DEV DISPLAY JSON-->
-                    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
-                        <div>store.item</div>
-                        <div>{{ store.items.find((e) => (e.id === this.$route.params.id)) }}</div>
-                    </div>
-
                 </template>
             </FormSection>
 
