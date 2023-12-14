@@ -191,8 +191,7 @@
                 <template v-slot:content>
 
                     <!-- EVENTS TABLE -->
-                    <!-- <EventsTable v-model="events" :item="item.id" :edit="edit"></EventsTable> -->
-                    <EventsTable v-model="item.events" :mode="mode" :edit="edit"></EventsTable>
+                    <EventsTable v-model="item.events" :edit="edit"></EventsTable>
 
                 </template>
             </FormSection>

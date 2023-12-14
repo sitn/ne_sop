@@ -16,9 +16,6 @@
             <!-- FLOATING ACTION BUTTONS -->
             <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
 
-            <!-- <FloatingButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons> -->
-            <!-- <FloatingActionButtons :edit="false" :wait="wait" :buttons="{ 'save': true, 'deletion': true }" @save-event="save" @edit-event="setEditMode"></FloatingActionButtons> -->
-
             <!-- DELETE DIALOG -->
             <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
@@ -29,7 +26,6 @@
 
 <script>
 import { store } from '../store/store.js'
-// import { sleep } from '../store/shared.js'
 import FloatingButtons from "../components/FloatingButtons.vue"
 import DeleteDialog from '../components/DeleteDialog.vue'
 import EntityForm from "../components/EntityForm.vue"
@@ -40,92 +36,61 @@ export default {
     components: { FloatingButtons, DeleteDialog, EntityForm },
     props: {},
     emits: [],
-    setup() {
-        return {
-        }
-    },
     data() {
         return {
             store,
             loaded: false,
             dialog: { deletion: false },
-            // actionButtons: { save: 'active', deletion: 'active' },
             edit: false,
             wait: false,
-            entity: null, // store.entity, // store.entities.find(e => e.id === this.$route.params.id),
-            // index: store.entities.findIndex((e) => (e.id === this.$route.params.id))
+            entity: {
+                "name": "",
+                "type": "",
+                "description": "",
+                "street": "",
+                "city": "",
+                "postalcode": "",
+                "region": "",
+                "country": "",
+                "website": "",
+                "email": "",
+                "telephone": "",
+                "valid": false
+            },
         }
     },
     computed: {
 
         actionButtons() {
             return {
-                save: this.entity.valid ? 'active' : 'disable', // this.entity.valid ? 'active' : 'disable',
+                save: this.entity.valid ? 'active' : 'disable',
                 deletion: 'none'
             }
         }
 
     },
-    async beforeCreate() {
-
-    },
     async created() {
-        // store.getEntity(this.$route.params.id)
-        this.store.loading = true
-        this.entity = await store.getEntity(this.$route.params.id)
+
+        // console.log(`this.$route.params.id: ${this.$route.params.id}`)
+        if (this.$route.params.hasOwnProperty('id')) {
+            this.store.loading = true
+            this.entity = await store.getEntity(this.$route.params.id)
+            this.store.loading = false
+        }
         this.store.loading = false
 
-        /*
-        try {
-
-            const id = this.$route.params.id
-            const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}`, {
-                method: 'GET',
-                redirect: 'follow'
-            })
-            this.entity = await response.json()
-            this.loaded = true
-            store.loading = false
-            console.log(this.entity)
-
-        } catch (error) {
-            console.error(error)
-        }
-        */
-
-        //this.loaded = !store.loading
-        // store.getEntity(this.$route.params.id)
-
-        // store.loaded = true
-
-        // store.saveButton = true
-        // this.entity = Object.assign({}, store.entities.find((e) => (e.id === this.$route.params.id)))
-        //store.getEntity(this.$route.params.id)
-        // this.entity = await store.entity
-        //console.log(store.entities.find((e) => (e.id === this.$route.params.id)))
-        // this.load(this.$route.params.id)
-
-    },
-    async mounted() {
     },
     methods: {
-        async save(redirectTo) {
+        async save() {
 
-            // TODO: POST RECORD TO DATABASE
-            console.log(`${this.$options.name}.vue | save()`)
+            // console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
-            // await sleep(Math.random() * 1300)
-            // store.entities[this.index] = Object.assign({}, this.entity)
-
-            let message = await store.updateEntity(this.$route.params.id, this.entity)
-            if (message) {
-                this.wait = false
-                console.log(message)
-
-                if (redirectTo !== null) {
-                    this.$router.push({ path: redirectTo })
-                }
+            if (this.entity.id) {
+                this.entity = await store.updateEntity(this.entity.id, this.entity)
+            } else {
+                this.entity = await store.addEntity(this.entity)
             }
+            this.wait = false
 
         },
         handleDeletion() {
@@ -133,12 +98,11 @@ export default {
         },
         async remove() {
             // TODO: DELETE RECORD IN DATABASE
-            console.log(`${this.$options.name}.vue | remove()`)
-            // store.entities.splice(this.index, 1)
+            // console.log(`${this.$options.name}.vue | remove()`)
             this.$router.push({ name: 'EntitiesList' })
         },
         setEditMode(val) {
-            console.log(`${this.$options.name}.vue | setEditMode(${val})`)
+            // console.log(`${this.$options.name}.vue | setEditMode(${val})`)
             this.edit = val
         }
     },
