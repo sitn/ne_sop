@@ -17,8 +17,6 @@ router.register(r"template", views.TemplateViewSet, basename="template")
 router.register(r"user", views.UserViewSet, basename="user")
 
 urlpatterns = [
-    # path("admin/", admin.site.urls),
-    # path("", include(router.urls)),
     path("api/", include(router.urls)),
     path(
         "api/schema/",
@@ -31,26 +29,6 @@ urlpatterns = [
         name="swagger-ui",
     ),
 ]
-
-"""
-    path(
-        "api/entity/<uuid:uuid>/",
-        views.EntityViewSet.as_view(actions={"get": "retrieve"}),
-        name="entity-uuid",
-    ),
-    path(
-        "api/entitylist/",
-        views.EntityListViewSet.as_view(),
-        name="entitylist",
-    ),
-"""
-
-"""     path(
-        "api/entitylist/",
-        views.EntityListViewSet.as_view(),
-        name="entity-list",
-    ), """
-
 
 # https://github.com/encode/django-rest-framework/issues/1337
 # urlpatterns = format_suffix_patterns(urlpatterns)
