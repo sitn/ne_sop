@@ -135,7 +135,7 @@ export const store = reactive({
     async getItem(id) {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/new-item/${id}`, {
+            const response = await fetch(`http://127.0.0.1:8000/api/item/${id}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -150,7 +150,7 @@ export const store = reactive({
     async updateItem(id, data) {
         try {
             // await sleep(1000)
-            const response = await fetch(`http://127.0.0.1:8000/api/new-item/${id}/`, {
+            const response = await fetch(`http://127.0.0.1:8000/api/item/${id}/`, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
@@ -173,7 +173,7 @@ export const store = reactive({
 
             // http://127.0.0.1:8000/api/item/
             // await sleep(1000)
-            const response = await fetch(`http://127.0.0.1:8000/api/new-item/`, {
+            const response = await fetch(`http://127.0.0.1:8000/api/item/`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
