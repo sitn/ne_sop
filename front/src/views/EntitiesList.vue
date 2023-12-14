@@ -84,12 +84,6 @@
                 </template>
             </q-table>
 
-            <!-- TODO REMOVE/DEV DISPLAY JSON-->
-            <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
-                <div>store.entities</div>
-                <div>{{ store.entities }}</div>
-            </div>
-
         </div>
 
         <!-- DELETE DIALOG -->
@@ -116,7 +110,7 @@ export default {
         return {
             store,
             selected: null,
-            searchString: null,
+            searchString: "",
             filter: "",
             dialog: { deletion: false },
             data: null,
@@ -186,37 +180,19 @@ export default {
 
             // update pagination object
             this.pagination = props.pagination
-
-            /*
-            this.pagination.rowsNumber = this.data.nrows
-            this.pagination.page = page
-            this.pagination.rowsPerPage = rowsPerPage
-            this.pagination.sortBy = sortBy
-            this.pagination.descending = descending
-            */
-
             this.loading = false
 
         },
         async query() {
 
-            // TODO: REPLACE WITH GET CALL TO API 
-            console.log(`search: ${this.searchString}`)
+            // console.log(`search: ${this.searchString}`)
             this.loading = true
 
-            // await sleep(Math.random() * 1300)
-
             if (this.searchString.length >= 3) {
-                //this.store.getEntities(str, 1, this.pagination.rowsPerPage)
-                //this.rows = this.store.entities
-                this.data = await store.getEntities(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending) // .then(console.log(this.rows))
 
-                // this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
+                this.data = await store.getEntities(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             } else {
                 this.data = await store.getEntities("", "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-
-                // this.store.getEntities("", 1, this.pagination.rowsPerPage)
-                // this.rows = this.store.entities
             }
             this.rows = this.data.results
             this.loading = false
@@ -226,18 +202,19 @@ export default {
             this.dialog.deletion = true
         },
         async remove() {
-            // TODO: REPLACE WITH GET CALL TO API 
 
-            // store.entities = store.entities.filter((x) => (x.id !== this.selected))
-            // this.rows = store.entities
+            this.loading = true
             console.log(`delete ${this.selected}`)
             let message = await store.deleteEntity(this.selected)
+            this.data = await store.getEntities(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+            this.rows = this.data.results
+            /*
             if (message) {
                 this.data = await store.getEntities(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
                 this.rows = this.data.results
-                // this.rows = this.rows.filter((x) => (x.id !== this.selected))
             }
-            console.log(message)
+            */
+            this.loading = false
 
         }
     }

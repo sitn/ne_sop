@@ -48,18 +48,6 @@
                         <div>{{ entity }}</div>
                     </div>
 
-                    <!-- TODO REMOVE/DEV DISPLAY JSON-->
-                    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
-                        <div>store.entity</div>
-                        <div>{{ store.entities.find(e => e.id === this.entity.id) }}</div>
-                    </div>
-
-                    <!-- TODO REMOVE/DEV DISPLAY JSON-->
-                    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
-                        <div>store.entityTypes</div>
-                        <div>{{ store.entityTypes }}</div>
-                    </div>
-
                 </template>
             </FormSection>
 
