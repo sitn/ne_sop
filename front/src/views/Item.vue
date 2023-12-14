@@ -30,17 +30,11 @@
 </template>
 
 <script>
-// import { v4 as uuidv4 } from 'uuid'
 import { store } from '../store/store.js'
-// import { sleep } from '../store/shared.js'
-// import documents from '../assets/data/documents.json'
-// import itemTypes from '../assets/data/item-types.json'
 import ItemForm from "../components/ItemForm.vue"
 import FloatingButtons from "../components/FloatingButtons.vue"
 import NewEntityDialog from "./NewEntityDialog.vue"
 import DeleteDialog from '../components/DeleteDialog.vue'
-
-// const subset = ["Parlementaire", "Groupe parlementaire", "Autre"]
 
 export default {
     name: 'Item',
@@ -55,7 +49,6 @@ export default {
         return {
             store,
             dialog: { deletion: false },
-            // actionButtons: { save: 'active', deletion: 'active' },
             mode: "update",
             edit: false,
             wait: false,
@@ -81,10 +74,7 @@ export default {
                 "valid": false
             },
             index: store.items.findIndex((e) => (e.id === this.$route.params.id)),
-            // itemTypes: itemTypes,
-            // authorOptions: [], // store.entities.filter(e => subset.includes(e.type)), // authors,
             addEntityDialog: false,
-            // serviceOptions: [], // store.entities.filter((e) => (e.type === "Service de l'état")),
         }
     },
     computed: {
@@ -95,60 +85,27 @@ export default {
             }
         }
     },
-    async beforeCreate() {
-
-    },
     async created() {
 
-        this.store.loading = true
-        this.item = await store.getItem(this.$route.params.id)
-
+        // console.log(`this.$route.params.id: ${this.$route.params.id}`)
+        if (this.$route.params.hasOwnProperty('id')) {
+            this.store.loading = true
+            this.item = await store.getItem(this.$route.params.id)
+            this.store.loading = false
+        }
         this.store.loading = false
 
-        // store.saveButton = true
-        // this.item = Object.assign({}, store.items[0])
-        //this.item = Object.assign({}, store.items.find((e) => (e.id === this.$route.params.id)))
-
-        // this.item = Object.assign({}, store.items.find((e) => (e.id === 1)))
-
-        console.log(`id: ${this.$route.params.id}`)
-        console.log(store.items)
-        console.log('this.item')
-        console.log(this.item)
-    },
-    mounted() {
     },
     methods: {
-        async load() {
-            // TODO: GET RECORD FROM DATABASE
-            console.log(`${this.$options.name}.vue | load()`)
-        },
-        async save(redirectTo) {
+        async save() {
 
-
-            // TODO: POST RECORD TO DATABASE
-            let message = await store.updateItem(this.$route.params.id, this.item)
-            if (message) {
-                this.wait = false
-                console.log(message)
-
-                if (redirectTo !== null) {
-                    this.$router.push({ path: redirectTo })
-                }
-            }
-
-            /*
-            console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
-            await sleep(Math.random() * 1300)
-            let ind = store.items.findIndex((e) => (e.id === this.$route.params.id))
-            store.items[ind] = Object.assign({}, this.item)
-            this.wait = false
-
-            if (redirectTo !== null) {
-                this.$router.push({ path: redirectTo })
+            if (this.item.id) {
+                this.item = await store.updateItem(this.item.id, this.item)
+            } else {
+                this.item = await store.addItem(this.item)
             }
-            */
+            this.wait = false
 
         },
         handleDeletion() {
@@ -156,27 +113,22 @@ export default {
         },
         async remove() {
             // TODO: DELETE RECORD IN DATABASE
-            console.log(`${this.$options.name}.vue | remove()`)
-            store.items.splice(this.index, 1)
+            // console.log(`${this.$options.name}.vue | remove()`)
             this.$router.push({ name: 'ItemsList' })
         },
         setEditMode(val) {
-            console.log(`${this.$options.name}.vue | setEditMode(${val})`)
+            // console.log(`${this.$options.name}.vue | setEditMode(${val})`)
             this.edit = val
-            // this.$refs.ItemForm.validateForm()
         },
         addEntity() {
-            console.log('Item.vue | Add new entity')
             this.addEntityDialog = true
         },
         async addNewEntity(val) {
 
-            console.log(`${this.$options.name} | addNewEntity()`)
-
+            //console.log(`${this.$options.name} | addNewEntity()`)
             let newEntity = await store.addEntity(val)
             this.authorOptions.unshift(newEntity)
-            console.log(this.authorOptions)
-            // this.authorOptions = await store.getEntities("", [2, 3], 1, 50)
+            // console.log(this.authorOptions)
             this.item.author = newEntity.id
 
         },
