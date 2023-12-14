@@ -7,7 +7,18 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
 """
 
-import os
+import os, sys
+
+# replace path here with the root path of your app
+root="D:/applications/NESOP/prepub/back"
+
+sys.path = [
+    root + "/ne_sop_backend",
+    root + "/venv/Scripts",
+    root + "/venv/Lib",
+    root + "/venv/Lib/site-packages",
+    ] + sys.path
+
 
 from django.core.wsgi import get_wsgi_application
 

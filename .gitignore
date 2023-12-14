@@ -1,6 +1,4 @@
 # Dependency directories
 .vite/
-back/pyvenv/
-back/venv/
-back/.venv/
-back/.vscode
+apache/app.wsgi
+apache/wsgi.conf

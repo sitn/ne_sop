@@ -1,0 +1,7 @@
+# APACHE mod_wsgi needs to be enabled
+# CHANGE THE APP PATH HERE:
+WSGIScriptAlias /api /path/to/wsgi/file/app.wsgi
+
+<location /api>
+    Require all granted
+</location>
