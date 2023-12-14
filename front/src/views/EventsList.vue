@@ -121,27 +121,18 @@
 <script>
 import { store } from '../store/store.js'
 import { downloadICS } from '../store/shared.js'
-// import items from '../assets/data/items.json'
-// import events from '../assets/data/events.json'
-// import * as ics from 'ics'
-// import { createEvent } from 'ics'
 import DeleteDialog from '../components/DeleteDialog.vue'
-
-//console.log(items.map(e => (e.events)).flat())
 
 export default {
     name: 'EventsList',
     components: { DeleteDialog },
-    props: { 'title': String }, // 'rows': items
+    props: { 'title': String },
     emits: [],
-    setup() {
-        return {}
-    },
     data() {
         return {
             store,
             selected: null,
-            searchString: null,
+            searchString: "",
             filter: "",
             dialog: { deletion: false },
             data: null,
@@ -185,10 +176,6 @@ export default {
             ],
         }
     },
-    computed: {
-    },
-    beforeCreate() {
-    },
     async created() {
 
         this.loading = true
@@ -198,57 +185,29 @@ export default {
         this.loading = false
 
     },
-    mounted() {
-
-    },
     methods: {
         downloadICS,
         async onRequest(props) {
 
             this.loading = true
-
-            console.log('onRequest')
-            console.log(props.pagination)
             let { page, rowsPerPage, sortBy, descending } = props.pagination
             // let filter = props.filter
-            console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
-
             rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage // rowsPerPage
-
             this.data = await store.getEvents("", "", page, rowsPerPage, sortBy, descending)
             this.rows = this.data.results
 
             // update pagination object
             this.pagination = props.pagination
-
-            /*
-            this.pagination.rowsNumber = this.data.nrows
-            this.pagination.page = page
-            this.pagination.rowsPerPage = rowsPerPage
-            this.pagination.sortBy = sortBy
-            this.pagination.descending = descending
-            */
-
             this.loading = false
 
         },
         async query() {
 
-            // TODO: REPLACE WITH GET CALL TO API 
-            console.log(`search: ${this.searchString}`)
             this.loading = true
-
-            // await sleep(Math.random() * 1300)
-
             if (this.searchString.length >= 3) {
-                //this.store.getEntities(str, 1, this.pagination.rowsPerPage)
-                //this.rows = this.store.entities
                 this.data = await store.getEvents(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-                // this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
             } else {
                 this.data = await store.getEvents("", "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-                // this.store.getEntities("", 1, this.pagination.rowsPerPage)
-                // this.rows = this.store.entities
             }
             this.rows = this.data.results
             this.loading = false
@@ -258,18 +217,15 @@ export default {
             this.dialog.deletion = true
         },
         async remove() {
-            // TODO: REPLACE WITH GET CALL TO API 
-            // store.events = store.events.filter((x) => (x.id !== this.selected))
-            // this.rows = store.events
 
-            console.log(`delete ${this.selected}`)
+            // console.log(`delete ${this.selected}`)
+            this.loading = true
             let message = await store.deleteEvent(this.selected)
             if (message) {
                 this.data = await store.getEvents(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
                 this.rows = this.data.results
-                // this.rows = this.rows.filter((x) => (x.id !== this.selected))
             }
-            console.log(message)
+            this.loading = false
 
         }
     }

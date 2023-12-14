@@ -1,49 +1,22 @@
 // store.js
 import { reactive } from 'vue'
-// import { EntityTypes } from './entity-types.js'
-// import entities from '../assets/data/entities.json'
-import items from '../assets/data/items.json'
-// import events from '../assets/data/events.json'
 import users from '../assets/data/users.json'
 import { sleep } from '../store/shared.js'
-// import { router } from '../router.js'
 
 export const store = reactive({
     dev: true,
-    session: { "user": null },
-    valid: null,
+    // valid: null,
     loading: true,
     warning: false,
     exit: false,
     navigation: { "from": null, "to": null },
-    entities: [],
-    entity: null,
-    itemTypes: null,
-    items: [],
-    events: [],
-    event: null,
-    documents: items.map((x) => (x.documents)).flat(1),
-    attachements: items.map((x) => (x.attachements)).flat(1),
     users: users,
-    // query parameters, number of results, page, filters
-    updateEvents() {
-        this.events = this.items.map((x) => (x.events)).flat(1)
-    },
-    updateDocuments() {
-        this.documents = this.items.map((x) => (x.documents)).flat(1)
-    },
-    updateAttachements() {
-        this.attachements = this.items.map((x) => (x.attachements)).flat(1)
-    },
-
-    //////////////////////////////////////////////////////////////////////////////////////////////
 
     // GET LIST OF ENTITIES
     async getEntities(search = "", type = [], page = 1, size = 10, sortBy = "", descending = "false") {
         try {
 
             // await sleep(1300)
-            console.log(`http://127.0.0.1:8000/api/entity?page=${page}&size=${size}&search=${search}&type=${type}&sortby=${sortBy}&descending=${descending}`)
             const response = await fetch(`http://127.0.0.1:8000/api/entity?page=${page}&size=${size}&search=${search}&type=${type}&sortby=${sortBy}&descending=${descending}`, {
                 method: 'GET',
                 redirect: 'follow'
@@ -73,7 +46,7 @@ export const store = reactive({
     // UPDATE ENTITY
     async updateEntity(id, data) {
         try {
-            await sleep(1000)
+            // await sleep(1000)
             const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}/`, {
                 method: 'PUT',
                 headers: {
@@ -95,7 +68,7 @@ export const store = reactive({
     async addEntity(data) {
         try {
 
-            await sleep(1000)
+            // await sleep(1000)
             const response = await fetch(`http://127.0.0.1:8000/api/entity/`, {
                 method: 'POST',
                 headers: {
@@ -115,16 +88,13 @@ export const store = reactive({
 
     // DELETE ENTITY
     async deleteEntity(id) {
-        // this.loading = true
         try {
 
-            await sleep(1000)
+            // await sleep(1000)
             const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}`, {
                 method: 'DELETE',
                 redirect: 'follow'
             })
-            // this.loading = false
-            // console.log(`loading: ${this.loading}`)
             return await response.json()
 
         } catch (error) {
@@ -156,7 +126,6 @@ export const store = reactive({
                 redirect: 'follow'
             })
             return await response.json()
-            // this.items = await response.json()
 
         } catch (error) {
             console.error(error)
@@ -181,7 +150,7 @@ export const store = reactive({
     // UPDATE ITEM
     async updateItem(id, data) {
         try {
-            await sleep(1000)
+            // await sleep(1000)
             const response = await fetch(`http://127.0.0.1:8000/api/new-item/${id}/`, {
                 method: 'PUT',
                 headers: {
@@ -204,7 +173,7 @@ export const store = reactive({
         try {
 
             // http://127.0.0.1:8000/api/item/
-            await sleep(1000)
+            // await sleep(1000)
             const response = await fetch(`http://127.0.0.1:8000/api/new-item/`, {
                 method: 'POST',
                 headers: {
@@ -272,7 +241,6 @@ export const store = reactive({
     async getEvents(search = "", item = "", page = 1, size = 10, sortBy = "", descending = "false") {
         try {
 
-            // await sleep(1300)
             const response = await fetch(`http://127.0.0.1:8000/api/event?page=${page}&size=${size}&sortby=${sortBy}&descending=${descending}&item=${item}&search=${search}`, {
                 method: 'GET',
                 redirect: 'follow'
@@ -370,21 +338,5 @@ export const store = reactive({
             console.error(error)
         }
     },
-
-    /*
-    async getTemplates() {
-        try {
-
-            const response = await fetch('http://127.0.0.1:8000/api/template/', {
-                method: 'GET',
-                redirect: 'follow'
-            })
-            this.templates = await response.json()
-
-        } catch (error) {
-            console.error(error)
-        }
-    },
-    */
 
 })
