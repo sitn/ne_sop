@@ -25,11 +25,6 @@ export default {
     components: {},
     props: { 'edit': Boolean, 'model': Object }, // { 'title': String },
     emits: ['editEvent', 'validationEvent'],
-    setup() {
-        return {
-
-        }
-    },
     data() {
         return {
             store,
@@ -45,32 +40,11 @@ export default {
     mounted() {
         this.validateForm()
         store.warning = false
-        /*
-        this.$watch(
-            'formData',
-            (newValue, oldValue) => {
-
-                this.validateForm()
-                if (newValue !== oldValue) {
-                    store.warning = true
-                }
-                console.log('watch')
-                console.log(newValue)
-                console.log(oldValue)
-                console.log(`newValue === oldValue = ${newValue === oldValue}`)
-                console.log(store.warning)
-            },
-            {
-                deep: true
-            }
-        )
-        */
     },
     updated() {
         this.validateForm()
     },
     watch: {
-
         formData: {
             handler(newValue, oldValue) {
                 this.validateForm()
@@ -80,24 +54,6 @@ export default {
             },
             deep: true
         },
-        /*
-        model: {
-            handler(newValue, oldValue) {
-                console.log(`${this.$options.name} | watch`)
-                console.log(this.model)
-                this.validateForm()
-            },
-            deep: true
-        },
-        */
-        /*
-         edit: {
-             handler(newValue, oldValue) {
-                 console.log(`${this.$options.name} | watch edit`)
-                 this.validateForm()
-             }
-         }
-         */
     },
     methods: {
         validateForm() {
@@ -133,22 +89,18 @@ export default {
             // saveTo(store.items, this.$route.params.id, this.item, store.navigation.to)
 
             // TODO: POST RECORD TO DATABASE
+            /*
             console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
             await sleep(Math.random() * 1300)
             let ind = store.items.findIndex((e) => (e.id === this.$route.params.id))
             store.items[ind] = Object.assign({}, this.item)
             this.wait = false
+            */
 
             if (redirectTo !== null) {
                 this.$router.push({ path: redirectTo })
             }
-
-            /*
-            if (redirect === true) {
-                this.$router.push({ path: store.navigation.to })
-            }
-            */
 
         },
     }
