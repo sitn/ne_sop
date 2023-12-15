@@ -46,6 +46,14 @@ python .\manage.py runserver
 Then open [http://127.0.0.1:8000/api/test](http://127.0.0.1:8000/api/test) in your browser, you should see "Congratulations! It works".
 
 
+## Database
+
+Are you starting with a new database? Then run this only once:
+
+```
+python manage.py loaddata entities.json entity-types.json items.json item-types.json item-status.json events.json event-types.json
+```
+
 ## Frontend
 
 In a new terminal, move to front directory and install

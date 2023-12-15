@@ -95,9 +95,15 @@ WSGI_APPLICATION = "ne_sop_backend.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+        "ENGINE": "mssql",
+        "NAME": os.environ["NESOP_DATABASE_NAME"],
+        "USER": os.environ["NESOP_DATABASE_USER"],
+        "PASSWORD": os.environ["NESOP_DATABASE_PASSWORD"],
+        "HOST": os.environ["NESOP_DATABASE_SERVER"],
+        "PORT": "1433",
+        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
+        },
+    },
 }
 
 
