@@ -18,8 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 from ne_sop_api import views
 
-from ne_sop_api import views
-
 urlpatterns = [
     path("api/test", views.test_api),
     path("admin/", admin.site.urls),

@@ -9,27 +9,34 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import os
 
 from pathlib import Path, PurePath
 from dotenv import load_dotenv
-import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables
-load_dotenv(PurePath(Path(BASE_DIR).resolve().parent, '.env'))
+load_dotenv(PurePath(Path(BASE_DIR).resolve().parent, ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['NESOP_SECRET_KEY']
+SECRET_KEY = os.environ["NESOP_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
+
+CSRF_TRUSTED_ORIGINS = []
+
+for host in ALLOWED_HOSTS:
+    CSRF_TRUSTED_ORIGINS.append(f'http://{host}')
+    CSRF_TRUSTED_ORIGINS.append(f'https://{host}')
 
 
 # Application definition
@@ -88,9 +95,15 @@ WSGI_APPLICATION = "ne_sop_backend.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+        "ENGINE": "mssql",
+        "NAME": os.environ["NESOP_DATABASE_NAME"],
+        "USER": os.environ["NESOP_DATABASE_USER"],
+        "PASSWORD": os.environ["NESOP_DATABASE_PASSWORD"],
+        "HOST": os.environ["NESOP_DATABASE_SERVER"],
+        "PORT": "1433",
+        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
+        },
+    },
 }
 
 
@@ -128,6 +141,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
@@ -144,10 +158,12 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
-    'DATETIME_FORMAT': "%d.%m.%Y %H:%M:%S",
-    'DATETIME_INPUT_FORMATS': "%Y-%m-%d %H:%M:%S",
-    'DATE_FORMAT': "%d.%m.%Y",
-    'DATE_INPUT_FORMAT': "%Y-%m-%d",
+    "DATETIME_FORMAT": "%d.%m.%Y %H:%M:%S",
+    "DATETIME_INPUT_FORMATS": ["%d.%m.%Y %H:%M:%S"],
+    "DATE_FORMAT": "%d.%m.%Y",
+    "DATE_INPUT_FORMATS": ["%d.%m.%Y"],
+    "TIME_FORMAT": "%H:%M",
+    "TIME_INPUT_FORMATS": ["%H:%M"],
 }
 
 SPECTACULAR_SETTINGS = {

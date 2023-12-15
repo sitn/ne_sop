@@ -39,7 +39,7 @@
                         <!-- TIME INPUT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <!-- <q-input type="time" bg-color="white" outlined v-model="event.time" label="Heure" :rules="['time']" /> -->
-                            <q-input bg-color="white" outlined v-model="event.time" label="Heure (hh:mm)" mask="##:##" :rules="[val => checkTime(val, true)]" :disable="!edit">
+                            <q-input bg-color="white" outlined v-model="event.time" label="Heure (hh:mm)" mask="##:##" :rules="[val => checkTime(val, true)]" clearable :disable="!edit">
                                 <template v-slot:append>
                                     <q-icon name="access_time" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
@@ -95,13 +95,6 @@
                         <div>{{ event }}</div>
                     </div>
 
-                    <!-- TODO REMOVE/DEV DISPLAY JSON-->
-                    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
-                        <div>store.event</div>
-                        <!-- store.events.find(e => e.id === this.$route.params.id) -->
-                        <div>{{ store.events.find(e => e.id === this.event.id) }}</div>
-                    </div>
-
                 </template>
             </FormSection>
 
@@ -111,7 +104,7 @@
 </template>
 
 <script>
-import { date } from 'quasar'
+// import { date } from 'quasar'
 import { store } from '../store/store.js'
 import { checkFilled, checkDate, checkTime } from '../store/shared.js'
 import Form from "../components/Form.vue"
@@ -158,18 +151,19 @@ export default {
         this.eventTypes = await this.store.getEventTypes()
         // console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
     },
-    mounted() {
-    },
-    /*
+
     watch: {
         event: {
             handler(newValue, oldValue) {
-                this.validateForm()
+                // this.validateForm()
+                if (newValue.time === "") {
+                    newValue.time = null
+                }
             },
             deep: true
         }
     },
-    */
+
     methods: {
         checkFilled,
         checkDate,

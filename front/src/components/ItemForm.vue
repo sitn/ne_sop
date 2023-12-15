@@ -79,12 +79,6 @@
                         <div>{{ item }}</div>
                     </div>
 
-                    <!-- TODO REMOVE/DEV DISPLAY JSON-->
-                    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
-                        <div>store.item</div>
-                        <div>{{ store.items.find((e) => (e.id === this.$route.params.id)) }}</div>
-                    </div>
-
                 </template>
             </FormSection>
 
@@ -191,8 +185,7 @@
                 <template v-slot:content>
 
                     <!-- EVENTS TABLE -->
-                    <!-- <EventsTable v-model="events" :item="item.id" :edit="edit"></EventsTable> -->
-                    <EventsTable v-model="item.events" :mode="mode" :edit="edit"></EventsTable>
+                    <EventsTable v-model="item.events" :edit="edit"></EventsTable>
 
                 </template>
             </FormSection>

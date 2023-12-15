@@ -48,18 +48,6 @@
                         <div>{{ entity }}</div>
                     </div>
 
-                    <!-- TODO REMOVE/DEV DISPLAY JSON-->
-                    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
-                        <div>store.entity</div>
-                        <div>{{ store.entities.find(e => e.id === this.entity.id) }}</div>
-                    </div>
-
-                    <!-- TODO REMOVE/DEV DISPLAY JSON-->
-                    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
-                        <div>store.entityTypes</div>
-                        <div>{{ store.entityTypes }}</div>
-                    </div>
-
                 </template>
             </FormSection>
 
@@ -129,7 +117,6 @@
 <script>
 import { store } from '../store/store.js'
 import { checkFilled, checkPhoneNumber, formatPhoneNumber, checkEmail, checkWebsite } from '../store/shared.js'
-// import entityTypes from '../assets/data/entity-types.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 
@@ -158,15 +145,9 @@ export default {
             }
         }
     },
-    async beforeCreate() {
-
-    },
     async created() {
         this.entityTypes = await this.store.getEntityTypes()
         console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
-    },
-    mounted() {
-
     },
     methods: {
         checkFilled,

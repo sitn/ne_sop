@@ -3,36 +3,8 @@ from django.contrib.auth.models import User
 import uuid
 from pathlib import Path
 
-ENTITY_TYPES = [
-    ("SERVICE_ETAT", "Service de l'état"),
-    ("PARLEMENTAIRE", "Parlementaire"),
-    ("GROUPE_PARLEMENTAIRE", "Groupe parlementaire"),
-    ("AUTRE", "Autre"),
-]
 
-
-ITEM_TYPES = [
-    ("INTERPELLATION", "Interpellation"),
-    ("MOTION", "Motion"),
-    ("POSTULAT", "Postulat"),
-    ("PROJET_LOIS", "Projet de lois et décrets"),
-    ("QUESTION", "Question"),
-    ("RAPPORT", "Rapport"),
-    ("RECOMMANDATION", "Recommandation"),
-    ("RESOLUTION", "Resolution"),
-]
-
-EVENT_TYPES = []
-
-
-class ItemTypes(models.TextChoices):
-    INTERPELLATION = "Interpellation", "Interpellation"
-    MOTION = "Motion", "Motion"
-
-
-# %%
-
-
+# %% ENTITY TYPE
 class EntityType(models.Model):
     name = models.CharField(max_length=50, blank=True, default="")
 
@@ -46,7 +18,7 @@ class EntityType(models.Model):
         return self.name
 
 
-# Create your models here.
+# %% ENTITY
 class Entity(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
@@ -72,6 +44,7 @@ class Entity(models.Model):
         ordering = ["name"]
 
 
+# %% ITEM TYPE
 class ItemType(models.Model):
     name = models.CharField(max_length=50, blank=True, default="")
 
@@ -82,6 +55,7 @@ class ItemType(models.Model):
         return self.name
 
 
+# %% ITEM STATUS
 class ItemStatus(models.Model):
     name = models.CharField(max_length=50, blank=True, default="")
     color = models.CharField(max_length=50, blank=True, default="")
@@ -93,6 +67,7 @@ class ItemStatus(models.Model):
         return self.name
 
 
+# %% ITEM
 class Item(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
@@ -103,10 +78,8 @@ class Item(models.Model):
         "Entity", related_name="author", null=True, on_delete=models.SET_NULL
     )
 
-    # type = models.CharField(choices=ITEM_TYPES, default="", max_length=100)
     type = models.ForeignKey("ItemType", null=True, on_delete=models.SET_NULL)
     status = models.ForeignKey("ItemStatus", null=True, on_delete=models.SET_NULL)
-    # events = models.ForeignKey("Event", many=True, null=True, on_delete=models.SET_NULL)
     description = models.TextField(max_length=600, blank=True, default="")
     urgent = models.BooleanField(default=False)
     writtenresponse = models.BooleanField(default=False)
@@ -122,10 +95,6 @@ class Item(models.Model):
     )
     support = models.ManyToManyField(Entity, blank=True, related_name="support")
 
-    # events = models.ManyToManyField(Event, blank=True, related_name="support")
-
-    # events = models.ManyToOneRel
-
     class Meta:
         ordering = ["created"]
 
@@ -133,6 +102,7 @@ class Item(models.Model):
         return self.title
 
 
+# %% EVENT TYPE
 class EventType(models.Model):
     name = models.CharField(max_length=50, blank=True, default="")
 
@@ -143,11 +113,12 @@ class EventType(models.Model):
         return self.name
 
 
+# %% EVENT
 class Event(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     date = models.DateField()
-    time = models.TimeField()
+    time = models.TimeField(null=True)
     item = models.ForeignKey(Item, related_name="events", on_delete=models.CASCADE)
     type = models.ForeignKey(EventType, null=True, on_delete=models.SET_NULL)
     description = models.CharField(max_length=500, blank=True, default="")
@@ -198,41 +169,3 @@ class Document(models.Model):
     def __str__(self):
         return self.filename
 
-
-"""
-from ne_sop_api.models import Entity
-
-Entity.objects.create(
-    name="Service de l'aménagement du territoire (SCAT)",
-    type="Service de l'état",
-    description="",
-    street="Rue de Tivoli 5",
-    city="Neuchâtel",
-    postalcode="2002",
-    region="Neuchâtel",
-    country="Suisse",
-    website="",
-    email="Service.AmenagementTerritoire@ne.ch",
-    telephone="+41 32 889 67 40",
-    valid=True,
-)
-
-Entity.objects.create(
-    name="Service de la faune, des forêts et de la nature (SFFN)",
-    type="Service de l'état",
-    description="",
-    street="Rue du Premier-Mars 11",
-    city="Couvet",
-    postalcode="2108",
-    region="Neuchâtel",
-    country="Suisse",
-    website="",
-    email="SFFN@ne.ch",
-    telephone="+41 32 889 67 60",
-    valid=True,
-)
-
-
-Entity.objects.all()
-
-"""
