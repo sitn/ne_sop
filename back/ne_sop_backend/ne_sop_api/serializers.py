@@ -268,6 +268,10 @@ class DocumentByItemSerializer(serializers.ModelSerializer):
         queryset=Template.objects.all(),
         slug_field='name',
     )
+    author = serializers.SlugRelatedField(
+        queryset=Entity.objects.all(),
+        slug_field='name',
+    )
     class Meta:
         model = Document
         fields = [
@@ -280,6 +284,8 @@ class DocumentByItemSerializer(serializers.ModelSerializer):
             # "relpath",
             "version",
             "filename",
+            "size",
+            "author",
         ]
 
 class FileSerializer(serializers.Serializer):

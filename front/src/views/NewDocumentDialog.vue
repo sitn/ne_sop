@@ -48,7 +48,7 @@ export default {
                 "type": null,
                 "date": new Date(),
                 "timestamp": Date.now(),
-                "author": store.session.user,
+                // "author": store.session.user,
                 "note": null,
                 "content": "",
                 "valid": false
@@ -75,7 +75,9 @@ export default {
             formData.append('file', this.document.file)
             formData.append('item_id', this.$route.params.id)
             formData.append('template_id', this.document.type)
+            formData.append('size', this.document.size)
             formData.append('note', this.document.note)
+            formData.append('author_id', 1) // /!\ METTRE A JOUR AVEC LA VALEUR DE L'AUTEUR DU DOCUMENT !
 
 
             try {

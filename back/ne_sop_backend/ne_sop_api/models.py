@@ -157,7 +157,9 @@ class Document(models.Model):
     valid = models.BooleanField(default=True)
     relpath = models.CharField(default=None, max_length=200)
     version = models.PositiveIntegerField(default=None)
+    size = models.PositiveIntegerField(default=0, null=False)
     item = models.ForeignKey(Item, related_name="document", on_delete=models.CASCADE)
+    author = models.ForeignKey(Entity, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ["created"]

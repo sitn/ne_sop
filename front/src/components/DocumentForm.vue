@@ -90,14 +90,7 @@ export default {
         }
     },
     created() {
-        console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
         this.getTemplatesByItemType(this.type);
-        
-        
-    },
-    mounted() {
-    },
-    updated() {
     },
     methods: {
         checkFilled,
@@ -109,10 +102,8 @@ export default {
         },
         getFileAttributes() {
             if (this.document.file) {
-                console.log(this.document.file.size)
                 this.document.filename = this.document.file.name
-                this.document.filesize = this.document.file.size
-                console.log(this.document.filesize)
+                this.document.size = this.document.file.size
             }
         },
 

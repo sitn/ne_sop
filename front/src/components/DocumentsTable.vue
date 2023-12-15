@@ -15,19 +15,16 @@
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="filename" :props="props">
-                    {{ props.row.filename }} ({{ formatBytes(props.row.filesize) }})
+                    {{ props.row.filename }} ({{ formatBytes(props.row.size) }})
                 </q-td>
                 <q-td key="template" :props="props">
                     {{ props.row.template }}
                 </q-td>
-                <!-- <q-td key="author" :props="props">
+                <q-td key="author" :props="props">
                     {{ props.row.author }}
-                </q-td> -->
-                <!-- <q-td key="date" :props="props">
-                    {{ props.row.date }}
-                </q-td> -->
+                </q-td>
                 <q-td key="created" :props="props">
-                    {{ date.formatDate(props.row.created, 'DD.MM.YYYY HH:mm:ss') }}
+                    {{ props.row.created }}
                 </q-td>
                 <q-td key="note" :props="props">
                     {{ props.row.note }}
@@ -72,7 +69,7 @@ const columns = [
     // { name: 'format', align: 'left', label: 'Format', field: 'format', sortable: true },
     // { name: 'version', align: 'center', label: 'version', field: 'version', sortable: true },
     { name: 'template', align: 'left', label: 'Type', field: 'template', sortable: true },
-    // { name: 'author', align: 'left', label: 'Ajouté par', field: 'author', sortable: true },
+    { name: 'author', align: 'left', label: 'Ajouté par', field: 'author', sortable: true },
     { name: 'created', align: 'left', label: 'Ajouté le', field: 'created', sortable: true },
     { name: 'note', align: 'left', label: 'Notes', field: 'note', sortable: true },
     { name: 'actions', align: 'right', label: '', field: 'action', sortable: false }
@@ -81,7 +78,7 @@ const columns = [
 export default {
     name: 'DocumentsTable',
     components: { NewDocumentDialog, DeleteDialog },
-    props: { 'type': String, 'edit': Boolean, 'modelValue': Object }, //  'events': Object,
+    props: { 'type': Number, 'edit': Boolean, 'modelValue': Object }, //  'events': Object,
     emits: ['update:modelValue'],
     setup() {
         return {

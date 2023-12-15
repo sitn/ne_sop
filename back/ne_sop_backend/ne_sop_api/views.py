@@ -545,6 +545,8 @@ class FileUploadView(views.APIView):
         item_id = request.data['item_id'] if 'item_id' in request.data else None
         template_id = request.data['template_id'] if 'template_id' in request.data else None
         note = request.data['note'] if 'note' in request.data else None
+        size = request.data['size'] if 'size' in request.data else None
+        author_id = request.data['author_id'] if 'author_id' in request.data else None
 
         documents = Document.objects.filter(
             item=item_id,
@@ -583,6 +585,8 @@ class FileUploadView(views.APIView):
         document.relpath = relpath
         document.version = version
         document.item_id = item_id
+        document.size = size
+        document.author_id = author_id
 
         document.save()
 
