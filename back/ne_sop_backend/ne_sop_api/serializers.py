@@ -263,15 +263,19 @@ class TemplateSerializer(serializers.ModelSerializer):
         ]
 
 
-class DocumentByItemSerializer(serializers.ModelSerializer):
+class DocumentSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False, read_only=False)
+
     template = serializers.SlugRelatedField(
         queryset=Template.objects.all(),
         slug_field='name',
     )
+
     author = serializers.SlugRelatedField(
         queryset=Entity.objects.all(),
         slug_field='name',
     )
+
     class Meta:
         model = Document
         fields = [
@@ -347,6 +351,8 @@ class NewItemSerializer(serializers.ModelSerializer):
 
     events = NewEventSerializer(required=False, many=True)
 
+    documents = DocumentSerializer(required=False, many=True)
+
     class Meta:
         model = Item
         fields = [
@@ -364,6 +370,7 @@ class NewItemSerializer(serializers.ModelSerializer):
             "lead",
             "support",
             "events",
+            "documents",
             "valid",
         ]
 

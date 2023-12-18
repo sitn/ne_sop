@@ -11,7 +11,7 @@
     </div>
 
     <!-- DOCUMENTS TABLE -->
-    <q-table :rows="store.documents" :columns="columns" row-key="date" class="q-my-md">
+    <q-table :rows="documents" :columns="columns" row-key="date" class="q-my-md">
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="filename" :props="props">
@@ -127,11 +127,8 @@ export default {
             this.selected = val
             this.dialog.deletion = true
         },
-        async remove() {
-            this.documents = this.documents.filter((x) => (x.id !== this.selected))
-        },
         async deleteRessource(ressource) {
-            store.deleteDocument(ressource.id, this.$route.params.id)
+            this.documents = this.documents.filter(x => x.filename !== ressource.filename)
         },
     }
 }

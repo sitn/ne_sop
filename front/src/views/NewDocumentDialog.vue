@@ -20,7 +20,6 @@
 
 <script>
 import { v4 as uuidv4 } from 'uuid'
-import { date } from 'quasar'
 import { store } from '../store/store.js'
 import DocumentForm from "../components/DocumentForm.vue"
 
@@ -70,16 +69,17 @@ export default {
     methods: {
         async save() {
             
-            let formData = new FormData()
-            formData.append('file', this.document.file)
-            formData.append('item_id', this.$route.params.id)
-            formData.append('template_id', this.document.type)
-            formData.append('size', this.document.size)
-            formData.append('note', this.document.note)
-            formData.append('author_id', 1) // /!\ METTRE A JOUR AVEC LA VALEUR DE L'AUTEUR DU DOCUMENT !
-
-
-            store.uploadDocument(formData, this.document.filename, this.$route.params.id)
+            this.documents.unshift({
+                'file': this.document.file,
+                'filename': this.document.filename,
+                'created': new Date().toLocaleString(),
+                'item_id': this.$route.params.id,
+                'template': this.document.type.name,
+                'template_id': this.document.type.id,
+                'size': this.document.size,
+                'note': this.document.note,
+                'author_id': 1 // /!\ METTRE A JOUR AVEC LA VALEUR DE L'AUTEUR DU DOCUMENT !
+            })
         }
     }
 }

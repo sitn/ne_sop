@@ -11,7 +11,7 @@ from ne_sop_api.models import (
     User,
 )
 from ne_sop_api.serializers import (
-    DocumentByItemSerializer,
+    DocumentSerializer,
     EntitySerializer,
     EntityListSerializer,
     EntityTypeSerializer,
@@ -467,10 +467,10 @@ class DocumentViewSet(viewsets.ViewSet):
     """
 
     queryset = Document.objects.all()
-    # serializer_class = DocumentByItemSerializer
+    # serializer_class = DocumentSerializer
 
     @extend_schema(
-        responses=DocumentByItemSerializer,
+        responses=DocumentSerializer,
         tags=["Documents"],
     )
     def list(self, request):
@@ -481,7 +481,7 @@ class DocumentViewSet(viewsets.ViewSet):
             documents = documents.filter(item_id=item_id)
         documents = documents.all().order_by('template', '-version')
 
-        serializer = DocumentByItemSerializer(documents, many=True)
+        serializer = DocumentSerializer(documents, many=True)
         return Response(serializer.data)
 
 
