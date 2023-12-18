@@ -1,12 +1,13 @@
 from rest_framework import serializers
 from ne_sop_api.models import (
+    Document,
     Entity,
     EntityType,
+    Event,
+    EventType,
     Item,
     ItemType,
     ItemStatus,
-    Event,
-    EventType,
     Template,
     User,
 )
@@ -250,16 +251,46 @@ class EventSerializer(serializers.ModelSerializer):
 
 # %% TEMPLATE
 class TemplateSerializer(serializers.ModelSerializer):
-    parents = ItemTypeSerializer()
+    item_types = ItemTypeSerializer()
 
     class Meta:
         model = Template
         fields = [
             "id",
             "name",
-            "parents",
+            "item_types",
             "valid",
         ]
+
+
+class DocumentByItemSerializer(serializers.ModelSerializer):
+    template = serializers.SlugRelatedField(
+        queryset=Template.objects.all(),
+        slug_field='name',
+    )
+    author = serializers.SlugRelatedField(
+        queryset=Entity.objects.all(),
+        slug_field='name',
+    )
+    class Meta:
+        model = Document
+        fields = [
+            "id",
+            "created",
+            # "uuid",
+            "template",
+            "note",
+            # "valid",
+            # "relpath",
+            "version",
+            "filename",
+            "size",
+            "author",
+        ]
+
+class FileSerializer(serializers.Serializer):
+    file = serializers.FileField()
+
 
 
 # %% TESTING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

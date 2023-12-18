@@ -1,0 +1,188 @@
+[
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "1",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                3
+            ],
+            "name": "Prise de position - Motion Postulat (CE)",
+            "relpath": "Modele_FicheAccomp_PrisePositionCEMoPo.dotx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "2",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                3
+            ],
+            "name": "Refus Motion Postulat 1",
+            "relpath": "Modele_FicheAccomp_RefusMoPo1.dotx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "3",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                3
+            ],
+            "name": "Refus Motion Postulat 2",
+            "relpath": "Modele_FicheAccomp_RefusMoPo2.dotx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "4",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                1
+            ],
+            "name": "Réponse écrite - Interpellation",
+            "relpath": "Modele_FicheAccomp_ReponseEcriteInterpellation.dotx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "5",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                5
+            ],
+            "name": "Réponse écrite - Question",
+            "relpath": "Modele_FicheAccomp_ReponseEcriteQuestion1.dotx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "6",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                2
+            ],
+            "name": "Position contre - Motion Postulat (CE)",
+            "relpath": "Modele_PositionContre_MoPo.dotx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "7",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                2
+            ],
+            "name": "Prise de position contre - Motion Postulat (CE)",
+            "relpath": "Modele_PrisePositionContre_MoPo.dotx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "8",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                1
+            ],
+            "name": "Réponse écrite - Interpellation (CE)",
+            "relpath": "Modele_ReponseEcrite_Interpellation.dotx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "9",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                5
+            ],
+            "name": "Réponse écrite - Question (CE)",
+            "relpath": "Modele_ReponseEcrite_Question.dotx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "10",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                1
+            ],
+            "name": "Speaking note - Interpellation (CE)",
+            "relpath": "Modele_SpeakingNote_Interpellation.dotx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "11",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                5
+            ],
+            "name": "Speaking note - Question (CE)",
+            "relpath": "Modele_SpeakingNote_Question.dotx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "12",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                7
+            ],
+            "name": "Speaking note - Recommandation (CE)",
+            "relpath": "Modele_SpeakingNote_Recommandation.dotx",
+            "valid": true
+        }
+    },
+        {
+        "model": "ne_sop_api.Template",
+        "pk": "13",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                7
+            ],
+            "name": "Note (CE)",
+            "relpath": "NoteCE.dotx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "14",
+        "fields": {
+            "created": "2023-12-04 15:00:00",
+            "item_types": [
+                3,
+                2,
+                1,
+                5,
+                7
+            ],
+            "name": "Autre",
+            "relpath": "NoteCE.dotx",
+            "valid": true
+        }
+    }
+]

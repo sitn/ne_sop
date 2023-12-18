@@ -7,7 +7,7 @@
         <q-card-section class="row items-center scroll" style="max-height: 70vh">
 
             <!-- FORM -->
-            <DocumentForm class="col" v-model="document" :type="type" :edit="edit"></DocumentForm>
+            <DocumentForm class="col" v-model="document" :item_type="item_type" :edit="edit"></DocumentForm>
 
         </q-card-section>
 
@@ -27,7 +27,7 @@ import DocumentForm from "../components/DocumentForm.vue"
 export default {
     name: 'NewDocumentDialog',
     components: { DocumentForm },
-    props: { 'type': String, 'modelValue': Object },
+    props: { 'item_type': Number, 'modelValue': Object },
     emits: [],
     setup() {
         return {
@@ -48,7 +48,7 @@ export default {
                 "type": null,
                 "date": new Date(),
                 "timestamp": Date.now(),
-                "author": store.session.user,
+                // "author": store.session.user,
                 "note": null,
                 "content": "",
                 "valid": false
@@ -69,10 +69,17 @@ export default {
     },
     methods: {
         async save() {
-            this.documents.push(Object.assign({}, this.document))
-            // console.log('NewDocumentDialog.vue | save()')
-            // let ind = store.items.findIndex((e) => (e.id === this.$route.params.id))
-            // store.items[ind].documents.push(this.document)
+            
+            let formData = new FormData()
+            formData.append('file', this.document.file)
+            formData.append('item_id', this.$route.params.id)
+            formData.append('template_id', this.document.type)
+            formData.append('size', this.document.size)
+            formData.append('note', this.document.note)
+            formData.append('author_id', 1) // /!\ METTRE A JOUR AVEC LA VALEUR DE L'AUTEUR DU DOCUMENT !
+
+
+            store.uploadDocument(formData, this.document.filename, this.$route.params.id)
         }
     }
 }

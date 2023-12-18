@@ -21,7 +21,7 @@
 
                         <!-- TYPE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="document.type" :options="documentTypes" option-label="name" option-value="name" emit-value label="Type" :rules="[v => checkFilled(v)]" clearable :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="document.type" :options="documentTypes" option-label="name" option-value="id" emit-value map-options label="Type" :rules="[v => checkFilled(v)]" clearable :disable="!edit">
 
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
@@ -39,7 +39,7 @@
                     <!-- NOTE TEXT AREA FIELD -->
                     <div class="row q-col-gutter-lg">
                         <div class="col">
-                            <q-input bg-color="white" outlined v-model="document.note" label="Notes" type="textarea" :disable="!edit" />
+                            <q-input bg-color="white" outlined v-model="document.note" label="Notes" type="textarea" :disable="!edit" :rules="[v => checkFile(v)]" />
                         </div>
                     </div>
 
@@ -60,14 +60,13 @@
 <script>
 import { store } from '../store/store.js'
 import { checkFilled, checkFile } from '../store/shared.js'
-import templates from '../assets/data/templates.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 
 export default {
     name: 'DocumentForm',
     components: { Form, FormSection },
-    props: { 'type': String, 'edit': Boolean, 'modelValue': Object },
+    props: { 'item_type': Number, 'edit': Boolean, 'modelValue': Object },
     emits: ['update:modelValue'],
     setup() {
         return {
@@ -76,7 +75,7 @@ export default {
     data() {
         return {
             store,
-            documentTypes: templates.filter((x) => (x.category.includes(this.type))),
+            documentTypes: [],
             valid: null,
         }
     },
@@ -91,14 +90,7 @@ export default {
         }
     },
     created() {
-        console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
-    },
-    mounted() {
-        // console.log(templates)
-        // console.log(templates.map((x) => (x.category)))
-        console.log(templates.filter((x) => (x.category.includes(this.type))))
-    },
-    updated() {
+        this.getDocumentTypes()
     },
     methods: {
         checkFilled,
@@ -110,11 +102,12 @@ export default {
         },
         getFileAttributes() {
             if (this.document.file) {
-                console.log(this.document.file.size)
                 this.document.filename = this.document.file.name
-                this.document.filesize = this.document.file.size
-                console.log(this.document.filesize)
+                this.document.size = this.document.file.size
             }
+        },
+        async getDocumentTypes() {
+            this.documentTypes = await store.getTemplatesByItemType(this.item_type)
         }
     }
 }

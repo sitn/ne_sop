@@ -23,7 +23,7 @@ admin.site.register(EventType)
 
 # Widgets
 class TemplateAdmin(admin.ModelAdmin):
-    filter_horizontal = ("parents",)
+    filter_horizontal = ("item_types",)
 
 
 admin.site.register(Template, TemplateAdmin)

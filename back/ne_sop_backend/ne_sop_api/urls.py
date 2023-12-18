@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 # from rest_framework.urlpatterns import format_suffix_patterns
 from ne_sop_api import views
@@ -14,10 +14,20 @@ router.register(r"entity-type", views.EntityTypeViewSet, basename="entity-type")
 router.register(r"event", views.EventViewSet, basename="event")
 router.register(r"event-type", views.EventTypeViewSet, basename="event-type")
 router.register(r"template", views.TemplateViewSet, basename="template")
+router.register(r"template-types", views.TemplateTypeViewSet, basename="template-types")
+router.register(r"document", views.DocumentViewSet, basename="document")
 router.register(r"user", views.UserViewSet, basename="user")
 
 urlpatterns = [
     path("api/", include(router.urls)),
+    re_path(
+        r'^api/fileupload/(?P<filename>[^/]+)$',
+        views.FileUploadView.as_view(),
+    ),
+    re_path(
+        r'^api/filedownload/(?P<pk>[^/]+)$',
+        views.FileDownloadView.as_view(),
+    ),
     path(
         "api/schema/",
         SpectacularAPIView.as_view(),
@@ -29,6 +39,3 @@ urlpatterns = [
         name="swagger-ui",
     ),
 ]
-
-# https://github.com/encode/django-rest-framework/issues/1337
-# urlpatterns = format_suffix_patterns(urlpatterns)

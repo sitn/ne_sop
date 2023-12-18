@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
+from pathlib import Path
 
 
 # %% ENTITY TYPE
@@ -130,30 +131,43 @@ class Event(models.Model):
         return str(self.date) + " - " + str(self.type)
 
 
-# %% DOCUMENT
-class Document(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
-    date = models.DateField()
-    note = models.CharField(max_length=500, blank=True, default="")
-    valid = models.BooleanField(default=True)
-
-    class Meta:
-        ordering = ["created"]
-
-    def __str__(self):
-        return self.date
-
-
-# %% TEMPLATE
 class Template(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=100, blank=True, default="")
-    parents = models.ManyToManyField(ItemType)
+    item_types = models.ManyToManyField(ItemType)
     valid = models.BooleanField(default=True)
+    relpath = models.CharField(default=None, max_length=400)
 
     class Meta:
         ordering = ["created"]
 
+    @property
+    def filename(self):
+        return Path(self.relpath).name
+
     def __str__(self):
         return self.name
+
+
+class Document(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
+    template = models.ForeignKey(Template, null=True, on_delete=models.SET_NULL)
+    note = models.CharField(max_length=500, blank=True, default="")
+    valid = models.BooleanField(default=True)
+    relpath = models.CharField(default=None, max_length=200)
+    version = models.PositiveIntegerField(default=None)
+    size = models.PositiveIntegerField(default=0, null=False)
+    item = models.ForeignKey(Item, related_name="document", on_delete=models.CASCADE)
+    author = models.ForeignKey(Entity, null=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        ordering = ["created"]
+
+    @property
+    def filename(self):
+        return Path(self.relpath).name
+
+    def __str__(self):
+        return self.filename
+

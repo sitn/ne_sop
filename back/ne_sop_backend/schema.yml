@@ -774,13 +774,13 @@ components:
         name:
           type: string
           maxLength: 100
-        parents:
+        item_types:
           $ref: '#/components/schemas/ItemType'
         valid:
           type: boolean
       required:
       - id
-      - parents
+      - item_types
     User:
       type: object
       properties:
