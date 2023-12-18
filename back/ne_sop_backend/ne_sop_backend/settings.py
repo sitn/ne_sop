@@ -30,6 +30,9 @@ SECRET_KEY = os.environ["NESOP_SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.environ.get('DEBUG', '') == 'True' else False
 
+if DEBUG and os.environ.get('LOCAL_DEBUG_USER'):
+    DEBUG_USER = os.environ["LOCAL_DEBUG_USER"]
+
 ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
 
 CSRF_TRUSTED_ORIGINS = []
@@ -62,7 +65,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.auth.middleware.RemoteUserMiddleware",
+    "ne_sop_backend.middleware.RemoteSitnMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # CORS
@@ -71,7 +74,6 @@ MIDDLEWARE = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
     'django.contrib.auth.backends.RemoteUserBackend',
 ]
 
