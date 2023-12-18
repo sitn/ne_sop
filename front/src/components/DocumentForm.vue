@@ -66,7 +66,7 @@ import FormSection from "../components/FormSection.vue"
 export default {
     name: 'DocumentForm',
     components: { Form, FormSection },
-    props: { 'type': String, 'edit': Boolean, 'modelValue': Object },
+    props: { 'item_type': Number, 'edit': Boolean, 'modelValue': Object },
     emits: ['update:modelValue'],
     setup() {
         return {
@@ -90,7 +90,7 @@ export default {
         }
     },
     created() {
-        this.getTemplatesByItemType(this.type);
+        this.getTemplatesByItemType(this.item_type);
     },
     methods: {
         checkFilled,

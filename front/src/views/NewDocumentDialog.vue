@@ -7,7 +7,7 @@
         <q-card-section class="row items-center scroll" style="max-height: 70vh">
 
             <!-- FORM -->
-            <DocumentForm class="col" v-model="document" :type="type" :edit="edit"></DocumentForm>
+            <DocumentForm class="col" v-model="document" :item_type="item_type" :edit="edit"></DocumentForm>
 
         </q-card-section>
 
@@ -27,7 +27,7 @@ import DocumentForm from "../components/DocumentForm.vue"
 export default {
     name: 'NewDocumentDialog',
     components: { DocumentForm },
-    props: { 'type': String, 'modelValue': Object },
+    props: { 'item_type': Number, 'modelValue': Object },
     emits: [],
     setup() {
         return {
@@ -69,7 +69,6 @@ export default {
     },
     methods: {
         async save() {
-            // this.documents.push(Object.assign({}, this.document))
             
             let formData = new FormData()
             formData.append('file', this.document.file)

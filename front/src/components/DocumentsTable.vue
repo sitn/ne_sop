@@ -34,7 +34,10 @@
                         <q-btn dense round flat color="grey" name="edit" @click="downloadRessource(props.row)" icon="sym_o_download" :disable="!edit">
                             <q-tooltip class="bg-black">Télécharger</q-tooltip>
                         </q-btn>
-                        <q-btn dense round flat color="red" name="delete" @click="deleteRessource(props.row)" icon="sym_o_delete" :disable="!edit">
+                        <!-- <q-btn dense round flat color="blue" name="delete" @click="handleEdition(props.row)" icon="sym_o_edit" :disable="!edit">
+                            <q-tooltip class="bg-black">Modifier</q-tooltip>
+                        </q-btn> -->
+                        <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row)" icon="sym_o_delete" :disable="!edit">
                             <q-tooltip class="bg-black">Supprimer</q-tooltip>
                         </q-btn>
                     </div>
@@ -49,11 +52,16 @@
 
     <!-- ADD NEW DIALOG -->
     <q-dialog v-model="dialog.newDocument">
-        <NewDocumentDialog v-model="documents" :type="type"></NewDocumentDialog>
+        <NewDocumentDialog v-model="documents" :item_type="type"></NewDocumentDialog>
     </q-dialog>
 
+    <!-- EDIT EVENT DIALOG -->
+    <!-- <q-dialog v-model="dialog.edit">
+        <EditDocumentDialog v-model="selected" :item_type="type"></EditDocumentDialog>
+    </q-dialog> -->
+
     <!-- DELETE DIALOG -->
-    <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+    <DeleteDialog v-model="dialog.deletion" @delete-event="deleteRessource(selected)" />
 </template>
 
 <script>
@@ -61,13 +69,11 @@ import { date } from 'quasar'
 import { store } from '../store/store.js'
 import { formatBytes } from '../store/shared.js'
 import NewDocumentDialog from "../views/NewDocumentDialog.vue"
+// import EditDocumentDialog from '../views/EditDocumentDialog.vue'
 import DeleteDialog from './DeleteDialog.vue'
 
 const columns = [
     { name: 'filename', align: 'left', label: 'Fichier', field: 'filename', sortable: true },
-    // { name: 'filesize', align: 'left', label: 'Taille', field: 'filesize', sortable: true },
-    // { name: 'format', align: 'left', label: 'Format', field: 'format', sortable: true },
-    // { name: 'version', align: 'center', label: 'version', field: 'version', sortable: true },
     { name: 'template', align: 'left', label: 'Type', field: 'template', sortable: true },
     { name: 'author', align: 'left', label: 'Ajouté par', field: 'author', sortable: true },
     { name: 'created', align: 'left', label: 'Ajouté le', field: 'created', sortable: true },
@@ -77,6 +83,7 @@ const columns = [
 
 export default {
     name: 'DocumentsTable',
+    // components: { NewDocumentDialog, EditDocumentDialog, DeleteDialog },
     components: { NewDocumentDialog, DeleteDialog },
     props: { 'type': Number, 'edit': Boolean, 'modelValue': Object }, //  'events': Object,
     emits: ['update:modelValue'],
@@ -108,11 +115,14 @@ export default {
     mounted() {
     },
     methods: {
-        // date,
         formatBytes,
         addDocument() {
             this.dialog.newDocument = true
         },
+        // handleEdition(val) {
+        //     this.selected = val
+        //     this.dialog.edit = true
+        // },
         handleDeletion(val) {
             this.selected = val
             this.dialog.deletion = true
