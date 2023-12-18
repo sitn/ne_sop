@@ -90,7 +90,7 @@ export default {
         }
     },
     created() {
-        this.getTemplatesByItemType(this.item_type);
+        this.getDocumentTypes()
     },
     methods: {
         checkFilled,
@@ -106,20 +106,9 @@ export default {
                 this.document.size = this.document.file.size
             }
         },
-
-        async getTemplatesByItemType(type_id) {
-            try {
-
-                const response = await fetch('http://127.0.0.1:8000/api/template-types?itemtype_id=' + type_id, {
-                    method: 'GET',
-                    redirect: 'follow'
-                })
-                this.documentTypes = await response.json()
-                
-            } catch (error) {
-                console.error(error)
-            }
-        },
+        async getDocumentTypes() {
+            this.documentTypes = await store.getTemplatesByItemType(this.item_type)
+        }
     }
 }
 </script>

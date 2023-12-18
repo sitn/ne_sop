@@ -79,21 +79,7 @@ export default {
             formData.append('author_id', 1) // /!\ METTRE A JOUR AVEC LA VALEUR DE L'AUTEUR DU DOCUMENT !
 
 
-            try {
-    
-                const response = await fetch('http://127.0.0.1:8000/api/fileupload/' + this.document.filename, {
-                    method: 'POST',
-                    body: formData,
-                    redirect: 'follow'
-                })
-                await response
-
-                store.getDocuments(this.$route.params.id)
-                
-            } catch (error) {
-                console.error(error)
-            }
-            
+            store.uploadDocument(formData, this.document.filename, this.$route.params.id)
         }
     }
 }

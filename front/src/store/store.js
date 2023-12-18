@@ -341,6 +341,7 @@ export const store = reactive({
     },
 
 
+    // GET DOCUMENT LIST FROM ITEM_ID
     async getDocuments(item_id) {
         // this.documents.push(Object.assign({}, this.document))
         
@@ -355,6 +356,80 @@ export const store = reactive({
         } catch (error) {
             console.error(error)
         }
-        
-    }
+    },
+
+
+    // GET LIST OF TEMPLATES FOR THIS ITEM TYPE
+    async getTemplatesByItemType(type_id) {
+        try {
+
+            const response = await fetch('http://127.0.0.1:8000/api/template-types?itemtype_id=' + type_id, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+            
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+
+    // UPLOAD DOCUMENT
+    async uploadDocument(formData, filename, item_id) {
+        try {
+    
+            const response = await fetch('http://127.0.0.1:8000/api/fileupload/' + filename, {
+                method: 'POST',
+                body: formData,
+                redirect: 'follow'
+            })
+            await response
+
+            store.getDocuments(item_id)
+            
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    
+
+    // DOWNLOAD DOCUMENT BY ID
+    async downloadDocument(document_id) {
+        try {
+
+            window.open(
+                'http://127.0.0.1:8000/api/filedownload/' + document_id,
+                {
+                    method: 'GET',
+                    redirect: 'follow'
+                }
+            )
+            
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+
+    // DELETE DOCUMENT BY ID
+    async deleteDocument(document_id, item_id) {
+        try {
+
+            const response = await fetch('http://127.0.0.1:8000/api/document/' + document_id,
+                {
+                    method: 'DELETE',
+                    redirect: 'follow'
+                }
+            )
+
+            await response.json()
+
+            store.getDocuments(item_id)
+            
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
 })

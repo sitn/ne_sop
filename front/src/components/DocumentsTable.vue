@@ -31,7 +31,7 @@
                 </q-td>
                 <q-td key="actions" :props="props">
                     <div class="float-right">
-                        <q-btn dense round flat color="grey" name="edit" @click="downloadRessource(props.row)" icon="sym_o_download" :disable="!edit">
+                        <q-btn dense round flat color="grey" name="edit" @click="store.downloadDocument(props.row.id)" icon="sym_o_download" :disable="!edit">
                             <q-tooltip class="bg-black">Télécharger</q-tooltip>
                         </q-btn>
                         <!-- <q-btn dense round flat color="blue" name="delete" @click="handleEdition(props.row)" icon="sym_o_edit" :disable="!edit">
@@ -130,38 +130,8 @@ export default {
         async remove() {
             this.documents = this.documents.filter((x) => (x.id !== this.selected))
         },
-        async downloadRessource(ressource) {
-            try {
-
-                window.open(
-                    'http://127.0.0.1:8000/api/filedownload/' + ressource.id,
-                    {
-                        method: 'GET',
-                        redirect: 'follow'
-                    }
-                )
-                
-            } catch (error) {
-                console.error(error)
-            }
-        },
         async deleteRessource(ressource) {
-            try {
-
-                const response = await fetch('http://127.0.0.1:8000/api/document/' + ressource.id,
-                    {
-                        method: 'DELETE',
-                        redirect: 'follow'
-                    }
-                )
-
-                await response.json()
-
-                store.getDocuments(this.$route.params.id)
-                
-            } catch (error) {
-                console.error(error)
-            }
+            store.deleteDocument(ressource.id, this.$route.params.id)
         },
     }
 }
