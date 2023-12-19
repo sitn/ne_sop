@@ -78,11 +78,11 @@
                         </q-td>
                         <!-- DEPOSIT DATE COLUMN -->
                         <q-td key="deposit" :props="props">
-                            {{ getDate(props.row.events, "Dépôt") }}
+                            {{ props.row.startdate }}
                         </q-td>
                         <!-- DELAY DATE COLUMN -->
                         <q-td key="delay" :props="props">
-                            {{ getDate(props.row.events, "Délai") }}
+                            {{ props.row.enddate }}
                         </q-td>
                         <!-- ACTIONS COLUMN -->
                         <q-td key="actions" :props="props">

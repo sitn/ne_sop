@@ -130,6 +130,8 @@ class ItemListSerializer(serializers.ModelSerializer):
             "lead",
             "support",
             "events",
+            "startdate",
+            "enddate",
             "valid",
         ]
 
@@ -266,12 +268,13 @@ class TemplateSerializer(serializers.ModelSerializer):
 class DocumentByItemSerializer(serializers.ModelSerializer):
     template = serializers.SlugRelatedField(
         queryset=Template.objects.all(),
-        slug_field='name',
+        slug_field="name",
     )
     author = serializers.SlugRelatedField(
         queryset=Entity.objects.all(),
-        slug_field='name',
+        slug_field="name",
     )
+
     class Meta:
         model = Document
         fields = [
@@ -288,9 +291,9 @@ class DocumentByItemSerializer(serializers.ModelSerializer):
             "author",
         ]
 
+
 class FileSerializer(serializers.Serializer):
     file = serializers.FileField()
-
 
 
 # %% TESTING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
