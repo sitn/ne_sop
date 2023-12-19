@@ -84,6 +84,8 @@ class Item(models.Model):
     urgent = models.BooleanField(default=False)
     writtenresponse = models.BooleanField(default=False)
     oralresponse = models.BooleanField(default=False)
+    startdate = models.DateField(null=True)
+    enddate = models.DateField(null=True)
     valid = models.BooleanField(default=True)
 
     lead = models.ForeignKey(
@@ -170,4 +172,3 @@ class Document(models.Model):
 
     def __str__(self):
         return self.filename
-
