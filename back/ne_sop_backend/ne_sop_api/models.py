@@ -132,6 +132,27 @@ class Event(models.Model):
     def __str__(self):
         return str(self.date) + " - " + str(self.type)
 
+    def save(self, *args, **kwargs):
+        super(Event, self).save(*args, **kwargs)
+
+        start_event = (
+            Event.objects.filter(item=self.item.pk, type=1).order_by("date").first()
+        )
+
+        if start_event:
+            Item.objects.filter(id=self.item.pk).update(startdate=start_event.date)
+        else:
+            Item.objects.filter(id=self.item.pk).update(startdate=None)
+
+        end_event = (
+            Event.objects.filter(item=self.item.pk, type=3).order_by("date").first()
+        )
+
+        if end_event:
+            Item.objects.filter(id=self.item.pk).update(enddate=end_event.date)
+        else:
+            Item.objects.filter(id=self.item.pk).update(enddate=None)
+
 
 class Template(models.Model):
     created = models.DateTimeField(auto_now_add=True)
