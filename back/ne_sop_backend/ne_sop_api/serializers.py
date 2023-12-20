@@ -131,6 +131,8 @@ class ItemListSerializer(serializers.ModelSerializer):
             "lead",
             "support",
             "events",
+            "startdate",
+            "enddate",
             "valid",
         ]
 
@@ -293,9 +295,9 @@ class TemplateSerializer(serializers.ModelSerializer):
 #             "author",
 #         ]
 
+
 class FileSerializer(serializers.Serializer):
     file = serializers.FileField()
-
 
 
 # %% TESTING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

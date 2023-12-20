@@ -50,6 +50,7 @@ from pathlib import Path, PurePath
 import os
 import shutil
 
+
 # %% TEST BACKEND
 @api_view(["GET"])
 def test_api(request):
@@ -57,7 +58,7 @@ def test_api(request):
     Test backend
     """
     html = "<h1>Congratulations !</h1>"
-    html += "<h2>It works</h2>"
+    html += f"<h2>Hello {request.user}, It works</h2>"
     return HttpResponse(content=html, status=200)
 
 
@@ -259,7 +260,16 @@ class ItemViewSet(viewsets.ViewSet):
         descending = request.query_params.get("descending", "false")
 
         # all_fields = Entity._meta.fields
-        if sortby not in ["id", "number", "title", "type", "status", "urgent"]:
+        if sortby not in [
+            "id",
+            "number",
+            "title",
+            "type",
+            "status",
+            "urgent",
+            "startdate",
+            "enddate",
+        ]:
             sortby = "id"
 
         if descending not in ["true", "false"]:
@@ -460,7 +470,6 @@ class TemplateViewSet(viewsets.ViewSet):
         tags=["Templates"],
     )
     def list(self, request):
-        
         serializer = TemplateSerializer(self.queryset, many=True)
         return Response(serializer.data)
 
@@ -508,25 +517,28 @@ class TemplateTypeViewSet(viewsets.ViewSet):
     """
     Template types viewset
     """
-    
+
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
-    
+
     @extend_schema(
         responses=TemplateSerializer,
         tags=["Template type"],
     )
-
     def list(self, request):
-        itemtype_id = request.query_params.get('itemtype_id') if 'itemtype_id' in request.query_params else None
-    
+        itemtype_id = (
+            request.query_params.get("itemtype_id")
+            if "itemtype_id" in request.query_params
+            else None
+        )
+
         templates = Template.objects
         if itemtype_id is not None:
             templates = templates.filter(item_types__id=itemtype_id)
         templates = templates.all()
 
         serializer = TemplateSerializer(templates, many=True)
-        
+
         return Response(serializer.data)
 
 # from pprint import pprint
@@ -582,36 +594,36 @@ class FileUploadView(views.APIView):
     def post(self, request, filename):
         serializer = FileSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response(
-                data=serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        file_obj = request.FILES['file']
-        item_id = request.data['item_id'] if 'item_id' in request.data else None
-        template_id = request.data['template_id'] if 'template_id' in request.data else None
-        note = request.data['note'] if 'note' in request.data else None
-        size = request.data['size'] if 'size' in request.data else None
-        author_id = request.data['author_id'] if 'author_id' in request.data else None
+        file_obj = request.FILES["file"]
+        item_id = request.data["item_id"] if "item_id" in request.data else None
+        template_id = (
+            request.data["template_id"] if "template_id" in request.data else None
+        )
+        note = request.data["note"] if "note" in request.data else None
+        size = request.data["size"] if "size" in request.data else None
+        author_id = request.data["author_id"] if "author_id" in request.data else None
 
-        documents = Document.objects.filter(
-            item=item_id,
-            template=template_id
-        ).all().order_by("-version")
-        
+        documents = (
+            Document.objects.filter(item=item_id, template=template_id)
+            .all()
+            .order_by("-version")
+        )
+
         version = 1
         if len(documents) > 0:
             version = documents[0].version + 1
 
-        file_extension = filename.rsplit('.', 1)[1]
+        file_extension = filename.rsplit(".", 1)[1]
 
-        if int(template_id) != int( os.environ['NESOP_TEMPLATE_AUTRE_ID'] ):
+        if int(template_id) != int(os.environ["NESOP_TEMPLATE_AUTRE_ID"]):
             template = Template.objects.filter(id=template_id).first()
             filename = template.filename
 
-        filename = filename.rsplit('.', 1)[0] + f'_v{version}.' + file_extension
+        filename = filename.rsplit(".", 1)[0] + f"_v{version}." + file_extension
 
-        root_dir = os.environ['NESOP_OP_PATH']
+        root_dir = os.environ["NESOP_OP_PATH"]
         op = Item.objects.filter(id=item_id).first()
         relpath = PurePath(str(op.created.year), op.number, filename)
         filepath = PurePath(root_dir, relpath)
@@ -621,9 +633,8 @@ class FileUploadView(views.APIView):
         if not os.path.exists(Path(filepath).resolve().parent):
             os.makedirs(Path(filepath).resolve().parent)
 
-        with open(filepath, 'wb') as output_file:
+        with open(filepath, "wb") as output_file:
             shutil.copyfileobj(file_obj.file, output_file)
-
 
         document = Document()
         document.template_id = template_id
@@ -638,25 +649,27 @@ class FileUploadView(views.APIView):
 
         return Response({"msg": "Document created"}, status=status.HTTP_201_CREATED)
 
-class FileDownloadView(views.APIView):
 
+class FileDownloadView(views.APIView):
     queryset = Document.objects.all()
 
     @extend_schema(
         tags=["Documents"],
     )
     def get(self, request, pk=None, format=None):
-        print('pk =', pk)
+        print("pk =", pk)
         document = get_object_or_404(self.queryset, pk=pk)
 
-        root_dir = os.environ['NESOP_OP_PATH']
+        root_dir = os.environ["NESOP_OP_PATH"]
         filepath = PurePath(root_dir, document.relpath)
-        print('filepath = ', filepath)
-        filepath = open(filepath, 'rb')
+        print("filepath = ", filepath)
+        filepath = open(filepath, "rb")
 
-        response = FileResponse(filepath, filename=document.filename, as_attachment=True)
+        response = FileResponse(
+            filepath, filename=document.filename, as_attachment=True
+        )
         headers = response.headers
-        headers['Content-Type'] = 'application/download'
-        headers['Accept-Ranges'] = 'bite'
-        response['Content-Disposition'] = f'attachment; filename={document.filename}'
+        headers["Content-Type"] = "application/download"
+        headers["Accept-Ranges"] = "bite"
+        response["Content-Disposition"] = f"attachment; filename={document.filename}"
         return response
