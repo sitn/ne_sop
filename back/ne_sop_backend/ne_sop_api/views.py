@@ -1,5 +1,6 @@
 from ne_sop_api.models import (
     Document,
+    NewDocument,
     Entity,
     EntityType,
     Event,
@@ -11,7 +12,8 @@ from ne_sop_api.models import (
     User,
 )
 from ne_sop_api.serializers import (
-    DocumentSerializer,
+    # DocumentSerializer,
+    NewDocumentSerializer,
     EntitySerializer,
     EntityListSerializer,
     EntityTypeSerializer,
@@ -35,10 +37,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
 from rest_framework import filters
 from django.core.paginator import Paginator
 from django.http import HttpResponse, FileResponse
+
+from django.conf import settings
 
 from ne_sop_api.utils import Utils
 
@@ -461,43 +465,43 @@ class TemplateViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-class DocumentViewSet(viewsets.ViewSet):
-    """
-    Documents viewset
-    """
+# class DocumentViewSet(viewsets.ViewSet):
+#     """
+#     Documents viewset
+#     """
 
-    queryset = Document.objects.all()
-    # serializer_class = DocumentSerializer
+#     queryset = Document.objects.all()
+#     # serializer_class = DocumentSerializer
 
-    @extend_schema(
-        responses=DocumentSerializer,
-        tags=["Documents"],
-    )
-    def list(self, request):
-        item_id = request.query_params.get('item_id') if 'item_id' in request.query_params else None
+#     @extend_schema(
+#         responses=DocumentSerializer,
+#         tags=["Documents"],
+#     )
+#     def list(self, request):
+#         item_id = request.query_params.get('item_id') if 'item_id' in request.query_params else None
 
-        documents = Document.objects
-        if item_id is not None:
-            documents = documents.filter(item_id=item_id)
-        documents = documents.all().order_by('template', '-version')
+#         documents = Document.objects
+#         if item_id is not None:
+#             documents = documents.filter(item_id=item_id)
+#         documents = documents.all().order_by('template', '-version')
 
-        serializer = DocumentSerializer(documents, many=True)
-        return Response(serializer.data)
+#         serializer = DocumentSerializer(documents, many=True)
+#         return Response(serializer.data)
 
 
-    @extend_schema(
-        tags=["Documents"],
-    )
-    def destroy(self, request, pk=None):
-        document = get_object_or_404(self.queryset, pk=pk)
+#     @extend_schema(
+#         tags=["Documents"],
+#     )
+#     def destroy(self, request, pk=None):
+#         document = get_object_or_404(self.queryset, pk=pk)
 
-        root_dir = os.environ['NESOP_OP_PATH']
-        filepath = Path( PurePath(root_dir, document.relpath) )
-        if filepath.exists():
-            os.remove(filepath)
+#         root_dir = os.environ['NESOP_OP_PATH']
+#         filepath = Path( PurePath(root_dir, document.relpath) )
+#         if filepath.exists():
+#             os.remove(filepath)
 
-        document.delete()
-        return Response({"msg": "Document deleted"})
+#         document.delete()
+#         return Response({"msg": "Document deleted"})
 
 
 class TemplateTypeViewSet(viewsets.ViewSet):
@@ -524,6 +528,48 @@ class TemplateTypeViewSet(viewsets.ViewSet):
         serializer = TemplateSerializer(templates, many=True)
         
         return Response(serializer.data)
+
+# from pprint import pprint
+class NewDocumentViewSet(viewsets.ViewSet):
+    """
+    New document viewset
+    """
+    parser_classes = [MultiPartParser]
+
+    queryset = NewDocument.objects.all()
+    serializer_class = NewDocument
+
+    @extend_schema(
+        responses=NewDocumentSerializer,
+        tags=["NewDocument"],
+    )
+    def create(self, request):
+        serializer = NewDocumentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    @extend_schema(
+        responses=NewDocumentSerializer,
+        tags=["NewDocument"],
+    )
+    def retrieve(self, request, pk):
+        document = get_object_or_404(self.queryset, pk=pk)
+        serializer = NewDocumentSerializer(document)
+        return Response(serializer.data)
+    
+    @extend_schema(
+        responses=NewDocumentSerializer,
+        tags=["NewDocument"],
+    )
+    def destroy(self, request, pk=None):
+        document = get_object_or_404(self.queryset, pk=pk)
+        print('document', document)
+        os.remove(PurePath(settings.MEDIA_ROOT, document.file.name))
+        document.delete()
+        return Response({"msg": "Document deleted"})
+
 
 
 class FileUploadView(views.APIView):

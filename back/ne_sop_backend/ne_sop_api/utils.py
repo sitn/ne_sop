@@ -34,4 +34,8 @@ class Utils(object):
             count += 1
             filepath_ = PurePath( f'_{count}.'.join(str(filepath).rsplit('.', 1)) )
         return filepath_
+    
+    @classmethod
+    def get_upload_path(cls, instance, filename):
+        return PurePath(str(instance.item.created.year), instance.item.number, filename)
 

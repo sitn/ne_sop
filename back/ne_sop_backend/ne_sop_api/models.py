@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
-from pathlib import Path
+from pathlib import Path, PurePath
+import os
 
+from ne_sop_api.utils import Utils
 
 # %% ENTITY TYPE
 class EntityType(models.Model):
@@ -149,6 +151,29 @@ class Template(models.Model):
         return self.name
 
 
+class NewDocument(models.Model):
+    uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
+    created = models.DateTimeField(auto_now_add=True)
+    template = models.ForeignKey(Template, null=True, on_delete=models.SET_NULL)
+    note = models.CharField(max_length=500, blank=True, default="")
+    filename = models.CharField(default=None, max_length=200)
+    version = models.PositiveIntegerField(default=None)
+    size = models.PositiveIntegerField(default=0, null=False)
+    item = models.ForeignKey(Item, related_name="item_documents", on_delete=models.CASCADE)
+    author = models.ForeignKey(Entity, null=True, on_delete=models.SET_NULL)
+    file = models.FileField(upload_to=Utils.get_upload_path)
+
+    class Meta:
+        ordering = ["created"]
+
+    @property
+    def relpath(self):
+        return PurePath(str(self.item.created.year), self.item.number, self.file.name)
+
+    def __str__(self):
+        return self.file.name
+
+
 class Document(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
@@ -158,8 +183,9 @@ class Document(models.Model):
     relpath = models.CharField(default=None, max_length=200)
     version = models.PositiveIntegerField(default=None)
     size = models.PositiveIntegerField(default=0, null=False)
-    item = models.ForeignKey(Item, related_name="document", on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, related_name="documents", on_delete=models.CASCADE)
     author = models.ForeignKey(Entity, null=True, on_delete=models.SET_NULL)
+    # file = models.FileField()
 
     class Meta:
         ordering = ["created"]
@@ -167,6 +193,10 @@ class Document(models.Model):
     @property
     def filename(self):
         return Path(self.relpath).name
+    
+    @property
+    def relpath(self):
+        return PurePath(str(op.created.year), op.number)
 
     def __str__(self):
         return self.filename
