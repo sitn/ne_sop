@@ -23,7 +23,7 @@ class Entity(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, blank=False, null=False, unique=True)
-    type = models.ForeignKey("EntityType", null=True, on_delete=models.SET_NULL)
+    type = models.ForeignKey("EntityType", null=True, on_delete=models.PROTECT)
     # type = models.CharField(choices=ENTITY_TYPES, default="", max_length=100)
     description = models.CharField(max_length=256, blank=True, default="")
     street = models.CharField(max_length=256, blank=True, default="")
@@ -34,6 +34,8 @@ class Entity(models.Model):
     website = models.URLField(max_length=512, blank=True, default="")
     email = models.EmailField(max_length=256, blank=True, default="")
     telephone = models.CharField(max_length=256, blank=True, default="")
+    users = models.ManyToManyField(User, blank=True, related_name="users")
+
     valid = models.BooleanField(default=True)
     # owner = models.ForeignKey("auth.User", related_name="snippets", on_delete=models.CASCADE)
 
@@ -78,8 +80,8 @@ class Item(models.Model):
         "Entity", related_name="author", null=True, on_delete=models.SET_NULL
     )
 
-    type = models.ForeignKey("ItemType", null=True, on_delete=models.SET_NULL)
-    status = models.ForeignKey("ItemStatus", null=True, on_delete=models.SET_NULL)
+    type = models.ForeignKey("ItemType", null=True, on_delete=models.PROTECT)
+    status = models.ForeignKey("ItemStatus", null=True, on_delete=models.PROTECT)
     description = models.TextField(max_length=600, blank=True, default="")
     urgent = models.BooleanField(default=False)
     writtenresponse = models.BooleanField(default=False)
@@ -122,7 +124,7 @@ class Event(models.Model):
     date = models.DateField()
     time = models.TimeField(null=True)
     item = models.ForeignKey(Item, related_name="events", on_delete=models.CASCADE)
-    type = models.ForeignKey(EventType, null=True, on_delete=models.SET_NULL)
+    type = models.ForeignKey(EventType, null=True, on_delete=models.PROTECT)
     description = models.CharField(max_length=500, blank=True, default="")
     valid = models.BooleanField(default=True)
 

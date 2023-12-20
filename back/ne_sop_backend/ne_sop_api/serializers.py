@@ -89,6 +89,7 @@ class EntitySerializer(serializers.ModelSerializer):
             "website",
             "email",
             "telephone",
+            "users",
             "valid",
         ]
 
