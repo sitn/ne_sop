@@ -60,7 +60,7 @@
 
             <q-card-actions align="right">
                 <q-btn outline label="Quitter sans enregistrer" icon="sym_o_close" color="black" @click="exit()" v-close-popup />
-                <q-btn outline label="Enregistrer" icon="sym_o_save" color="black" @click="save(store.navigation.to)" v-close-popup />
+                <q-btn outline label="Enregistrer" icon="sym_o_save" color="black" @click="save(store.navigation.to)" :disable="saveButton.disable" v-close-popup />
             </q-card-actions>
 
         </q-card>
@@ -69,7 +69,6 @@
 
 <script>
 import { store } from '../store/store.js'
-// import { router } from '../router.js'
 
 export default {
     name: 'FloatingButtons',
@@ -81,52 +80,34 @@ export default {
     },
     data() {
         return {
-            // saveButton: {}, // { render: ['active', 'disable'].includes(this.buttons.save), disable: this.buttons.save === 'disable' },
-            // deleteButton: {},// { render: ['active', 'disable'].includes(this.buttons.deletion), disable: this.buttons.deletion === 'disable' },
             store,
             waitMode: this.wait,
             editMode: this.edit
         }
     },
     computed: {
-        /* saveButton() { return { render: ['active', 'disable'].includes(this.buttons.save), disable: !store.valid } },  */
         saveButton() { return { render: ['active', 'disable'].includes(this.buttons.save), disable: this.buttons.save === 'disable' } },
         deleteButton() { return { render: ['active', 'disable'].includes(this.buttons.deletion), disable: this.buttons.deletion === 'disable' } }
     },
     mounted() {
 
     },
-    watch: {
-        /*
-        buttons: {
-            handler(newValue, oldValue) {
-                console.log(`${this.$options.name}.vue | watch buttons`)
-                this.saveButton = { render: ['active', 'disable'].includes(this.buttons.save), disable: this.buttons.save === 'disable' }
-                this.deleteButton = { render: ['active', 'disable'].includes(this.buttons.deletion), disable: this.buttons.deletion === 'disable' }
-
-                console.log(`${this.$options.name}.vue | saveButton`)
-                console.log(`${this.$options.name}.vue | buttons`)
-                console.log(this.buttons)
-                console.log(this.saveButton)
-                console.log(oldValue)
-                console.log(newValue)
-            },
-            deep: true
-        }
-        */
-    },
     methods: {
         switchEdit() {
-            console.log(`${this.$options.name}.vue | editEvent(${this.editMode})`)
+            // console.log(`${this.$options.name}.vue | editEvent(${this.editMode})`)
             this.editMode = !this.editMode
             this.$emit('editEvent', this.editMode)
         },
         save(redirect = null) {
 
-            console.log(`${this.$options.name}.vue | saveEvent`)
+            // console.log(`${this.$options.name}.vue | saveEvent`)
             store.warning = false
+            store.oldFormData = Object.assign({}, store.newFormData)
+
             // this.$emit('saveEvent', { redirect: redirect })
             this.$emit('saveEvent', redirect)
+
+            this.$router.push({ path: store.navigation.to })
 
             /*
             if (redirect !== null) {
@@ -136,13 +117,12 @@ export default {
 
         },
         remove() {
-            console.log(`${this.$options.name}.vue | deleteEvent`)
+            // console.log(`${this.$options.name}.vue | deleteEvent`)
             this.$emit('deleteEvent')
         },
         exit() {
-            console.log('ROUTER')
-            console.log(this.$router)
-            console.log(this.$route)
+            // console.log(this.$router)
+            // console.log(this.$route)
             // console.log(`store.navigation.to: ${store.navigation.to}`)
 
             this.store.warning = false
