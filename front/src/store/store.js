@@ -8,6 +8,8 @@ export const store = reactive({
     warning: false,
     exit: false,
     navigation: { "from": null, "to": null },
+    oldFormData: null,
+    newFormData: null,
     entity: null,
     event: null,
     documents: [],
@@ -344,7 +346,7 @@ export const store = reactive({
     // GET DOCUMENT LIST FROM ITEM_ID
     async getDocuments(item_id) {
         // this.documents.push(Object.assign({}, this.document))
-        
+
         try {
             const response = await fetch('http://127.0.0.1:8000/api/document?item_id=' + item_id, {
                 method: 'GET',
@@ -352,7 +354,7 @@ export const store = reactive({
             })
             this.documents = await response.json()
             return this.documents
-            
+
         } catch (error) {
             console.error(error)
         }
@@ -368,7 +370,7 @@ export const store = reactive({
                 redirect: 'follow'
             })
             return await response.json()
-            
+
         } catch (error) {
             console.error(error)
         }
@@ -378,7 +380,7 @@ export const store = reactive({
     // UPLOAD DOCUMENT
     async uploadDocument(formData, filename, item_id) {
         try {
-    
+
             const response = await fetch('http://127.0.0.1:8000/api/fileupload/' + filename, {
                 method: 'POST',
                 body: formData,
@@ -387,12 +389,12 @@ export const store = reactive({
             await response
 
             store.getDocuments(item_id)
-            
+
         } catch (error) {
             console.error(error)
         }
     },
-    
+
 
     // DOWNLOAD DOCUMENT BY ID
     async downloadDocument(document_id) {
@@ -405,7 +407,7 @@ export const store = reactive({
                     redirect: 'follow'
                 }
             )
-            
+
         } catch (error) {
             console.error(error)
         }
@@ -426,7 +428,7 @@ export const store = reactive({
             await response.json()
 
             store.getDocuments(item_id)
-            
+
         } catch (error) {
             console.error(error)
         }
