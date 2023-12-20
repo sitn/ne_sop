@@ -30,15 +30,20 @@ export default {
             store,
             editMode: this.edit,
             valid: null,
+            oldData: null,
+            newData: null,
         }
     },
     computed: {
         formData() {
+            // console.log("this.form")
+            // console.log(this.$refs.form)
             return Object.assign({}, this.model)
         }
     },
     mounted() {
         this.validateForm()
+        store.oldFormData = Object.assign({}, this.model)
         store.warning = false
     },
     updated() {
@@ -47,10 +52,10 @@ export default {
     watch: {
         formData: {
             handler(newValue, oldValue) {
+
+                store.newFormData = Object.assign({}, this.model)
                 this.validateForm()
-                if ((JSON.stringify(newValue) !== JSON.stringify(oldValue))) {
-                    store.warning = true
-                }
+
             },
             deep: true
         },
@@ -59,24 +64,28 @@ export default {
         validateForm() {
             this.$nextTick(() => { this.$refs.form.validate() })
 
-            /*
-            if (this.$refs.hasOwnProperty('form')) {
-                if (this.$refs.form !== null) {
-                    this.$nextTick(() => { this.$refs.form.validate() })
-                }
+            let oldDataString = JSON.stringify(store.oldFormData).replaceAll(/"id":\d+,/gi, '').replaceAll(/"uuid":"[a-z0-9-]+",/gi, '')
+            let newDataString = JSON.stringify(this.model).replaceAll(/"id":\d+,/gi, '').replaceAll(/"uuid":"[a-z0-9-]+",/gi, '')
+
+            // console.log(oldDataString)
+            // console.log(newDataString)
+
+            if (oldDataString !== newDataString) {
+                store.warning = true
+            } else {
+                store.warning = false
             }
-            */
 
         },
         validationSuccess() {
-            console.log(`${this.$options.name} | validationSuccess()`)
+            // console.log(`${this.$options.name} | validationSuccess()`)
             this.valid = true
             this.model.valid = true
             store.valid = true
             this.$emit('validationEvent', true)
         },
         validationError() {
-            console.log(`${this.$options.name} | validationError()`)
+            // console.log(`${this.$options.name} | validationError()`)
             this.valid = false
             this.model.valid = false
             store.valid = false
@@ -84,19 +93,7 @@ export default {
         },
         async save(redirectTo) {
 
-            console.log(`${this.$options.name}.vue | save()`)
-
-            // saveTo(store.items, this.$route.params.id, this.item, store.navigation.to)
-
-            // TODO: POST RECORD TO DATABASE
-            /*
-            console.log(`${this.$options.name}.vue | save()`)
-            this.wait = true
-            await sleep(Math.random() * 1300)
-            let ind = store.items.findIndex((e) => (e.id === this.$route.params.id))
-            store.items[ind] = Object.assign({}, this.item)
-            this.wait = false
-            */
+            // console.log(`${this.$options.name}.vue | save()`)
 
             if (redirectTo !== null) {
                 this.$router.push({ path: redirectTo })

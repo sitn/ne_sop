@@ -8,6 +8,8 @@ export const store = reactive({
     warning: false,
     exit: false,
     navigation: { "from": null, "to": null },
+    oldFormData: null,
+    newFormData: null,
     entity: null,
     event: null,
     documents: [],
@@ -373,7 +375,7 @@ export const store = reactive({
                 redirect: 'follow'
             })
             return await response.json()
-            
+
         } catch (error) {
             console.error(error)
         }
@@ -395,7 +397,7 @@ export const store = reactive({
             console.error(error)
         }
     },
-    
+
 
     // DOWNLOAD DOCUMENT BY ID
     async downloadDocument(document_id) {
@@ -408,7 +410,7 @@ export const store = reactive({
                     redirect: 'follow'
                 }
             )
-            
+
         } catch (error) {
             console.error(error)
         }
