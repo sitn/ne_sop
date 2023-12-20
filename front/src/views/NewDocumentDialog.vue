@@ -68,12 +68,12 @@ export default {
     },
     methods: {
         async save() {
-            
+
             this.documents.unshift({
                 'file': this.document.file,
                 'filename': this.document.filename,
                 'created': new Date().toLocaleString(),
-                'item_id': this.$route.params.id,
+                // 'item_id': this.$route.params.id,
                 'template': this.document.type.name,
                 'template_id': this.document.type.id,
                 'size': this.document.size,

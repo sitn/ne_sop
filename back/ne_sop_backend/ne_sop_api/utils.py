@@ -38,4 +38,18 @@ class Utils(object):
     @classmethod
     def get_upload_path(cls, instance, filename):
         return PurePath(str(instance.item.created.year), instance.item.number, filename)
+    
+    @classmethod
+    def get_next_documentVersion(cls, DocumentModel, data):
+        print(data)
+        documents = DocumentModel.objects.filter(
+            item=data['item'],
+            template=data['template']
+        ).all().order_by("-version")
+
+        version = 1
+        if len(documents) > 0:
+            version = documents[0].version + 1
+        
+        return version
 

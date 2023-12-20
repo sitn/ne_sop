@@ -182,7 +182,7 @@ class NewDocument(models.Model):
     filename = models.CharField(default=None, max_length=200)
     version = models.PositiveIntegerField(default=None)
     size = models.PositiveIntegerField(default=0, null=False)
-    item = models.ForeignKey(Item, related_name="item_documents", on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, related_name="documents", on_delete=models.CASCADE)
     author = models.ForeignKey(Entity, null=True, on_delete=models.SET_NULL)
     file = models.FileField(upload_to=Utils.get_upload_path)
 
@@ -196,30 +196,3 @@ class NewDocument(models.Model):
     def __str__(self):
         return self.file.name
 
-
-class Document(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
-    template = models.ForeignKey(Template, null=True, on_delete=models.SET_NULL)
-    note = models.CharField(max_length=500, blank=True, default="")
-    valid = models.BooleanField(default=True)
-    relpath = models.CharField(default=None, max_length=200)
-    version = models.PositiveIntegerField(default=None)
-    size = models.PositiveIntegerField(default=0, null=False)
-    item = models.ForeignKey(Item, related_name="documents", on_delete=models.CASCADE)
-    author = models.ForeignKey(Entity, null=True, on_delete=models.SET_NULL)
-    # file = models.FileField()
-
-    class Meta:
-        ordering = ["created"]
-
-    @property
-    def filename(self):
-        return Path(self.relpath).name
-    
-    @property
-    def relpath(self):
-        return PurePath(str(op.created.year), op.number)
-
-    def __str__(self):
-        return self.filename

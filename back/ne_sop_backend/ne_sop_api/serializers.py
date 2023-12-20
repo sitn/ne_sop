@@ -1,6 +1,7 @@
 from rest_framework import serializers
+from ne_sop_api.utils import Utils
+
 from ne_sop_api.models import (
-    # Document,
     NewDocument,
     Entity,
     EntityType,
@@ -266,36 +267,6 @@ class TemplateSerializer(serializers.ModelSerializer):
         ]
 
 
-# class DocumentSerializer(serializers.ModelSerializer):
-#     id = serializers.IntegerField(required=False, read_only=False)
-
-#     template = serializers.SlugRelatedField(
-#         queryset=Template.objects.all(),
-#         slug_field='name',
-#     )
-
-#     author = serializers.SlugRelatedField(
-#         queryset=Entity.objects.all(),
-#         slug_field='name',
-#     )
-
-#     class Meta:
-#         model = Document
-#         fields = [
-#             "id",
-#             "created",
-#             # "uuid",
-#             "template",
-#             "note",
-#             # "valid",
-#             # "relpath",
-#             "version",
-#             "filename",
-#             "size",
-#             "author",
-#         ]
-
-
 class FileSerializer(serializers.Serializer):
     file = serializers.FileField()
 
@@ -323,6 +294,45 @@ class NewEventSerializer(serializers.ModelSerializer):
             "description",
             "valid",
         ]
+
+
+class NewDocumentSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False, read_only=False)
+
+    template = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    template_id = serializers.PrimaryKeyRelatedField(source="template", queryset=Template.objects.all(), write_only=True)
+    
+    author = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    author_id = serializers.PrimaryKeyRelatedField(source="author", queryset=Entity.objects.all(), write_only=True)
+    
+    version = serializers.IntegerField(required=False)
+
+    item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
+    file = serializers.FileField()
+
+    class Meta:
+        model = NewDocument
+        fields = [
+            "id",
+            "uuid",
+            "created",
+            "filename",
+            "template",
+            "template_id",
+            "note",
+            "version",
+            "size",
+            "item",
+            "author",
+            "author_id",
+            "file",
+        ]
+
+    def create(self, validated_data):
+        version = Utils.get_next_documentVersion(NewDocument, validated_data)
+        validated_data['version'] = version
+        document = NewDocument.objects.create(**validated_data)
+        return document
 
 
 class NewItemSerializer(serializers.ModelSerializer):
@@ -354,7 +364,7 @@ class NewItemSerializer(serializers.ModelSerializer):
 
     events = NewEventSerializer(required=False, many=True)
 
-    # documents = DocumentSerializer(required=False, many=True)
+    documents = NewDocumentSerializer(required=False, many=True)
 
     class Meta:
         model = Item
@@ -466,36 +476,4 @@ class NewItemSerializer(serializers.ModelSerializer):
                 Event.objects.create(item=instance, **new_event)
 
         return instance
-    
-
-class NewDocumentSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False, read_only=True)
-
-    template = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    template_id = serializers.PrimaryKeyRelatedField(source="template", queryset=Template.objects.all(), write_only=True)
-    
-    author = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    author_id = serializers.PrimaryKeyRelatedField(source="author", queryset=Entity.objects.all(), write_only=True)
-    
-    item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
-    file = serializers.FileField()
-
-    class Meta:
-        model = NewDocument
-        fields = [
-            "id",
-            "uuid",
-            "created",
-            "filename",
-            "template",
-            "template_id",
-            "note",
-            "version",
-            "size",
-            "item",
-            "author",
-            "author_id",
-            "file",
-        ]
-
 
