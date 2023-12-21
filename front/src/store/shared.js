@@ -45,11 +45,6 @@ export const checkWebsite = (val, allowEmpty = true) => {
 
 }
 
-export const formatPhoneNumber = (val) => {
-    // console.log('formatPhoneNumber')
-    /// console.log(val)
-}
-
 export const checkFile = (val) => {
     if (val) {
         return true
@@ -66,7 +61,7 @@ export const checkDate = (val) => {
     let dmy = val.split(".")
     let day = parseInt(dmy[0])
     let month = parseInt(dmy[1] - 1)
-    let year = parseInt(dmy[2].padStart(4, 0)) // 
+    let year = parseInt(dmy[2].padStart(4, 0))
 
     const eventDate = new Date()
     eventDate.setFullYear(year)
@@ -97,35 +92,15 @@ export const checkFilled = (val) => {
 
 export const downloadICS = async (val) => {
 
-    console.log('download ICS')
-    console.log(val)
-
-    // const extract = date => val.date.toISOString().split(/[^0-9]/).slice(0, -1)
-    // let date = new Date(val.date)
     let eventDate = date.extractDate(val.date, 'DD.MM.YYYY')
-    console.log(eventDate)
-
     let dateArray = [eventDate.getFullYear(), eventDate.getMonth() + 1, eventDate.getDate()]
-    console.log(dateArray)
 
     let event = {
-        start: dateArray, // Date.parse(val.date), //  [2018, 5, 30, 6, 30],
+        start: dateArray,
         duration: { hours: 1, minutes: 0 },
         title: `Objet parlementaire ${val.itemNumber}`,
         description: '',
         location: '',
-        /*
-        url: 'http://www.bolderboulder.com/',
-        geo: { lat: 40.0095, lon: 105.2669 },
-        categories: ['10k races', 'Memorial Day Weekend', 'Boulder CO'],
-        status: 'CONFIRMED',
-        busyStatus: 'BUSY',
-        organizer: { name: 'Admin', email: 'Race@BolderBOULDER.com' },
-        attendees: [
-            { name: 'Adam Gibbons', email: 'adam@example.com', rsvp: true, partstat: 'ACCEPTED', role: 'REQ-PARTICIPANT' },
-            { name: 'Brittany Seaton', email: 'brittany@example2.org', dir: 'https://linkedin.com/in/brittanyseaton', role: 'OPT-PARTICIPANT' }
-        ]
-        */
     }
 
     const filename = 'sop.ics'
@@ -140,8 +115,6 @@ export const downloadICS = async (val) => {
     })
     const url = URL.createObjectURL(file);
 
-    // trying to assign the file URL to a window could cause cross-site
-    // issues so this is a workaround using HTML5
     const anchor = document.createElement('a');
     anchor.href = url;
     anchor.download = filename;
@@ -153,40 +126,6 @@ export const downloadICS = async (val) => {
     URL.revokeObjectURL(url);
 }
 
-/*
-downloadICS(val) {
-
-    console.log(val)
-
-    let event = {
-        start: [2018, 5, 30, 6, 30],
-        duration: { hours: 6, minutes: 30 },
-        title: 'Bolder Boulder',
-        description: 'Annual 10-kilometer run in Boulder, Colorado',
-        location: 'Folsom Field, University of Colorado (finish line)',
-        url: 'http://www.bolderboulder.com/',
-        geo: { lat: 40.0095, lon: 105.2669 },
-        categories: ['10k races', 'Memorial Day Weekend', 'Boulder CO'],
-        status: 'CONFIRMED',
-        busyStatus: 'BUSY',
-        organizer: { name: 'Admin', email: 'Race@BolderBOULDER.com' },
-
-    }
-
-    ics.createEvent(event, (error, value) => {
-        if (error) {
-            console.log(error)
-            return
-        }
-        window.open("data:text/calendar;charset=utf8," + value);
-        console.log(value)
-    })
-
-}
-
-*/
-
-// source: https://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
 export const formatBytes = (bytes, decimals = 2) => {
     if (!+bytes) return '0 Bytes'
 
