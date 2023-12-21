@@ -443,10 +443,10 @@ export const store = reactive({
 
 
     // DELETE DOCUMENT BY ID
-    async deleteDocument(document_id, item_id) {
+    async deleteDocument(document_id) {
         try {
 
-            const response = await fetch(`${host}/api/document/` + document_id,
+            const response = await fetch(`${host}/api/newdocument/${document_id}/`,
                 {
                     method: 'DELETE',
                     redirect: 'follow'

@@ -129,6 +129,7 @@ export default {
         },
         async deleteRessource(ressource) {
             this.documents = this.documents.filter(x => x.filename !== ressource.filename)
+            store.deleteDocument(ressource.id)
         },
     }
 }
