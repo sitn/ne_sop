@@ -97,7 +97,7 @@ class Item(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    support = models.ManyToManyField(Entity, blank=True, related_name="support")
+    support = models.ManyToManyField(Entity, blank=True, related_name="item")
 
     class Meta:
         ordering = ["created"]
