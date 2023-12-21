@@ -1,7 +1,19 @@
 # APACHE mod_wsgi needs to be enabled
+# https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/modwsgi/
 # CHANGE THE APP PATH HERE:
-WSGIScriptAlias /api /path/to/wsgi/file/app.wsgi
+Define API_ROOT "/path/to/your/api"
 
-<location /api>
+Alias /ne_sop_api/static "${API_ROOT}/ne_sop_backend/ne_sop_backend/static"
+<Directory "${API_ROOT}/ne_sop_backend/ne_sop_backend/static">
     Require all granted
-</location>
+</Directory>
+
+WSGIScriptAlias /ne_sop_api "${API_ROOT}/ne_sop_backend/ne_sop_backend/wsgi.py"
+WSGIPythonHome "${API_ROOT}/venv"
+WSGIPythonPath "${API_ROOT}/"
+
+<Directory "${API_ROOT}/ne_sop_backend/ne_sop_backend/">
+    <Files wsgi.py>
+        Require all granted
+    </Files>
+</Directory>
