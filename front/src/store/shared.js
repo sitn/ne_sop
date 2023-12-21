@@ -51,8 +51,6 @@ export const formatPhoneNumber = (val) => {
 }
 
 export const checkFile = (val) => {
-    //console.log('checkFile')
-    //console.log(val)
     if (val) {
         return true
     } else {
@@ -61,13 +59,9 @@ export const checkFile = (val) => {
 }
 
 export const checkDate = (val) => {
-    // let mydate = date.extractDate(val, 'DD.MM.YYYY')
-    // console.log(`val: ${val}`)
 
     let reg = /^[0-9]{2}.[0-9]{2}.[0-9]{4}$/
     let isValidMask = reg.test(val)
-
-    // console.log(`val: ${val} reg: ${isValidMask}`)
 
     let dmy = val.split(".")
     let day = parseInt(dmy[0])
@@ -82,17 +76,6 @@ export const checkDate = (val) => {
     let isValidDate = parseInt(eventDate.getDate()) === parseInt(day) &&
         parseInt(eventDate.getMonth()) === parseInt(month) &&
         parseInt(eventDate.getFullYear()) === parseInt(year)
-
-    /*
-    const result = eventDate.toLocaleDateString("fr-CH", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-    })
-
-    console.log(eventDate)
-    console.log(result)
-    */
 
     return (isValidDate & isValidMask) ? true : 'Format non-valable'
 
