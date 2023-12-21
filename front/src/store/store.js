@@ -1,6 +1,9 @@
 // store.js
 import { reactive } from 'vue'
 import users from '../assets/data/users.json'
+import config from '../../config.json'
+
+const host = config.api_host.replace(/\/+$/, '')
 
 export const store = reactive({
     dev: true,
@@ -20,7 +23,7 @@ export const store = reactive({
         try {
 
             // await sleep(1300)
-            const response = await fetch(`http://127.0.0.1:8000/api/entity?page=${page}&size=${size}&search=${search}&type=${type}&sortby=${sortBy}&descending=${descending}`, {
+            const response = await fetch(`${host}/api/entity?page=${page}&size=${size}&search=${search}&type=${type}&sortby=${sortBy}&descending=${descending}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -35,7 +38,7 @@ export const store = reactive({
     async getEntity(id) {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}`, {
+            const response = await fetch(`${host}/api/entity/${id}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -50,7 +53,7 @@ export const store = reactive({
     async updateEntity(id, data) {
         try {
             // await sleep(1000)
-            const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}/`, {
+            const response = await fetch(`${host}/api/entity/${id}/`, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
@@ -72,7 +75,7 @@ export const store = reactive({
         try {
 
             // await sleep(1000)
-            const response = await fetch(`http://127.0.0.1:8000/api/entity/`, {
+            const response = await fetch(`${host}/api/entity/`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -94,7 +97,7 @@ export const store = reactive({
         try {
 
             // await sleep(1000)
-            const response = await fetch(`http://127.0.0.1:8000/api/entity/${id}`, {
+            const response = await fetch(`${host}/api/entity/${id}`, {
                 method: 'DELETE',
                 redirect: 'follow'
             })
@@ -109,7 +112,7 @@ export const store = reactive({
     async getEntityTypes() {
         try {
 
-            const response = await fetch('http://127.0.0.1:8000/api/entity-type/', {
+            const response = await fetch(`${host}/api/entity-type/`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -124,7 +127,7 @@ export const store = reactive({
     async getItems(search = "", page = 1, size = 10, sortBy = "", descending = "false") {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/item?page=${page}&size=${size}&sortby=${sortBy}&descending=${descending}&search=${search}`, {
+            const response = await fetch(`${host}/api/item?page=${page}&size=${size}&sortby=${sortBy}&descending=${descending}&search=${search}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -139,7 +142,7 @@ export const store = reactive({
     async getItem(id) {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/item/${id}`, {
+            const response = await fetch(`${host}/api/item/${id}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -154,7 +157,7 @@ export const store = reactive({
     async updateItem(id, data) {
         try {
             // await sleep(1000)
-            const response = await fetch(`http://127.0.0.1:8000/api/item/${id}/`, {
+            const response = await fetch(`${host}/api/item/${id}/`, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
@@ -177,7 +180,7 @@ export const store = reactive({
 
             // http://127.0.0.1:8000/api/item/
             // await sleep(1000)
-            const response = await fetch(`http://127.0.0.1:8000/api/item/`, {
+            const response = await fetch(`${host}/api/item/`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -198,7 +201,7 @@ export const store = reactive({
     async deleteItem(id) {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/item/${id}`, {
+            const response = await fetch(`${host}/api/item/${id}`, {
                 method: 'DELETE',
                 redirect: 'follow'
             })
@@ -213,7 +216,7 @@ export const store = reactive({
     async getItemTypes() {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/item-type`, {
+            const response = await fetch(`${host}/api/item-type`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -228,7 +231,7 @@ export const store = reactive({
     async getItemStatus() {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/item-status`, {
+            const response = await fetch(`${host}/api/item-status`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -244,7 +247,7 @@ export const store = reactive({
     async getEvents(search = "", item = "", page = 1, size = 10, sortBy = "", descending = "false") {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/event?page=${page}&size=${size}&sortby=${sortBy}&descending=${descending}&item=${item}&search=${search}`, {
+            const response = await fetch(`${host}/api/event?page=${page}&size=${size}&sortby=${sortBy}&descending=${descending}&item=${item}&search=${search}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -259,7 +262,7 @@ export const store = reactive({
     async getEvent(id) {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/event/${id}`, {
+            const response = await fetch(`${host}/api/event/${id}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -274,7 +277,7 @@ export const store = reactive({
     async updateEvent(id, data) {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/event/${id}/`, {
+            const response = await fetch(`${host}/api/event/${id}/`, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
@@ -295,7 +298,7 @@ export const store = reactive({
     async addEvent(data) {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/event/`, {
+            const response = await fetch(`${host}/api/event/`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -316,7 +319,7 @@ export const store = reactive({
     async deleteEvent(id) {
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/api/event/${id}`, {
+            const response = await fetch(`${host}/api/event/${id}`, {
                 method: 'DELETE',
                 redirect: 'follow'
             })
@@ -331,7 +334,7 @@ export const store = reactive({
     async getEventTypes() {
         try {
 
-            const response = await fetch('http://127.0.0.1:8000/api/event-type/', {
+            const response = await fetch(`${host}/api/event-type/`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -348,7 +351,7 @@ export const store = reactive({
         // this.documents.push(Object.assign({}, this.document))
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/document?item_id=' + item_id, {
+            const response = await fetch(`${host}/api/document?item_id=` + item_id, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -365,7 +368,7 @@ export const store = reactive({
     async getTemplatesByItemType(type_id) {
         try {
 
-            const response = await fetch('http://127.0.0.1:8000/api/template-types?itemtype_id=' + type_id, {
+            const response = await fetch(`${host}/api/template-types?itemtype_id=` + type_id, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -381,7 +384,7 @@ export const store = reactive({
     async uploadDocument(formData, filename, item_id) {
         try {
 
-            const response = await fetch('http://127.0.0.1:8000/api/fileupload/' + filename, {
+            const response = await fetch(`${host}/api/fileupload/` + filename, {
                 method: 'POST',
                 body: formData,
                 redirect: 'follow'
@@ -401,7 +404,7 @@ export const store = reactive({
         try {
 
             window.open(
-                'http://127.0.0.1:8000/api/filedownload/' + document_id,
+                `${host}/api/filedownload/` + document_id,
                 {
                     method: 'GET',
                     redirect: 'follow'
@@ -418,7 +421,7 @@ export const store = reactive({
     async deleteDocument(document_id, item_id) {
         try {
 
-            const response = await fetch('http://127.0.0.1:8000/api/document/' + document_id,
+            const response = await fetch(`${host}/api/document/` + document_id,
                 {
                     method: 'DELETE',
                     redirect: 'follow'
