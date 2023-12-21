@@ -61,7 +61,7 @@
     </q-dialog> -->
 
     <!-- DELETE DIALOG -->
-    <DeleteDialog v-model="dialog.deletion" @delete-event="deleteRessource(selected)" />
+    <DeleteDialog v-model="dialog.deletion" @delete-event="deleteRessource(selected)" :content="dialog_content" />
 </template>
 
 <script>
@@ -98,6 +98,7 @@ export default {
             selected: null,
             dialog: { newDocument: false, deletion: false },
             columns: columns,
+            dialog_content: undefined,
         }
     },
     computed: {
@@ -125,6 +126,7 @@ export default {
         // },
         handleDeletion(val) {
             this.selected = val
+            this.dialog_content = `Supprimer définitivement le document '${val.filename}' ?`
             this.dialog.deletion = true
         },
         async deleteRessource(ressource) {
