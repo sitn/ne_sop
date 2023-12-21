@@ -536,7 +536,6 @@ class NewDocumentViewSet(viewsets.ViewSet):
     )
     def destroy(self, request, pk=None):
         document = get_object_or_404(self.queryset, pk=pk)
-        print('document', document)
         os.remove(PurePath(settings.MEDIA_ROOT, document.file.name))
         document.delete()
         return Response({"msg": "Document deleted"})

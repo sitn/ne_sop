@@ -460,7 +460,6 @@ class NewItemSerializer(serializers.ModelSerializer):
 
             # IF EVENT ALREADY EXISTS, UPDATE IT
             if event_id:
-                print("Update (event exists)")
                 event_instance = Event.objects.get(id=event_id, item=instance)
                 event_instance.date = new_event.get("date", event_instance.date)
                 event_instance.time = new_event.get("time", event_instance.time)
@@ -473,7 +472,6 @@ class NewItemSerializer(serializers.ModelSerializer):
 
             # IF EVENT DOES NOT EXISTS, CREATE IT
             else:
-                print("CREATE (event does not exist)")
                 Event.objects.create(item=instance, **new_event)
 
         return instance

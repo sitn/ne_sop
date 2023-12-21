@@ -41,7 +41,6 @@ class Utils(object):
     
     @classmethod
     def get_next_documentVersion(cls, DocumentModel, data):
-        print(data)
         documents = DocumentModel.objects.filter(
             item=data['item'],
             template=data['template']
