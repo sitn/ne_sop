@@ -1,6 +1,5 @@
 <template>
     <Form :model="event" :edit="edit" @validation-event="validation">
-        <!-- <Form ref="FormContainer" :model="event" :edit="edit" @validation-event="validation"> -->
 
         <template v-slot:body>
 
@@ -8,17 +7,31 @@
             <FormSection title="Événement">
                 <template v-slot:content>
 
+                    <div class="row q-col-gutter-lg q-py-md" v-if="item">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <div class="text-weight-medium">{{ item.number }} - {{ item.type.name }}</div>
+                            <router-link :to="{
+                                name: 'Item',
+                                params: {
+                                    id: item.id
+                                }
+                            }">
+                                <div>{{ item.title }}</div>
+
+                            </router-link>
+                        </div>
+                    </div>
+
                     <div class="row q-col-gutter-lg q-py-md">
 
                         <!-- DATE INPUT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <!--  <q-input type="date" bg-color="white" outlined v-model="eventDate" label="Date" required /> mask="MM.DD.YYYY" -->
-                            <!-- <q-input bg-color="white" outlined v-model="event.date" label="Date" mask="date" :rules="['date']" :disable="!edit"> -->
-                            <q-input bg-color="white" outlined v-model="event.date" label="Date (jj.mm.aaaa)" mask="##.##.####" fill-mask :rules="[val => checkDate(val)]" :disable="!edit">
+                            <!-- <q-input type="date" pattern="\d{2}.\d{2}.\d{4}" bg-color="white" outlined v-model="event.date" label="Date (jj.mm.aaaa)" required> -->
+                            <q-input bg-color="white" outlined v-model="event.date" label="Date (jj.mm.aaaa)" mask="##.##.####" :rules="[val => checkDate(val)]" :disable="!edit">
                                 <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                                            <q-date v-model="event.date" mask="DD.MM.YYYY" color="blue-grey" text-color="white">
+                                            <q-date v-model="event.date" mask="DD.MM.YYYY" today-btn color="blue-grey" text-color="white">
                                                 <div class="row justify-end">
                                                     <q-btn v-close-popup label="Fermer" color="primary" flat />
                                                 </div>
@@ -31,7 +44,7 @@
                                                 <q-date v-model="event.date"></q-date>
                                             </q-popup-proxy>
                                         </q-icon>
-                                        -->
+                                    -->
                                 </template>
                             </q-input>
                         </div>
@@ -115,15 +128,12 @@ export default {
     components: { Form, FormSection },
     props: { 'edit': Boolean, 'modelValue': Object, 'mode': String },
     emits: ['update:modelValue', 'validationEvent'],
-    setup() {
-        return {
-        }
-    },
     data() {
         return {
             store,
             valid: null,
             eventTypes: [],
+            item: null,
         }
     },
     computed: {
@@ -136,19 +146,12 @@ export default {
             }
         }
     },
-    watch: {
-        /*
-        event: {
-            handler(newVal, oldVal) {
-                console.log(`valid date: ${date.isValid(newVal.date)}`)
-            },
-            deep: true
-        }
-        */
-    },
     async created() {
 
         this.eventTypes = await this.store.getEventTypes()
+        if (this.event.item) {
+            this.item = await this.store.getItem(this.event.item, true)
+        }
         // console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
     },
 

@@ -7,6 +7,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r"item", views.ItemViewSet, basename="item")
+router.register(r"item-summary", views.ItemSummaryViewSet, basename="item-summary")
 router.register(r"item-type", views.ItemTypeViewSet, basename="item-type")
 router.register(r"item-status", views.ItemStatusViewSet, basename="item-status")
 router.register(r"entity", views.EntityViewSet, basename="entity")
