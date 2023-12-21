@@ -7,6 +7,21 @@
             <FormSection title="Événement">
                 <template v-slot:content>
 
+                    <div class="row q-col-gutter-lg q-py-md" v-if="item">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <div class="text-weight-medium">{{ item.number }} - {{ item.type.name }}</div>
+                            <router-link :to="{
+                                name: 'Item',
+                                params: {
+                                    id: item.id
+                                }
+                            }">
+                                <div>{{ item.title }}</div>
+
+                            </router-link>
+                        </div>
+                    </div>
+
                     <div class="row q-col-gutter-lg q-py-md">
 
                         <!-- DATE INPUT FIELD -->
@@ -118,6 +133,7 @@ export default {
             store,
             valid: null,
             eventTypes: [],
+            item: null,
         }
     },
     computed: {
@@ -133,6 +149,9 @@ export default {
     async created() {
 
         this.eventTypes = await this.store.getEventTypes()
+        if (this.event.item) {
+            this.item = await this.store.getItem(this.event.item, true)
+        }
         // console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
     },
 
