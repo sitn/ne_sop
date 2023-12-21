@@ -65,7 +65,7 @@ export const checkDate = (val) => {
     let dmy = val.split(".")
     let day = parseInt(dmy[0])
     let month = parseInt(dmy[1] - 1)
-    let year = parseInt(dmy[2].padStart(4, 0))
+    let year = parseInt(dmy[2])
 
     const eventDate = new Date()
     eventDate.setFullYear(year)
