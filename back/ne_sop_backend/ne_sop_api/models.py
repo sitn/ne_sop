@@ -193,7 +193,7 @@ class NewDocument(models.Model):
 
     @property
     def relpath(self):
-        return PurePath(str(self.item.created.year), self.item.number, self.file.name)
+        return PurePath(str(self.item.created.year), str(self.item.id), self.file.name)
 
     def __str__(self):
         return self.file.name

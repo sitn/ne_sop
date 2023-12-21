@@ -166,6 +166,9 @@ export const store = reactive({
     async updateItem(id, data) {
         try {
             // await sleep(1000)
+            let documents = data.documents
+            delete data.documents
+
             const response = await fetch(`${host}/api/item/${id}/`, {
                 method: 'PUT',
                 headers: {
@@ -175,7 +178,11 @@ export const store = reactive({
                 redirect: 'follow',
             })
 
-            return await response.json()
+            await response.json()
+            
+            await this.prepareAddDocuments(documents, data)
+            
+            return await this.getItem(id)
 
         } catch (error) {
             console.error(error)
@@ -183,50 +190,31 @@ export const store = reactive({
 
     },
 
+
     // ADD NEW ITEM
     async addItem(data) {
         let documents = data.documents
         delete data.documents
 
-        let ITEM = null
+        try {
+            const response = await fetch(`${host}/api/item/`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+                redirect: 'follow',
+            })
 
-        await fetch("http://127.0.0.1:8000/api/item/", {
-            method: 'POST',
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(data),
-            redirect: 'follow'
-        })
-        .then(response => response.json())
-        .then(item => {
-            console.log('item', item)
+            let tmp = await response.json()
             
-            ITEM = item
+            await this.prepareAddDocuments(documents, tmp)
 
-            let promises = []
-            documents.forEach(x => {
-                let formData = new FormData()
-                formData.append('file', x.file)
-                formData.append('filename', x.filename)
-                formData.append('created', x.created)
-                formData.append('template', x.template)
-                formData.append('template_id', x.template_id)
-                formData.append('size', x.size)
-                formData.append('note', x.note)
-                formData.append('author_id', x.author_id)
-                formData.append('item', item.id)
-    
-                promises.push(store.addDocument(formData, x.filename))
-            });
+            return await this.getItem(tmp.id)
 
-            console.log('promises', promises)
-            
-            Promise.all(promises)
-            .catch(error => console.log('error', error))
-        })
-        .catch(error => console.log('error', error))
-
-        return ITEM
-
+        } catch (error) {
+            console.error(error)
+        }
     },
 
     // DELETE ITEM
@@ -382,7 +370,7 @@ export const store = reactive({
     async getTemplatesByItemType(type_id) {
         try {
 
-                const response = await fetch(`http://127.0.0.1:8000/api/template-types?itemtype_id=${type_id}`, {
+                const response = await fetch(`${host}/api/template-types?itemtype_id=${type_id}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -394,11 +382,36 @@ export const store = reactive({
     },
 
 
+    // PREPARE UPLOAD DOCUMENTS
+    async prepareAddDocuments(documents, item) {
+        documents = documents.filter(x => x.id === undefined)
+
+        let promises = []
+        documents.forEach(x => {
+            let formData = new FormData()
+            formData.append('file', x.file)
+            formData.append('filename', x.filename)
+            formData.append('created', x.created)
+            formData.append('template', x.template)
+            formData.append('template_id', x.template_id)
+            formData.append('size', x.size)
+            formData.append('note', x.note)
+            formData.append('author_id', x.author_id)
+            formData.append('item', item.id)
+
+            promises.push(store.addDocument(formData, x.filename))
+        });
+
+        Promise.all(promises)
+        .catch(error => console.log('error', error))
+    },
+
+
     // UPLOAD DOCUMENT
     async addDocument(formData) {
         try {
     
-            const response = await fetch('http://127.0.0.1:8000/api/newdocument/', {
+            const response = await fetch(`${host}/api/newdocument/`, {
                 method: 'POST',
                 body: formData,
                 redirect: 'follow'
@@ -416,7 +429,7 @@ export const store = reactive({
         try {
 
             window.open(
-                `${host}/api/filedownload/` + document_id,
+                `${host}/api/newdocument/${document_id}/`,
                 {
                     method: 'GET',
                     redirect: 'follow'

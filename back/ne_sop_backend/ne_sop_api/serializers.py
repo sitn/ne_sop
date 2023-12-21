@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from ne_sop_api.utils import Utils
+import os
 
 from ne_sop_api.models import (
     NewDocument,
@@ -301,15 +302,14 @@ class NewDocumentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False, read_only=False)
 
     template = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    template_id = serializers.PrimaryKeyRelatedField(source="template", queryset=Template.objects.all(), write_only=True)
+    template_id = serializers.PrimaryKeyRelatedField(source='template', queryset=Template.objects.all(), write_only=True)
     
     author = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    author_id = serializers.PrimaryKeyRelatedField(source="author", queryset=Entity.objects.all(), write_only=True)
+    author_id = serializers.PrimaryKeyRelatedField(source='author', queryset=Entity.objects.all(), write_only=True)
     
     version = serializers.IntegerField(required=False)
 
     item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
-    file = serializers.FileField()
 
     class Meta:
         model = NewDocument
@@ -332,6 +332,24 @@ class NewDocumentSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         version = Utils.get_next_documentVersion(NewDocument, validated_data)
         validated_data['version'] = version
+
+        template = validated_data.get('template')
+
+        file = validated_data.get('file', None)
+
+        filename = file.name
+        file_extension = filename.rsplit(".", 1)[1]
+
+        if int(template.id) != int(os.environ["NESOP_TEMPLATE_AUTRE_ID"]):
+            template = Template.objects.filter(id=template.id).first()
+            filename = template.filename
+
+        filename = filename.rsplit(".", 1)[0] + f"_v{version}." + file_extension
+
+        file.name = filename
+        validated_data['file'] = file
+        validated_data['filename'] = filename
+
         document = NewDocument.objects.create(**validated_data)
         return document
 

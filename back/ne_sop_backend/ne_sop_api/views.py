@@ -529,7 +529,7 @@ class NewDocumentViewSet(viewsets.ViewSet):
     parser_classes = [MultiPartParser]
 
     queryset = NewDocument.objects.all()
-    serializer_class = NewDocument
+    serializer_class = NewDocumentSerializer
 
     @extend_schema(
         responses=NewDocumentSerializer,
@@ -548,9 +548,20 @@ class NewDocumentViewSet(viewsets.ViewSet):
     )
     def retrieve(self, request, pk):
         document = get_object_or_404(self.queryset, pk=pk)
-        serializer = NewDocumentSerializer(document)
-        return Response(serializer.data)
-    
+
+        filepath = PurePath(settings.MEDIA_ROOT, document.file.name)
+        filepath = open(filepath, "rb")
+        
+        response = FileResponse(
+            filepath, filename=document.filename, as_attachment=True
+        )
+
+        headers = response.headers
+        headers["Content-Type"] = "application/download"
+        headers["Accept-Ranges"] = "bite"
+        response["Content-Disposition"] = f"attachment; filename={document.filename}"
+        return response
+
     @extend_schema(
         responses=NewDocumentSerializer,
         tags=["NewDocument"],

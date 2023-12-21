@@ -31,10 +31,10 @@
                 </q-td>
                 <q-td key="actions" :props="props">
                     <div class="float-right">
-                        <q-btn dense round flat color="grey" name="edit" @click="store.downloadDocument(props.row.id)" icon="sym_o_download" :disable="!edit">
+                        <q-btn dense round flat color="grey" name="download" @click="store.downloadDocument(props.row.id)" icon="sym_o_download" :disable="!edit">
                             <q-tooltip class="bg-black">Télécharger</q-tooltip>
                         </q-btn>
-                        <!-- <q-btn dense round flat color="blue" name="delete" @click="handleEdition(props.row)" icon="sym_o_edit" :disable="!edit">
+                        <!-- <q-btn dense round flat color="blue" name="edit" @click="handleEdition(props.row)" icon="sym_o_edit" :disable="!edit">
                             <q-tooltip class="bg-black">Modifier</q-tooltip>
                         </q-btn> -->
                         <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row)" icon="sym_o_delete" :disable="!edit">

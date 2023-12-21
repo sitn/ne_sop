@@ -36,8 +36,7 @@ export default {
         }
     },
     created() {
-        // console.log(`${this.$options.name}.vue | created()`)
-        this.document = Object.assign({}, this.modelValue) // assign a copy of the model value, to bypass reactivity
+        this.document = Object.assign({}, this.modelValue)
     },
     methods: {
         save() {

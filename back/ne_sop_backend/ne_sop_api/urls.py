@@ -1,4 +1,4 @@
-from django.urls import path, include, re_path
+from django.urls import path, include
 
 # from rest_framework.urlpatterns import format_suffix_patterns
 from ne_sop_api import views
