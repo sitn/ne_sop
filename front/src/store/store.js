@@ -369,8 +369,8 @@ export const store = reactive({
     // GET LIST OF TEMPLATES FOR THIS ITEM TYPE
     async getTemplatesByItemType(type_id) {
         try {
-
-                const response = await fetch(`${host}/api/template-types?itemtype_id=${type_id}`, {
+            
+            const response = await fetch(`${host}/api/template-types?itemtype_id=${type_id}`, {
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -411,7 +411,7 @@ export const store = reactive({
     async addDocument(formData) {
         try {
     
-            const response = await fetch(`${host}/api/newdocument/`, {
+            const response = await fetch(`${host}/api/document/`, {
                 method: 'POST',
                 body: formData,
                 redirect: 'follow'
@@ -429,7 +429,7 @@ export const store = reactive({
         try {
 
             window.open(
-                `${host}/api/newdocument/${document_id}/`,
+                `${host}/api/document/${document_id}/`,
                 {
                     method: 'GET',
                     redirect: 'follow'
@@ -446,7 +446,7 @@ export const store = reactive({
     async deleteDocument(document_id) {
         try {
 
-            const response = await fetch(`${host}/api/newdocument/${document_id}/`,
+            const response = await fetch(`${host}/api/document/${document_id}/`,
                 {
                     method: 'DELETE',
                     redirect: 'follow'

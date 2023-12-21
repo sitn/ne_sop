@@ -3,7 +3,7 @@ from ne_sop_api.utils import Utils
 import os
 
 from ne_sop_api.models import (
-    NewDocument,
+    Document,
     Entity,
     EntityType,
     Event,
@@ -298,7 +298,7 @@ class NewEventSerializer(serializers.ModelSerializer):
         ]
 
 
-class NewDocumentSerializer(serializers.ModelSerializer):
+class DocumentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False, read_only=False)
 
     template = serializers.SlugRelatedField(slug_field='name', read_only=True)
@@ -312,7 +312,7 @@ class NewDocumentSerializer(serializers.ModelSerializer):
     item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
 
     class Meta:
-        model = NewDocument
+        model = Document
         fields = [
             "id",
             "uuid",
@@ -330,8 +330,9 @@ class NewDocumentSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        version = Utils.get_next_documentVersion(NewDocument, validated_data)
+        version = Utils.get_next_documentVersion(Document, validated_data)
         validated_data['version'] = version
+
 
         template = validated_data.get('template')
 
@@ -350,7 +351,7 @@ class NewDocumentSerializer(serializers.ModelSerializer):
         validated_data['file'] = file
         validated_data['filename'] = filename
 
-        document = NewDocument.objects.create(**validated_data)
+        document = Document.objects.create(**validated_data)
         return document
 
 
@@ -383,7 +384,7 @@ class NewItemSerializer(serializers.ModelSerializer):
 
     events = NewEventSerializer(required=False, many=True)
 
-    documents = NewDocumentSerializer(required=False, many=True)
+    documents = DocumentSerializer(required=False, many=True)
 
     class Meta:
         model = Item

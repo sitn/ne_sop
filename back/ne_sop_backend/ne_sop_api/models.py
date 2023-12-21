@@ -176,7 +176,7 @@ class Template(models.Model):
         return self.name
 
 
-class NewDocument(models.Model):
+class Document(models.Model):
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True)
     template = models.ForeignKey(Template, null=True, on_delete=models.SET_NULL)

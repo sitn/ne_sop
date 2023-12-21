@@ -1,5 +1,5 @@
 from ne_sop_api.models import (
-    NewDocument,
+    Document,
     Entity,
     EntityType,
     Event,
@@ -12,7 +12,7 @@ from ne_sop_api.models import (
 )
 from ne_sop_api.serializers import (
     # DocumentSerializer,
-    NewDocumentSerializer,
+    DocumentSerializer,
     EntitySerializer,
     EntityListSerializer,
     EntityTypeSerializer,
@@ -522,29 +522,29 @@ class TemplateTypeViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 # from pprint import pprint
-class NewDocumentViewSet(viewsets.ViewSet):
+class DocumentViewSet(viewsets.ViewSet):
     """
     New document viewset
     """
     parser_classes = [MultiPartParser]
 
-    queryset = NewDocument.objects.all()
-    serializer_class = NewDocumentSerializer
+    queryset = Document.objects.all()
+    serializer_class = DocumentSerializer
 
     @extend_schema(
-        responses=NewDocumentSerializer,
-        tags=["NewDocument"],
+        responses=DocumentSerializer,
+        tags=["Document"],
     )
     def create(self, request):
-        serializer = NewDocumentSerializer(data=request.data)
+        serializer = DocumentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     @extend_schema(
-        responses=NewDocumentSerializer,
-        tags=["NewDocument"],
+        responses=DocumentSerializer,
+        tags=["Document"],
     )
     def retrieve(self, request, pk):
         document = get_object_or_404(self.queryset, pk=pk)
@@ -563,8 +563,8 @@ class NewDocumentViewSet(viewsets.ViewSet):
         return response
 
     @extend_schema(
-        responses=NewDocumentSerializer,
-        tags=["NewDocument"],
+        responses=DocumentSerializer,
+        tags=["Document"],
     )
     def destroy(self, request, pk=None):
         document = get_object_or_404(self.queryset, pk=pk)
