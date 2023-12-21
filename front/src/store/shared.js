@@ -19,6 +19,10 @@ export const checkPhoneNumber = (val, allowEmpty = true) => {
 
 }
 
+export const formatPhoneNumber = (val) => {
+    // TO DO: implement auto-formatting of phone numbers 
+}
+
 export const checkEmail = (val, allowEmpty = true) => {
 
     let reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
