@@ -46,9 +46,8 @@ export const checkWebsite = (val, allowEmpty = true) => {
 }
 
 export const formatPhoneNumber = (val) => {
-    // this.entity.telephone = '+41255555555'
-    console.log('formatPhoneNumber')
-    console.log(val)
+    // console.log('formatPhoneNumber')
+    /// console.log(val)
 }
 
 export const checkFile = (val) => {
@@ -62,26 +61,41 @@ export const checkFile = (val) => {
 }
 
 export const checkDate = (val) => {
-    let mydate = date.extractDate(val, 'DD.MM.YYYY')
-
+    // let mydate = date.extractDate(val, 'DD.MM.YYYY')
     // console.log(`val: ${val}`)
-    // console.log(date.formatDate(mydate, 'DD.MM.YYYY'))
-    // console.log(date.formatDate(mydate, 'YYYY/MM/DD'))
-    // console.log(!isNaN(new Date(date.formatDate(mydate, 'YYYY/MM/DD'))))
 
-    // !isNaN(new Date('2322/16/12'))
-    // console.log(mydate)
+    let reg = /^[0-9]{2}.[0-9]{2}.[0-9]{4}$/
+    let isValidMask = reg.test(val)
 
-    // console.log(val.split("."))
+    // console.log(`val: ${val} reg: ${isValidMask}`)
+
     let dmy = val.split(".")
-    let mymydate = new Date(dmy[2], dmy[1] - 1, dmy[0])
-    // console.log(mymydate)
+    let day = parseInt(dmy[0])
+    let month = parseInt(dmy[1] - 1)
+    let year = parseInt(dmy[2].padStart(4, 0)) // 
 
-    let newDate = `${dmy[2]}/${dmy[1]}/${dmy[0]}`;
-    // console.log(newDate)
+    const eventDate = new Date()
+    eventDate.setFullYear(year)
+    eventDate.setMonth(month)
+    eventDate.setDate(day)
 
-    // console.log(`date valid: ${date.isValid(mydate)}`)
-    return date.isValid(mydate) ? true : 'Format non-valable'
+    let isValidDate = parseInt(eventDate.getDate()) === parseInt(day) &&
+        parseInt(eventDate.getMonth()) === parseInt(month) &&
+        parseInt(eventDate.getFullYear()) === parseInt(year)
+
+    /*
+    const result = eventDate.toLocaleDateString("fr-CH", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    })
+
+    console.log(eventDate)
+    console.log(result)
+    */
+
+    return (isValidDate & isValidMask) ? true : 'Format non-valable'
+
 }
 
 export const checkTime = (val, allowEmpty = true) => {
