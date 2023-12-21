@@ -139,10 +139,18 @@ export const store = reactive({
     },
 
     // GET ITEM DETAILS
-    async getItem(id) {
+    async getItem(id, summary = false) {
         try {
 
-            const response = await fetch(`${host}/api/item/${id}`, {
+            let url = ""
+            if (summary) {
+                url = `${host}/api/item-summary/${id}`
+            } else {
+                url = `${host}/api/item/${id}`
+            }
+
+            const response = await fetch(url, {
+
                 method: 'GET',
                 redirect: 'follow'
             })
@@ -152,6 +160,7 @@ export const store = reactive({
             console.error(error)
         }
     },
+
 
     // UPDATE ITEM
     async updateItem(id, data) {

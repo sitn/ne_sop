@@ -17,6 +17,7 @@ from ne_sop_api.serializers import (
     EntityTypeSerializer,
     FileSerializer,
     NewItemSerializer,
+    NestedItemSerializer,
     ItemListSerializer,
     ItemTypeSerializer,
     ItemStatusSerializer,
@@ -231,6 +232,26 @@ class ItemStatusViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
+# ITEM SUMMARY
+class ItemSummaryViewSet(viewsets.ViewSet):
+    """
+    Item summary viewset
+    """
+
+    queryset = Item.objects.all()
+    serializer_class = NestedItemSerializer
+    search_fields = ["title", "number"]
+
+    @extend_schema(
+        tags=["Items"],
+    )
+    def retrieve(self, request, pk=None):
+        item = get_object_or_404(self.queryset, pk=pk)
+        serializer = NestedItemSerializer(item)
+        return Response(serializer.data)
+
+
+# ITEM
 class ItemViewSet(viewsets.ViewSet):
     """
     Item viewset
