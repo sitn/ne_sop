@@ -150,6 +150,7 @@ export const store = reactive({
             }
 
             const response = await fetch(url, {
+
                 method: 'GET',
                 redirect: 'follow'
             })
