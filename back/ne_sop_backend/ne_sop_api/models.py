@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
-from pathlib import Path
+from pathlib import Path, PurePath
+import os
 
+from ne_sop_api.utils import Utils
 
 # %% ENTITY TYPE
 class EntityType(models.Model):
@@ -71,7 +73,7 @@ class ItemStatus(models.Model):
 
 # %% ITEM
 class Item(models.Model):
-    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     number = models.CharField(max_length=30, blank=True, default="")
     title = models.CharField(max_length=512, blank=True, default="")
@@ -175,23 +177,24 @@ class Template(models.Model):
 
 
 class Document(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
+    created = models.DateTimeField(auto_now_add=True)
     template = models.ForeignKey(Template, null=True, on_delete=models.SET_NULL)
     note = models.CharField(max_length=500, blank=True, default="")
-    valid = models.BooleanField(default=True)
-    relpath = models.CharField(default=None, max_length=200)
+    filename = models.CharField(default=None, max_length=200)
     version = models.PositiveIntegerField(default=None)
     size = models.PositiveIntegerField(default=0, null=False)
-    item = models.ForeignKey(Item, related_name="document", on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, related_name="documents", on_delete=models.CASCADE)
     author = models.ForeignKey(Entity, null=True, on_delete=models.SET_NULL)
+    file = models.FileField(upload_to=Utils.get_upload_path)
 
     class Meta:
         ordering = ["created"]
 
     @property
-    def filename(self):
-        return Path(self.relpath).name
+    def relpath(self):
+        return PurePath(str(self.item.created.year), str(self.item.id), self.file.name)
 
     def __str__(self):
-        return self.filename
+        return self.file.name
+

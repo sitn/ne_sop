@@ -11,11 +11,10 @@ from ne_sop_api.models import (
     User,
 )
 from ne_sop_api.serializers import (
-    DocumentByItemSerializer,
+    DocumentSerializer,
     EntitySerializer,
     EntityListSerializer,
     EntityTypeSerializer,
-    FileSerializer,
     NewItemSerializer,
     NestedItemSerializer,
     ItemListSerializer,
@@ -36,10 +35,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
 from rest_framework import filters
 from django.core.paginator import Paginator
 from django.http import HttpResponse, FileResponse
+
+from django.conf import settings
 
 from ne_sop_api.utils import Utils
 
@@ -491,48 +492,6 @@ class TemplateViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-class DocumentViewSet(viewsets.ViewSet):
-    """
-    Documents viewset
-    """
-
-    queryset = Document.objects.all()
-    # serializer_class = DocumentByItemSerializer
-
-    @extend_schema(
-        responses=DocumentByItemSerializer,
-        tags=["Documents"],
-    )
-    def list(self, request):
-        item_id = (
-            request.query_params.get("item_id")
-            if "item_id" in request.query_params
-            else None
-        )
-
-        documents = Document.objects
-        if item_id is not None:
-            documents = documents.filter(item_id=item_id)
-        documents = documents.all().order_by("template", "-version")
-
-        serializer = DocumentByItemSerializer(documents, many=True)
-        return Response(serializer.data)
-
-    @extend_schema(
-        tags=["Documents"],
-    )
-    def destroy(self, request, pk=None):
-        document = get_object_or_404(self.queryset, pk=pk)
-
-        root_dir = os.environ["NESOP_OP_PATH"]
-        filepath = Path(PurePath(root_dir, document.relpath))
-        if filepath.exists():
-            os.remove(filepath)
-
-        document.delete()
-        return Response({"msg": "Document deleted"})
-
-
 class TemplateTypeViewSet(viewsets.ViewSet):
     """
     Template types viewset
@@ -561,93 +520,53 @@ class TemplateTypeViewSet(viewsets.ViewSet):
 
         return Response(serializer.data)
 
-
-class FileUploadView(views.APIView):
+# from pprint import pprint
+class DocumentViewSet(viewsets.ViewSet):
+    """
+    New document viewset
+    """
     parser_classes = [MultiPartParser]
 
-    @extend_schema(
-        responses=FileSerializer,
-        tags=["Documents"],
-    )
-    def post(self, request, filename):
-        serializer = FileSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        file_obj = request.FILES["file"]
-        item_id = request.data["item_id"] if "item_id" in request.data else None
-        template_id = (
-            request.data["template_id"] if "template_id" in request.data else None
-        )
-        note = request.data["note"] if "note" in request.data else None
-        size = request.data["size"] if "size" in request.data else None
-        author_id = request.data["author_id"] if "author_id" in request.data else None
-
-        documents = (
-            Document.objects.filter(item=item_id, template=template_id)
-            .all()
-            .order_by("-version")
-        )
-
-        version = 1
-        if len(documents) > 0:
-            version = documents[0].version + 1
-
-        file_extension = filename.rsplit(".", 1)[1]
-
-        if int(template_id) != int(os.environ["NESOP_TEMPLATE_AUTRE_ID"]):
-            template = Template.objects.filter(id=template_id).first()
-            filename = template.filename
-
-        filename = filename.rsplit(".", 1)[0] + f"_v{version}." + file_extension
-
-        root_dir = os.environ["NESOP_OP_PATH"]
-        op = Item.objects.filter(id=item_id).first()
-        relpath = PurePath(str(op.created.year), op.number, filename)
-        filepath = PurePath(root_dir, relpath)
-
-        filepath = Utils.iterateFilename(filepath)
-
-        if not os.path.exists(Path(filepath).resolve().parent):
-            os.makedirs(Path(filepath).resolve().parent)
-
-        with open(filepath, "wb") as output_file:
-            shutil.copyfileobj(file_obj.file, output_file)
-
-        document = Document()
-        document.template_id = template_id
-        document.note = note
-        document.relpath = relpath
-        document.version = version
-        document.item_id = item_id
-        document.size = size
-        document.author_id = author_id
-
-        document.save()
-
-        return Response({"msg": "Document created"}, status=status.HTTP_201_CREATED)
-
-
-class FileDownloadView(views.APIView):
     queryset = Document.objects.all()
+    serializer_class = DocumentSerializer
 
     @extend_schema(
-        tags=["Documents"],
+        responses=DocumentSerializer,
+        tags=["Document"],
     )
-    def get(self, request, pk=None, format=None):
-        print("pk =", pk)
+    def create(self, request):
+        serializer = DocumentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    @extend_schema(
+        responses=DocumentSerializer,
+        tags=["Document"],
+    )
+    def retrieve(self, request, pk):
         document = get_object_or_404(self.queryset, pk=pk)
 
-        root_dir = os.environ["NESOP_OP_PATH"]
-        filepath = PurePath(root_dir, document.relpath)
-        print("filepath = ", filepath)
+        filepath = PurePath(settings.MEDIA_ROOT, document.file.name)
         filepath = open(filepath, "rb")
-
+        
         response = FileResponse(
             filepath, filename=document.filename, as_attachment=True
         )
+
         headers = response.headers
         headers["Content-Type"] = "application/download"
         headers["Accept-Ranges"] = "bite"
         response["Content-Disposition"] = f"attachment; filename={document.filename}"
         return response
+
+    @extend_schema(
+        responses=DocumentSerializer,
+        tags=["Document"],
+    )
+    def destroy(self, request, pk=None):
+        document = get_object_or_404(self.queryset, pk=pk)
+        os.remove(PurePath(settings.MEDIA_ROOT, document.file.name))
+        document.delete()
+        return Response({"msg": "Document deleted"})

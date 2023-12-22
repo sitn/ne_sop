@@ -5,7 +5,7 @@
 
       <q-card-section class="row items-center">
         <q-avatar icon="sym_o_delete_forever" color="red" text-color="white" />
-        <span class="q-ml-sm">Supprimer définitivement cette entrée et tous les éléments liés?</span>
+        <span class="q-ml-sm">{{ content }}</span>
       </q-card-section>
 
       <q-card-actions align="right">
@@ -20,7 +20,10 @@
 <script>
 export default {
   name: 'DeleteDialog',
-  props: { 'modelValue': Boolean },
+  props: {
+    'modelValue': Boolean,
+    'content': {type: String, default: () => 'Supprimer définitivement cette entrée et tous les éléments liés?'}
+  },
   emits: ['update:modelValue', 'deleteEvent'],
   methods: {
     remove() {
