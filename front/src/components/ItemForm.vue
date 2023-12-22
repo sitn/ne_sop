@@ -222,8 +222,7 @@
                 <template v-slot:content>
 
                     <!-- DOCUMENTS TABLE -->
-                    <!-- <DocumentsTable v-model="documents" :type="item.type" :edit="edit"></DocumentsTable> -->
-                    <!-- <DocumentsTable v-model="item.documents" :type="item.type" :edit="edit"></DocumentsTable> -->
+                    <DocumentsTable v-model="item.documents" :type="item.type" :edit="edit"></DocumentsTable>
 
                 </template>
             </FormSection>
@@ -303,7 +302,6 @@ export default {
         this.itemTypes = await store.getItemTypes()
         // this.events = await store.getEvents("", this.item.id, 1, 20) // search = "", item = "", page = 1, size = 10
 
-        this.documents = await store.getDocuments(this.$route.params.id)
     },
     async mounted() {
 
