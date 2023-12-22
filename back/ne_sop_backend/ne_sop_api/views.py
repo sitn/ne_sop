@@ -8,7 +8,6 @@ from ne_sop_api.models import (
     ItemStatus,
     ItemType,
     Template,
-    User,
 )
 from ne_sop_api.serializers import (
     DocumentByItemSerializer,
@@ -28,9 +27,10 @@ from ne_sop_api.serializers import (
     UserSerializer,
 )
 
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.models import User
 from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404
-from rest_framework import generics
 from rest_framework import viewsets, views
 from rest_framework.response import Response
 from rest_framework import status
@@ -42,6 +42,11 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse, FileResponse
 
 from ne_sop_api.utils import Utils
+from ne_sop_api.permissions import (
+    IsManagerPermission,
+    IsManagerOrReadOnlyPermission,
+    isAllowedRegadingEntitiesAndItemId
+)
 
 from pathlib import Path, PurePath
 import os
@@ -67,6 +72,7 @@ class UserViewSet(viewsets.ViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsManagerPermission]
 
     @extend_schema(
         responses=UserSerializer,
@@ -78,21 +84,13 @@ class UserViewSet(viewsets.ViewSet):
 
 
 # %% ENTITY TYPE
-class EntityTypeViewSet(viewsets.ViewSet):
+class EntityTypeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Entity types viewset
     """
 
     queryset = EntityType.objects.all()
     serializer_class = EntityTypeSerializer
-
-    @extend_schema(
-        responses=EntityTypeSerializer,
-        tags=["Entity type"],
-    )
-    def list(self, request):
-        serializer = EntityTypeSerializer(self.queryset, many=True)
-        return Response(serializer.data)
 
 
 # %% ENTITY
@@ -103,6 +101,7 @@ class EntityViewSet(viewsets.ViewSet):
 
     serializer_class = EntitySerializer
     search_fields = ["name", "email", "telephone"]
+    permission_classes = [IsManagerOrReadOnlyPermission]
 
     @extend_schema(
         tags=["Entities"],
@@ -197,7 +196,7 @@ class EntityViewSet(viewsets.ViewSet):
 
 
 # %% ITEM TYPE
-class ItemTypeViewSet(viewsets.ViewSet):
+class ItemTypeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Item types viewset
     """
@@ -205,31 +204,16 @@ class ItemTypeViewSet(viewsets.ViewSet):
     queryset = ItemType.objects.all()
     serializer_class = ItemTypeSerializer
 
-    @extend_schema(
-        responses=ItemTypeSerializer,
-        tags=["Item types"],
-    )
-    def list(self, request):
-        serializer = ItemTypeSerializer(self.queryset, many=True)
-        return Response(serializer.data)
 
 
 # %% ITEM STATUS
-class ItemStatusViewSet(viewsets.ViewSet):
+class ItemStatusViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Item status viewset
     """
 
     queryset = ItemStatus.objects.all()
     serializer_class = ItemStatusSerializer
-
-    @extend_schema(
-        responses=ItemStatusSerializer,
-        tags=["Item status"],
-    )
-    def list(self, request):
-        serializer = ItemStatusSerializer(self.queryset, many=True)
-        return Response(serializer.data)
 
 
 # ITEM SUMMARY
@@ -257,9 +241,14 @@ class ItemViewSet(viewsets.ViewSet):
     Item viewset
     """
 
-    queryset = Item.objects.all()
     serializer_class = NewItemSerializer
     search_fields = ["title", "number"]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name='Manager').exists():
+            return Item.objects.all()
+        return Item.objects.filter(support__in=user.entities.all())
 
     @extend_schema(
         responses=NewItemSerializer,
@@ -267,7 +256,7 @@ class ItemViewSet(viewsets.ViewSet):
     )
     def list(self, request):
         filter = filters.SearchFilter()
-        queryset = filter.filter_queryset(request, Item.objects.all(), self)
+        queryset = filter.filter_queryset(request, self.get_queryset(), self)
 
         title = request.query_params.get("title", "")
         number = request.query_params.get("number", "")
@@ -337,7 +326,7 @@ class ItemViewSet(viewsets.ViewSet):
         tags=["Items"],
     )
     def retrieve(self, request, pk=None):
-        item = get_object_or_404(self.queryset, pk=pk)
+        item = get_object_or_404(self.get_queryset(), pk=pk)
         serializer = NewItemSerializer(item)
         return Response(serializer.data)
 
@@ -345,7 +334,7 @@ class ItemViewSet(viewsets.ViewSet):
         tags=["Items"],
     )
     def update(self, request, pk=None):
-        item = get_object_or_404(self.queryset, pk=pk)
+        item = get_object_or_404(self.get_queryset(), pk=pk)
         serializer = NewItemSerializer(item, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -356,27 +345,19 @@ class ItemViewSet(viewsets.ViewSet):
         tags=["Items"],
     )
     def destroy(self, request, pk=None):
-        item = get_object_or_404(self.queryset, pk=pk)
+        item = get_object_or_404(self.get_queryset(), pk=pk)
         item.delete()
         return Response({"msg": "Item deleted"})
 
 
 # %% EVENT TYPE
-class EventTypeViewSet(viewsets.ViewSet):
+class EventTypeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Event types viewset
     """
 
     queryset = EventType.objects.all()
     serializer_class = EventTypeSerializer
-
-    @extend_schema(
-        responses=EventTypeSerializer,
-        tags=["Event types"],
-    )
-    def list(self, request):
-        serializer = EventTypeSerializer(self.queryset, many=True)
-        return Response(serializer.data)
 
 
 # %% EVENT
@@ -385,9 +366,13 @@ class EventViewSet(viewsets.ViewSet):
     Events viewset
     """
 
-    queryset = Event.objects.all()
     serializer_class = EventSerializer
     search_fields = ["date", "item__number", "item__title"]
+    permission_classes = [IsManagerOrReadOnlyPermission]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Event.objects.filter(item__support__in=user.entities.all())
 
     @extend_schema(
         responses=EventSerializer,
@@ -395,7 +380,7 @@ class EventViewSet(viewsets.ViewSet):
     )
     def list(self, request):
         filter = filters.SearchFilter()
-        queryset = filter.filter_queryset(request, Event.objects.all(), self)
+        queryset = filter.filter_queryset(request, self.get_queryset(), self)
 
         # queryset = Event.objects.all()
         item = request.query_params.get("item", None)
@@ -410,7 +395,7 @@ class EventViewSet(viewsets.ViewSet):
         if descending not in ["true", "false"]:
             descending = "false"
 
-        if len(item):
+        if item and len(item) > 0:
             queryset = queryset.filter(item__exact=item)
 
         if descending == "true":
@@ -449,7 +434,7 @@ class EventViewSet(viewsets.ViewSet):
         tags=["Events"],
     )
     def retrieve(self, request, pk=None):
-        event = get_object_or_404(self.queryset, pk=pk)
+        event = get_object_or_404(self.get_queryset(), pk=pk)
         serializer = EventSerializer(event)
         return Response(serializer.data)
 
@@ -457,7 +442,7 @@ class EventViewSet(viewsets.ViewSet):
         tags=["Events"],
     )
     def update(self, request, pk=None):
-        event = get_object_or_404(self.queryset, pk=pk)
+        event = get_object_or_404(self.get_queryset(), pk=pk)
         serializer = EventSerializer(event, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -468,13 +453,13 @@ class EventViewSet(viewsets.ViewSet):
         tags=["Events"],
     )
     def destroy(self, request, pk=None):
-        event = get_object_or_404(self.queryset, pk=pk)
+        event = get_object_or_404(self.get_queryset(), pk=pk)
         event.delete()
         return Response({"msg": "Event deleted"})
 
 
 # %% TEMPLATE
-class TemplateViewSet(viewsets.ViewSet):
+class TemplateViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Templates viewset
     """
@@ -482,22 +467,17 @@ class TemplateViewSet(viewsets.ViewSet):
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
 
-    @extend_schema(
-        responses=TemplateSerializer,
-        tags=["Templates"],
-    )
-    def list(self, request):
-        serializer = TemplateSerializer(self.queryset, many=True)
-        return Response(serializer.data)
-
 
 class DocumentViewSet(viewsets.ViewSet):
     """
     Documents viewset
     """
 
-    queryset = Document.objects.all()
     # serializer_class = DocumentByItemSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return Document.objects.filter(item__support__in=user.entities.all())
 
     @extend_schema(
         responses=DocumentByItemSerializer,
@@ -522,7 +502,7 @@ class DocumentViewSet(viewsets.ViewSet):
         tags=["Documents"],
     )
     def destroy(self, request, pk=None):
-        document = get_object_or_404(self.queryset, pk=pk)
+        document = get_object_or_404(self.get_queryset(), pk=pk)
 
         root_dir = os.environ["NESOP_OP_PATH"]
         filepath = Path(PurePath(root_dir, document.relpath))
@@ -576,6 +556,8 @@ class FileUploadView(views.APIView):
 
         file_obj = request.FILES["file"]
         item_id = request.data["item_id"] if "item_id" in request.data else None
+        if not isAllowedRegadingEntitiesAndItemId(request.user, item_id):
+            raise PermissionDenied()
         template_id = (
             request.data["template_id"] if "template_id" in request.data else None
         )
@@ -629,14 +611,18 @@ class FileUploadView(views.APIView):
 
 
 class FileDownloadView(views.APIView):
-    queryset = Document.objects.all()
+    permission_classes = [IsManagerPermission]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Document.objects.filter(item__support__in=user.entities.all())
 
     @extend_schema(
         tags=["Documents"],
     )
     def get(self, request, pk=None, format=None):
         print("pk =", pk)
-        document = get_object_or_404(self.queryset, pk=pk)
+        document = get_object_or_404(self.get_queryset(), pk=pk)
 
         root_dir = os.environ["NESOP_OP_PATH"]
         filepath = PurePath(root_dir, document.relpath)
