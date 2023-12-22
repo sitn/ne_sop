@@ -281,7 +281,7 @@ export default {
             }
         },
         mailtostring() {
-            return `mailto:${this.item.users.map(o => o.email).join(";")}&subject=OP ${this.item.number} - ${this.item.title}&body=Bonjour,%0D%0A%0D%0AL'objet parlementaire ${this.item.number} a été modifié.%0D%0A%0D%0AConsulter les modifications: https://sop.ne.ch/items/${this.item.id}`
+            return `mailto:${this.item.users.map(o => o.email).join(";")}&subject=OP ${encodeURIComponent(this.item.number)} - ${encodeURIComponent(this.item.title)}&body=Bonjour,%0D%0A%0D%0AL'objet parlementaire ${encodeURIComponent(this.item.number)} a été modifié.%0D%0A%0D%0AConsulter les modifications: https://sop.ne.ch/items/${this.item.id}`
         }
     },
     beforeCreate() {
