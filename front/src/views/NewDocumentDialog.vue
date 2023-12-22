@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid'
 import { store } from '../store/store.js'
 import DocumentForm from "../components/DocumentForm.vue"
 
@@ -37,7 +36,6 @@ export default {
             store,
             edit: true,
             document: {
-                "id": uuidv4(),
                 "file": null,
                 "filename": "",
                 "filesize": "",

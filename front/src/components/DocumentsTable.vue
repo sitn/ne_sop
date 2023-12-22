@@ -131,7 +131,9 @@ export default {
         },
         async deleteRessource(ressource) {
             this.documents = this.documents.filter(x => x.filename !== ressource.filename)
-            store.deleteDocument(ressource.id)
+            if (ressource.id !== undefined) {
+                store.deleteDocument(ressource.id)
+            }
         },
     }
 }
