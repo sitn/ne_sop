@@ -88,6 +88,7 @@ class Item(models.Model):
     oralresponse = models.BooleanField(default=False)
     startdate = models.DateField(null=True)
     enddate = models.DateField(null=True)
+    autonotify = models.BooleanField(default=False)
     valid = models.BooleanField(default=True)
 
     lead = models.ForeignKey(
