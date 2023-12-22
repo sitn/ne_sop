@@ -172,6 +172,7 @@ class ItemSerializer(serializers.ModelSerializer):
             "lead",
             "support",
             "events",
+            "autonotify",
             "valid",
         ]
 
@@ -368,6 +369,7 @@ class NewItemSerializer(serializers.ModelSerializer):
             "lead",
             "support",
             "events",
+            "autonotify",
             "valid",
         ]
 
@@ -403,6 +405,7 @@ class NewItemSerializer(serializers.ModelSerializer):
         instance.author = validated_data.get("author", instance.author)
         instance.lead = validated_data.get("lead", instance.lead)
         instance.support.set(support)
+        instance.autonotify = validated_data.get("autonotify", instance.autonotify)
         instance.valid = validated_data.get("valid", instance.valid)
 
         # for key, value in validated_data.items():
