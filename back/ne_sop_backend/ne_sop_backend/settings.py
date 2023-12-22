@@ -82,7 +82,7 @@ ROOT_URLCONF = "ne_sop_backend.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ["ne_sop_api/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -151,7 +151,7 @@ USE_TZ = True
 
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "ne_sop_backend", "static")
+STATIC_ROOT = PurePath(BASE_DIR, "ne_sop_backend", "static")
 
 # Media files
 MEDIA_URL='/media/'
