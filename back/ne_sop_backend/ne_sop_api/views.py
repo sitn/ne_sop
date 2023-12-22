@@ -11,7 +11,6 @@ from ne_sop_api.models import (
     User,
 )
 from ne_sop_api.serializers import (
-    # DocumentSerializer,
     DocumentSerializer,
     EntitySerializer,
     EntityListSerializer,
