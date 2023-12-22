@@ -302,12 +302,16 @@ class NewEventSerializer(serializers.ModelSerializer):
 class DocumentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False, read_only=False)
 
-    template = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    template_id = serializers.PrimaryKeyRelatedField(source='template', queryset=Template.objects.all(), write_only=True)
-    
-    author = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    author_id = serializers.PrimaryKeyRelatedField(source='author', queryset=Entity.objects.all(), write_only=True)
-    
+    template = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    template_id = serializers.PrimaryKeyRelatedField(
+        source="template", queryset=Template.objects.all(), write_only=True
+    )
+
+    author = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    author_id = serializers.PrimaryKeyRelatedField(
+        source="author", queryset=Entity.objects.all(), write_only=True
+    )
+
     version = serializers.IntegerField(required=False)
 
     item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
@@ -332,12 +336,11 @@ class DocumentSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         version = Utils.get_next_documentVersion(Document, validated_data)
-        validated_data['version'] = version
+        validated_data["version"] = version
 
+        template = validated_data.get("template")
 
-        template = validated_data.get('template')
-
-        file = validated_data.get('file', None)
+        file = validated_data.get("file", None)
 
         filename = file.name
         file_extension = filename.rsplit(".", 1)[1]
@@ -349,8 +352,8 @@ class DocumentSerializer(serializers.ModelSerializer):
         filename = filename.rsplit(".", 1)[0] + f"_v{version}." + file_extension
 
         file.name = filename
-        validated_data['file'] = file
-        validated_data['filename'] = filename
+        validated_data["file"] = file
+        validated_data["filename"] = filename
 
         document = Document.objects.create(**validated_data)
         return document
@@ -406,6 +409,7 @@ class NewItemSerializer(serializers.ModelSerializer):
             "events",
             "autonotify",
             "documents",
+            "users",
             "valid",
         ]
 
@@ -497,4 +501,3 @@ class NewItemSerializer(serializers.ModelSerializer):
                 Event.objects.create(item=instance, **new_event)
 
         return instance
-
