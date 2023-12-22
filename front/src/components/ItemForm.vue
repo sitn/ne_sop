@@ -281,7 +281,7 @@ export default {
             }
         },
         mailtostring() {
-            return `mailto:sitn@ne.ch&subject=Objet parlementaire ${this.item.number} - ${this.item.type.name}&body=Bonjour,%0D%0A%0D%0Al'objet parlementaire ${this.item.number} a été modifié.%0D%0A%0D%0AConsulter les modifications: https://sop.ne.ch/items/${this.item.id}`
+            return `mailto:${this.item.users.map(o => o.email).join(";")}&subject=OP ${this.item.number} - ${this.item.title}&body=Bonjour,%0D%0A%0D%0AL'objet parlementaire ${this.item.number} a été modifié.%0D%0A%0D%0AConsulter les modifications: https://sop.ne.ch/items/${this.item.id}`
         }
     },
     beforeCreate() {
