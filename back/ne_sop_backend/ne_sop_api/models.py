@@ -73,7 +73,7 @@ class ItemStatus(models.Model):
 
 # %% ITEM
 class Item(models.Model):
-    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     number = models.CharField(max_length=30, blank=True, default="")
     title = models.CharField(max_length=512, blank=True, default="")
