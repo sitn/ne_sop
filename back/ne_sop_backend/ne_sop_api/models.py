@@ -112,7 +112,7 @@ class Item(models.Model):
         related_users = (
             User.objects.filter(entities__in=related_entities)
             .distinct()
-            .values("id", "email")
+            .values("email")
         )
 
         return related_users
