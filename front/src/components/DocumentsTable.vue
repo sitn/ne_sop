@@ -11,7 +11,7 @@
     </div>
 
     <!-- DOCUMENTS TABLE -->
-    <q-table :rows="store.documents" :columns="columns" row-key="date" class="q-my-md">
+    <q-table :rows="documents" :columns="columns" row-key="date" class="q-my-md">
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="filename" :props="props">
@@ -31,10 +31,10 @@
                 </q-td>
                 <q-td key="actions" :props="props">
                     <div class="float-right">
-                        <q-btn dense round flat color="grey" name="edit" @click="store.downloadDocument(props.row.id)" icon="sym_o_download" :disable="!edit">
+                        <q-btn dense round flat color="grey" name="download" @click="store.downloadDocument(props.row.id)" icon="sym_o_download" :disable="!edit" v-if="props.row.id">
                             <q-tooltip class="bg-black">Télécharger</q-tooltip>
                         </q-btn>
-                        <!-- <q-btn dense round flat color="blue" name="delete" @click="handleEdition(props.row)" icon="sym_o_edit" :disable="!edit">
+                        <!-- <q-btn dense round flat color="blue" name="edit" @click="handleEdition(props.row)" icon="sym_o_edit" :disable="!edit">
                             <q-tooltip class="bg-black">Modifier</q-tooltip>
                         </q-btn> -->
                         <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row)" icon="sym_o_delete" :disable="!edit">
@@ -61,7 +61,7 @@
     </q-dialog> -->
 
     <!-- DELETE DIALOG -->
-    <DeleteDialog v-model="dialog.deletion" @delete-event="deleteRessource(selected)" />
+    <DeleteDialog v-model="dialog.deletion" @delete-event="deleteRessource(selected)" :content="dialog_content" />
 </template>
 
 <script>
@@ -98,6 +98,7 @@ export default {
             selected: null,
             dialog: { newDocument: false, deletion: false },
             columns: columns,
+            dialog_content: undefined,
         }
     },
     computed: {
@@ -125,13 +126,14 @@ export default {
         // },
         handleDeletion(val) {
             this.selected = val
+            this.dialog_content = `Supprimer définitivement le document '${val.filename}' ?`
             this.dialog.deletion = true
         },
-        async remove() {
-            this.documents = this.documents.filter((x) => (x.id !== this.selected))
-        },
         async deleteRessource(ressource) {
-            store.deleteDocument(ressource.id, this.$route.params.id)
+            this.documents = this.documents.filter(x => x.filename !== ressource.filename)
+            if (ressource.id !== undefined) {
+                store.deleteDocument(ressource.id)
+            }
         },
     }
 }
