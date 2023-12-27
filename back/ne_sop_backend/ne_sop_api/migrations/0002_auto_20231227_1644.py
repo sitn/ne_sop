@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("ne_sop_api", "0021_alter_entity_type_alter_entity_users_and_more"),
+        ("ne_sop_api", "0001_initial"),
     ]
 
     def apply_migration(apps, schema_editor):
