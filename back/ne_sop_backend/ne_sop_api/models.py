@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 import uuid
 from pathlib import Path, PurePath
-import os
 
 from ne_sop_api.utils import Utils
+
 
 # %% ENTITY TYPE
 class EntityType(models.Model):
@@ -90,6 +90,7 @@ class Item(models.Model):
     oralresponse = models.BooleanField(default=False)
     startdate = models.DateField(null=True)
     enddate = models.DateField(null=True)
+    autonotify = models.BooleanField(default=False)
     valid = models.BooleanField(default=True)
 
     lead = models.ForeignKey(
@@ -100,6 +101,18 @@ class Item(models.Model):
         on_delete=models.SET_NULL,
     )
     support = models.ManyToManyField(Entity, blank=True, related_name="item")
+
+    @property
+    def users(self):
+        related_entities = list(self.support.all())
+        related_entities.append(self.lead)
+        related_users = (
+            User.objects.filter(entities__in=related_entities)
+            .distinct()
+            .values("email")
+        )
+
+        return related_users
 
     class Meta:
         ordering = ["created"]
@@ -197,4 +210,3 @@ class Document(models.Model):
 
     def __str__(self):
         return self.file.name
-

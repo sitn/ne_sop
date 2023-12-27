@@ -143,38 +143,65 @@
                     <div class="row q-py-md">
 
                         <!-- URGENT CHECKBOX FIELD -->
-                        <q-item tag="label" v-ripple :disable="!edit">
-                            <q-item-section avatar>
-                                <q-checkbox v-model="item.urgent" val="true" color="blue" :disable="!edit" />
-                            </q-item-section>
-                            <q-item-section>
-                                <q-item-label>Urgent</q-item-label>
-                                <q-item-label caption>Demande nécessite un traitement prioritaire</q-item-label>
-                            </q-item-section>
-                        </q-item>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <q-item tag="label" v-ripple :disable="!edit">
+                                <q-item-section avatar>
+                                    <q-checkbox v-model="item.urgent" val="true" color="blue" :disable="!edit" />
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label>Urgent</q-item-label>
+                                    <q-item-label caption>Demande nécessite un traitement prioritaire</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                        </div>
 
                         <!-- WRITTEN RESPONSE CHECKBOX FIELD -->
-                        <q-item tag="label" v-ripple :disable="!edit">
-                            <q-item-section avatar>
-                                <q-checkbox v-model="item.writtenresponse" val="true" color="blue" :disable="!edit" />
-                            </q-item-section>
-                            <q-item-section>
-                                <q-item-label>Réponse écrite</q-item-label>
-                                <q-item-label caption>Demande nécessite une réponse écrite</q-item-label>
-                            </q-item-section>
-                        </q-item>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <q-item tag="label" v-ripple :disable="!edit">
+                                <q-item-section avatar>
+                                    <q-checkbox v-model="item.writtenresponse" val="true" color="blue" :disable="!edit" />
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label>Réponse écrite</q-item-label>
+                                    <q-item-label caption>Demande nécessite une réponse écrite</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                        </div>
 
                         <!-- ORAL RESPONSE CHECKBOX FIELD -->
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <q-item tag="label" v-ripple :disable="!edit">
+                                <q-item-section avatar>
+                                    <q-checkbox v-model="item.oralresponse" val="true" color="blue" :disable="!edit" />
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label>Réponse orale</q-item-label>
+                                    <q-item-label caption>Demande nécessite une réponse orale</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                        </div>
+
+                        <!-- AUTOMATIC NOTIFICATIONS CHECKBOX FIELD -->
                         <q-item tag="label" v-ripple :disable="!edit">
                             <q-item-section avatar>
-                                <q-checkbox v-model="item.oralresponse" val="true" color="blue" :disable="!edit" />
+                                <q-checkbox v-model="item.autonotify" val="true" color="blue" :disable="!edit" />
                             </q-item-section>
                             <q-item-section>
-                                <q-item-label>Réponse orale</q-item-label>
-                                <q-item-label caption>Demande nécessite une réponse orale</q-item-label>
+                                <q-item-label>Notification automatique</q-item-label>
+                                <q-item-label caption>Notifier le(s) service(s) à chaque changement</q-item-label>
                             </q-item-section>
                         </q-item>
 
+
+                    </div>
+
+                    <div class="row q-py-md">
+                        <!-- ADD NEW EVENT BUTTON -->
+                        <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
+                            <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_mail" label="Notifier" :href="mailtostring" @click="" :disable="!edit">
+                                <q-tooltip class="bg-black">Envoyer une notification au(x) service(s)</q-tooltip>
+                            </q-btn>
+                        </div>
                     </div>
 
                 </template>
@@ -252,6 +279,9 @@ export default {
             set(item) {
                 this.$emit('update:modelValue', item)
             }
+        },
+        mailtostring() {
+            return `mailto:${this.item.users.map(o => o.email).join(";")}&subject=OP ${encodeURIComponent(this.item.number)} - ${encodeURIComponent(this.item.title)}&body=Bonjour,%0D%0A%0D%0AL'objet parlementaire ${encodeURIComponent(this.item.number)} a été modifié.%0D%0A%0D%0AConsulter les modifications: https://sop.ne.ch/items/${this.item.id}`
         }
     },
     beforeCreate() {
