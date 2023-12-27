@@ -1,9 +1,7 @@
 // store.js
 import { reactive } from 'vue'
 import users from '../assets/data/users.json'
-import config from '../../config.json'
-
-const host = config.api_host.replace(/\/+$/, '')
+const host = import.meta.env.VITE_API_URL
 
 export const store = reactive({
     dev: true,
