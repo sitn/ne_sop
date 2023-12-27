@@ -2,9 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 import uuid
 from pathlib import Path, PurePath
-from django.db.models import Q
-
-import os
 
 from ne_sop_api.utils import Utils
 
