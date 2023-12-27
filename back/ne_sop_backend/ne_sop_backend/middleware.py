@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.middleware import RemoteUserMiddleware
-
+from django.contrib.auth.backends import RemoteUserBackend
 
 class RemoteSitnMiddleware(RemoteUserMiddleware):
     """
@@ -11,3 +11,7 @@ class RemoteSitnMiddleware(RemoteUserMiddleware):
         if settings.DEBUG and getattr(settings, "DEBUG_USER", None):
             request.META[self.header] = settings.DEBUG_USER
         super().process_request(request)
+
+
+class RemoteSitnUserBackend(RemoteUserBackend):
+    create_unknown_user = False
