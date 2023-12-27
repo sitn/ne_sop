@@ -1,4 +1,6 @@
 from pathlib import Path, PurePath
+from django.template import loader
+from django.conf import settings
 
 
 class Utils(object):
@@ -52,3 +54,28 @@ class Utils(object):
         
         return version
 
+
+    @classmethod
+    def itemCreatedNotification(cls, item, request):
+        template = loader.get_template("email_update_item_fr-ch.html")
+
+        context = {
+            'item_id': item.id,
+            'item_name': item.title,
+            'front_url': settings.FRONT_URL,
+        }
+        
+        return template.render(context, request) 
+
+
+    @classmethod
+    def itemChangedNotification(cls, item, request):
+        template = loader.get_template("email_update_item_fr-ch.html")
+
+        context = {
+            'item_id': item.id,
+            'item_name': item.title,
+            'front_url': settings.FRONT_URL,
+        }
+        
+        return template.render(context, request) 

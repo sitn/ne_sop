@@ -4,6 +4,45 @@ info:
   version: 1.0.0
   description: API documentation
 paths:
+  /api/document/:
+    get:
+      operationId: api_document_list
+      description: Documents viewset
+      tags:
+      - Documents
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Document'
+          description: ''
+  /api/document/{id}/:
+    delete:
+      operationId: api_document_destroy
+      description: Documents viewset
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this document.
+        required: true
+      tags:
+      - Documents
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
   /api/entity/:
     get:
       operationId: api_entity_list
@@ -15,7 +54,7 @@ paths:
       - basicAuth: []
       - {}
       responses:
-        '201':
+        '200':
           content:
             application/json:
               schema:
@@ -78,8 +117,7 @@ paths:
       - in: path
         name: id
         schema:
-          type: integer
-        description: A unique integer value identifying this entity.
+          type: string
         required: true
       tags:
       - Entities
@@ -101,8 +139,7 @@ paths:
       - in: path
         name: id
         schema:
-          type: integer
-        description: A unique integer value identifying this entity.
+          type: string
         required: true
       tags:
       - Entities
@@ -136,8 +173,7 @@ paths:
       - in: path
         name: id
         schema:
-          type: integer
-        description: A unique integer value identifying this entity.
+          type: string
         required: true
       tags:
       - Entities
@@ -292,10 +328,52 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/filedownload/{id}:
+    get:
+      operationId: api_filedownload_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          pattern: ^[^/]+$
+        required: true
+      tags:
+      - Documents
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/fileupload/{filename}:
+    post:
+      operationId: api_fileupload_create
+      parameters:
+      - in: path
+        name: filename
+        schema:
+          type: string
+          pattern: ^[^/]+$
+        required: true
+      tags:
+      - Documents
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+          description: ''
   /api/item/:
     get:
       operationId: api_item_list
-      description: Items viewset
+      description: Item viewset
       tags:
       - Items
       security:
@@ -309,24 +387,24 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Item'
+                  $ref: '#/components/schemas/NewItem'
           description: ''
     post:
       operationId: api_item_create
-      description: Items viewset
+      description: Item viewset
       tags:
       - Items
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ItemRequest'
+              $ref: '#/components/schemas/NewItemRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ItemRequest'
+              $ref: '#/components/schemas/NewItemRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ItemRequest'
+              $ref: '#/components/schemas/NewItemRequest'
         required: true
       security:
       - cookieAuth: []
@@ -337,7 +415,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
+                $ref: '#/components/schemas/NewItem'
+          description: ''
+  /api/item-status/:
+    get:
+      operationId: api_item_status_list
+      description: Item status viewset
+      tags:
+      - Item status
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemStatus'
           description: ''
   /api/item-type/:
     get:
@@ -361,7 +458,7 @@ paths:
   /api/item/{id}/:
     get:
       operationId: api_item_retrieve
-      description: Items viewset
+      description: Item viewset
       parameters:
       - in: path
         name: id
@@ -380,11 +477,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
+                $ref: '#/components/schemas/NewItem'
           description: ''
     put:
       operationId: api_item_update
-      description: Items viewset
+      description: Item viewset
       parameters:
       - in: path
         name: id
@@ -398,13 +495,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ItemRequest'
+              $ref: '#/components/schemas/NewItemRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ItemRequest'
+              $ref: '#/components/schemas/NewItemRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ItemRequest'
+              $ref: '#/components/schemas/NewItemRequest'
         required: true
       security:
       - cookieAuth: []
@@ -415,11 +512,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
+                $ref: '#/components/schemas/NewItem'
           description: ''
     delete:
       operationId: api_item_destroy
-      description: Items viewset
+      description: Item viewset
       parameters:
       - in: path
         name: id
@@ -455,6 +552,38 @@ paths:
                 items:
                   $ref: '#/components/schemas/Template'
           description: ''
+  /api/template-types/:
+    get:
+      operationId: api_template_types_list
+      description: Template types viewset
+      tags:
+      - Template type
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Template'
+          description: ''
+  /api/test:
+    get:
+      operationId: api_test_retrieve
+      description: Test backend
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /api/user/:
     get:
       operationId: api_user_list
@@ -476,6 +605,54 @@ paths:
           description: ''
 components:
   schemas:
+    Document:
+      type: object
+      properties:
+        id:
+          type: integer
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        template:
+          type: string
+        note:
+          type: string
+          maxLength: 500
+        version:
+          type: integer
+        filename:
+          type: string
+          readOnly: true
+        size:
+          type: integer
+        author:
+          type: string
+      required:
+      - author
+      - created
+      - filename
+      - template
+    DocumentRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        template:
+          type: string
+        note:
+          type: string
+          maxLength: 500
+        version:
+          type: integer
+        size:
+          type: integer
+        author:
+          type: string
+          minLength: 1
+      required:
+      - author
+      - template
     Entity:
       type: object
       properties:
@@ -490,9 +667,7 @@ components:
           type: string
           maxLength: 100
         type:
-          allOf:
-          - $ref: '#/components/schemas/EntityType'
-          readOnly: true
+          type: integer
         description:
           type: string
           maxLength: 256
@@ -526,6 +701,7 @@ components:
           type: boolean
       required:
       - id
+      - name
       - type
       - uuid
     EntityRequest:
@@ -533,10 +709,10 @@ components:
       properties:
         name:
           type: string
+          minLength: 1
           maxLength: 100
-        type_id:
+        type:
           type: integer
-          writeOnly: true
         description:
           type: string
           maxLength: 256
@@ -569,7 +745,8 @@ components:
         valid:
           type: boolean
       required:
-      - type_id
+      - name
+      - type
     EntityType:
       type: object
       properties:
@@ -581,12 +758,6 @@ components:
           maxLength: 50
       required:
       - id
-    EntityTypeRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 50
     Event:
       type: object
       properties:
@@ -603,14 +774,12 @@ components:
         time:
           type: string
           format: time
+          nullable: true
         type:
-          allOf:
-          - $ref: '#/components/schemas/EventType'
-          readOnly: true
+          type: integer
+          nullable: true
         item:
-          allOf:
-          - $ref: '#/components/schemas/Item'
-          readOnly: true
+          type: integer
         description:
           type: string
           maxLength: 500
@@ -620,8 +789,6 @@ components:
       - date
       - id
       - item
-      - time
-      - type
       - uuid
     EventRequest:
       type: object
@@ -632,12 +799,12 @@ components:
         time:
           type: string
           format: time
-        type_id:
+          nullable: true
+        type:
           type: integer
-          writeOnly: true
-        item_id:
+          nullable: true
+        item:
           type: integer
-          writeOnly: true
         description:
           type: string
           maxLength: 500
@@ -645,9 +812,7 @@ components:
           type: boolean
       required:
       - date
-      - item_id
-      - time
-      - type_id
+      - item
     EventType:
       type: object
       properties:
@@ -659,13 +824,90 @@ components:
           maxLength: 50
       required:
       - id
-    EventTypeRequest:
+    File:
       type: object
       properties:
+        file:
+          type: string
+          format: uri
+      required:
+      - file
+    ItemStatus:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
         name:
           type: string
           maxLength: 50
-    Item:
+        color:
+          type: string
+          maxLength: 50
+      required:
+      - id
+    ItemType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+      required:
+      - id
+    NewEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+        uuid:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+          nullable: true
+        type:
+          type: integer
+        description:
+          type: string
+          maxLength: 500
+        valid:
+          type: boolean
+      required:
+      - date
+      - type
+    NewEventRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        uuid:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+          nullable: true
+        type:
+          type: integer
+        description:
+          type: string
+          maxLength: 500
+        valid:
+          type: boolean
+      required:
+      - date
+      - type
+    NewItem:
       type: object
       properties:
         id:
@@ -682,26 +924,44 @@ components:
           type: string
           maxLength: 512
         type:
-          allOf:
-          - $ref: '#/components/schemas/ItemType'
-          readOnly: true
+          type: integer
         status:
-          allOf:
-          - $ref: '#/components/schemas/ItemStatus'
-          readOnly: true
+          type: integer
+        description:
+          type: string
+          maxLength: 600
+        urgent:
+          type: boolean
+        writtenresponse:
+          type: boolean
+        oralresponse:
+          type: boolean
         author:
-          allOf:
-          - $ref: '#/components/schemas/Entity'
-          readOnly: true
+          type: integer
+        lead:
+          type: integer
+        support:
+          type: array
+          items:
+            type: integer
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/NewEvent'
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
         valid:
           type: boolean
       required:
       - author
       - id
+      - lead
       - status
       - type
       - uuid
-    ItemRequest:
+    NewItemRequest:
       type: object
       properties:
         number:
@@ -710,61 +970,42 @@ components:
         title:
           type: string
           maxLength: 512
-        type_id:
+        type:
           type: integer
-          writeOnly: true
-        status_id:
+        status:
           type: integer
-          writeOnly: true
-        author_id:
+        description:
+          type: string
+          maxLength: 600
+        urgent:
+          type: boolean
+        writtenresponse:
+          type: boolean
+        oralresponse:
+          type: boolean
+        author:
           type: integer
-          writeOnly: true
+        lead:
+          type: integer
+        support:
+          type: array
+          items:
+            type: integer
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/NewEventRequest'
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentRequest'
         valid:
           type: boolean
       required:
-      - author_id
-      - status_id
-      - type_id
-    ItemStatus:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 50
-        color:
-          type: string
-          maxLength: 50
-      required:
-      - id
-    ItemStatusRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 50
-        color:
-          type: string
-          maxLength: 50
-    ItemType:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 50
-      required:
-      - id
-    ItemTypeRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 50
+      - author
+      - lead
+      - status
+      - type
     Template:
       type: object
       properties:

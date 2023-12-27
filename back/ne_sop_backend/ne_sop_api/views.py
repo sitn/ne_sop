@@ -26,10 +26,9 @@ from ne_sop_api.serializers import (
     UserSerializer,
 )
 
-from django.template import loader
-
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, views
@@ -559,13 +558,8 @@ def notificationNewItem(request, item_id):
     """
     Send mail for new items
     """
-    template = loader.get_template("email_update_item__fr-ch.html")
-
     item = get_object_or_404(Item.objects.all(), pk=item_id)
 
-    context = {
-        'item_id': item_id,
-        'item_name': item.title,
-    }
-    
-    return HttpResponse(template.render(context, request))
+    response = Utils.itemChangedNotification(item, request)
+
+    return HttpResponse(response)
