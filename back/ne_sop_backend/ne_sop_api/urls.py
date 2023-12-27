@@ -1,4 +1,4 @@
-from django.urls import path, include, re_path
+from django.urls import path, include
 
 # from rest_framework.urlpatterns import format_suffix_patterns
 from ne_sop_api import views
@@ -21,15 +21,6 @@ router.register(r"user", views.UserViewSet, basename="user")
 
 urlpatterns = [
     path("api/", include(router.urls)),
-    path("api/notification-new-item/<int:item_id>/", views.notificationNewItem),
-    re_path(
-        r"^api/fileupload/(?P<filename>[^/]+)$",
-        views.FileUploadView.as_view(),
-    ),
-    re_path(
-        r"^api/filedownload/(?P<pk>[^/]+)$",
-        views.FileDownloadView.as_view(),
-    ),
     path(
         "api/schema/",
         SpectacularAPIView.as_view(),

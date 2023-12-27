@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
-from pathlib import Path
+from pathlib import Path, PurePath
+
+from ne_sop_api.utils import Utils
 
 
 # %% ENTITY TYPE
@@ -34,7 +36,7 @@ class Entity(models.Model):
     website = models.URLField(max_length=512, blank=True, default="")
     email = models.EmailField(max_length=256, blank=True, default="")
     telephone = models.CharField(max_length=256, blank=True, default="")
-    users = models.ManyToManyField(User, blank=True, related_name="users")
+    users = models.ManyToManyField(User, blank=True, related_name="entities")
 
     valid = models.BooleanField(default=True)
     # owner = models.ForeignKey("auth.User", related_name="snippets", on_delete=models.CASCADE)
@@ -71,7 +73,7 @@ class ItemStatus(models.Model):
 
 # %% ITEM
 class Item(models.Model):
-    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     number = models.CharField(max_length=30, blank=True, default="")
     title = models.CharField(max_length=512, blank=True, default="")
@@ -88,6 +90,7 @@ class Item(models.Model):
     oralresponse = models.BooleanField(default=False)
     startdate = models.DateField(null=True)
     enddate = models.DateField(null=True)
+    autonotify = models.BooleanField(default=False)
     valid = models.BooleanField(default=True)
 
     lead = models.ForeignKey(
@@ -98,6 +101,18 @@ class Item(models.Model):
         on_delete=models.SET_NULL,
     )
     support = models.ManyToManyField(Entity, blank=True, related_name="item")
+
+    @property
+    def users(self):
+        related_entities = list(self.support.all())
+        related_entities.append(self.lead)
+        related_users = (
+            User.objects.filter(entities__in=related_entities)
+            .distinct()
+            .values("email")
+        )
+
+        return related_users
 
     class Meta:
         ordering = ["created"]
@@ -175,23 +190,23 @@ class Template(models.Model):
 
 
 class Document(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
+    created = models.DateTimeField(auto_now_add=True)
     template = models.ForeignKey(Template, null=True, on_delete=models.SET_NULL)
     note = models.CharField(max_length=500, blank=True, default="")
-    valid = models.BooleanField(default=True)
-    relpath = models.CharField(default=None, max_length=200)
+    filename = models.CharField(default=None, max_length=200)
     version = models.PositiveIntegerField(default=None)
     size = models.PositiveIntegerField(default=0, null=False)
-    item = models.ForeignKey(Item, related_name="document", on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, related_name="documents", on_delete=models.CASCADE)
     author = models.ForeignKey(Entity, null=True, on_delete=models.SET_NULL)
+    file = models.FileField(upload_to=Utils.get_upload_path)
 
     class Meta:
         ordering = ["created"]
 
     @property
-    def filename(self):
-        return Path(self.relpath).name
+    def relpath(self):
+        return PurePath(str(self.item.created.year), str(self.item.id), self.file.name)
 
     def __str__(self):
-        return self.filename
+        return self.file.name

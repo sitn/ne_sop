@@ -35,11 +35,6 @@ if DEBUG and os.environ.get('LOCAL_DEBUG_USER'):
 
 ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
 
-CSRF_TRUSTED_ORIGINS = []
-
-for host in ALLOWED_HOSTS:
-    CSRF_TRUSTED_ORIGINS.append(f'http://{host}')
-    CSRF_TRUSTED_ORIGINS.append(f'https://{host}')
 
 
 # Application definition
@@ -60,6 +55,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -68,9 +64,6 @@ MIDDLEWARE = [
     "ne_sop_backend.middleware.RemoteSitnMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # CORS
-    "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -165,6 +158,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
     "PAGE_SIZE": 10,
     "DATETIME_FORMAT": "%d.%m.%Y %H:%M:%S",
     "DATETIME_INPUT_FORMATS": ["%d.%m.%Y %H:%M:%S"],
@@ -172,6 +168,9 @@ REST_FRAMEWORK = {
     "DATE_INPUT_FORMATS": ["%d.%m.%Y"],
     "TIME_FORMAT": "%H:%M",
     "TIME_INPUT_FORMATS": ["%H:%M"],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        'rest_framework.authentication.RemoteUserAuthentication',
+    ),
 }
 
 SPECTACULAR_SETTINGS = {
@@ -182,7 +181,4 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-]
+CORS_ALLOWED_ORIGINS = os.environ["CORS_ALLOWED_ORIGINS"].split(",")

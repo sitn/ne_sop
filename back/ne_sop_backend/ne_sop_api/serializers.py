@@ -1,4 +1,7 @@
 from rest_framework import serializers
+from ne_sop_api.utils import Utils
+import os
+
 from ne_sop_api.models import (
     Document,
     Entity,
@@ -172,6 +175,7 @@ class ItemSerializer(serializers.ModelSerializer):
             "lead",
             "support",
             "events",
+            "autonotify",
             "valid",
         ]
 
@@ -266,33 +270,6 @@ class TemplateSerializer(serializers.ModelSerializer):
         ]
 
 
-class DocumentByItemSerializer(serializers.ModelSerializer):
-    template = serializers.SlugRelatedField(
-        queryset=Template.objects.all(),
-        slug_field="name",
-    )
-    author = serializers.SlugRelatedField(
-        queryset=Entity.objects.all(),
-        slug_field="name",
-    )
-
-    class Meta:
-        model = Document
-        fields = [
-            "id",
-            "created",
-            # "uuid",
-            "template",
-            "note",
-            # "valid",
-            # "relpath",
-            "version",
-            "filename",
-            "size",
-            "author",
-        ]
-
-
 class FileSerializer(serializers.Serializer):
     file = serializers.FileField()
 
@@ -320,6 +297,66 @@ class NewEventSerializer(serializers.ModelSerializer):
             "description",
             "valid",
         ]
+
+
+class DocumentSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False, read_only=False)
+
+    template = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    template_id = serializers.PrimaryKeyRelatedField(
+        source="template", queryset=Template.objects.all(), write_only=True
+    )
+
+    author = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    author_id = serializers.PrimaryKeyRelatedField(
+        source="author", queryset=Entity.objects.all(), write_only=True
+    )
+
+    version = serializers.IntegerField(required=False)
+
+    item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
+
+    class Meta:
+        model = Document
+        fields = [
+            "id",
+            "uuid",
+            "created",
+            "filename",
+            "template",
+            "template_id",
+            "note",
+            "version",
+            "size",
+            "item",
+            "author",
+            "author_id",
+            "file",
+        ]
+
+    def create(self, validated_data):
+        version = Utils.get_next_documentVersion(Document, validated_data)
+        validated_data["version"] = version
+
+        template = validated_data.get("template")
+
+        file = validated_data.get("file", None)
+
+        filename = file.name
+        file_extension = filename.rsplit(".", 1)[1]
+
+        if int(template.id) != int(os.environ["NESOP_TEMPLATE_AUTRE_ID"]):
+            template = Template.objects.filter(id=template.id).first()
+            filename = template.filename
+
+        filename = filename.rsplit(".", 1)[0] + f"_v{version}." + file_extension
+
+        file.name = filename
+        validated_data["file"] = file
+        validated_data["filename"] = filename
+
+        document = Document.objects.create(**validated_data)
+        return document
 
 
 class NewItemSerializer(serializers.ModelSerializer):
@@ -351,6 +388,8 @@ class NewItemSerializer(serializers.ModelSerializer):
 
     events = NewEventSerializer(required=False, many=True)
 
+    documents = DocumentSerializer(required=False, many=True)
+
     class Meta:
         model = Item
         fields = [
@@ -368,6 +407,9 @@ class NewItemSerializer(serializers.ModelSerializer):
             "lead",
             "support",
             "events",
+            "autonotify",
+            "documents",
+            "users",
             "valid",
         ]
 
@@ -403,6 +445,7 @@ class NewItemSerializer(serializers.ModelSerializer):
         instance.author = validated_data.get("author", instance.author)
         instance.lead = validated_data.get("lead", instance.lead)
         instance.support.set(support)
+        instance.autonotify = validated_data.get("autonotify", instance.autonotify)
         instance.valid = validated_data.get("valid", instance.valid)
 
         # for key, value in validated_data.items():
@@ -443,7 +486,6 @@ class NewItemSerializer(serializers.ModelSerializer):
 
             # IF EVENT ALREADY EXISTS, UPDATE IT
             if event_id:
-                print("Update (event exists)")
                 event_instance = Event.objects.get(id=event_id, item=instance)
                 event_instance.date = new_event.get("date", event_instance.date)
                 event_instance.time = new_event.get("time", event_instance.time)
@@ -456,7 +498,6 @@ class NewItemSerializer(serializers.ModelSerializer):
 
             # IF EVENT DOES NOT EXISTS, CREATE IT
             else:
-                print("CREATE (event does not exist)")
                 Event.objects.create(item=instance, **new_event)
 
         return instance
