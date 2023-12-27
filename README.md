@@ -54,6 +54,8 @@ Are you starting with a new database? Then run this only once:
 python manage.py loaddata entities.json entity-types.json items.json item-types.json item-status.json events.json event-types.json
 ```
 
+⚠️ In case you use a Microsoft SQL Server, you will need to install the correct ODBC driver. In our case, this is the [version 17](https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver16#version-17).
+
 ## Frontend
 
 In a new terminal, move to front directory and install
