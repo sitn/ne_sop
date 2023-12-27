@@ -179,9 +179,31 @@ export const store = reactive({
             })
 
             await response.json()
-            
+
+
+            // let x = await response.json()
             await this.prepareAddDocuments(documents, data)
-            
+
+            /*
+            let newItem = await this.getItem(id)
+            x.documents = newItem.documents
+            console.log(x)
+            */
+
+            // x.documents =
+            // await response.json()
+
+            /*    
+            let result = null
+            await this.prepareAddDocuments(documents, data)
+                .then(x => result = this.getItem(id))
+                .then(x => console.log('prepareAddDocuments'))
+
+
+            console.log('updateItem')
+            console.log(result)
+            */
+
             return await this.getItem(id)
 
         } catch (error) {
@@ -207,7 +229,7 @@ export const store = reactive({
             })
 
             let tmp = await response.json()
-            
+
             await this.prepareAddDocuments(documents, tmp)
 
             return await this.getItem(tmp.id)
@@ -369,7 +391,7 @@ export const store = reactive({
     // GET LIST OF TEMPLATES FOR THIS ITEM TYPE
     async getTemplatesByItemType(type_id) {
         try {
-            
+
             const response = await fetch(`${host}/api/template-types?itemtype_id=${type_id}`, {
                 method: 'GET',
                 redirect: 'follow'
@@ -402,15 +424,15 @@ export const store = reactive({
             promises.push(store.addDocument(formData, x.filename))
         });
 
-        Promise.all(promises)
-        .catch(error => console.log('error', error))
+        return await Promise.all(promises)
+            .catch(error => console.log('error', error))
     },
 
 
     // UPLOAD DOCUMENT
     async addDocument(formData) {
         try {
-    
+
             const response = await fetch(`${host}/api/document/`, {
                 method: 'POST',
                 body: formData,
@@ -455,7 +477,7 @@ export const store = reactive({
 
             await response.json()
 
-            
+
         } catch (error) {
             console.error(error)
         }
