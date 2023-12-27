@@ -1,9 +1,7 @@
 // store.js
 import { reactive } from 'vue'
 import users from '../assets/data/users.json'
-import config from '../../config.json'
-
-const host = config.api_host.replace(/\/+$/, '')
+const host = import.meta.env.VITE_API_URL
 
 export const store = reactive({
     dev: true,
@@ -179,9 +177,8 @@ export const store = reactive({
             })
 
             await response.json()
-            
             await this.prepareAddDocuments(documents, data)
-            
+
             return await this.getItem(id)
 
         } catch (error) {
@@ -207,7 +204,7 @@ export const store = reactive({
             })
 
             let tmp = await response.json()
-            
+
             await this.prepareAddDocuments(documents, tmp)
 
             return await this.getItem(tmp.id)
@@ -369,7 +366,7 @@ export const store = reactive({
     // GET LIST OF TEMPLATES FOR THIS ITEM TYPE
     async getTemplatesByItemType(type_id) {
         try {
-            
+
             const response = await fetch(`${host}/api/template-types?itemtype_id=${type_id}`, {
                 method: 'GET',
                 redirect: 'follow'
@@ -402,15 +399,15 @@ export const store = reactive({
             promises.push(store.addDocument(formData, x.filename))
         });
 
-        Promise.all(promises)
-        .catch(error => console.log('error', error))
+        return await Promise.all(promises)
+            .catch(error => console.log('error', error))
     },
 
 
     // UPLOAD DOCUMENT
     async addDocument(formData) {
         try {
-    
+
             const response = await fetch(`${host}/api/document/`, {
                 method: 'POST',
                 body: formData,
@@ -455,7 +452,7 @@ export const store = reactive({
 
             await response.json()
 
-            
+
         } catch (error) {
             console.error(error)
         }
