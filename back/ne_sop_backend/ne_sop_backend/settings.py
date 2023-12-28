@@ -67,7 +67,7 @@ MIDDLEWARE = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.RemoteUserBackend',
+    "ne_sop_backend.middleware.RemoteSitnUserBackend",
 ]
 
 ROOT_URLCONF = "ne_sop_backend.urls"
@@ -202,3 +202,5 @@ LOGGING = {
 }
 
 FRONT_URL = os.getenv('FRONT_URL')
+
+CSRF_TRUSTED_ORIGINS = os.environ["CORS_ALLOWED_ORIGINS"].split(",")
