@@ -54,7 +54,7 @@ export default {
             wait: false,
             item: {
                 "number": "",
-                "type": "",
+                "type": null,
                 "title": "",
                 "status": "",
                 "description": "",
