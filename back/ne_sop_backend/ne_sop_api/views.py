@@ -586,27 +586,3 @@ class DocumentViewSet(viewsets.ViewSet):
         os.remove(PurePath(settings.MEDIA_ROOT, document.file.name))
         document.delete()
         return Response({"msg": "Document deleted"})
-
-
-# %% TEST BACKEND
-@api_view(["GET"])
-def notificationNewItem(request, item_id):
-    """
-    Send mail for new items
-    """
-    item = get_object_or_404(Item.objects.all(), pk=item_id)
-
-    response_html = Utils.itemChangedNotification(item, request)
-
-    # msg = EmailMultiAlternatives(
-    #     subject=f"SOP - modification de l'op {item.id}",
-    #     body=response_html,
-    #     from_email="noreply-sop@ne.ch",
-    #     to=["marc.rufener@ne.ch"],
-    #     # cc=["matthew.parkan@ne.ch", "stephane.maltaesousa@ne.ch"],
-    # )
-
-    # msg.content_subtype="html"
-    # msg.send()
-
-    return HttpResponse(response_html)

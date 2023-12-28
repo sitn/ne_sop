@@ -21,7 +21,6 @@ router.register(r"user", views.UserViewSet, basename="user")
 
 urlpatterns = [
     path("api/", include(router.urls)),
-    path("api/notification-new-item/<int:item_id>", views.notificationNewItem),
     path(
         "api/schema/",
         SpectacularAPIView.as_view(),
