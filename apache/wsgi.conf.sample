@@ -1,19 +1,21 @@
-# APACHE mod_wsgi needs to be enabled
-# https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/modwsgi/
-# CHANGE THE APP PATH HERE:
-Define API_ROOT "/path/to/your/api"
+<VirtualHost *:80>
+	# CHANGE THE DOMAIN HERE:
+    ServerName subdomain.domain.ch
+	# CHANGE THE APP PATH HERE:
+    Define SOP_ROOT "/path/to/your/app/root"
+	
+	DocumentRoot "${SOP_ROOT}/front/dist"
 
-Alias /ne_sop_api/static "${API_ROOT}/ne_sop_backend/ne_sop_backend/static"
-<Directory "${API_ROOT}/ne_sop_backend/ne_sop_backend/static">
-    Require all granted
-</Directory>
+	Alias /ne_sop_api/static "${SOP_ROOT}/back/ne_sop_backend/ne_sop_backend/static"
+	<Directory "${SOP_ROOT}/back/ne_sop_backend/ne_sop_backend/static">
+		Require all granted
+	</Directory>
 
-WSGIScriptAlias /ne_sop_api "${API_ROOT}/ne_sop_backend/ne_sop_backend/wsgi.py"
-WSGIPythonHome "${API_ROOT}/venv"
-WSGIPythonPath "${API_ROOT}/"
+	WSGIScriptAlias /ne_sop_api "${SOP_ROOT}/back/ne_sop_backend/ne_sop_backend/wsgi.py"
 
-<Directory "${API_ROOT}/ne_sop_backend/ne_sop_backend/">
-    <Files wsgi.py>
-        Require all granted
-    </Files>
-</Directory>
+	<Directory "${SOP_ROOT}/back/ne_sop_backend/ne_sop_backend/">
+		<Files wsgi.py>
+			Require all granted
+		</Files>
+	</Directory>
+</VirtualHost>
