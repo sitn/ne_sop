@@ -85,13 +85,21 @@ class UserViewSet(viewsets.ViewSet):
 
 
 # %% ENTITY TYPE
-class EntityTypeViewSet(viewsets.ReadOnlyModelViewSet):
+class EntityTypeViewSet(viewsets.ViewSet):
     """
     Entity types viewset
     """
 
     queryset = EntityType.objects.all()
     serializer_class = EntityTypeSerializer
+
+    @extend_schema(
+        responses=EntityTypeSerializer,
+        tags=["Entity type"],
+    )
+    def list(self, request):
+        serializer = EntityTypeSerializer(self.queryset, many=True)
+        return Response(serializer.data)
 
 
 # %% ENTITY
@@ -197,7 +205,7 @@ class EntityViewSet(viewsets.ViewSet):
 
 
 # %% ITEM TYPE
-class ItemTypeViewSet(viewsets.ReadOnlyModelViewSet):
+class ItemTypeViewSet(viewsets.ViewSet):
     """
     Item types viewset
     """
@@ -205,16 +213,32 @@ class ItemTypeViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ItemType.objects.all()
     serializer_class = ItemTypeSerializer
 
+    @extend_schema(
+        responses=ItemTypeSerializer,
+        tags=["Item types"],
+    )
+    def list(self, request):
+        serializer = ItemTypeSerializer(self.queryset, many=True)
+        return Response(serializer.data)
+
 
 
 # %% ITEM STATUS
-class ItemStatusViewSet(viewsets.ReadOnlyModelViewSet):
+class ItemStatusViewSet(viewsets.ViewSet):
     """
     Item status viewset
     """
 
     queryset = ItemStatus.objects.all()
     serializer_class = ItemStatusSerializer
+
+    @extend_schema(
+        responses=ItemStatusSerializer,
+        tags=["Item status"],
+    )
+    def list(self, request):
+        serializer = ItemStatusSerializer(self.queryset, many=True)
+        return Response(serializer.data)
 
 
 # ITEM SUMMARY
@@ -352,13 +376,21 @@ class ItemViewSet(viewsets.ViewSet):
 
 
 # %% EVENT TYPE
-class EventTypeViewSet(viewsets.ReadOnlyModelViewSet):
+class EventTypeViewSet(viewsets.ViewSet):
     """
     Event types viewset
     """
 
     queryset = EventType.objects.all()
     serializer_class = EventTypeSerializer
+
+    @extend_schema(
+        responses=EventTypeSerializer,
+        tags=["Event types"],
+    )
+    def list(self, request):
+        serializer = EventTypeSerializer(self.queryset, many=True)
+        return Response(serializer.data)
 
 
 # %% EVENT
