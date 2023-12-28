@@ -195,7 +195,7 @@
 
                     </div>
 
-                    <div class="row q-py-md">
+                    <div class="row q-py-md" v-if="this.item.users">
                         <!-- ADD NEW EVENT BUTTON -->
                         <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
                             <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_mail" label="Notifier" :href="mailtostring" @click="" :disable="!edit">
