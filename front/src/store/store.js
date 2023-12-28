@@ -2,9 +2,10 @@
 import { reactive } from 'vue'
 import users from '../assets/data/users.json'
 const host = import.meta.env.VITE_API_URL
+const dev = import.meta.env.VITE_DEV.toLowerCase() === 'true'
 
 export const store = reactive({
-    dev: true,
+    dev: dev,
     loading: true,
     warning: false,
     exit: false,
@@ -15,6 +16,23 @@ export const store = reactive({
     event: null,
     documents: [],
     users: users,
+    user: null,
+
+    // GET CURRENT USER
+    async getCurrentUser() {
+        try {
+
+            // await sleep(1300)
+            const response = await fetch(`${host}/api/current-user/`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
 
     // GET LIST OF ENTITIES
     async getEntities(search = "", type = [], page = 1, size = 10, sortBy = "", descending = "false") {
