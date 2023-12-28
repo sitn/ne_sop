@@ -9,9 +9,11 @@
         </div>
 
         <!-- HELP -->
-        <FormSection title="Aide">
+        <FormSection title="Question ou remarque ?">
             <template v-slot:content>
-
+                <p>
+                    N'hésitez pas à nous contacter: <a href="mailto:sitn@ne.ch?subject=SOP - help">sitn@ne.ch</a>.
+                </p>
             </template>
         </FormSection>
 
