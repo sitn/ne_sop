@@ -79,11 +79,23 @@ Open [http://localhost:5173/web/sop/#/login](http://localhost:5173/web/sop/#/log
 
 Follow Installation steps.
 
+Configure Apache if needed
+
 ## Frontend
-In your front directory, run the following to create the `dist` directory:
+
+Start by copying your env.<instance>.template to env.<instance> and edit accordingly to your install.
+
+Example:
 
 ```
-vite build
+cp env.production.template env.production
+```
+
+In your `front` directory, run the following to create the `dist` directory replacing <instance> by production or prepub:
+
+```
+npm i
+npm run build -- --mode <instance>
 ```
 
 # Swagger
