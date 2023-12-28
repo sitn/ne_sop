@@ -12,12 +12,22 @@ from ne_sop_api.models import (
     ItemType,
     ItemStatus,
     Template,
+    Group,
     User,
 )
 
 
+# %% GROUP
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ("name",)
+
+
 # %% USER
 class UserSerializer(serializers.ModelSerializer):
+    groups = GroupSerializer(many=True)
+
     class Meta:
         model = User
         fields = [
@@ -29,6 +39,29 @@ class UserSerializer(serializers.ModelSerializer):
             "is_active",
             "first_name",
             "last_name",
+        ]
+
+
+# %% CURRENT USER
+class CurrentUserSerializer(serializers.ModelSerializer):
+    # groups = GroupSerializer(many=True)
+    groups = serializers.StringRelatedField(many=True)
+    is_manager = serializers.SerializerMethodField("get_is_manager")
+
+    def get_is_manager(self, obj):
+        return obj.groups.filter(name="Manager").exists()
+
+    class Meta:
+        model = User
+        fields = [
+            "email",
+            "username",
+            "email",
+            "is_superuser",
+            "is_staff",
+            "is_active",
+            "is_manager",
+            "groups",
         ]
 
 
