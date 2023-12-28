@@ -79,6 +79,11 @@ Open [http://localhost:5173/web/sop/#/login](http://localhost:5173/web/sop/#/log
 
 Follow Installation steps.
 
+In the `front\ne_sop_backend` directory, collect static files by running:
+```
+python .\manage.py collectstatic
+```
+
 Configure Apache if needed
 
 ## Frontend
