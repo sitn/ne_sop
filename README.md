@@ -83,6 +83,11 @@ In the `front\ne_sop_backend` directory, collect static files by running:
 ```
 python .\manage.py collectstatic
 ```
+Add a first admin user by running:
+```
+python .\manage.py createsuperuser
+```
+⚠️ Currently the username must match a user name from the Active Directory (AD).
 
 Configure Apache if needed
 
