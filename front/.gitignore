@@ -10,9 +10,11 @@ package-lock.json
 # dotenv environment variable files
 .env
 .env.development.local
-.env.test.local
-.env.production.local
 .env.local
+.env.prepub
+.env.production
+.env.production.local
+.env.test.local
 
 # Nuxt.js build / generate output
 dist
