@@ -58,15 +58,24 @@ class Utils(object):
 
     @classmethod
     def itemCreatedNotification(cls, item, request):
-        template = loader.get_template("email_update_item_fr-ch.html")
+        template = loader.get_template("email_create_item_fr-ch.html")
 
         context = {
             'item_id': item.id,
             'item_name': item.title,
             'front_url': settings.FRONT_URL,
+            'main_service': item.entity_lead_name,
+            'support_services': item.entity_support_name,
         }
+
+        subject = f"SOP - création de l'op {item.number}"
+        body = template.render(context, request)
+        to = item.user_lead_email if item.user_lead_email is not None else item.users_support_email
+        cc = item.users_support_email if to is item.user_lead_email is not None else None
+
+        cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
         
-        return template.render(context, request) 
+        return
 
 
     @classmethod
@@ -77,20 +86,38 @@ class Utils(object):
             'item_id': item.id,
             'item_name': item.title,
             'front_url': settings.FRONT_URL,
+            'main_service': item.entity_lead_name,
+            'support_services': item.entity_support_name,
         }
         
-        subject = f"SOP - modification de l'op {item.id}, to={item.user_lead}, cc={item.users_support}"
+        subject = f"SOP - modification de l'op {item.number}"
         body = template.render(context, request)
-        to = ['marc.rufener@ne.ch']
-        cc = ['marc.rufener@ne.ch']
-        # to = item.user_lead
-        # cc = item.users_support
+        to = item.user_lead_email if item.user_lead_email is not None else item.users_support_email
+        cc = item.users_support_email if to is item.user_lead_email is not None else None
 
-        # cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
+        cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
 
-        return template.render(context, request) 
-    
-    
+        return
+
+
+    @classmethod
+    def itemRemovedNotification(cls, item, request):
+        template = loader.get_template("email_delete_item_fr-ch.html")
+
+        context = {
+            'item_name': item.title,
+        }
+        
+        subject = f"SOP - suppression de l'op {item.number}"
+        body = template.render(context, request)
+        to = item.user_lead_email if item.user_lead_email is not None else item.users_support_email
+        cc = item.users_support_email if to is item.user_lead_email is not None else None
+
+        cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
+
+        return
+
+
     @classmethod
     def sendEmailNotification(cls, subject, body, to, cc=None, bcc=None):
         msg = EmailMultiAlternatives(

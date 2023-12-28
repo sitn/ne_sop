@@ -114,7 +114,7 @@ class Item(models.Model):
         return related_users
     
     @property
-    def user_lead(self):
+    def user_lead_email(self):
         related_entities = [self.lead]
         related_users = (
             User.objects.filter(entities__in=related_entities)
@@ -125,7 +125,7 @@ class Item(models.Model):
         return related_users
     
     @property
-    def users_support(self):
+    def users_support_email(self):
         related_entities = list(self.support.all())
         related_users = (
             User.objects.filter(entities__in=related_entities)
@@ -134,6 +134,15 @@ class Item(models.Model):
         )
         related_users = [ru.get('email') for ru in related_users]
         return related_users
+
+    @property
+    def entity_lead_name(self):
+        return self.lead.name
+    
+    @property
+    def entity_support_name(self):
+        support = list(self.support.all())
+        return ', '.join([s.name for s in support]) if len(support) > 0 else '-'
 
     class Meta:
         ordering = ["created"]

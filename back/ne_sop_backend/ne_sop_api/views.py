@@ -343,10 +343,8 @@ class ItemViewSet(viewsets.ViewSet):
     def create(self, request):
         serializer = NewItemSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            # insert mail here
-            Utils.itemCreatedNotification()
-            # return Response({"msg": "Item created"}, status=status.HTTP_201_CREATED)
+            item = serializer.save()
+            Utils.itemCreatedNotification(item, request)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -366,9 +364,9 @@ class ItemViewSet(viewsets.ViewSet):
         item = get_object_or_404(self.get_queryset(), pk=pk)
         serializer = NewItemSerializer(item, data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            # insert mail here
-            Utils.itemCreatedNotification(item, request)
+            item = serializer.save()
+            if item.autonotify is True:
+                Utils.itemChangedNotification(item, request)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -378,7 +376,7 @@ class ItemViewSet(viewsets.ViewSet):
     def destroy(self, request, pk=None):
         item = get_object_or_404(self.get_queryset(), pk=pk)
         item.delete()
-        # insert mail here
+        Utils.itemRemovedNotification(item, request)
         return Response({"msg": "Item deleted"})
 
 
