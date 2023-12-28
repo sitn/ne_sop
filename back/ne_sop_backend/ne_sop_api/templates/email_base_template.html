@@ -88,13 +88,13 @@
     </tr>
     <tr class="main">
       <td>
-        {% block greetings %}
-        <p>{% trans "Good day," %}</p>
-        {% endblock %}
+        <p>Bonjour,</p>
+        <br>
         {% block content %}
-        <p>{% trans "Best whishes," %}</p>
         <p></p>
         {% endblock %}
+        <br>
+        <p>Meilleures salutations.</p>
       </td>
     </tr>
     <tr class="footer">
@@ -102,7 +102,7 @@
         {% block footer %}
         {% endblock %}
         <p>
-          {% trans "This is an automated email, please do not reply. For any question, feel free to contact us at" %}
+          Ceci est un message automatique, merci de ne pas y répondre. Pour toute question, n'hésitez pas à nous contacter:
           <a href="mailto:sitn@ne.ch?subject=SOP - contact">sitn@ne.ch</a>.
         </p>
       </td>

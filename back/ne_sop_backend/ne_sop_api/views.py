@@ -40,6 +40,7 @@ from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
 from rest_framework import filters
 from django.core.paginator import Paginator
 from django.http import HttpResponse, FileResponse
+from django.core.mail import EmailMultiAlternatives
 
 from django.conf import settings
 
@@ -319,6 +320,8 @@ class ItemViewSet(viewsets.ViewSet):
         serializer = NewItemSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            # insert mail here
+            Utils.itemCreatedNotification()
             # return Response({"msg": "Item created"}, status=status.HTTP_201_CREATED)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -340,6 +343,8 @@ class ItemViewSet(viewsets.ViewSet):
         serializer = NewItemSerializer(item, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            # insert mail here
+            Utils.itemCreatedNotification(item, request)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -349,6 +354,7 @@ class ItemViewSet(viewsets.ViewSet):
     def destroy(self, request, pk=None):
         item = get_object_or_404(self.get_queryset(), pk=pk)
         item.delete()
+        # insert mail here
         return Response({"msg": "Item deleted"})
 
 
@@ -560,6 +566,17 @@ def notificationNewItem(request, item_id):
     """
     item = get_object_or_404(Item.objects.all(), pk=item_id)
 
-    response = Utils.itemChangedNotification(item, request)
+    response_html = Utils.itemChangedNotification(item, request)
 
-    return HttpResponse(response)
+    # msg = EmailMultiAlternatives(
+    #     subject=f"SOP - modification de l'op {item.id}",
+    #     body=response_html,
+    #     from_email="noreply-sop@ne.ch",
+    #     to=["marc.rufener@ne.ch"],
+    #     # cc=["matthew.parkan@ne.ch", "stephane.maltaesousa@ne.ch"],
+    # )
+
+    # msg.content_subtype="html"
+    # msg.send()
+
+    return HttpResponse(response_html)

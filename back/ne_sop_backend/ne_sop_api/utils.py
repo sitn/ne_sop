@@ -1,6 +1,7 @@
 from pathlib import Path, PurePath
 from django.template import loader
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 
 
 class Utils(object):
@@ -78,4 +79,28 @@ class Utils(object):
             'front_url': settings.FRONT_URL,
         }
         
+        subject = f"SOP - modification de l'op {item.id}, to={item.user_lead}, cc={item.users_support}"
+        body = template.render(context, request)
+        to = ['marc.rufener@ne.ch']
+        cc = ['marc.rufener@ne.ch']
+        # to = item.user_lead
+        # cc = item.users_support
+
+        # cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
+
         return template.render(context, request) 
+    
+    
+    @classmethod
+    def sendEmailNotification(cls, subject, body, to, cc=None, bcc=None):
+        msg = EmailMultiAlternatives(
+            subject=subject,
+            body=body,
+            from_email="noreply-sop@ne.ch",
+            to=to,
+            cc=cc,
+            bcc=bcc,
+        )
+        msg.content_subtype="html"
+        msg.send()
+        return

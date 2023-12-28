@@ -95,20 +95,16 @@ WSGI_APPLICATION = "ne_sop_backend.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # "default": {
-    #     "ENGINE": "mssql",
-    #     "NAME": os.environ["NESOP_DATABASE_NAME"],
-    #     "USER": os.environ["NESOP_DATABASE_USER"],
-    #     "PASSWORD": os.environ["NESOP_DATABASE_PASSWORD"],
-    #     "HOST": os.environ["NESOP_DATABASE_SERVER"],
-    #     "PORT": "1433",
-    #     "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
-    #     },
-    # },
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+        "ENGINE": "mssql",
+        "NAME": os.environ["NESOP_DATABASE_NAME"],
+        "USER": os.environ["NESOP_DATABASE_USER"],
+        "PASSWORD": os.environ["NESOP_DATABASE_PASSWORD"],
+        "HOST": os.environ["NESOP_DATABASE_SERVER"],
+        "PORT": "1433",
+        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
+        },
+    },
 }
 
 
@@ -204,3 +200,5 @@ LOGGING = {
 FRONT_URL = os.getenv('FRONT_URL')
 
 CSRF_TRUSTED_ORIGINS = os.environ["CORS_ALLOWED_ORIGINS"].split(",")
+
+EMAIL_HOST=os.environ.get("NESOP_EMAIL_HOST", "localhost")

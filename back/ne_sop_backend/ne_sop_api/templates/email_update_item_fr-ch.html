@@ -1,0 +1,10 @@
+{% extends "email_base_template.html" %}
+{% block content %}
+<h2>L'objet parlementaire "<em>{{ item_name }}</em>" a été modifié.</h2>
+<p>
+        Pour consulter l'objet en question, suivez le lien suivant: <a href="{{ front_url }}/items/{{ item_id }}">{{ front_url }}/items/{{ item_id }}</a>
+</p>
+
+{% endblock %}
+{% block footer %}
+{% endblock %}
