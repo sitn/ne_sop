@@ -64,19 +64,20 @@ class Utils(object):
             'item_id': item.id,
             'item_name': item.title,
             'front_url': settings.FRONT_URL,
-            'main_service': item.entity_lead_name,
-            'support_services': item.entity_support_name,
+            'main_service': item.get_entity_lead_name(),
+            'support_services': item.get_entity_support_name(),
         }
+
+        user_lead_email = item.get_user_lead_email()
+        users_support_email = item.get_users_support_email()
 
         subject = f"SOP - création de l'op {item.number}"
         body = template.render(context, request)
-        to = item.user_lead_email if item.user_lead_email is not None else item.users_support_email
-        cc = item.users_support_email if to is item.user_lead_email is not None else None
+        to = user_lead_email if user_lead_email is not None else users_support_email
+        cc = users_support_email if to is user_lead_email is not None else None
 
         cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
         
-        return
-
 
     @classmethod
     def itemChangedNotification(cls, item, request):
@@ -86,18 +87,19 @@ class Utils(object):
             'item_id': item.id,
             'item_name': item.title,
             'front_url': settings.FRONT_URL,
-            'main_service': item.entity_lead_name,
-            'support_services': item.entity_support_name,
+            'main_service': item.get_entity_lead_name(),
+            'support_services': item.get_entity_support_name(),
         }
+
+        user_lead_email = item.get_user_lead_email()
+        users_support_email = item.get_users_support_email()
         
         subject = f"SOP - modification de l'op {item.number}"
         body = template.render(context, request)
-        to = item.user_lead_email if item.user_lead_email is not None else item.users_support_email
-        cc = item.users_support_email if to is item.user_lead_email is not None else None
+        to = user_lead_email if user_lead_email is not None else users_support_email
+        cc = users_support_email if to is user_lead_email is not None else None
 
         cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
-
-        return
 
 
     @classmethod
@@ -108,14 +110,15 @@ class Utils(object):
             'item_name': item.title,
         }
         
+        user_lead_email = item.get_user_lead_email()
+        users_support_email = item.get_users_support_email()
+
         subject = f"SOP - suppression de l'op {item.number}"
         body = template.render(context, request)
-        to = item.user_lead_email if item.user_lead_email is not None else item.users_support_email
-        cc = item.users_support_email if to is item.user_lead_email is not None else None
+        to = user_lead_email if user_lead_email is not None else users_support_email
+        cc = users_support_email if to is user_lead_email is not None else None
 
         cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
-
-        return
 
 
     @classmethod
@@ -130,4 +133,3 @@ class Utils(object):
         )
         msg.content_subtype="html"
         msg.send()
-        return
