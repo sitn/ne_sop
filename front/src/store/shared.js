@@ -96,14 +96,18 @@ export const checkFilled = (val) => {
 
 export const downloadICS = async (val) => {
 
-    let eventDate = date.extractDate(val.date, 'DD.MM.YYYY')
-    let dateArray = [eventDate.getFullYear(), eventDate.getMonth() + 1, eventDate.getDate()]
+    console.log(val)
+
+    let eventDate = date.extractDate(`${val.date} ${val.time}`, 'DD.MM.YYYY HH:mm')
+    console.log(eventDate)
+    let dateArray = [eventDate.getFullYear(), eventDate.getMonth() + 1, eventDate.getDate(), eventDate.getHours(), eventDate.getMinutes()]
 
     let event = {
         start: dateArray,
         duration: { hours: 1, minutes: 0 },
-        title: `Objet parlementaire ${val.itemNumber}`,
-        description: '',
+        title: `OP ${val.item.number} - ${val.type.name}`,
+        // description: `OP ${val.item.number} - ${val.item.title}\r\n${val.type.name}`,
+        htmlContent: `<!DOCTYPE html><html><body><p><b>${val.date} - ${val.type.name}</b></p><p>OP ${val.item.number} - ${val.item.title}</p>${val.description}<p></p></body></html>`,
         location: '',
     }
 
