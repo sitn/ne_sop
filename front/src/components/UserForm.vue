@@ -137,7 +137,7 @@ export default {
         }
     },
     created() {
-        console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
+        // console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
     },
     mounted() {
     },

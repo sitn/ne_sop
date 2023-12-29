@@ -96,7 +96,7 @@ export default {
         checkFilled,
         checkFile,
         validation(val) {
-            console.log(`${this.$options.name} | validation: ${val}`)
+            // console.log(`${this.$options.name} | validation: ${val}`)
             this.valid = val
             // this.$emit('validationEvent', this.valid)
         },

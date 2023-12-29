@@ -90,9 +90,7 @@ export default {
         async save(redirectTo) {
 
             // this.$refs.EventForm.validateForm() // VALIDATE FORM
-
-            // TODO: POST RECORD TO DATABASE
-            console.log(`${this.$options.name} | save()`)
+            // console.log(`${this.$options.name} | save()`)
             // console.log(`${this.$options.name} | this.$refs.EventForm.valid = ${this.$refs.EventForm.valid}`)
 
             this.wait = true
@@ -120,20 +118,19 @@ export default {
             this.valid = val
             this.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
             // store.valid ? this.actionButtons.save = 'active' : this.actionButtons.save = 'disable'
-            console.log(`${this.$options.name} | handleValidation()`)
+            // console.log(`${this.$options.name} | handleValidation()`)
             // this.actionButtons.save = 'disable'
         },
         handleDeletion() {
             this.dialog.deletion = true
         },
         async remove() {
-            // TODO: DELETE RECORD IN DATABASE
-            console.log(`${this.$options.name} | remove()`)
+            // console.log(`${this.$options.name} | remove()`)
             store.events.splice(this.index, 1)
             this.$router.push({ name: 'EventsList' })
         },
         setEditMode(val) {
-            console.log(`${this.$options.name} | setEditMode(${val})`)
+            // console.log(`${this.$options.name} | setEditMode(${val})`)
             this.edit = val
             // this.$refs.EventForm.validateForm()
         }

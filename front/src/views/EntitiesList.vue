@@ -168,12 +168,12 @@ export default {
 
             this.loading = true
 
-            console.log('onRequest')
-            console.log(props.pagination)
+            // console.log('onRequest')
+            // console.log(props.pagination)
             let { page, rowsPerPage, sortBy, descending } = props.pagination
             // let filter = props.filter
 
-            console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
+            // console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
 
             rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage // rowsPerPage
 
@@ -206,7 +206,7 @@ export default {
         async remove() {
 
             this.loading = true
-            console.log(`delete ${this.selected}`)
+            // console.log(`delete ${this.selected}`)
             let message = await store.deleteEntity(this.selected)
             this.data = await store.getEntities(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             this.rows = this.data.results

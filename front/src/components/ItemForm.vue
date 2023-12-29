@@ -290,13 +290,13 @@ export default {
         // console.log(`router id: ${this.$route.params.id}`)
         let data1 = await store.getEntities("", 1, 1, 20, "name", "false")
         this.serviceOptions = data1.results
-        console.log('this.serviceOptions')
-        console.log(this.serviceOptions)
+        // console.log('this.serviceOptions')
+        // console.log(this.serviceOptions)
 
         let data2 = await store.getEntities("", [2, 3], 1, 20, "name", "false")
         this.authorOptions = data2.results
-        console.log("this.authorOptions")
-        console.log(this.authorOptions)
+        // console.log("this.authorOptions")
+        // console.log(this.authorOptions)
 
         this.itemStatus = await store.getItemStatus()
         this.itemTypes = await store.getItemTypes()
@@ -312,7 +312,7 @@ export default {
             this.item.support = []
         },
         addEntity() {
-            console.log('ItemForm.vue | Add new entity')
+            // console.log('ItemForm.vue | Add new entity')
             this.dialog.newEntity = true
         },
         async searchEntity(searchString = "", type = []) {
@@ -337,22 +337,19 @@ export default {
         },
         async addNewEntity(val) {
 
-            console.log(`${this.$options.name} | addNewEntity()`)
+            // console.log(`${this.$options.name} | addNewEntity()`)
 
             let newEntity = await store.addEntity(val)
             // this.authorOptions = await store.getEntities("", [2, 3], 1, 50)
             this.authorOptions = [await store.getEntity(newEntity.id)]
 
-            // this.authorOptions = [newEntity]
-            // this.authorOptions = this.authorOptions.unshift(newEntity)
-            console.log(this.authorOptions)
-
+            // console.log(this.authorOptions)
             this.item.author = await newEntity.id
 
         },
         filterFn(val, update, abort) {
             update(async () => {
-                console.log('filterFn')
+                // console.log('filterFn')
                 // TODO - GET RECORDS FROM DATABASE
                 const str = val.toLowerCase()
                 // this.authorOptions = entities.filter((v) => v.name.toLowerCase().indexOf(needle) > -1)
