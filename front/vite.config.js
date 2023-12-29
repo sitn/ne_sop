@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
         }
       })
     ],
-    /*
+
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -34,6 +34,6 @@ export default defineConfig(({ mode }) => {
         '@public/*': fileURLToPath(new URL('./public/', import.meta.url)),
       }
     }
-    */
+
   }
 })
