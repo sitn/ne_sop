@@ -111,8 +111,34 @@ class Item(models.Model):
             .distinct()
             .values("email")
         )
-
         return related_users
+
+    def get_user_lead_email(self):
+        related_entities = [self.lead]
+        related_users = (
+            User.objects.filter(entities__in=related_entities)
+            .distinct()
+            .values("email")
+        )
+        related_users = [ru.get('email') for ru in related_users]
+        return related_users
+
+    def get_users_support_email(self):
+        related_entities = list(self.support.all())
+        related_users = (
+            User.objects.filter(entities__in=related_entities)
+            .distinct()
+            .values("email")
+        )
+        related_users = [ru.get('email') for ru in related_users]
+        return related_users
+
+    def get_entity_lead_name(self):
+        return self.lead.name
+    
+    def get_entity_support_name(self):
+        support = list(self.support.all())
+        return ', '.join([s.name for s in support]) if len(support) > 0 else '-'
 
     class Meta:
         ordering = ["created"]

@@ -1,4 +1,7 @@
 from pathlib import Path, PurePath
+from django.template import loader
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 
 
 class Utils(object):
@@ -52,3 +55,81 @@ class Utils(object):
         
         return version
 
+
+    @classmethod
+    def itemCreatedNotification(cls, item, request):
+        template = loader.get_template("email_create_item_fr-ch.html")
+
+        context = {
+            'item_id': item.id,
+            'item_name': item.title,
+            'front_url': settings.FRONT_URL,
+            'main_service': item.get_entity_lead_name(),
+            'support_services': item.get_entity_support_name(),
+        }
+
+        user_lead_email = item.get_user_lead_email()
+        users_support_email = item.get_users_support_email()
+
+        subject = f"SOP - création de l'op {item.number}"
+        body = template.render(context, request)
+        to = user_lead_email if user_lead_email is not None else users_support_email
+        cc = users_support_email if to is user_lead_email is not None else None
+
+        cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
+        
+
+    @classmethod
+    def itemChangedNotification(cls, item, request):
+        template = loader.get_template("email_update_item_fr-ch.html")
+
+        context = {
+            'item_id': item.id,
+            'item_name': item.title,
+            'front_url': settings.FRONT_URL,
+            'main_service': item.get_entity_lead_name(),
+            'support_services': item.get_entity_support_name(),
+        }
+
+        user_lead_email = item.get_user_lead_email()
+        users_support_email = item.get_users_support_email()
+        
+        subject = f"SOP - modification de l'op {item.number}"
+        body = template.render(context, request)
+        to = user_lead_email if user_lead_email is not None else users_support_email
+        cc = users_support_email if to is user_lead_email is not None else None
+
+        cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
+
+
+    @classmethod
+    def itemRemovedNotification(cls, item, request):
+        template = loader.get_template("email_delete_item_fr-ch.html")
+
+        context = {
+            'item_name': item.title,
+        }
+        
+        user_lead_email = item.get_user_lead_email()
+        users_support_email = item.get_users_support_email()
+
+        subject = f"SOP - suppression de l'op {item.number}"
+        body = template.render(context, request)
+        to = user_lead_email if user_lead_email is not None else users_support_email
+        cc = users_support_email if to is user_lead_email is not None else None
+
+        cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
+
+
+    @classmethod
+    def sendEmailNotification(cls, subject, body, to, cc=None, bcc=None):
+        msg = EmailMultiAlternatives(
+            subject=subject,
+            body=body,
+            from_email="noreply-sop@ne.ch",
+            to=to,
+            cc=cc,
+            bcc=bcc,
+        )
+        msg.content_subtype="html"
+        msg.send()

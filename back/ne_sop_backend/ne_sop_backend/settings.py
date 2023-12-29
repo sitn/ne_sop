@@ -75,7 +75,7 @@ ROOT_URLCONF = "ne_sop_backend.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ["ne_sop_api/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -144,7 +144,7 @@ USE_TZ = True
 
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "ne_sop_backend", "static")
+STATIC_ROOT = PurePath(BASE_DIR, "ne_sop_backend", "static")
 
 # Media files
 MEDIA_URL='/media/'
@@ -182,4 +182,23 @@ SPECTACULAR_SETTINGS = {
 }
 
 CORS_ALLOWED_ORIGINS = os.environ["CORS_ALLOWED_ORIGINS"].split(",")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+}
+
+FRONT_URL = os.getenv('FRONT_URL')
+
 CSRF_TRUSTED_ORIGINS = os.environ["CORS_ALLOWED_ORIGINS"].split(",")
+
+EMAIL_HOST=os.environ.get("NESOP_EMAIL_HOST", "localhost")
