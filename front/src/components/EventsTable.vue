@@ -28,9 +28,11 @@
                 </q-td>
                 <q-td key="actions" :props="props">
                     <div class="float-right">
+                        <!-- 
                         <q-btn dense round flat color="grey" name="calendar" @click="downloadICS(props.row)" icon="sym_o_calendar_add_on" :disable="!edit">
                             <q-tooltip class="bg-black">Ajouter au calendrier</q-tooltip>
                         </q-btn>
+                        -->
                         <q-btn dense round flat color="blue" name="delete" @click="handleEdition(props.row)" icon="sym_o_edit" :disable="!edit">
                             <q-tooltip class="bg-black">Modifier</q-tooltip>
                         </q-btn>
