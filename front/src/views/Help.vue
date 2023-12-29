@@ -9,9 +9,11 @@
         </div>
 
         <!-- HELP -->
-        <FormSection title="Aide">
+        <FormSection title="Question ou remarque ?">
             <template v-slot:content>
-
+                <p>
+                    N'hésitez pas à nous contacter: <a :href="mailtostring">{{ email_webmaster }}</a>.
+                </p>
             </template>
         </FormSection>
 
@@ -29,10 +31,13 @@ export default {
     emits: [],
     data() {
         return {
-
+            email_webmaster: import.meta.env.VITE_WEBMASTER_EMAIL,
         }
     },
     computed: {
+        mailtostring() {
+            return `mailto:${this.email_webmaster}&subject=SOP - help`
+        }
     },
     mounted() {
     },
