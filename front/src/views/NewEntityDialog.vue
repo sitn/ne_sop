@@ -58,11 +58,8 @@ export default {
     methods: {
         save() {
 
-            // TODO POST NEW VALUE TO DATABASE
-            console.log(`${this.$options.name} | save()`)
+            // console.log(`${this.$options.name} | save()`)
             this.$emit('addNewEntity', this.entity)
-            // let newEntity = await store.addEntity(this.entity)
-            // await this.$emit('addNewEntity', newEntity)
 
         }
     }

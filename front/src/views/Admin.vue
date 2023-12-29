@@ -159,8 +159,7 @@ export default {
     },
     methods: {
         async query() {
-            // TODO: REPLACE WITH GET CALL TO DATABASE 
-            console.log(`search: ${this.searchString}`)
+            // console.log(`search: ${this.searchString}`)
             this.loading = true
             await sleep(Math.random() * 1300)
             let str = this.searchString.toLowerCase()

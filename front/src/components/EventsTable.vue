@@ -127,11 +127,11 @@ export default {
 
             this.loading = true
 
-            console.log('onRequest')
-            console.log(props.pagination)
+            // console.log('onRequest')
+            // console.log(props.pagination)
             let { page, rowsPerPage, sortBy, descending } = props.pagination
             // let filter = props.filter
-            console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
+            // console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
 
             rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage
 

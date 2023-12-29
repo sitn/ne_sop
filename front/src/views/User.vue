@@ -62,22 +62,16 @@ export default {
         }
     },
     created() {
-        console.log(`router id: ${this.$route.params.id}`)
+        // console.log(`router id: ${this.$route.params.id}`)
         this.user = Object.assign({}, store.users.find(e => e.id === this.$route.params.id))
     },
     mounted() {
     },
     methods: {
-        async load() {
-            // TODO: GET RECORD FROM DATABASE
-            console.log(`${this.$options.name}.vue | load()`)
-        },
         async save(redirectTo) {
-            // TODO: POST RECORD TO DATABASE
-            console.log(`${this.$options.name}.vue | save()`)
+            // console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
             await sleep(Math.random() * 1300)
-            // let ind = store.users.findIndex((e) => (e.id === this.$route.params.id))
             store.users[this.index] = Object.assign({}, this.user)
             this.wait = false
 
@@ -90,13 +84,12 @@ export default {
             this.dialog.deletion = true
         },
         async remove() {
-            // TODO: DELETE RECORD IN DATABASE
-            console.log(`${this.$options.name}.vue | remove()`)
+            // console.log(`${this.$options.name}.vue | remove()`)
             store.users.splice(this.index, 1)
             this.$router.push({ name: 'Admin' })
         },
         setEditMode(val) {
-            console.log(`${this.$options.name}.vue | setEditMode(${val})`)
+            // console.log(`${this.$options.name}.vue | setEditMode(${val})`)
             this.edit = val
         }
     }

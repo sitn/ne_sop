@@ -147,7 +147,7 @@ export default {
     },
     async created() {
         this.entityTypes = await this.store.getEntityTypes()
-        console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
+        // console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
     },
     methods: {
         checkFilled,
