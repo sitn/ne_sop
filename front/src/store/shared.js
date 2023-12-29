@@ -96,7 +96,7 @@ export const checkFilled = (val) => {
 
 export const downloadICS = async (val) => {
 
-    console.log(val)
+    // console.log(val)
 
     let eventDate = date.extractDate(`${val.date} ${val.time}`, 'DD.MM.YYYY HH:mm')
     console.log(eventDate)
