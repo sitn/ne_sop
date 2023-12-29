@@ -18,6 +18,7 @@ router.register(r"template", views.TemplateViewSet, basename="template")
 router.register(r"template-types", views.TemplateTypeViewSet, basename="template-types")
 router.register(r"document", views.DocumentViewSet, basename="document")
 router.register(r"user", views.UserViewSet, basename="user")
+router.register(r"current-user", views.CurrentUserViewSet, basename="current-user")
 
 urlpatterns = [
     path("api/", include(router.urls)),

@@ -15,16 +15,22 @@
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="filename" :props="props">
-                    {{ props.row.filename }} ({{ formatBytes(props.row.size) }})
+                    <div class="text-bold">{{ props.row.filename }} ({{ formatBytes(props.row.size) }})</div>
+                    <div>{{ props.row.template }}</div>
                 </q-td>
+                <!-- 
                 <q-td key="template" :props="props">
                     {{ props.row.template }}
                 </q-td>
+                -->
+                <!--
                 <q-td key="author" :props="props">
                     {{ props.row.author }}
                 </q-td>
+                -->
                 <q-td key="created" :props="props">
-                    {{ props.row.created }}
+                    <div class="text-bold">{{ props.row.created }}</div>
+                    <div>{{ props.row.author }}</div>
                 </q-td>
                 <q-td key="note" :props="props">
                     {{ props.row.note }}
@@ -74,8 +80,8 @@ import DeleteDialog from './DeleteDialog.vue'
 
 const columns = [
     { name: 'filename', align: 'left', label: 'Fichier', field: 'filename', sortable: true },
-    { name: 'template', align: 'left', label: 'Type', field: 'template', sortable: true },
-    { name: 'author', align: 'left', label: 'Ajouté par', field: 'author', sortable: true },
+    /*{ name: 'template', align: 'left', label: 'Type', field: 'template', sortable: true }, */
+    /*{ name: 'author', align: 'left', label: 'Ajouté par', field: 'author', sortable: true },*/
     { name: 'created', align: 'left', label: 'Ajouté le', field: 'created', sortable: true },
     { name: 'note', align: 'left', label: 'Notes', field: 'note', sortable: true },
     { name: 'actions', align: 'right', label: '', field: 'action', sortable: false }

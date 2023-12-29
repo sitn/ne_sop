@@ -18,16 +18,18 @@
                         </template>
                         <template v-slot:append>
                             <q-spinner color="blue-grey" :thickness="3" v-if="loading" />
+                            <!-- 
                             <q-btn unelevated icon="sym_o_filter_alt" padding="xs" @click="console.log('filter')">
                                 <q-tooltip class="bg-black">Filtrer</q-tooltip>
                             </q-btn>
+                            -->
                         </template>
 
                     </q-input>
                 </div>
 
                 <!-- ADD NEW ITEM BUTTON -->
-                <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
+                <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6" v-if="store.user.is_manager">
                     <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" to="/items/new">
                         <q-tooltip class="bg-black">Ajouter un nouvel objet parlementaire</q-tooltip>
                     </q-btn>
@@ -87,7 +89,7 @@
                         <!-- ACTIONS COLUMN -->
                         <q-td key="actions" :props="props">
                             <div class="float-right">
-                                <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete">
+                                <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete" v-if="store.user.is_manager">
                                     <q-tooltip class="bg-black">Supprimer</q-tooltip>
                                 </q-btn>
                             </div>

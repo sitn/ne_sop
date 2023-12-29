@@ -37,9 +37,14 @@
 
                 <q-space></q-space>
 
+                <div class="text-center text-body1 gt-sm" v-if="store.user">{{ store.user.username }} <q-icon size="lg" name="account_circle" text-color="white" flat round dense />
+                </div>
+
+                <!-- 
                 <q-btn size="lg" text-color="white" round label="" dense unelevated icon="sym_o_logout" @click="processLogout" v-if="$route.name !== 'Login'">
                     <q-tooltip class="bg-black">Déconnexion</q-tooltip>
                 </q-btn>
+                -->
 
                 <!-- 
                 <q-btn-dropdown size="lg" label="" dense icon="account_circle" dropdown-icon="" unelevated v-if="$route.name !== 'Login'">
@@ -112,26 +117,28 @@
                     </q-item>
 
                     <!-- <q-separator /> -->
-
+                    <!-- 
                     <q-item clickable v-ripple to="/statistics" style="color:#757575" class="custom-font" active-class="bg-light-blue-1 text-blue-grey-7">
                         <q-item-section avatar>
-                            <q-icon name="sym_o_bar_chart" size="lg" /> <!-- color="grey-7" -->
+                            <q-icon name="sym_o_bar_chart" size="lg" />
                         </q-item-section>
 
                         <q-item-section>
                             Statistiques
                         </q-item-section>
                     </q-item>
-
+                    -->
+                    <!--
                     <q-item clickable v-ripple to="/admin" style="color:#757575" class="custom-font" active-class="bg-light-blue-1 text-blue-grey-7">
                         <q-item-section avatar>
-                            <q-icon name="sym_o_admin_panel_settings" size="lg" /> <!-- color="grey-7" -->
+                            <q-icon name="sym_o_admin_panel_settings" size="lg" />
                         </q-item-section>
 
                         <q-item-section>
                             Administration
                         </q-item-section>
                     </q-item>
+                    -->
 
                     <q-item clickable v-ripple to="/help" style="color:#757575" class="custom-font" active-class="bg-light-blue-1 text-blue-grey-7">
                         <q-item-section avatar>
@@ -168,12 +175,13 @@ export default {
     setup() {
         return {
             drawer: ref(false),
-            miniState: ref(true)
+            miniState: ref(true),
         }
     },
     data() {
         return {
-            store
+            store,
+
         }
     },
     created() {
@@ -183,12 +191,6 @@ export default {
                 e.returnValue = ''
             }
         })
-    },
-    mounted() {
-    },
-    computed: {
-    },
-    watch: {
     },
     methods: {
         processLogout() {

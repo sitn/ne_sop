@@ -20,9 +20,11 @@
                         <template v-slot:append>
                             <q-spinner color="blue-grey" :thickness="3" v-if="loading" />
                             <!-- FILTER BUTTON -->
-                            <q-btn unelevated icon="sym_o_filter_alt" padding="xs" @click="console.log('filter')"> <!-- color="orange-1" text-color="black" -->
+                            <!-- 
+                            <q-btn unelevated icon="sym_o_filter_alt" padding="xs" @click="console.log('filter')">
                                 <q-tooltip class="bg-black">Filtrer</q-tooltip>
                             </q-btn>
+                            -->
                         </template>
                     </q-input>
                 </div>
@@ -88,11 +90,6 @@
                                 <q-btn dense round flat color="grey" name="calendar" @click="downloadICS(props.row)" icon="sym_o_calendar_add_on">
                                     <q-tooltip class="bg-black">Ajouter au calendrier</q-tooltip>
                                 </q-btn>
-                                <!-- 
-                                <q-btn href="data:,I am text file" download="a122.txt" dense round flat color="grey" name="calendar" @click="" icon="sym_o_calendar_add_on">
-                                    <q-tooltip class="bg-black">Ajouter au calendrier</q-tooltip>
-                                </q-btn>
-                                -->
                                 <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete">
                                     <q-tooltip class="bg-black">Supprimer</q-tooltip>
                                 </q-btn>

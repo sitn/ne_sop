@@ -20,15 +20,17 @@
                         <template v-slot:append>
                             <q-spinner color="blue-grey" :thickness="3" v-if="loading" />
                             <!-- FILTER BUTTON -->
-                            <q-btn unelevated icon="sym_o_filter_alt" padding="xs" @click="console.log('filter')"> <!-- color="orange-1" text-color="black" -->
+                            <!--
+                            <q-btn unelevated icon="sym_o_filter_alt" padding="xs" @click="console.log('filter')">
                                 <q-tooltip class="bg-black">Filtrer</q-tooltip>
                             </q-btn>
+                            -->
                         </template>
                     </q-input>
                 </div>
 
                 <!-- ADD NEW RECORD BUTTON -->
-                <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
+                <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6" v-if="store.user.is_manager">
                     <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" @click="" to="/entities/new">
                         <q-tooltip class="bg-black">Ajouter une nouvelle entité</q-tooltip>
                     </q-btn>
@@ -71,7 +73,7 @@
                                 <q-btn dense round flat color="grey" name="phone" @click="console.log(props.row.telephone)" icon="sym_o_call" :href="`tel:${props.row.telephone}`" v-if="props.row.telephone !== ''">
                                     <q-tooltip class="bg-black" v-if="props.row.telephone">Appeler: {{ props.row.telephone }}</q-tooltip>
                                 </q-btn>
-                                <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete">
+                                <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete" v-if="store.user.is_manager">
                                     <q-tooltip class="bg-black">Supprimer</q-tooltip>
                                 </q-btn>
                             </div>

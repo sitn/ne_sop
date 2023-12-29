@@ -41,16 +41,20 @@ export const router = createRouter({
 // navigation guards
 router.beforeEach(async (to, from) => {
 
+    if (store.user === null) {
+        store.user = await store.getCurrentUser()
+    }
+
     store.navigation.from = from.fullPath
     store.navigation.to = to.fullPath
     //  return false to cancel the navigation
-    console.log(`from: ${from}, to: ${to}`)
+    // console.log(`from: ${from}, to: ${to}`)
 
     // DISPLAY WARNING DIALOG
     if (store.warning) {
 
-        console.log(from)
-        console.log(to)
+        // console.log(from)
+        // console.log(to)
 
         store.exit = true
         return false

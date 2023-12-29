@@ -11,12 +11,12 @@
 
                         <!-- REFERENCE NUMBER TEXT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-input bg-color="white" outlined v-model="item.number" label="N°" :rules="[v => checkFilled(v)]" :disable="!edit" />
+                            <q-input bg-color="white" outlined v-model="item.number" label="N°" :rules="[v => checkFilled(v)]" :disable="!edit || !store.user.is_manager" />
                         </div>
 
                         <!-- TYPE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.type" :options="itemTypes" option-label="name" option-value="id" emit-value map-options label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.type" :options="itemTypes" option-label="name" option-value="id" emit-value map-options label="Type" clearable :rules="[v => checkFilled(v)]" :disable="!edit || !store.user.is_manager">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section>
@@ -34,7 +34,7 @@
 
                         <!-- TITLE TEXT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-input bg-color="white" outlined v-model="item.title" label="Titre" :rules="[v => checkFilled(v)]" :disable="!edit" />
+                            <q-input bg-color="white" outlined v-model="item.title" label="Titre" :rules="[v => checkFilled(v)]" :disable="!edit || !store.user.is_manager" />
                         </div>
 
                         <!-- AUTHOR SELECT/CREATE FIELD -->
@@ -42,7 +42,7 @@
 
                             <!--  <q-select bg-color="white" outlined v-model="item.author" :options="authorOptions" option-label="name" option-value="id" emit-value map-options label="Auteur" clearable :rules="[v => checkFilled(v)]" :disable="!edit"> -->
 
-                            <q-select bg-color="white" outlined v-model="item.author" use-input :options="authorOptions" option-label="name" option-value="id" emit-value map-options @filter="filterFn" label="Auteur" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.author" use-input :options="authorOptions" option-label="name" option-value="id" emit-value map-options @filter="filterFn" label="Auteur" clearable :rules="[v => checkFilled(v)]" :disable="!edit || !store.user.is_manager">
 
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
@@ -54,7 +54,7 @@
                                 </template>
 
                                 <template v-slot:after>
-                                    <q-btn round unelevated color="blue-grey-8" icon="sym_o_person_add" @click="addEntity()" :disable="!edit">
+                                    <q-btn round unelevated color="blue-grey-8" icon="sym_o_person_add" @click="addEntity()" :disable="!edit || !store.user.is_manager">
                                         <q-tooltip class="bg-black">Ajouter une nouvelle option</q-tooltip>
                                     </q-btn>
                                 </template>
@@ -69,7 +69,7 @@
                     <!-- DESCRIPTION TEXT AREA FIELD -->
                     <div class="row q-col-gutter-lg q-py-md">
                         <div class="col">
-                            <q-input bg-color="white" outlined v-model="item.description" label="Description" type="textarea" :disable="!edit" />
+                            <q-input bg-color="white" outlined v-model="item.description" label="Description" type="textarea" :disable="!edit || !store.user.is_manager" />
                         </div>
                     </div>
 
@@ -90,7 +90,7 @@
 
                         <!-- PRIMARY SERVICE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.lead" :options="serviceOptions" option-label="name" option-value="id" emit-value map-options label="Service principal" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.lead" :options="serviceOptions" option-label="name" option-value="id" emit-value map-options label="Service principal" clearable :rules="[v => checkFilled(v)]" :disable="!edit || !store.user.is_manager">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section>
@@ -103,7 +103,7 @@
 
                         <!-- SUPPORT SERVICE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.support" :options="serviceOptions" option-label="name" option-value="id" emit-value map-options label="Service(s) en appui" multiple clearable @clear="reset()" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.support" :options="serviceOptions" option-label="name" option-value="id" emit-value map-options label="Service(s) en appui" multiple clearable @clear="reset()" :disable="!edit || !store.user.is_manager">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section side>
@@ -124,7 +124,7 @@
 
                         <!-- STATUS SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-select bg-color="white" outlined v-model="item.status" :options="itemStatus" option-label="name" option-value="id" emit-value map-options label="Statut" clearable :rules="[v => checkFilled(v)]" :disable="!edit">
+                            <q-select bg-color="white" outlined v-model="item.status" :options="itemStatus" option-label="name" option-value="id" emit-value map-options label="Statut" clearable :rules="[v => checkFilled(v)]" :disable="!edit || !store.user.is_manager">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section side>
@@ -144,9 +144,9 @@
 
                         <!-- URGENT CHECKBOX FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-item tag="label" v-ripple :disable="!edit">
+                            <q-item tag="label" v-ripple :disable="!edit || !store.user.is_manager">
                                 <q-item-section avatar>
-                                    <q-checkbox v-model="item.urgent" val="true" color="blue" :disable="!edit" />
+                                    <q-checkbox v-model="item.urgent" val="true" color="blue" :disable="!edit || !store.user.is_manager" />
                                 </q-item-section>
                                 <q-item-section>
                                     <q-item-label>Urgent</q-item-label>
@@ -157,9 +157,9 @@
 
                         <!-- WRITTEN RESPONSE CHECKBOX FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-item tag="label" v-ripple :disable="!edit">
+                            <q-item tag="label" v-ripple :disable="!edit || !store.user.is_manager">
                                 <q-item-section avatar>
-                                    <q-checkbox v-model="item.writtenresponse" val="true" color="blue" :disable="!edit" />
+                                    <q-checkbox v-model="item.writtenresponse" val="true" color="blue" :disable="!edit || !store.user.is_manager" />
                                 </q-item-section>
                                 <q-item-section>
                                     <q-item-label>Réponse écrite</q-item-label>
@@ -170,9 +170,9 @@
 
                         <!-- ORAL RESPONSE CHECKBOX FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-item tag="label" v-ripple :disable="!edit">
+                            <q-item tag="label" v-ripple :disable="!edit || !store.user.is_manager">
                                 <q-item-section avatar>
-                                    <q-checkbox v-model="item.oralresponse" val="true" color="blue" :disable="!edit" />
+                                    <q-checkbox v-model="item.oralresponse" val="true" color="blue" :disable="!edit || !store.user.is_manager" />
                                 </q-item-section>
                                 <q-item-section>
                                     <q-item-label>Réponse orale</q-item-label>
@@ -182,9 +182,9 @@
                         </div>
 
                         <!-- AUTOMATIC NOTIFICATIONS CHECKBOX FIELD -->
-                        <q-item tag="label" v-ripple :disable="!edit">
+                        <q-item tag="label" v-ripple :disable="!edit || !store.user.is_manager">
                             <q-item-section avatar>
-                                <q-checkbox v-model="item.autonotify" val="true" color="blue" :disable="!edit" />
+                                <q-checkbox v-model="item.autonotify" val="true" color="blue" :disable="!edit || !store.user.is_manager" />
                             </q-item-section>
                             <q-item-section>
                                 <q-item-label>Notification automatique</q-item-label>
@@ -195,7 +195,7 @@
 
                     </div>
 
-                    <div class="row q-py-md" v-if="this.item.users">
+                    <div class="row q-py-md" v-if="this.item.users & !store.user.is_manager">
                         <!-- ADD NEW EVENT BUTTON -->
                         <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
                             <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_mail" label="Notifier" :href="mailtostring" @click="" :disable="!edit">

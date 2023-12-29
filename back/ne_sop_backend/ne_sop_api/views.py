@@ -24,6 +24,7 @@ from ne_sop_api.serializers import (
     EventTypeSerializer,
     TemplateSerializer,
     UserSerializer,
+    CurrentUserSerializer,
 )
 
 from django.core.exceptions import PermissionDenied
@@ -48,7 +49,7 @@ from ne_sop_api.utils import Utils
 from ne_sop_api.permissions import (
     IsManagerPermission,
     IsManagerOrReadOnlyPermission,
-    isAllowedRegadingEntitiesAndItemId
+    isAllowedRegadingEntitiesAndItemId,
 )
 
 from pathlib import Path, PurePath
@@ -65,6 +66,27 @@ def test_api(request):
     html = "<h1>Congratulations !</h1>"
     html += f"<h2>Hello {request.user}, It works</h2>"
     return HttpResponse(content=html, status=200)
+
+
+# %% CURRENT USER
+class CurrentUserViewSet(viewsets.ViewSet):
+    """
+    Curent Users viewset
+    """
+
+    queryset = User.objects.all()
+    serializer_class = CurrentUserSerializer
+    permission_classes = [IsManagerOrReadOnlyPermission]
+
+    @extend_schema(
+        responses=CurrentUserSerializer,
+        tags=["Users"],
+    )
+    def list(self, request):
+        queryset = User.objects.all()
+        current_user = get_object_or_404(queryset, pk=request.user.id)
+        serializer = CurrentUserSerializer(current_user)
+        return Response(serializer.data)
 
 
 # %% USER
@@ -224,7 +246,6 @@ class ItemTypeViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-
 # %% ITEM STATUS
 class ItemStatusViewSet(viewsets.ViewSet):
     """
@@ -273,7 +294,7 @@ class ItemViewSet(viewsets.ViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.groups.filter(name='Manager').exists():
+        if user.groups.filter(name="Manager").exists():
             return Item.objects.all()
         return Item.objects.filter(support__in=user.entities.all())
 
@@ -534,11 +555,13 @@ class TemplateTypeViewSet(viewsets.ViewSet):
 
         return Response(serializer.data)
 
+
 # from pprint import pprint
 class DocumentViewSet(viewsets.ViewSet):
     """
     New document viewset
     """
+
     parser_classes = [MultiPartParser]
     serializer_class = DocumentSerializer
 
@@ -556,7 +579,7 @@ class DocumentViewSet(viewsets.ViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     @extend_schema(
         responses=DocumentSerializer,
         tags=["Document"],
@@ -566,7 +589,7 @@ class DocumentViewSet(viewsets.ViewSet):
 
         filepath = PurePath(settings.MEDIA_ROOT, document.file.name)
         filepath = open(filepath, "rb")
-        
+
         response = FileResponse(
             filepath, filename=document.filename, as_attachment=True
         )
