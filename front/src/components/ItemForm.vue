@@ -73,10 +73,14 @@
                         </div>
                     </div>
 
-                    <!-- TODO REMOVE/DEV DISPLAY JSON-->
+                    <!-- DEV DISPLAY JSON-->
                     <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
-                        <div>item</div>
+                        <div class="text-bold">Item</div>
                         <div>{{ item }}</div>
+                        <div class="text-bold">User</div>
+                        <div>{{ this.item.hasOwnProperty('users') }}</div>
+                        <div class="text-bold">store.user.is_manager</div>
+                        <div>{{ store.user.is_manager }}</div>
                     </div>
 
                 </template>
@@ -195,7 +199,7 @@
 
                     </div>
 
-                    <div class="row q-py-md" v-if="store.user.is_manager">
+                    <div class="row q-py-md" v-if="this.item.hasOwnProperty('users') & store.user.is_manager">
                         <!-- ADD NEW EVENT BUTTON -->
                         <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
                             <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_mail" label="Notifier" :href="mailtostring" @click="" :disable="!edit">
