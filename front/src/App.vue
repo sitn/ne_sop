@@ -38,7 +38,7 @@
 
                 <q-space></q-space>
 
-                <div class="text-center text-body1 gt-sm" v-if="store.user">{{ store.user.username }} <q-icon size="lg" name="account_circle" text-color="white" flat round dense />
+                <div class="text-center text-body1 gt-sm" v-if="store.user.username">{{ store.user.username }} <q-icon size="lg" name="account_circle" text-color="white" flat round dense />
                 </div>
 
                 <!-- 
