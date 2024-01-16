@@ -36,7 +36,7 @@ export default {
     },
     computed: {
         mailtostring() {
-            return `mailto:${this.email_webmaster}&subject=SOP - help`
+            return `mailto:${this.email_webmaster}&subject=SOP - Help`
         }
     },
     mounted() {
