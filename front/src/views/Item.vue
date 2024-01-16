@@ -1,30 +1,35 @@
 <template>
     <div class="" v-if="!store.loading">
-        <q-layout>
+        <div v-if="Object.keys(item).includes('number')">
+            <q-layout>
 
-            <!-- BREADCRUMBS NAVIGATION -->
-            <div class="q-pa-sm q-gutter-sm">
-                <q-breadcrumbs style="font-size: 16px">
-                    <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
-                    <q-breadcrumbs-el :label="item.number.toString()" />
-                </q-breadcrumbs>
-            </div>
+                <!-- BREADCRUMBS NAVIGATION -->
+                <div class="q-pa-sm q-gutter-sm">
+                    <q-breadcrumbs style="font-size: 16px">
+                        <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
+                        <q-breadcrumbs-el :label="item.number.toString()" />
+                    </q-breadcrumbs>
+                </div>
 
-            <!-- FORM -->
-            <ItemForm v-model="item" :mode="mode" :edit="edit" ref="ItemForm"></ItemForm>
+                <!-- FORM -->
+                <ItemForm v-model="item" :mode="mode" :edit="edit" ref="ItemForm"></ItemForm>
 
-            <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="false" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+                <!-- FLOATING ACTION BUTTONS -->
+                <FloatingButtons :edit="false" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
 
-            <!-- DELETE DIALOG -->
-            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+                <!-- DELETE DIALOG -->
+                <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
-            <!-- ADD NEW ENTITY DIALOG -->
-            <q-dialog v-model="addEntityDialog">
-                <NewEntityDialog @addNewEntity="addNewEntity"></NewEntityDialog>
-            </q-dialog>
+                <!-- ADD NEW ENTITY DIALOG -->
+                <q-dialog v-model="addEntityDialog">
+                    <NewEntityDialog @addNewEntity="addNewEntity"></NewEntityDialog>
+                </q-dialog>
 
-        </q-layout>
+            </q-layout>
+        </div>
+        <div v-else>
+            <UnknownUrlRequest />
+        </div>
 
     </div>
 </template>
@@ -35,10 +40,11 @@ import ItemForm from "../components/ItemForm.vue"
 import FloatingButtons from "../components/FloatingButtons.vue"
 import NewEntityDialog from "./NewEntityDialog.vue"
 import DeleteDialog from '../components/DeleteDialog.vue'
+import UnknownUrlRequest from './UnknownUrlRequest.vue'
 
 export default {
     name: 'Item',
-    components: { ItemForm, FloatingButtons, NewEntityDialog, DeleteDialog },
+    components: { ItemForm, FloatingButtons, NewEntityDialog, DeleteDialog, UnknownUrlRequest },
     props: {},
     emits: [],
     setup() {
