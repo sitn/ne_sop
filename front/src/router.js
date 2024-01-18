@@ -13,7 +13,7 @@ import NewUser from './views/NewUser.vue'
 import Admin from './views/Admin.vue'
 import Help from './views/Help.vue'
 import Unauthorized from './views/Unauthorized.vue'
-
+import NotFound from './views/NotFound.vue'
 
 const routes = [
     { path: '/', redirect: '/items' },
@@ -31,7 +31,8 @@ const routes = [
     { path: '/admin', name: 'Admin', component: Admin },
     { path: '/admin/users/:id', name: 'User', component: User, props: true },
     { path: '/admin/users/new', name: 'NewUser', component: NewUser },
-    { path: '/help', name: 'Help', component: Help }
+    { path: '/help', name: 'Help', component: Help },
+    { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
 ]
 
 export const router = createRouter({
