@@ -10,9 +10,9 @@ import Item from './views/Item.vue'
 import Entity from './views/Entity.vue'
 import User from './views/User.vue'
 import NewUser from './views/NewUser.vue'
-import Login from './views/Login.vue'
 import Admin from './views/Admin.vue'
 import Help from './views/Help.vue'
+import NotFound from './views/NotFound.vue'
 
 const routes = [
     { path: '/', redirect: '/items' },
@@ -26,11 +26,11 @@ const routes = [
     { path: '/events/:id', name: 'Event', component: Event, props: true },
     { path: '/events/new', name: 'NewEvent', component: Event },
     { path: '/statistics', name: 'Statistics', component: Statistics },
-    { path: '/login', name: 'Login', component: Login },
     { path: '/admin', name: 'Admin', component: Admin },
     { path: '/admin/users/:id', name: 'User', component: User, props: true },
     { path: '/admin/users/new', name: 'NewUser', component: NewUser },
-    { path: '/help', name: 'Help', component: Help }
+    { path: '/help', name: 'Help', component: Help },
+    { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound }
 ]
 
 export const router = createRouter({

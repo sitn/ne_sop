@@ -28,7 +28,7 @@
             </q-layout>
         </div>
         <div v-else>
-            <UnknownUrlRequest />
+            <NotFound />
         </div>
 
     </div>
@@ -40,11 +40,11 @@ import ItemForm from "../components/ItemForm.vue"
 import FloatingButtons from "../components/FloatingButtons.vue"
 import NewEntityDialog from "./NewEntityDialog.vue"
 import DeleteDialog from '../components/DeleteDialog.vue'
-import UnknownUrlRequest from './UnknownUrlRequest.vue'
+import NotFound from './NotFound.vue'
 
 export default {
     name: 'Item',
-    components: { ItemForm, FloatingButtons, NewEntityDialog, DeleteDialog, UnknownUrlRequest },
+    components: { ItemForm, FloatingButtons, NewEntityDialog, DeleteDialog, NotFound },
     props: {},
     emits: [],
     setup() {
@@ -92,7 +92,7 @@ export default {
     },
     async created() {
 
-        // console.log(`this.$route.params.id: ${this.$route.params.id}`)
+        console.log(`this.$route.params.id: ${this.$route.params.id}`)
         if (this.$route.params.hasOwnProperty('id')) {
             this.store.loading = true
             this.item = await store.getItem(this.$route.params.id)
@@ -100,6 +100,15 @@ export default {
         }
         this.store.loading = false
 
+    },
+    watch: {
+        async $route(to, from) {
+            if (this.$route.params.hasOwnProperty('id')) {
+                this.store.loading = true
+                this.item = await store.getItem(this.$route.params.id)
+                this.store.loading = false
+            }
+        }
     },
     methods: {
         async save() {

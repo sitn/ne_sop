@@ -1,11 +1,12 @@
 <template>
-    <div class="unknownurlrequest">
+    <div class="notfound">
         <div class="q-pa-md">
             <div style="text-align: center;">
 
                 <h2 style="font-weight: 500;">Page inconnue</h2>
                 <q-icon name="warning" style="font-size: max(min(15vw, 150pt), 80pt); max-width: 100px;" color="warning"></q-icon>
-                <h5>La page recherchée n'existe pas (<a :href="linkString">{{ linkString }}</a>).</h5>
+                <h5>La page recherchée n'existe pas.<br>
+                    (<a :href="linkString">{{ linkString }}</a>)</h5>
 
             </div>
         </div>
@@ -16,8 +17,8 @@
 
 
 export default {
-    name: 'UnknownUrlRequest',
-    data () {
+    name: 'NotFound',
+    data() {
         return {
             client_url: import.meta.env.VITE_CLIENT_URL,
             link: null,
@@ -25,7 +26,7 @@ export default {
     },
     computed: {
         linkString() {
-            return this.client_url + this.$route.fullPath
+            return window.location.href
         }
     }
 }
@@ -33,7 +34,7 @@ export default {
 </script>
 
 <style scoped>
-.unknownurlrequest {
+.notfound {
     padding-top: 40px;
     max-width: 50%;
     margin: auto;
