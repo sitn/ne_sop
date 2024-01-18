@@ -1,36 +1,51 @@
 <template>
-    <div class="" v-if="!store.loading">
-        <q-layout>
+    <q-layout view="hHh LpR fFf" class="shadow-2">
 
-            <!-- BREADCRUMBS NAVIGATION -->
-            <div class="q-pa-sm q-gutter-sm">
-                <q-breadcrumbs style="font-size: 16px">
-                    <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
-                    <q-breadcrumbs-el :label="item.number.toString()" />
-                </q-breadcrumbs>
-            </div>
+        <Header></Header>
+        <Sidebar></Sidebar>
 
-            <!-- FORM -->
-            <ItemForm v-model="item" :mode="mode" :edit="edit" ref="ItemForm"></ItemForm>
+        <q-page-container>
+            <q-page class="q-pa-md">
 
-            <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="false" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+                <div class="" v-if="!store.loading">
+                    <q-layout>
 
-            <!-- DELETE DIALOG -->
-            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+                        <!-- BREADCRUMBS NAVIGATION -->
+                        <div class="q-pa-sm q-gutter-sm">
+                            <q-breadcrumbs style="font-size: 16px">
+                                <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
+                                <q-breadcrumbs-el :label="item.number.toString()" />
+                            </q-breadcrumbs>
+                        </div>
 
-            <!-- ADD NEW ENTITY DIALOG -->
-            <q-dialog v-model="addEntityDialog">
-                <NewEntityDialog @addNewEntity="addNewEntity"></NewEntityDialog>
-            </q-dialog>
+                        <!-- FORM -->
+                        <ItemForm v-model="item" :mode="mode" :edit="edit" ref="ItemForm"></ItemForm>
 
-        </q-layout>
+                        <!-- FLOATING ACTION BUTTONS -->
+                        <FloatingButtons :edit="false" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
 
-    </div>
+                        <!-- DELETE DIALOG -->
+                        <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+
+                        <!-- ADD NEW ENTITY DIALOG -->
+                        <q-dialog v-model="addEntityDialog">
+                            <NewEntityDialog @addNewEntity="addNewEntity"></NewEntityDialog>
+                        </q-dialog>
+
+                    </q-layout>
+
+                </div>
+
+            </q-page>
+        </q-page-container>
+
+    </q-layout>
 </template>
 
 <script>
 import { store } from '../store/store.js'
+import Header from '../components/Header.vue'
+import Sidebar from '../components/Sidebar.vue'
 import ItemForm from "../components/ItemForm.vue"
 import FloatingButtons from "../components/FloatingButtons.vue"
 import NewEntityDialog from "./NewEntityDialog.vue"
@@ -38,7 +53,7 @@ import DeleteDialog from '../components/DeleteDialog.vue'
 
 export default {
     name: 'Item',
-    components: { ItemForm, FloatingButtons, NewEntityDialog, DeleteDialog },
+    components: { Header, Sidebar, ItemForm, FloatingButtons, NewEntityDialog, DeleteDialog },
     props: {},
     emits: [],
     setup() {

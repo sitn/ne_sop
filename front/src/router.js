@@ -16,6 +16,7 @@ import Unauthorized from './views/Unauthorized.vue'
 import NotFound from './views/NotFound.vue'
 
 const routes = [
+    { path: '/unauthorized', name: 'Unauthorized', component: Unauthorized },
     { path: '/', redirect: '/items' },
     { path: '/items', name: 'ItemsList', component: ItemsList },
     { path: '/items/:id', name: 'Item', component: Item, props: true },
@@ -27,7 +28,6 @@ const routes = [
     { path: '/events/:id', name: 'Event', component: Event, props: true },
     { path: '/events/new', name: 'NewEvent', component: Event },
     { path: '/statistics', name: 'Statistics', component: Statistics },
-    { path: '/unauthorized', name: 'Unauthorized', component: Unauthorized },
     { path: '/admin', name: 'Admin', component: Admin },
     { path: '/admin/users/:id', name: 'User', component: User, props: true },
     { path: '/admin/users/new', name: 'NewUser', component: NewUser },
@@ -54,7 +54,11 @@ router.beforeEach(async (to, from) => {
 
     if (!(store.user && store.user.username) && to.name !== 'Unauthorized') {
         router.push({name: 'Unauthorized'})
-    }
+    } 
+    
+/*     if (to.name !== 'Layout') {
+        router.push({name: 'Layout'})
+    }  */
 
     // DISPLAY WARNING DIALOG
     if (store.warning) {
