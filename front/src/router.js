@@ -10,9 +10,10 @@ import Item from './views/Item.vue'
 import Entity from './views/Entity.vue'
 import User from './views/User.vue'
 import NewUser from './views/NewUser.vue'
-import Login from './views/Login.vue'
 import Admin from './views/Admin.vue'
 import Help from './views/Help.vue'
+import Unauthorized from './views/Unauthorized.vue'
+
 
 const routes = [
     { path: '/', redirect: '/items' },
@@ -26,7 +27,7 @@ const routes = [
     { path: '/events/:id', name: 'Event', component: Event, props: true },
     { path: '/events/new', name: 'NewEvent', component: Event },
     { path: '/statistics', name: 'Statistics', component: Statistics },
-    { path: '/login', name: 'Login', component: Login },
+    { path: '/unauthorized', name: 'Unauthorized', component: Unauthorized },
     { path: '/admin', name: 'Admin', component: Admin },
     { path: '/admin/users/:id', name: 'User', component: User, props: true },
     { path: '/admin/users/new', name: 'NewUser', component: NewUser },
@@ -49,6 +50,10 @@ router.beforeEach(async (to, from) => {
     store.navigation.to = to.fullPath
     //  return false to cancel the navigation
     // console.log(`from: ${from}, to: ${to}`)
+
+    if (!(store.user && store.user.username) && to.name !== 'Unauthorized') {
+        router.push({name: 'Unauthorized'})
+    }
 
     // DISPLAY WARNING DIALOG
     if (store.warning) {

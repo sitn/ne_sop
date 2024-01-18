@@ -171,7 +171,7 @@
             </q-layout>
         </div>
         <div v-else>
-            <Unauthorized />
+            <router-view></router-view>
         </div>
     </div>
 </template>
@@ -179,13 +179,9 @@
 <script>
 import { ref } from 'vue'
 import { store } from './store/store.js'
-import Unauthorized from './views/Unauthorized.vue'
 
 export default {
     name: 'App',
-    components: {
-        Unauthorized,
-    },
     setup() {
         return {
             drawer: ref(false),
