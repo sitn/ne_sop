@@ -5,8 +5,8 @@
 
                 <h2 style="font-weight: 500;">Page inconnue</h2>
                 <q-icon name="warning" style="font-size: max(min(15vw, 150pt), 80pt); max-width: 100px;" color="warning"></q-icon>
-                <h5>La page recherchée n'existe pas.<br>
-                    (<a :href="linkString">{{ linkString }}</a>)</h5>
+                <h5>La page recherchée n'existe pas.<br></h5>
+                <p>(<a :href="linkString">{{ linkString }}</a>)</p>
 
             </div>
         </div>

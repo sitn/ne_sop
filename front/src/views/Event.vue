@@ -1,26 +1,31 @@
 <template>
     <div class="" v-if="!store.loading">
+        <div v-if="Object.keys(event).includes('id')">
 
-        <q-layout>
+            <q-layout>
 
-            <!-- BREADCRUMBS NAVIGATION -->
-            <div class="q-pa-sm q-gutter-sm">
-                <q-breadcrumbs style="font-size: 16px">
-                    <q-breadcrumbs-el label="Calendrier" to="/events" />
-                    <q-breadcrumbs-el :label="event.date" />
-                </q-breadcrumbs>
-            </div>
+                <!-- BREADCRUMBS NAVIGATION -->
+                <div class="q-pa-sm q-gutter-sm">
+                    <q-breadcrumbs style="font-size: 16px">
+                        <q-breadcrumbs-el label="Calendrier" to="/events" />
+                        <q-breadcrumbs-el :label="event.date" />
+                    </q-breadcrumbs>
+                </div>
 
-            <!-- FORM -->
-            <EventForm v-model="event" :edit="edit"></EventForm>
+                <!-- FORM -->
+                <EventForm v-model="event" :edit="edit"></EventForm>
 
-            <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+                <!-- FLOATING ACTION BUTTONS -->
+                <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
 
-            <!-- DELETE DIALOG -->
-            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+                <!-- DELETE DIALOG -->
+                <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
-        </q-layout>
+            </q-layout>
+        </div>
+        <div v-else>
+            <NotFound />
+        </div>
     </div>
 </template>
 
@@ -29,10 +34,11 @@ import { store } from '../store/store.js'
 import FloatingButtons from "../components/FloatingButtons.vue"
 import DeleteDialog from '../components/DeleteDialog.vue'
 import EventForm from "../components/EventForm.vue"
+import NotFound from './NotFound.vue'
 
 export default {
     name: 'Event',
-    components: { FloatingButtons, DeleteDialog, EventForm },
+    components: { FloatingButtons, DeleteDialog, EventForm, NotFound },
     props: {},
     emits: [],
     data() {
@@ -58,6 +64,15 @@ export default {
             return {
                 save: this.event.valid ? 'active' : 'disable',
                 deletion: 'none'
+            }
+        }
+    },
+    watch: {
+        async $route(to, from) {
+            if (this.$route.params.hasOwnProperty('id')) {
+                this.store.loading = true
+                this.event = await store.getEvent(this.$route.params.id)
+                this.store.loading = false
             }
         }
     },

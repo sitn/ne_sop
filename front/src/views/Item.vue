@@ -1,6 +1,6 @@
 <template>
     <div class="" v-if="!store.loading">
-        <div v-if="Object.keys(item).includes('number')">
+        <div v-if="Object.keys(item).includes('id')">
             <q-layout>
 
                 <!-- BREADCRUMBS NAVIGATION -->
@@ -90,17 +90,6 @@ export default {
             }
         }
     },
-    async created() {
-
-        console.log(`this.$route.params.id: ${this.$route.params.id}`)
-        if (this.$route.params.hasOwnProperty('id')) {
-            this.store.loading = true
-            this.item = await store.getItem(this.$route.params.id)
-            this.store.loading = false
-        }
-        this.store.loading = false
-
-    },
     watch: {
         async $route(to, from) {
             if (this.$route.params.hasOwnProperty('id')) {
@@ -109,6 +98,17 @@ export default {
                 this.store.loading = false
             }
         }
+    },
+    async created() {
+
+        // console.log(`this.$route.params.id: ${this.$route.params.id}`)
+        if (this.$route.params.hasOwnProperty('id')) {
+            this.store.loading = true
+            this.item = await store.getItem(this.$route.params.id)
+            this.store.loading = false
+        }
+        this.store.loading = false
+
     },
     methods: {
         async save() {

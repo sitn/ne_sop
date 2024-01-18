@@ -1,25 +1,31 @@
 <template>
     <div class="" v-if="!store.loading">
-        <q-layout>
+        <div v-if="Object.keys(entity).includes('id')">
 
-            <!-- BREADCRUMBS NAVIGATION -->
-            <div class="q-pa-sm q-gutter-sm">
-                <q-breadcrumbs style="font-size: 16px">
-                    <q-breadcrumbs-el label="Personnes et groupes" to="/entities" />
-                    <q-breadcrumbs-el :label="entity.name" />
-                </q-breadcrumbs>
-            </div>
+            <q-layout>
 
-            <!-- FORM -->
-            <EntityForm v-model="entity" :edit="edit"></EntityForm>
+                <!-- BREADCRUMBS NAVIGATION -->
+                <div class="q-pa-sm q-gutter-sm">
+                    <q-breadcrumbs style="font-size: 16px">
+                        <q-breadcrumbs-el label="Personnes et groupes" to="/entities" />
+                        <q-breadcrumbs-el :label="entity.name" />
+                    </q-breadcrumbs>
+                </div>
 
-            <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode" v-if="store.user.is_manager"></FloatingButtons>
+                <!-- FORM -->
+                <EntityForm v-model="entity" :edit="edit"></EntityForm>
 
-            <!-- DELETE DIALOG -->
-            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+                <!-- FLOATING ACTION BUTTONS -->
+                <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode" v-if="store.user.is_manager"></FloatingButtons>
 
-        </q-layout>
+                <!-- DELETE DIALOG -->
+                <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+
+            </q-layout>
+        </div>
+        <div v-else>
+            <NotFound />
+        </div>
 
     </div>
 </template>
@@ -29,11 +35,12 @@ import { store } from '../store/store.js'
 import FloatingButtons from "../components/FloatingButtons.vue"
 import DeleteDialog from '../components/DeleteDialog.vue'
 import EntityForm from "../components/EntityForm.vue"
+import NotFound from './NotFound.vue'
 
 export default {
     store,
     name: 'Entity',
-    components: { FloatingButtons, DeleteDialog, EntityForm },
+    components: { FloatingButtons, DeleteDialog, EntityForm, NotFound },
     props: {},
     emits: [],
     data() {
@@ -68,6 +75,15 @@ export default {
             }
         }
 
+    },
+    watch: {
+        async $route(to, from) {
+            if (this.$route.params.hasOwnProperty('id')) {
+                this.store.loading = true
+                this.entity = await store.getEntity(this.$route.params.id)
+                this.store.loading = false
+            }
+        }
     },
     async created() {
 
