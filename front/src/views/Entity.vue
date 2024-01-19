@@ -52,7 +52,6 @@ import NotFound from '../components/NotFound.vue'
 
 
 export default {
-    store,
     name: 'Entity',
     components: { Header, Sidebar, FloatingButtons, DeleteDialog, EntityForm, NotFound },
     props: {},
