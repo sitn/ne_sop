@@ -1,30 +1,41 @@
 <template>
-    <div class="">
+    <q-layout view="hHh LpR fFf" class="shadow-2">
 
-        <!-- Breadcrumbs navigation -->
-        <div class="q-pa-sm q-gutter-sm">
-            <q-breadcrumbs style="font-size: 16px">
-                <q-breadcrumbs-el label="Statistiques" to="/statistics" />
-            </q-breadcrumbs>
-        </div>
+        <Header></Header>
+        <Sidebar></Sidebar>
 
-        <!-- Identification -->
-        <FormSection title="Statistiques">
-            <template v-slot:content>
+        <q-page-container>
+            <q-page class="q-pa-md">
 
-            </template>
-        </FormSection>
+                <!-- Breadcrumbs navigation -->
+                <div class="q-pa-sm q-gutter-sm">
+                    <q-breadcrumbs style="font-size: 16px">
+                        <q-breadcrumbs-el label="Statistiques" to="/statistics" />
+                    </q-breadcrumbs>
+                </div>
 
-    </div>
+                <!-- Identification -->
+                <FormSection title="Statistiques">
+                    <template v-slot:content>
+
+                    </template>
+                </FormSection>
+
+            </q-page>
+        </q-page-container>
+
+    </q-layout>
 </template>
 
 <script>
 import FormSection from "../components/FormSection.vue"
+import Header from '../components/Header.vue'
+import Sidebar from '../components/Sidebar.vue'
 
 
 export default {
     name: 'Help',
-    components: { FormSection },
+    components: { Header, Sidebar, FormSection },
     props: { 'model': Object },
     emits: [],
     setup() {
@@ -39,6 +50,8 @@ export default {
         }
     },
     computed: {
+    },
+    watch: {
     },
     mounted() {
 

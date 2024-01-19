@@ -25,8 +25,7 @@
 
         <q-toolbar>
 
-            <q-btn size="lg" text-color="white" flat @click="drawer = !drawer" round dense icon="sym_o_menu" v-if="store.user && store.user.username" />
-            <!-- <q-btn size="lg" text-color="white" flat @click="drawer = !drawer" round dense icon="sym_o_menu" :disable="$route.name === 'Login'" /> -->
+            <q-btn size="lg" text-color="white" flat @click="store.drawer = !store.drawer" round dense icon="sym_o_menu" />
 
             <q-toolbar-title class="gt-xs">
                 <a href="https://www.ne.ch/autorites/DDTE/" target="_blank"><img src="img/ne_logo_white.svg" alt="Neuchâtel" /></a>
@@ -36,7 +35,7 @@
 
             <q-space></q-space>
 
-            <div class="text-center text-body1 gt-sm" v-if="store.user && store.user.username">{{ store.user.username }} <q-icon size="lg" name="account_circle" text-color="white" flat round dense />
+            <div class="text-center text-body1 gt-sm">{{ store.user.username }} <q-icon size="lg" name="account_circle" text-color="white" flat round dense />
             </div>
 
             <!-- 
@@ -101,7 +100,6 @@ export default {
     async created() {
     },
     async mounted() {
-
     },
 
 }

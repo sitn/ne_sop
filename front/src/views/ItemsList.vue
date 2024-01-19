@@ -124,6 +124,7 @@ import Header from '../components/Header.vue'
 import Sidebar from '../components/Sidebar.vue'
 import DeleteDialog from '../components/DeleteDialog.vue'
 
+
 export default {
     name: 'ItemsList',
     components: { Header, Sidebar, DeleteDialog },

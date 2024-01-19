@@ -13,26 +13,26 @@ import NewUser from './views/NewUser.vue'
 import Admin from './views/Admin.vue'
 import Help from './views/Help.vue'
 import Unauthorized from './views/Unauthorized.vue'
-import NotFound from './views/NotFound.vue'
+import NotFoundPage from './views/NotFoundPage.vue'
 
 const routes = [
     { path: '/unauthorized', name: 'Unauthorized', component: Unauthorized },
     { path: '/', redirect: '/items' },
     { path: '/items', name: 'ItemsList', component: ItemsList },
-    { path: '/items/:id', name: 'Item', component: Item, props: true },
+    { path: '/items/:id(\\d+)', name: 'Item', component: Item, props: true },
     { path: '/items/new', name: 'NewItem', component: Item },
     { path: '/entities', name: 'EntitiesList', component: EntitiesList },
-    { path: '/entities/:id', name: 'Entity', component: Entity, props: true },
+    { path: '/entities/:id(\\d+)', name: 'Entity', component: Entity, props: true },
     { path: '/entities/new', name: 'NewEntity', component: Entity },
     { path: '/events', name: 'EventsList', component: EventsList },
-    { path: '/events/:id', name: 'Event', component: Event, props: true },
+    { path: '/events/:id(\\d+)', name: 'Event', component: Event, props: true },
     { path: '/events/new', name: 'NewEvent', component: Event },
     { path: '/statistics', name: 'Statistics', component: Statistics },
     { path: '/admin', name: 'Admin', component: Admin },
-    { path: '/admin/users/:id', name: 'User', component: User, props: true },
+    { path: '/admin/users/:id(\\d+)', name: 'User', component: User, props: true },
     { path: '/admin/users/new', name: 'NewUser', component: NewUser },
     { path: '/help', name: 'Help', component: Help },
-    { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
+    { path: '/:pathMatch(.*)*', name: 'NotFoundPage', component: NotFoundPage },
 ]
 
 export const router = createRouter({
@@ -53,12 +53,8 @@ router.beforeEach(async (to, from) => {
     // console.log(`from: ${from}, to: ${to}`)
 
     if (!(store.user && store.user.username) && to.name !== 'Unauthorized') {
-        router.push({name: 'Unauthorized'})
-    } 
-    
-/*     if (to.name !== 'Layout') {
-        router.push({name: 'Layout'})
-    }  */
+        router.push({ name: 'Unauthorized' })
+    }
 
     // DISPLAY WARNING DIALOG
     if (store.warning) {

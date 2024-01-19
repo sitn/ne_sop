@@ -1,4 +1,5 @@
 // store.js
+import { ref } from 'vue'
 import { reactive } from 'vue'
 import users from '../assets/data/users.json'
 const host = import.meta.env.VITE_API_URL
@@ -17,6 +18,8 @@ export const store = reactive({
     documents: [],
     users: users,
     user: null,
+    drawer: ref(false),
+    miniState: ref(true),
 
     // GET CURRENT USER
     async getCurrentUser() {

@@ -8,31 +8,38 @@
             <q-page class="q-pa-md">
 
                 <div class="" v-if="!store.loading">
-                    <q-layout>
+                    <div v-if="item && item.id">
 
-                        <!-- BREADCRUMBS NAVIGATION -->
-                        <div class="q-pa-sm q-gutter-sm">
-                            <q-breadcrumbs style="font-size: 16px">
-                                <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
-                                <q-breadcrumbs-el :label="item.number.toString()" />
-                            </q-breadcrumbs>
-                        </div>
+                        <q-layout>
 
-                        <!-- FORM -->
-                        <ItemForm v-model="item" :mode="mode" :edit="edit" ref="ItemForm"></ItemForm>
+                            <!-- BREADCRUMBS NAVIGATION -->
+                            <div class="q-pa-sm q-gutter-sm">
+                                <q-breadcrumbs style="font-size: 16px">
+                                    <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
+                                    <q-breadcrumbs-el :label="item.number.toString()" />
+                                </q-breadcrumbs>
+                            </div>
 
-                        <!-- FLOATING ACTION BUTTONS -->
-                        <FloatingButtons :edit="false" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+                            <!-- FORM -->
+                            <ItemForm v-model="item" :mode="mode" :edit="edit" ref="ItemForm"></ItemForm>
 
-                        <!-- DELETE DIALOG -->
-                        <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+                            <!-- FLOATING ACTION BUTTONS -->
+                            <FloatingButtons :edit="false" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
 
-                        <!-- ADD NEW ENTITY DIALOG -->
-                        <q-dialog v-model="addEntityDialog">
-                            <NewEntityDialog @addNewEntity="addNewEntity"></NewEntityDialog>
-                        </q-dialog>
+                            <!-- DELETE DIALOG -->
+                            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
-                    </q-layout>
+                            <!-- ADD NEW ENTITY DIALOG -->
+                            <q-dialog v-model="addEntityDialog">
+                                <NewEntityDialog @addNewEntity="addNewEntity"></NewEntityDialog>
+                            </q-dialog>
+
+                        </q-layout>
+                    </div>
+
+                    <div v-else>
+                        <NotFound></NotFound>
+                    </div>
 
                 </div>
 
@@ -46,6 +53,7 @@
 import { store } from '../store/store.js'
 import Header from '../components/Header.vue'
 import Sidebar from '../components/Sidebar.vue'
+import NotFound from '../components/NotFound.vue'
 import ItemForm from "../components/ItemForm.vue"
 import FloatingButtons from "../components/FloatingButtons.vue"
 import NewEntityDialog from "./NewEntityDialog.vue"
@@ -53,7 +61,7 @@ import DeleteDialog from '../components/DeleteDialog.vue'
 
 export default {
     name: 'Item',
-    components: { Header, Sidebar, ItemForm, FloatingButtons, NewEntityDialog, DeleteDialog },
+    components: { Header, Sidebar, ItemForm, FloatingButtons, NewEntityDialog, DeleteDialog, NotFound },
     props: {},
     emits: [],
     setup() {
@@ -97,6 +105,18 @@ export default {
                 save: this.item.valid ? 'active' : 'disable',
                 deletion: 'none'
             }
+        }
+    },
+    watch: {
+        async $route(to, from) {
+
+            if (this.$route.params.hasOwnProperty('id')) {
+                this.store.loading = true
+                this.item = await store.getItem(this.$route.params.id)
+                this.store.loading = false
+            }
+            this.store.loading = false
+
         }
     },
     async created() {
