@@ -19,7 +19,6 @@ export const store = reactive({
     users: users,
     user: null,
     drawer: ref(false),
-    miniState: ref(true),
 
     // GET CURRENT USER
     async getCurrentUser() {

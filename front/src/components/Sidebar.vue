@@ -1,5 +1,5 @@
 <template>
-    <q-drawer v-model="store.drawer" show-if-above :mini="store.miniState" @mouseover="store.miniState = false" @mouseout="store.miniState = true" mini-to-overlay :mini-width=70 :width="300" :breakpoint="500" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
+    <q-drawer v-model="store.drawer" show-if-above :mini="miniState" @mouseover="miniState = false" @mouseout="miniState = true" mini-to-overlay :mini-width=70 :width="300" :breakpoint="500" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
         <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
             <q-list padding>
                 <q-item clickable v-ripple to="/items" style="color:#757575" active-class="bg-light-blue-1 text-blue-grey-7">
@@ -76,15 +76,14 @@
 
 <script>
 import { store } from '../store/store.js'
-// import { ref } from 'vue'
+import { ref } from 'vue'
 
 export default {
     name: 'Sidebar',
     setup() {
         return {
             store,
-            // drawer: ref(store.drawer),
-            // miniState: ref(store.miniState),
+            miniState: ref(store.miniState),
 
         }
     },
