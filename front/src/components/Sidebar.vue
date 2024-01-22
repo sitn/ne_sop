@@ -76,13 +76,16 @@
 
 <script>
 import { store } from '../store/store.js'
-
+// import { ref } from 'vue'
 
 export default {
     name: 'Sidebar',
     setup() {
         return {
             store,
+            // drawer: ref(store.drawer),
+            // miniState: ref(store.miniState),
+
         }
     },
 

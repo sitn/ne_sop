@@ -1,45 +1,33 @@
 <template>
-    <q-layout view="hHh LpR fFf" class="shadow-2">
+    <div class="" v-if="!store.loading">
+        <div v-if="event && event.id">
 
-        <Header></Header>
-        <Sidebar></Sidebar>
+            <q-layout>
 
-        <q-page-container>
-            <q-page class="q-pa-md">
-
-                <div class="" v-if="!store.loading">
-                    <div v-if="event && event.id">
-
-                        <q-layout>
-
-                            <!-- BREADCRUMBS NAVIGATION -->
-                            <div class="q-pa-sm q-gutter-sm">
-                                <q-breadcrumbs style="font-size: 16px">
-                                    <q-breadcrumbs-el label="Calendrier" to="/events" />
-                                    <q-breadcrumbs-el :label="event.date" />
-                                </q-breadcrumbs>
-                            </div>
-
-                            <!-- FORM -->
-                            <EventForm v-model="event" :edit="edit"></EventForm>
-
-                            <!-- FLOATING ACTION BUTTONS -->
-                            <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
-
-                            <!-- DELETE DIALOG -->
-                            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
-
-                        </q-layout>
-                    </div>
-
-                    <div v-else>
-                        <NotFound></NotFound>
-                    </div>
+                <!-- BREADCRUMBS NAVIGATION -->
+                <div class="q-pa-sm q-gutter-sm">
+                    <q-breadcrumbs style="font-size: 16px">
+                        <q-breadcrumbs-el label="Calendrier" to="/events" />
+                        <q-breadcrumbs-el :label="event.date" />
+                    </q-breadcrumbs>
                 </div>
-            </q-page>
-        </q-page-container>
 
-    </q-layout>
+                <!-- FORM -->
+                <EventForm v-model="event" :edit="edit"></EventForm>
+
+                <!-- FLOATING ACTION BUTTONS -->
+                <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+
+                <!-- DELETE DIALOG -->
+                <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+
+            </q-layout>
+        </div>
+
+        <div v-else>
+            <NotFound></NotFound>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -47,14 +35,12 @@ import { store } from '../store/store.js'
 import FloatingButtons from "../components/FloatingButtons.vue"
 import DeleteDialog from '../components/DeleteDialog.vue'
 import EventForm from "../components/EventForm.vue"
-import Header from '../components/Header.vue'
-import Sidebar from '../components/Sidebar.vue'
 import NotFound from '../components/NotFound.vue'
 
 
 export default {
     name: 'Event',
-    components: { Header, Sidebar, FloatingButtons, DeleteDialog, EventForm, NotFound },
+    components: { FloatingButtons, DeleteDialog, EventForm, NotFound },
     props: {},
     emits: [],
     data() {

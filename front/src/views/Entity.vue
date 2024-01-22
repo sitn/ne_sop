@@ -1,44 +1,33 @@
 <template>
-    <q-layout view="hHh LpR fFf" class="shadow-2">
 
-        <Header></Header>
-        <Sidebar></Sidebar>
+    <div class="" v-if="!store.loading">
+        <div v-if="entity && entity.id">
+            <q-layout>
 
-        <q-page-container>
-            <q-page class="q-pa-md">
-
-                <div class="" v-if="!store.loading">
-                    <div v-if="entity && entity.id">
-                        <q-layout>
-
-                            <!-- BREADCRUMBS NAVIGATION -->
-                            <div class="q-pa-sm q-gutter-sm">
-                                <q-breadcrumbs style="font-size: 16px">
-                                    <q-breadcrumbs-el label="Personnes et groupes" to="/entities" />
-                                    <q-breadcrumbs-el :label="entity.name" />
-                                </q-breadcrumbs>
-                            </div>
-
-                            <!-- FORM -->
-                            <EntityForm v-model="entity" :edit="edit"></EntityForm>
-
-                            <!-- FLOATING ACTION BUTTONS -->
-                            <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode" v-if="store.user.is_manager"></FloatingButtons>
-
-                            <!-- DELETE DIALOG -->
-                            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
-
-                        </q-layout>
-                    </div>
-
-                    <div v-else>
-                        <NotFound></NotFound>
-                    </div>
+                <!-- BREADCRUMBS NAVIGATION -->
+                <div class="q-pa-sm q-gutter-sm">
+                    <q-breadcrumbs style="font-size: 16px">
+                        <q-breadcrumbs-el label="Personnes et groupes" to="/entities" />
+                        <q-breadcrumbs-el :label="entity.name" />
+                    </q-breadcrumbs>
                 </div>
-            </q-page>
-        </q-page-container>
 
-    </q-layout>
+                <!-- FORM -->
+                <EntityForm v-model="entity" :edit="edit"></EntityForm>
+
+                <!-- FLOATING ACTION BUTTONS -->
+                <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode" v-if="store.user.is_manager"></FloatingButtons>
+
+                <!-- DELETE DIALOG -->
+                <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+
+            </q-layout>
+        </div>
+
+        <div v-else>
+            <NotFound></NotFound>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -46,14 +35,12 @@ import { store } from '../store/store.js'
 import FloatingButtons from "../components/FloatingButtons.vue"
 import DeleteDialog from '../components/DeleteDialog.vue'
 import EntityForm from "../components/EntityForm.vue"
-import Header from '../components/Header.vue'
-import Sidebar from '../components/Sidebar.vue'
 import NotFound from '../components/NotFound.vue'
 
 
 export default {
     name: 'Entity',
-    components: { Header, Sidebar, FloatingButtons, DeleteDialog, EntityForm, NotFound },
+    components: { FloatingButtons, DeleteDialog, EntityForm, NotFound },
     props: {},
     emits: [],
     data() {

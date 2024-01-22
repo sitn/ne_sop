@@ -1,133 +1,118 @@
 <template>
-    <q-layout view="hHh LpR fFf" class="shadow-2">
+    <div class="q-pa-sm q-gutter-sm">
 
-        <Header></Header>
-        <Sidebar></Sidebar>
+        <!-- BREADCRUMBS NAVIGATION -->
+        <q-breadcrumbs style="font-size: 16px">
+            <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
+        </q-breadcrumbs>
 
-        <q-page-container>
-            <q-page class="q-pa-md">
+        <div class="row q-col-gutter-md q-px-sm q-mt-xs items-center">
 
-                <div class="q-pa-sm q-gutter-sm">
-
-                    <!-- BREADCRUMBS NAVIGATION -->
-                    <q-breadcrumbs style="font-size: 16px">
-                        <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
-                    </q-breadcrumbs>
-
-                    <div class="row q-col-gutter-md q-px-sm q-mt-xs items-center">
-
-                        <!-- SEARCH ITEMS FIELD -->
-                        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
-                            <q-input bg-color="white" v-model="searchString" outlined dense placeholder="Rechercher" @update:model-value="query()">
-                                <template v-slot:prepend>
-                                    <q-icon name="sym_o_search" />
-                                </template>
-                                <template v-slot:append>
-                                    <q-spinner color="blue-grey" :thickness="3" v-if="loading" />
-                                    <!-- 
+            <!-- SEARCH ITEMS FIELD -->
+            <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
+                <q-input bg-color="white" v-model="searchString" outlined dense placeholder="Rechercher" @update:model-value="query()">
+                    <template v-slot:prepend>
+                        <q-icon name="sym_o_search" />
+                    </template>
+                    <template v-slot:append>
+                        <q-spinner color="blue-grey" :thickness="3" v-if="loading" />
+                        <!-- 
                             <q-btn unelevated icon="sym_o_filter_alt" padding="xs" @click="console.log('filter')">
                                 <q-tooltip class="bg-black">Filtrer</q-tooltip>
                             </q-btn>
                             -->
-                                </template>
+                    </template>
 
-                            </q-input>
+                </q-input>
+            </div>
+
+            <!-- ADD NEW ITEM BUTTON -->
+            <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6" v-if="store.user.is_manager">
+                <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" to="/items/new">
+                    <q-tooltip class="bg-black">Ajouter un nouvel objet parlementaire</q-tooltip>
+                </q-btn>
+            </div>
+
+        </div>
+
+        <!-- ITEMS TABLE -->
+        <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" @request="onRequest" binary-state-sort class="q-my-lg"> <!-- :filter="filter" -->
+
+            <!-- TABLE BODY -->
+            <template v-slot:body="props">
+                <q-tr :props="props">
+
+                    <!-- STATUS COLUMN -->
+                    <q-td key="status" :props="props">
+
+                        <div>
+                            <q-badge color="red" class="q-my-sm" v-if="props.row.urgent">Urgent</q-badge>
+                        </div>
+                        <div class="row items-center">
+                            <q-badge :color="props.row.status.color" rounded class="q-mr-sm" />
+                            <div>{{ props.row.status.name }}</div>
                         </div>
 
-                        <!-- ADD NEW ITEM BUTTON -->
-                        <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6" v-if="store.user.is_manager">
-                            <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" to="/items/new">
-                                <q-tooltip class="bg-black">Ajouter un nouvel objet parlementaire</q-tooltip>
+                    </q-td>
+
+                    <!-- NUMBER COLUMN -->
+                    <q-td key="number" :props="props">
+                        {{ props.row.number }}
+                    </q-td>
+                    <!-- TYPE COLUMN -->
+                    <q-td key="type" :props="props">
+                        {{ props.row.type.name }}
+                    </q-td>
+                    <!-- TITLE COLUMN -->
+                    <q-td key="title" :props="props">
+
+                        <router-link :to="{
+                            name: 'Item',
+                            params: {
+                                id: props.row.id
+                            }
+                        }">
+                            {{ props.row.title }}
+                        </router-link>
+
+                    </q-td>
+                    <!-- DEPOSIT DATE COLUMN -->
+                    <q-td key="deposit" :props="props">
+                        {{ props.row.startdate }}
+                    </q-td>
+                    <!-- DELAY DATE COLUMN -->
+                    <q-td key="delay" :props="props">
+                        {{ props.row.enddate }}
+                    </q-td>
+                    <!-- ACTIONS COLUMN -->
+                    <q-td key="actions" :props="props">
+                        <div class="float-right">
+                            <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete" v-if="store.user.is_manager">
+                                <q-tooltip class="bg-black">Supprimer</q-tooltip>
                             </q-btn>
                         </div>
+                    </q-td>
+                </q-tr>
+            </template>
+            <template v-slot:no-data>
+                Aucune objet
+            </template>
+        </q-table>
 
-                    </div>
+        <!-- DELETE DIALOG -->
+        <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
-                    <!-- ITEMS TABLE -->
-                    <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" @request="onRequest" binary-state-sort class="q-my-lg"> <!-- :filter="filter" -->
-
-                        <!-- TABLE BODY -->
-                        <template v-slot:body="props">
-                            <q-tr :props="props">
-
-                                <!-- STATUS COLUMN -->
-                                <q-td key="status" :props="props">
-
-                                    <div>
-                                        <q-badge color="red" class="q-my-sm" v-if="props.row.urgent">Urgent</q-badge>
-                                    </div>
-                                    <div class="row items-center">
-                                        <q-badge :color="props.row.status.color" rounded class="q-mr-sm" />
-                                        <div>{{ props.row.status.name }}</div>
-                                    </div>
-
-                                </q-td>
-
-                                <!-- NUMBER COLUMN -->
-                                <q-td key="number" :props="props">
-                                    {{ props.row.number }}
-                                </q-td>
-                                <!-- TYPE COLUMN -->
-                                <q-td key="type" :props="props">
-                                    {{ props.row.type.name }}
-                                </q-td>
-                                <!-- TITLE COLUMN -->
-                                <q-td key="title" :props="props">
-
-                                    <router-link :to="{
-                                        name: 'Item',
-                                        params: {
-                                            id: props.row.id
-                                        }
-                                    }">
-                                        {{ props.row.title }}
-                                    </router-link>
-
-                                </q-td>
-                                <!-- DEPOSIT DATE COLUMN -->
-                                <q-td key="deposit" :props="props">
-                                    {{ props.row.startdate }}
-                                </q-td>
-                                <!-- DELAY DATE COLUMN -->
-                                <q-td key="delay" :props="props">
-                                    {{ props.row.enddate }}
-                                </q-td>
-                                <!-- ACTIONS COLUMN -->
-                                <q-td key="actions" :props="props">
-                                    <div class="float-right">
-                                        <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete" v-if="store.user.is_manager">
-                                            <q-tooltip class="bg-black">Supprimer</q-tooltip>
-                                        </q-btn>
-                                    </div>
-                                </q-td>
-                            </q-tr>
-                        </template>
-                        <template v-slot:no-data>
-                            Aucune objet
-                        </template>
-                    </q-table>
-
-                    <!-- DELETE DIALOG -->
-                    <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
-
-                </div>
-
-            </q-page>
-        </q-page-container>
-
-    </q-layout>
+    </div>
 </template>
 
 <script>
 import { store } from '../store/store.js'
-import Header from '../components/Header.vue'
-import Sidebar from '../components/Sidebar.vue'
 import DeleteDialog from '../components/DeleteDialog.vue'
 
 
 export default {
     name: 'ItemsList',
-    components: { Header, Sidebar, DeleteDialog },
+    components: { DeleteDialog },
     props: { 'title': String, 'model': Object },
     emits: [],
     data() {

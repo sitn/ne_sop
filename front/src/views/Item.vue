@@ -1,58 +1,43 @@
 <template>
-    <q-layout view="hHh LpR fFf" class="shadow-2">
+    <div class="" v-if="!store.loading">
+        <div v-if="item && item.id">
 
-        <Header></Header>
-        <Sidebar></Sidebar>
+            <q-layout>
 
-        <q-page-container>
-            <q-page class="q-pa-md">
-
-                <div class="" v-if="!store.loading">
-                    <div v-if="item && item.id">
-
-                        <q-layout>
-
-                            <!-- BREADCRUMBS NAVIGATION -->
-                            <div class="q-pa-sm q-gutter-sm">
-                                <q-breadcrumbs style="font-size: 16px">
-                                    <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
-                                    <q-breadcrumbs-el :label="item.number.toString()" />
-                                </q-breadcrumbs>
-                            </div>
-
-                            <!-- FORM -->
-                            <ItemForm v-model="item" :mode="mode" :edit="edit" ref="ItemForm"></ItemForm>
-
-                            <!-- FLOATING ACTION BUTTONS -->
-                            <FloatingButtons :edit="false" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
-
-                            <!-- DELETE DIALOG -->
-                            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
-
-                            <!-- ADD NEW ENTITY DIALOG -->
-                            <q-dialog v-model="addEntityDialog">
-                                <NewEntityDialog @addNewEntity="addNewEntity"></NewEntityDialog>
-                            </q-dialog>
-
-                        </q-layout>
-                    </div>
-
-                    <div v-else>
-                        <NotFound></NotFound>
-                    </div>
-
+                <!-- BREADCRUMBS NAVIGATION -->
+                <div class="q-pa-sm q-gutter-sm">
+                    <q-breadcrumbs style="font-size: 16px">
+                        <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
+                        <q-breadcrumbs-el :label="item.number.toString()" />
+                    </q-breadcrumbs>
                 </div>
 
-            </q-page>
-        </q-page-container>
+                <!-- FORM -->
+                <ItemForm v-model="item" :mode="mode" :edit="edit" ref="ItemForm"></ItemForm>
 
-    </q-layout>
+                <!-- FLOATING ACTION BUTTONS -->
+                <FloatingButtons :edit="false" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+
+                <!-- DELETE DIALOG -->
+                <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+
+                <!-- ADD NEW ENTITY DIALOG -->
+                <q-dialog v-model="addEntityDialog">
+                    <NewEntityDialog @addNewEntity="addNewEntity"></NewEntityDialog>
+                </q-dialog>
+
+            </q-layout>
+        </div>
+
+        <div v-else>
+            <NotFound></NotFound>
+        </div>
+
+    </div>
 </template>
 
 <script>
 import { store } from '../store/store.js'
-import Header from '../components/Header.vue'
-import Sidebar from '../components/Sidebar.vue'
 import NotFound from '../components/NotFound.vue'
 import ItemForm from "../components/ItemForm.vue"
 import FloatingButtons from "../components/FloatingButtons.vue"
@@ -61,7 +46,7 @@ import DeleteDialog from '../components/DeleteDialog.vue'
 
 export default {
     name: 'Item',
-    components: { Header, Sidebar, ItemForm, FloatingButtons, NewEntityDialog, DeleteDialog, NotFound },
+    components: { ItemForm, FloatingButtons, NewEntityDialog, DeleteDialog, NotFound },
     props: {},
     emits: [],
     setup() {

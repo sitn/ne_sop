@@ -13,7 +13,7 @@ import NewUser from './views/NewUser.vue'
 import Admin from './views/Admin.vue'
 import Help from './views/Help.vue'
 import Unauthorized from './views/Unauthorized.vue'
-import NotFoundPage from './views/NotFoundPage.vue'
+import NotFound from './components/NotFound.vue'
 
 const routes = [
     { path: '/unauthorized', name: 'Unauthorized', component: Unauthorized },
@@ -32,7 +32,7 @@ const routes = [
     { path: '/admin/users/:id(\\d+)', name: 'User', component: User, props: true },
     { path: '/admin/users/new', name: 'NewUser', component: NewUser },
     { path: '/help', name: 'Help', component: Help },
-    { path: '/:pathMatch(.*)*', name: 'NotFoundPage', component: NotFoundPage },
+    { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
 ]
 
 export const router = createRouter({
