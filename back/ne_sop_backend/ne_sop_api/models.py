@@ -11,6 +11,7 @@ from ne_sop_api.utils import Utils
 # %% ENTITY TYPE
 class EntityType(models.Model):
     name = models.CharField(max_length=50, blank=True, default="")
+    service = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["name"]
