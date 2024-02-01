@@ -5,7 +5,7 @@
 
             <!-- BREADCRUMBS NAVIGATION -->
             <q-breadcrumbs style="font-size: 16px">
-                <q-breadcrumbs-el label="Personnes et groupes" to="/entities" />
+                <q-breadcrumbs-el label="Parlementaires" to="/entities" />
             </q-breadcrumbs>
 
             <!-- SEARCH AND FILTER SECTION -->
@@ -156,7 +156,7 @@ export default {
     },
     async created() {
         this.loading = true
-        this.data = await store.getEntities("", "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+        this.data = await store.getEntities("", [2, 3, 4], this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
         this.rows = this.data.results // await store.getEntities("", "", this.pagination.page, this.pagination.rowsPerPage) // .then(console.log(this.rows))
         this.pagination.rowsNumber = this.data.nrows
         this.loading = false
@@ -177,7 +177,7 @@ export default {
 
             rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage // rowsPerPage
 
-            this.data = await store.getEntities("", "", page, rowsPerPage, sortBy, descending)
+            this.data = await store.getEntities("", [2, 3, 4], page, rowsPerPage, sortBy, descending)
             this.rows = this.data.results
 
             // update pagination object
@@ -192,9 +192,9 @@ export default {
 
             if (this.searchString.length >= 3) {
 
-                this.data = await store.getEntities(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+                this.data = await store.getEntities(this.searchString, [2, 3, 4], this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             } else {
-                this.data = await store.getEntities("", "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+                this.data = await store.getEntities("", [2, 3, 4], this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             }
             this.rows = this.data.results
             this.loading = false
@@ -208,7 +208,7 @@ export default {
             this.loading = true
             // console.log(`delete ${this.selected}`)
             let message = await store.deleteEntity(this.selected)
-            this.data = await store.getEntities(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+            this.data = await store.getEntities(this.searchString, [2, 3, 4], this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             this.rows = this.data.results
             /*
             if (message) {
