@@ -292,7 +292,7 @@ export default {
     },
     async created() {
         // console.log(`router id: ${this.$route.params.id}`)
-        let data1 = await store.getEntities("", 1, 1, 20, "name", "false")
+        let data1 = await store.getEntities("", [1], 1, 20, "name", "false")
         this.serviceOptions = data1.results
         // console.log('this.serviceOptions')
         // console.log(this.serviceOptions)
