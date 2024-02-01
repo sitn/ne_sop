@@ -76,7 +76,7 @@ class EventTypeSerializer(serializers.ModelSerializer):
 class EntityTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = EntityType
-        fields = ("id", "name")
+        fields = ("id", "name", "service")
 
 
 # %% ENTITY LIST
