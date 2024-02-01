@@ -5,7 +5,7 @@
             <!-- BREADCRUMBS NAVIGATION -->
             <div class="q-pa-sm q-gutter-sm">
                 <q-breadcrumbs style="font-size: 16px">
-                    <q-breadcrumbs-el label="Personnes et groupes" to="/entities" />
+                    <q-breadcrumbs-el label="Parlementaires" to="/entities" />
                     <q-breadcrumbs-el :label="entity.name" />
                 </q-breadcrumbs>
             </div>
