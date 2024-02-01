@@ -3,6 +3,8 @@ from django.contrib.auth.models import User, Group
 import uuid
 from pathlib import Path, PurePath
 
+# from django.utils import timezone
+import datetime
 from ne_sop_api.utils import Utils
 
 
@@ -62,6 +64,7 @@ class ItemType(models.Model):
 # %% ITEM STATUS
 class ItemStatus(models.Model):
     name = models.CharField(max_length=50, blank=True, default="")
+    deadline = models.BooleanField(default=False)
     color = models.CharField(max_length=50, blank=True, default="")
 
     class Meta:
@@ -78,9 +81,7 @@ class Item(models.Model):
     number = models.CharField(max_length=30, blank=True, default="")
     title = models.CharField(max_length=512, blank=True, default="")
 
-    author = models.ForeignKey(
-        "Entity", related_name="author", null=True, on_delete=models.SET_NULL
-    )
+    author = models.ForeignKey("Entity", related_name="author", null=True, on_delete=models.SET_NULL)
 
     type = models.ForeignKey("ItemType", null=True, on_delete=models.PROTECT)
     status = models.ForeignKey("ItemStatus", null=True, on_delete=models.PROTECT)
@@ -92,6 +93,7 @@ class Item(models.Model):
     enddate = models.DateField(null=True)
     autonotify = models.BooleanField(default=False)
     valid = models.BooleanField(default=True)
+    late = models.BooleanField(default=False)
 
     lead = models.ForeignKey(
         "Entity",
@@ -102,43 +104,40 @@ class Item(models.Model):
     )
     support = models.ManyToManyField(Entity, blank=True, related_name="item")
 
+    """
+    @property
+    def islate(self):
+        if self.enddate and self.status:
+            return (datetime.date.today() > self.enddate) and (self.status.deadline)  # (self.status.id in [1, 2])
+        else:
+            return False
+    """
+
     @property
     def users(self):
         related_entities = list(self.support.all())
         related_entities.append(self.lead)
-        related_users = (
-            User.objects.filter(entities__in=related_entities)
-            .distinct()
-            .values("email")
-        )
+        related_users = User.objects.filter(entities__in=related_entities).distinct().values("email")
         return related_users
 
     def get_user_lead_email(self):
         related_entities = [self.lead]
-        related_users = (
-            User.objects.filter(entities__in=related_entities)
-            .distinct()
-            .values("email")
-        )
-        related_users = [ru.get('email') for ru in related_users]
+        related_users = User.objects.filter(entities__in=related_entities).distinct().values("email")
+        related_users = [ru.get("email") for ru in related_users]
         return related_users
 
     def get_users_support_email(self):
         related_entities = list(self.support.all())
-        related_users = (
-            User.objects.filter(entities__in=related_entities)
-            .distinct()
-            .values("email")
-        )
-        related_users = [ru.get('email') for ru in related_users]
+        related_users = User.objects.filter(entities__in=related_entities).distinct().values("email")
+        related_users = [ru.get("email") for ru in related_users]
         return related_users
 
     def get_entity_lead_name(self):
         return self.lead.name
-    
+
     def get_entity_support_name(self):
         support = list(self.support.all())
-        return ', '.join([s.name for s in support]) if len(support) > 0 else '-'
+        return ", ".join([s.name for s in support]) if len(support) > 0 else "-"
 
     class Meta:
         ordering = ["created"]
@@ -178,23 +177,36 @@ class Event(models.Model):
     def save(self, *args, **kwargs):
         super(Event, self).save(*args, **kwargs)
 
-        start_event = (
-            Event.objects.filter(item=self.item.pk, type=1).order_by("date").first()
-        )
+        start_event = Event.objects.filter(item=self.item.pk, type=1).order_by("date").first()
 
+        # update item start date
         if start_event:
             Item.objects.filter(id=self.item.pk).update(startdate=start_event.date)
         else:
             Item.objects.filter(id=self.item.pk).update(startdate=None)
 
-        end_event = (
-            Event.objects.filter(item=self.item.pk, type=3).order_by("date").first()
-        )
+        end_event = Event.objects.filter(item=self.item.pk, type=3).order_by("date").last()
 
+        # update item end date and late status
         if end_event:
-            Item.objects.filter(id=self.item.pk).update(enddate=end_event.date)
+            # get item instance
+            item_instance = Item.objects.get(id=self.item.pk)
+
+            # Item.objects.filter(id=self.item.pk).update(enddate=end_event.date)
+            item_instance.enddate = end_event.date
+
+            if (item_instance.enddate < datetime.date.today()) and (item_instance.status.deadline):
+                item_instance.late = True
+                # Item.objects.filter(id=self.item.pk, status__in=[1, 2]).update(late=True)
+            else:
+                item_instance.late = False
+                # Item.objects.filter(id=self.item.pk).update(late=False)
+                #  queryset = Item.objects.filter(enddate=datetime.date.today() - datetime.timedelta(days=1), status__in=[1, 2])
+            item_instance.save()
+
         else:
-            Item.objects.filter(id=self.item.pk).update(enddate=None)
+            item_instance.enddate = None
+            # Item.objects.filter(id=self.item.pk).update(enddate=None)
 
 
 class Template(models.Model):
