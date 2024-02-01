@@ -4,6 +4,7 @@
         "pk": 1,
         "fields": {
             "name": "Pas traité",
+            "deadline": true,
             "color": "red"
         }
     },
@@ -12,6 +13,7 @@
         "pk": 2,
         "fields": {
             "name": "En traitement",
+            "deadline": true,
             "color": "yellow-7"
         }
     },
@@ -20,6 +22,7 @@
         "pk": 3,
         "fields": {
             "name": "Terminé",
+            "deadline": false,
             "color": "green"
         }
     },
@@ -28,6 +31,7 @@
         "pk": 4,
         "fields": {
             "name": "Terminé - Rapport à produire",
+            "deadline": false,
             "color": "cyan-7"
         }
     },
@@ -36,6 +40,7 @@
         "pk": 5,
         "fields": {
             "name": "Terminé - Archivé",
+            "deadline": false,
             "color": "blue-grey-1"
         }
     },
@@ -44,6 +49,7 @@
         "pk": 6,
         "fields": {
             "name": "Retiré",
+            "deadline": false,
             "color": "black"
         }
     }
