@@ -12,7 +12,7 @@
         "pk": 2,
         "fields": {
             "name": "En traitement",
-            "color": "orange"
+            "color": "yellow-7"
         }
     },
     {
@@ -27,7 +27,7 @@
         "model": "ne_sop_api.ItemStatus",
         "pk": 4,
         "fields": {
-            "name": "Rapport à produire",
+            "name": "Terminé - Rapport à produire",
             "color": "cyan-7"
         }
     },
@@ -35,8 +35,16 @@
         "model": "ne_sop_api.ItemStatus",
         "pk": 5,
         "fields": {
+            "name": "Terminé - Archivé",
+            "color": "blue-grey-1"
+        }
+    },
+    {
+        "model": "ne_sop_api.ItemStatus",
+        "pk": 6,
+        "fields": {
             "name": "Retiré",
-            "color": "grey-4"
+            "color": "black"
         }
     }
 ]
