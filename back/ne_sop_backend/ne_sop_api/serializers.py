@@ -161,6 +161,8 @@ class ItemListSerializer(serializers.ModelSerializer):
             "type",
             "status",
             "urgent",
+            "late",
+            # "islate",
             "writtenresponse",
             "oralresponse",
             "author",
@@ -202,6 +204,8 @@ class ItemSerializer(serializers.ModelSerializer):
             "status",
             "description",
             "urgent",
+            "late",
+            # "islate",
             "writtenresponse",
             "oralresponse",
             "author",
@@ -336,14 +340,10 @@ class DocumentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False, read_only=False)
 
     template = serializers.SlugRelatedField(slug_field="name", read_only=True)
-    template_id = serializers.PrimaryKeyRelatedField(
-        source="template", queryset=Template.objects.all(), write_only=True
-    )
+    template_id = serializers.PrimaryKeyRelatedField(source="template", queryset=Template.objects.all(), write_only=True)
 
     author = serializers.SlugRelatedField(slug_field="name", read_only=True)
-    author_id = serializers.PrimaryKeyRelatedField(
-        source="author", queryset=Entity.objects.all(), write_only=True
-    )
+    author_id = serializers.PrimaryKeyRelatedField(source="author", queryset=Entity.objects.all(), write_only=True)
 
     version = serializers.IntegerField(required=False)
 
@@ -434,6 +434,8 @@ class NewItemSerializer(serializers.ModelSerializer):
             "status",
             "description",
             "urgent",
+            "late",
+            # "islate",
             "writtenresponse",
             "oralresponse",
             "author",
@@ -469,12 +471,9 @@ class NewItemSerializer(serializers.ModelSerializer):
         instance.status = validated_data.get("status", instance.status)
         instance.description = validated_data.get("description", instance.description)
         instance.urgent = validated_data.get("urgent", instance.urgent)
-        instance.writtenresponse = validated_data.get(
-            "writtenresponse", instance.writtenresponse
-        )
-        instance.oralresponse = validated_data.get(
-            "oralresponse", instance.oralresponse
-        )
+        # instance.late = validated_data.get("late", instance.late)
+        instance.writtenresponse = validated_data.get("writtenresponse", instance.writtenresponse)
+        instance.oralresponse = validated_data.get("oralresponse", instance.oralresponse)
         instance.author = validated_data.get("author", instance.author)
         instance.lead = validated_data.get("lead", instance.lead)
         instance.support.set(support)
@@ -523,9 +522,7 @@ class NewItemSerializer(serializers.ModelSerializer):
                 event_instance.date = new_event.get("date", event_instance.date)
                 event_instance.time = new_event.get("time", event_instance.time)
                 event_instance.type = new_event.get("type", event_instance.type)
-                event_instance.description = new_event.get(
-                    "description", event_instance.description
-                )
+                event_instance.description = new_event.get("description", event_instance.description)
                 event_instance.valid = new_event.get("valid", event_instance.valid)
                 event_instance.save()
 
