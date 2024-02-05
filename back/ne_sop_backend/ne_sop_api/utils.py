@@ -121,7 +121,7 @@ class Utils(object):
         cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
 
     @classmethod
-    def itemLatedNotification(cls, item, request):
+    def itemLateNotification(cls, item, request):
         template = loader.get_template("email_late_item_fr-ch.html")
 
         context = {
