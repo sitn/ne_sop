@@ -1,6 +1,8 @@
 <template>
+
     <div class="" v-if="!store.loading">
-        <q-layout>
+        <div v-if="entity && entity.id">
+            <q-layout>
 
             <!-- BREADCRUMBS NAVIGATION -->
             <div class="q-pa-sm q-gutter-sm">
@@ -10,17 +12,21 @@
                 </q-breadcrumbs>
             </div>
 
-            <!-- FORM -->
-            <EntityForm v-model="entity" :edit="edit"></EntityForm>
+                <!-- FORM -->
+                <EntityForm v-model="entity" :edit="edit"></EntityForm>
 
-            <!-- FLOATING ACTION BUTTONS -->
-            <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode" v-if="store.user.is_manager"></FloatingButtons>
+                <!-- FLOATING ACTION BUTTONS -->
+                <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode" v-if="store.user.is_manager"></FloatingButtons>
 
-            <!-- DELETE DIALOG -->
-            <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+                <!-- DELETE DIALOG -->
+                <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
-        </q-layout>
+            </q-layout>
+        </div>
 
+        <div v-else>
+            <NotFound></NotFound>
+        </div>
     </div>
 </template>
 
@@ -29,11 +35,12 @@ import { store } from '../store/store.js'
 import FloatingButtons from "../components/FloatingButtons.vue"
 import DeleteDialog from '../components/DeleteDialog.vue'
 import EntityForm from "../components/EntityForm.vue"
+import NotFound from '../components/NotFound.vue'
+
 
 export default {
-    store,
     name: 'Entity',
-    components: { FloatingButtons, DeleteDialog, EntityForm },
+    components: { FloatingButtons, DeleteDialog, EntityForm, NotFound },
     props: {},
     emits: [],
     data() {
@@ -68,6 +75,18 @@ export default {
             }
         }
 
+    },
+    watch: {
+        async $route(to, from) {
+
+            if (this.$route.params.hasOwnProperty('id')) {
+                this.store.loading = true
+                this.entity = await store.getEntity(this.$route.params.id)
+                this.store.loading = false
+            }
+            this.store.loading = false
+
+        }
     },
     async created() {
 

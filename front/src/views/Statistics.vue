@@ -1,21 +1,17 @@
 <template>
-    <div class="">
-
-        <!-- Breadcrumbs navigation -->
-        <div class="q-pa-sm q-gutter-sm">
-            <q-breadcrumbs style="font-size: 16px">
-                <q-breadcrumbs-el label="Statistiques" to="/statistics" />
-            </q-breadcrumbs>
-        </div>
-
-        <!-- Identification -->
-        <FormSection title="Statistiques">
-            <template v-slot:content>
-
-            </template>
-        </FormSection>
-
+    <!-- Breadcrumbs navigation -->
+    <div class="q-pa-sm q-gutter-sm">
+        <q-breadcrumbs style="font-size: 16px">
+            <q-breadcrumbs-el label="Statistiques" to="/statistics" />
+        </q-breadcrumbs>
     </div>
+
+    <!-- Identification -->
+    <FormSection title="Statistiques">
+        <template v-slot:content>
+
+        </template>
+    </FormSection>
 </template>
 
 <script>
@@ -40,8 +36,9 @@ export default {
     },
     computed: {
     },
+    watch: {
+    },
     mounted() {
-
     },
     methods: {
 

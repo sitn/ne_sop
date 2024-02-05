@@ -1,40 +1,29 @@
 <template>
-    <div class="">
+    <div class="q-pa-sm q-gutter-sm">
 
-        <div class="q-pa-sm q-gutter-sm">
+        <!-- BREADCRUMBS NAVIGATION -->
+        <q-breadcrumbs style="font-size: 16px">
+            <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
+        </q-breadcrumbs>
 
-            <!-- BREADCRUMBS NAVIGATION -->
-            <q-breadcrumbs style="font-size: 16px">
-                <q-breadcrumbs-el label="Objets parlementaires" to="/items" />
-            </q-breadcrumbs>
+        <div class="row q-col-gutter-md q-px-sm q-mt-xs items-center">
 
-            <div class="row q-col-gutter-md q-px-sm q-mt-xs items-center">
-
-                <!-- SEARCH ITEMS FIELD -->
-                <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
-                    <q-input bg-color="white" v-model="searchString" outlined dense placeholder="Rechercher" @update:model-value="query()">
-                        <template v-slot:prepend>
-                            <q-icon name="sym_o_search" />
-                        </template>
-                        <template v-slot:append>
-                            <q-spinner color="blue-grey" :thickness="3" v-if="loading" />
-                            <!-- 
+            <!-- SEARCH ITEMS FIELD -->
+            <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
+                <q-input bg-color="white" v-model="searchString" outlined dense placeholder="Rechercher" @update:model-value="query()">
+                    <template v-slot:prepend>
+                        <q-icon name="sym_o_search" />
+                    </template>
+                    <template v-slot:append>
+                        <q-spinner color="blue-grey" :thickness="3" v-if="loading" />
+                        <!-- 
                             <q-btn unelevated icon="sym_o_filter_alt" padding="xs" @click="console.log('filter')">
                                 <q-tooltip class="bg-black">Filtrer</q-tooltip>
                             </q-btn>
                             -->
-                        </template>
+                    </template>
 
-                    </q-input>
-                </div>
-
-                <!-- ADD NEW ITEM BUTTON -->
-                <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6" v-if="store.user.is_manager">
-                    <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" to="/items/new">
-                        <q-tooltip class="bg-black">Ajouter un nouvel objet parlementaire</q-tooltip>
-                    </q-btn>
-                </div>
-
+                </q-input>
             </div>
 
             <!-- ITEMS TABLE -->
@@ -114,8 +103,17 @@
 
             <!-- DELETE DIALOG -->
             <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+            <!-- ADD NEW ITEM BUTTON -->
+            <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6" v-if="store.user.is_manager">
+                <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none" to="/items/new">
+                    <q-tooltip class="bg-black">Ajouter un nouvel objet parlementaire</q-tooltip>
+                </q-btn>
+            </div>
 
         </div>
+
+        <!-- DELETE DIALOG -->
+        <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
 
     </div>
 </template>
@@ -123,6 +121,7 @@
 <script>
 import { store } from '../store/store.js'
 import DeleteDialog from '../components/DeleteDialog.vue'
+
 
 export default {
     name: 'ItemsList',
