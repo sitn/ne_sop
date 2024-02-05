@@ -120,6 +120,28 @@ class Utils(object):
 
         cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
 
+    @classmethod
+    def itemLatedNotification(cls, item, request):
+        template = loader.get_template("email_late_item_fr-ch.html")
+
+        context = {
+            'item_id': item.id,
+            'item_name': item.title,
+            'front_url': settings.FRONT_URL,
+            'main_service': item.get_entity_lead_name(),
+            'support_services': item.get_entity_support_name(),
+        }
+
+        user_lead_email = item.get_user_lead_email()
+        users_support_email = item.get_users_support_email()
+        
+        subject = f"SOP - modification de l'op {item.number}"
+        body = template.render(context, request)
+        to = user_lead_email if user_lead_email is not None else users_support_email
+        cc = users_support_email if to is user_lead_email is not None else None
+
+        cls.sendEmailNotification(subject=subject, body=body, to=to, cc=cc)
+
 
     @classmethod
     def sendEmailNotification(cls, subject, body, to, cc=None, bcc=None):
