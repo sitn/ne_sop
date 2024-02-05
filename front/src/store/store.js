@@ -36,12 +36,29 @@ export const store = reactive({
         }
     },
 
+    // GET LIST OF SERVICES
+    /*
+    async getServices(search = "", page = 1, size = 10, sortBy = "", descending = "false") {
+        try {
+
+            const response = await fetch(`${host}/api/service?page=${page}&size=${size}&search=${search}&sortby=${sortBy}&descending=${descending}`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    */
+
     // GET LIST OF ENTITIES
-    async getEntities(search = "", type = [], page = 1, size = 10, sortBy = "", descending = "false") {
+    async getEntities(search = "", type = [], service = "", page = 1, size = 10, sortBy = "", descending = "false") {
         try {
 
             // await sleep(1300)
-            const response = await fetch(`${host}/api/entity?page=${page}&size=${size}&search=${search}&type=${type}&sortby=${sortBy}&descending=${descending}`, {
+            const response = await fetch(`${host}/api/entity?page=${page}&size=${size}&search=${search}&type=${type}&service=${service}&sortby=${sortBy}&descending=${descending}`, {
                 method: 'GET',
                 redirect: 'follow'
             })

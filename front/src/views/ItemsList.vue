@@ -35,68 +35,79 @@
 
         </div>
 
-        <!-- ITEMS TABLE -->
-        <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" @request="onRequest" binary-state-sort class="q-my-lg"> <!-- :filter="filter" -->
+           <!-- ITEMS TABLE -->
+           <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" @request="onRequest" binary-state-sort class="q-my-lg"> <!-- :filter="filter" -->
 
-            <!-- TABLE BODY -->
-            <template v-slot:body="props">
-                <q-tr :props="props">
+        <!-- TABLE BODY -->
+        <template v-slot:body="props">
+            <q-tr :props="props">
 
-                    <!-- STATUS COLUMN -->
-                    <q-td key="status" :props="props">
+                <!-- STATUS COLUMN -->
+                <q-td key="status" :props="props">
 
-                        <div>
-                            <q-badge color="red" class="q-my-sm" v-if="props.row.urgent">Urgent</q-badge>
-                        </div>
-                        <div class="row items-center">
-                            <q-badge :color="props.row.status.color" rounded class="q-mr-sm" />
-                            <div>{{ props.row.status.name }}</div>
-                        </div>
+                    <!-- 
+                    <q-avatar rounded size="58px" v-if="props.row.islate">
+                        <img src="img/kermit-panicking.gif">
+                    </q-avatar>
+                    -->
 
-                    </q-td>
+                    <!-- <q-badge floating color="yellow" text-color="black">retard</q-badge> -->
 
-                    <!-- NUMBER COLUMN -->
-                    <q-td key="number" :props="props">
-                        {{ props.row.number }}
-                    </q-td>
-                    <!-- TYPE COLUMN -->
-                    <q-td key="type" :props="props">
-                        {{ props.row.type.name }}
-                    </q-td>
-                    <!-- TITLE COLUMN -->
-                    <q-td key="title" :props="props">
 
-                        <router-link :to="{
-                            name: 'Item',
-                            params: {
-                                id: props.row.id
-                            }
-                        }">
-                            {{ props.row.title }}
-                        </router-link>
+                    <div class="q-gutter-xs">
+                        <q-badge color="red" class="q-my-sm" v-if="props.row.urgent">Urgent</q-badge>
 
-                    </q-td>
-                    <!-- DEPOSIT DATE COLUMN -->
-                    <q-td key="deposit" :props="props">
-                        {{ props.row.startdate }}
-                    </q-td>
-                    <!-- DELAY DATE COLUMN -->
-                    <q-td key="delay" :props="props">
-                        {{ props.row.enddate }}
-                    </q-td>
-                    <!-- ACTIONS COLUMN -->
-                    <q-td key="actions" :props="props">
-                        <div class="float-right">
-                            <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete" v-if="store.user.is_manager">
-                                <q-tooltip class="bg-black">Supprimer</q-tooltip>
-                            </q-btn>
-                        </div>
-                    </q-td>
-                </q-tr>
-            </template>
-            <template v-slot:no-data>
-                Aucune objet
-            </template>
+                        <q-badge color="yellow" text-color="black" class="q-my-sm blink" v-if="props.row.late"> Retard</q-badge>
+                    </div>
+                    <div class="row items-center">
+                        <q-badge :color="props.row.status.color" rounded class="q-mr-sm" />
+                        <div>{{ props.row.status.name }}</div>
+                    </div>
+
+                </q-td>
+
+                <!-- NUMBER COLUMN -->
+                <q-td key="number" :props="props">
+                    {{ props.row.number }}
+                </q-td>
+                <!-- TYPE COLUMN -->
+                <q-td key="type" :props="props">
+                    {{ props.row.type.name }}
+                </q-td>
+                <!-- TITLE COLUMN -->
+                <q-td key="title" :props="props">
+
+                    <router-link :to="{
+                        name: 'Item',
+                        params: {
+                            id: props.row.id
+                        }
+                    }">
+                        {{ props.row.title }}
+                    </router-link>
+
+                </q-td>
+                <!-- DEPOSIT DATE COLUMN -->
+                <q-td key="deposit" :props="props">
+                    {{ props.row.startdate }}
+                </q-td>
+                <!-- DELAY DATE COLUMN -->
+                <q-td key="delay" :props="props">
+                    {{ props.row.enddate }}
+                </q-td>
+                <!-- ACTIONS COLUMN -->
+                <q-td key="actions" :props="props">
+                    <div class="float-right">
+                        <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete" v-if="store.user.is_manager">
+                            <q-tooltip class="bg-black">Supprimer</q-tooltip>
+                        </q-btn>
+                    </div>
+                </q-td>
+            </q-tr>
+        </template>
+        <template v-slot:no-data>
+            Aucune objet
+        </template>
         </q-table>
 
         <!-- DELETE DIALOG -->
@@ -171,7 +182,7 @@ export default {
                 {
                     name: "delay",
                     align: "left",
-                    label: "Délai",
+                    label: "Délai retour sec. gén.",
                     field: "events",
                     sortable: true,
                 },

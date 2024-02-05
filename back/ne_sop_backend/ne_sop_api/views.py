@@ -47,6 +47,7 @@ from django.conf import settings
 
 from ne_sop_api.utils import Utils
 from ne_sop_api.permissions import (
+    IsSuperuserPermission,
     IsManagerPermission,
     IsManagerOrReadOnlyPermission,
     isAllowedRegadingEntitiesAndItemId,
@@ -55,6 +56,7 @@ from ne_sop_api.permissions import (
 from pathlib import Path, PurePath
 import os
 import shutil
+import datetime
 
 
 # %% TEST BACKEND
@@ -114,7 +116,10 @@ class EntityTypeViewSet(viewsets.ViewSet):
     Entity types viewset
     """
 
-    queryset = EntityType.objects.all()
+    # queryset = EntityType.objects.all()
+    # filter to keep "Parlementaire", "Groupe parlementaire", "Autre"
+    # queryset = EntityType.objects.filter(id__in=[2, 3, 4])
+    queryset = EntityType.objects.filter(service=False)
     serializer_class = EntityTypeSerializer
 
     @extend_schema(
@@ -124,6 +129,24 @@ class EntityTypeViewSet(viewsets.ViewSet):
     def list(self, request):
         serializer = EntityTypeSerializer(self.queryset, many=True)
         return Response(serializer.data)
+
+
+# %% PARLIAMENTARY TYPE
+"""
+class ParliamentaryTypeViewSet(viewsets.ViewSet):
+
+    # queryset = EntityType.objects.all()
+    queryset = EntityType.objects.filter(id__in=[2, 3, 4])
+    serializer_class = EntityTypeSerializer
+
+    @extend_schema(
+        responses=EntityTypeSerializer,
+        tags=["Entity type"],
+    )
+    def list(self, request):
+        serializer = EntityTypeSerializer(self.queryset, many=True)
+        return Response(serializer.data) 
+"""
 
 
 # %% ENTITY
@@ -141,11 +164,24 @@ class EntityViewSet(viewsets.ViewSet):
     )
     def list(self, request):
         filter = filters.SearchFilter()
+
         queryset = filter.filter_queryset(request, Entity.objects.all(), self)
+        # queryset = filter.filter_queryset(request, Entity.objects.filter(type__in=[3]), self)
+
+        # if self.request.user.is_superuser:
+        #    queryset = filter.filter_queryset(request, Entity.objects.all(), self)
+        # else:
+        #    queryset = filter.filter_queryset(request, Entity.objects.filter(type__in=[2, 3, 4]), self)
+
+        # queryset = filter.filter_queryset(request, Entity.objects.all(), self)
+        # queryset = filter.filter_queryset(
+        #     request, Entity.objects.filter(type__in=[2, 3, 4]), self
+        # )
 
         # queryset = Entity.objects.all()
         name = request.query_params.get("name", "")
         type = request.query_params.get("type")
+        service = request.query_params.get("service")
         page = int(request.query_params.get("page", "1"))
         size = int(request.query_params.get("size", "10"))
         sortby = request.query_params.get("sortby", "id")
@@ -163,6 +199,145 @@ class EntityViewSet(viewsets.ViewSet):
 
         if type:
             queryset = queryset.filter(type__in=type.split(","))
+
+        if service == "true":
+            queryset = queryset.filter(type__service=True)
+
+        if service == "false":
+            queryset = queryset.filter(type__service=False)
+
+        if descending == "true":
+            paginator = Paginator(queryset.order_by(Lower(sortby).desc()), size)
+        else:
+            paginator = Paginator(queryset.order_by(Lower(sortby).asc()), size)
+
+        queryset = paginator.page(page)
+        nrows = paginator.count
+        npages = paginator.num_pages
+
+        serializer = EntityListSerializer(queryset, many=True)
+
+        return Response(
+            {
+                "page": page,
+                "npages": npages,
+                "nrows": nrows,
+                "sortby": sortby,
+                "descending": descending,
+                "results": serializer.data,
+            }
+        )
+
+    @extend_schema(
+        tags=["Entities"],
+    )
+    def create(self, request):
+        serializer = EntitySerializer(data=request.data)
+        if serializer.is_valid():
+            # print("CREATE ENTITY")
+            # print(serializer.validated_data.get("type").service)
+
+            if (not self.request.user.is_superuser) & serializer.validated_data.get("type").service:
+                # if not self.request.user.is_superuser & serializer.validated_data.get("type").id not in [2, 3, 4]:
+                return Response(
+                    {"msg": "You do not have permissions to create a service"},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+            else:
+                serializer.save()
+
+            # return Response({"msg": "New entity created"}, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        tags=["Entities"],
+    )
+    def retrieve(self, request, pk=None):
+        queryset = Entity.objects.all()
+        entity = get_object_or_404(queryset, pk=pk)
+        serializer = EntitySerializer(entity)
+        return Response(serializer.data)
+
+    @extend_schema(
+        tags=["Entities"],
+    )
+    def update(self, request, pk=None):
+        queryset = Entity.objects.all()
+        entity = get_object_or_404(queryset, pk=pk)
+        serializer = EntitySerializer(entity, data=request.data)
+        # print("UPDATE ENTITY")
+        # print(serializer.validated_data.get("type").service)
+
+        if serializer.is_valid():
+            if (not self.request.user.is_superuser) & serializer.validated_data.get("type").service:
+                # if not self.request.user.is_superuser & serializer.validated_data.get("type").id not in [2, 3, 4]:
+                return Response(
+                    {"msg": "You do not have permissions to update a service"},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+            else:
+                serializer.save()
+                return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        tags=["Entities"],
+    )
+    def destroy(self, request, pk=None):
+        queryset = Entity.objects.all()
+        entity = get_object_or_404(queryset, pk=pk)
+
+        # print("DESTROY ENTITY")
+        # print(entity.type.name)
+        # print(entity.type.service)
+        # print(self.request.user)
+        # print(self.request.user.is_superuser)
+
+        if (not self.request.user.is_superuser) & entity.type.service:
+            # if not self.request.user.is_superuser & entity.type not in [2, 3, 4]:
+            return Response(
+                {"msg": "You do not have permission to delete a service"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        else:
+            entity.delete()
+            # print("DELETED")
+
+        return Response({"msg": "Entity deleted"})
+
+
+# %% SERVICE
+"""
+class ServiceViewSet(viewsets.ViewSet):
+
+    serializer_class = EntitySerializer
+    search_fields = ["name", "email", "telephone"]
+    permission_classes = [IsSuperuserPermission]
+
+    @extend_schema(
+        tags=["Entities"],
+    )
+    def list(self, request):
+        filter = filters.SearchFilter()
+        queryset = filter.filter_queryset(request, Entity.objects.filter(type=1), self)
+
+        # queryset = Entity.objects.all()
+        name = request.query_params.get("name", "")
+        page = int(request.query_params.get("page", "1"))
+        size = int(request.query_params.get("size", "10"))
+        sortby = request.query_params.get("sortby", "id")
+        descending = request.query_params.get("descending", "false")
+        # all_fields = Entity._meta.fields
+
+        if sortby not in ["id", "name"]:
+            sortby = "id"
+
+        if descending not in ["true", "false"]:
+            descending = "false"
+
+        if name is not None:
+            queryset = queryset.filter(name__icontains=name)
 
         if descending == "true":
             paginator = Paginator(queryset.order_by(Lower(sortby).desc()), size)
@@ -225,7 +400,8 @@ class EntityViewSet(viewsets.ViewSet):
         queryset = Entity.objects.all()
         entity = get_object_or_404(queryset, pk=pk)
         entity.delete()
-        return Response({"msg": "Entity deleted"})
+        return Response({"msg": "Service deleted"}) 
+"""
 
 
 # %% ITEM TYPE
@@ -540,11 +716,7 @@ class TemplateTypeViewSet(viewsets.ViewSet):
         tags=["Template type"],
     )
     def list(self, request):
-        itemtype_id = (
-            request.query_params.get("itemtype_id")
-            if "itemtype_id" in request.query_params
-            else None
-        )
+        itemtype_id = request.query_params.get("itemtype_id") if "itemtype_id" in request.query_params else None
 
         templates = Template.objects
         if itemtype_id is not None:
@@ -590,9 +762,7 @@ class DocumentViewSet(viewsets.ViewSet):
         filepath = PurePath(settings.MEDIA_ROOT, document.file.name)
         filepath = open(filepath, "rb")
 
-        response = FileResponse(
-            filepath, filename=document.filename, as_attachment=True
-        )
+        response = FileResponse(filepath, filename=document.filename, as_attachment=True)
 
         headers = response.headers
         headers["Content-Type"] = "application/download"
@@ -609,3 +779,33 @@ class DocumentViewSet(viewsets.ViewSet):
         os.remove(PurePath(settings.MEDIA_ROOT, document.file.name))
         document.delete()
         return Response({"msg": "Document deleted"})
+
+
+# %% UPDATE LATE ATTRIBUTE IN ITEMS
+class LateItemsViewSet(viewsets.ViewSet):
+    """
+    Late item viewset
+    """
+
+    # serializer_class = CurrentUserSerializer
+    permission_classes = [IsManagerOrReadOnlyPermission]
+
+    @extend_schema(
+        responses=CurrentUserSerializer,
+        tags=["Items"],
+    )
+    def list(self, request):
+        # filter items that are late today
+        # queryset = Item.objects.filter(enddate=datetime.date.today() - datetime.timedelta(days=1), status__in=[1, 2])
+        queryset = Item.objects.filter(enddate=datetime.date.today() - datetime.timedelta(days=1), status__deadline=True)
+        queryset.update(late=True)
+
+        for item in queryset:
+            # print(serializer.data)
+            Utils.itemLateNotification(item, request)
+                
+        return Response(
+            {
+                "msg": f"{queryset.count()} late item(s) updated",
+            }
+        )
