@@ -798,19 +798,14 @@ class LateItemsViewSet(viewsets.ViewSet):
         # filter items that are late today
         # queryset = Item.objects.filter(enddate=datetime.date.today() - datetime.timedelta(days=1), status__in=[1, 2])
         queryset = Item.objects.filter(enddate=datetime.date.today() - datetime.timedelta(days=1), status__deadline=True)
-
         queryset.update(late=True)
-        # print(queryset.count())
 
         for item in queryset:
-            serializer = NewItemSerializer(item)
-            # Utils.itemChangedNotification(serializer.data, request)
-            print(serializer.data)
-
-        # return Response(serializer.data)
+            # print(serializer.data)
+            Utils.itemLateNotification(item, request)
+                
         return Response(
             {
                 "msg": f"{queryset.count()} late item(s) updated",
-                # "results": serializer.data,
             }
         )
