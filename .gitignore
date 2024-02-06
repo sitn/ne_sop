@@ -3,3 +3,4 @@
 .vscode/
 apache/app.wsgi
 apache/wsgi.conf
+doc

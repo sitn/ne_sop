@@ -292,12 +292,12 @@ export default {
     },
     async created() {
         // console.log(`router id: ${this.$route.params.id}`)
-        let data1 = await store.getEntities("", 1, 1, 20, "name", "false")
+        let data1 = await store.getEntities("", [], "true", 1, 20, "name", "false")
         this.serviceOptions = data1.results
         // console.log('this.serviceOptions')
         // console.log(this.serviceOptions)
 
-        let data2 = await store.getEntities("", [2, 3], 1, 20, "name", "false")
+        let data2 = await store.getEntities("", [], "false", 1, 20, "name", "false")
         this.authorOptions = data2.results
         // console.log("this.authorOptions")
         // console.log(this.authorOptions)
@@ -319,7 +319,7 @@ export default {
             // console.log('ItemForm.vue | Add new entity')
             this.dialog.newEntity = true
         },
-        async searchEntity(searchString = "", type = []) {
+        async searchEntity(searchString = "", type = [], service = "") {
 
             // TODO: REPLACE WITH GET CALL TO API 
 
@@ -330,10 +330,10 @@ export default {
             if (str.length >= 3) {
                 // this.store.getEntities(str, 1, this.pagination.rowsPerPage)
                 // this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
-                data = await store.getEntities(str, type, 1, 5, "name", "false")
+                data = await store.getEntities(str, type, service, 1, 5, "name", "false")
             } else {
                 // this.store.getEntities("", 1, this.pagination.rowsPerPage)
-                data = await store.getEntities("", type, 1, 20, "name", "false")
+                data = await store.getEntities("", type, service, 1, 20, "name", "false")
             }
 
             return data.results
@@ -358,7 +358,7 @@ export default {
                 const str = val.toLowerCase()
                 // this.authorOptions = entities.filter((v) => v.name.toLowerCase().indexOf(needle) > -1)
                 // this.authorOptions = store.entities.filter((e) => subset.includes(e.type)).filter((v) => v.name.toLowerCase().indexOf(str) > -1)
-                this.authorOptions = await this.searchEntity(str, [2, 3])
+                this.authorOptions = await this.searchEntity(str, [2, 3], "false")
             })
         }
     }

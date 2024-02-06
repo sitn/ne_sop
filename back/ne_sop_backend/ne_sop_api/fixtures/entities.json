@@ -12,7 +12,7 @@
             "postalcode": "2002",
             "region": "Neuchâtel",
             "country": "Suisse",
-            "website": "",
+            "website": "https://www.ne.ch/autorites/ddte/scat/Pages/accueil.aspx",
             "email": "Service.AmenagementTerritoire@ne.ch",
             "telephone": "+41 32 889 67 40",
             "valid": true
@@ -186,6 +186,82 @@
             "website": "",
             "email": "",
             "telephone": "",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Entity",
+        "pk": 11,
+        "fields": {
+            "uuid": "acdb88e0-64f0-4dbb-a57e-579201900741",
+            "name": "Secrétariat général du DDTE",
+            "type": 1,
+            "description": "",
+            "street": "Château, Rue de la Collégiale 12, Case postale 1",
+            "city": "Neuchâtel 2",
+            "postalcode": "2002",
+            "region": "Neuchâtel",
+            "country": "Suisse",
+            "website": "https://www.ne.ch/autorites/ddte/sdte/Pages/accueil.aspx",
+            "email": "Secretariat.DDTE@ne.ch",
+            "telephone": "+41 32 889 67 00",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Entity",
+        "pk": 12,
+        "fields": {
+            "uuid": "49cee2a2-87b4-485b-9b9b-0c4ca9b5cd5c",
+            "name": "Secrétariat général du DECS",
+            "type": 1,
+            "description": "",
+            "street": "Château, Rue de la Collégiale 12, Case postale 1",
+            "city": "Neuchâtel 2",
+            "postalcode": "2002",
+            "region": "Neuchâtel",
+            "country": "Suisse",
+            "website": "https://www.ne.ch/autorites/decs/secs/Pages/accueil.aspx",
+            "email": "Secretariat.DECS@ne.ch",
+            "telephone": "+41 32 889 68 00",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Entity",
+        "pk": 13,
+        "fields": {
+            "uuid": "4ed0aee9-1e9e-40c4-a570-680f69a9e9e0",
+            "name": "Secrétariat général du DESC",
+            "type": 1,
+            "description": "",
+            "street": "Château, Rue de la Collégiale 12, Case postale 1",
+            "city": "Neuchâtel 2",
+            "postalcode": "2002",
+            "region": "Neuchâtel",
+            "country": "Suisse",
+            "website": "https://www.ne.ch/autorites/desc/sesc/Pages/accueil.aspx",
+            "email": "Secretariat.DESC@ne.ch",
+            "telephone": "+41 32 889 61 00",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Entity",
+        "pk": 13,
+        "fields": {
+            "uuid": "4ed0aee9-1e9e-40c4-a570-680f69a9e9e0",
+            "name": "Secrétariat général du DFDS",
+            "type": 1,
+            "description": "",
+            "street": "Château, Rue de la Collégiale 12, Case postale 1",
+            "city": "Neuchâtel 2",
+            "postalcode": "2002",
+            "region": "Neuchâtel",
+            "country": "Suisse",
+            "website": "https://www.ne.ch/autorites/DFDS/sfds/Pages/accueil.aspx",
+            "email": "Secretariat.DFDS@ne.ch",
+            "telephone": "+41 889 69 00",
             "valid": true
         }
     }

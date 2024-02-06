@@ -2,6 +2,17 @@ from rest_framework import permissions
 from ne_sop_api.models import Item
 
 
+class IsSuperuserPermission(permissions.BasePermission):
+    """
+    This will be reimplemented when OpenID will be fully functionnal.
+    """
+
+    message = "Current user is not a Superuser."
+
+    def has_permission(self, request, view):
+        return request.user.is_superuser
+
+
 class IsManagerPermission(permissions.BasePermission):
     """
     This will be reimplemented when OpenID will be fully functionnal.

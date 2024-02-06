@@ -4,6 +4,7 @@
         "pk": 1,
         "fields": {
             "name": "Pas traité",
+            "deadline": true,
             "color": "red"
         }
     },
@@ -12,7 +13,8 @@
         "pk": 2,
         "fields": {
             "name": "En traitement",
-            "color": "orange"
+            "deadline": true,
+            "color": "yellow-7"
         }
     },
     {
@@ -20,6 +22,7 @@
         "pk": 3,
         "fields": {
             "name": "Terminé",
+            "deadline": false,
             "color": "green"
         }
     },
@@ -27,7 +30,8 @@
         "model": "ne_sop_api.ItemStatus",
         "pk": 4,
         "fields": {
-            "name": "Rapport à produire",
+            "name": "Terminé - Rapport à produire",
+            "deadline": false,
             "color": "cyan-7"
         }
     },
@@ -35,8 +39,18 @@
         "model": "ne_sop_api.ItemStatus",
         "pk": 5,
         "fields": {
+            "name": "Terminé - Archivé",
+            "deadline": false,
+            "color": "blue-grey-1"
+        }
+    },
+    {
+        "model": "ne_sop_api.ItemStatus",
+        "pk": 6,
+        "fields": {
             "name": "Retiré",
-            "color": "grey-4"
+            "deadline": false,
+            "color": "black"
         }
     }
 ]

@@ -116,6 +116,7 @@ export default {
                 "urgent": false,
                 "writtenresponse": false,
                 "oralresponse": false,
+                "autonotify": false,
                 /* "fight": false, */
                 "author": null,
                 "lead": null,
