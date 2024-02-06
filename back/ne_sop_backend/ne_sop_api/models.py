@@ -1,8 +1,8 @@
-from django.db import models
-from django.contrib.auth.models import User, Group
 import uuid
 from pathlib import Path, PurePath
 
+from django.contrib.auth.models import User
+from django.db import models
 from ne_sop_api.utils import Utils
 
 
@@ -120,7 +120,7 @@ class Item(models.Model):
             .distinct()
             .values("email")
         )
-        related_users = [ru.get('email') for ru in related_users]
+        related_users = [ru.get("email") for ru in related_users]
         return related_users
 
     def get_users_support_email(self):
@@ -130,15 +130,15 @@ class Item(models.Model):
             .distinct()
             .values("email")
         )
-        related_users = [ru.get('email') for ru in related_users]
+        related_users = [ru.get("email") for ru in related_users]
         return related_users
 
     def get_entity_lead_name(self):
         return self.lead.name
-    
+
     def get_entity_support_name(self):
         support = list(self.support.all())
-        return ', '.join([s.name for s in support]) if len(support) > 0 else '-'
+        return ", ".join([s.name for s in support]) if len(support) > 0 else "-"
 
     class Meta:
         ordering = ["created"]
@@ -188,7 +188,7 @@ class Event(models.Model):
             Item.objects.filter(id=self.item.pk).update(startdate=None)
 
         end_event = (
-            Event.objects.filter(item=self.item.pk, type=3).order_by("date").first()
+            Event.objects.filter(item=self.item.pk, type=3).order_by("date").last()
         )
 
         if end_event:

@@ -1,6 +1,6 @@
 <template>
     <div class="" v-if="!store.loading">
-        <div v-if="item && item.id">
+        <div v-if="(item && item.id) || $route.name === 'NewItem'">
 
             <q-layout>
 
@@ -16,7 +16,7 @@
                 <ItemForm v-model="item" :mode="mode" :edit="edit" ref="ItemForm"></ItemForm>
 
                 <!-- FLOATING ACTION BUTTONS -->
-                <FloatingButtons :edit="false" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
+                <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
 
                 <!-- DELETE DIALOG -->
                 <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
@@ -60,7 +60,54 @@ export default {
             mode: "update",
             edit: false,
             wait: false,
-            item: {
+            item: {},
+            addEntityDialog: false,
+        }
+    },
+    computed: {
+        actionButtons() {
+            return {
+                save: this.item.valid ? 'active' : 'disable',
+                deletion: 'none'
+            }
+        }
+    },
+    watch: {
+        async $route(to, from) {
+
+            if (to.name === "NewItem" && from.href !== to.href) {
+                this.initialize_item()
+                this.edit = true
+                this.$router.push({ name: 'NewItem' })
+            }
+            if (this.$route.params.hasOwnProperty('id')) {
+                this.store.loading = true
+                this.item = await store.getItem(this.$route.params.id)
+                this.store.loading = false
+            }
+            this.store.loading = false
+
+        }
+    },
+    async created() {
+        this.initialize_item()
+
+        if (this.$route.name === "NewItem") {
+            this.edit = true
+        }
+
+        // console.log(`this.$route.params.id: ${this.$route.params.id}`)
+        if (this.$route.params.hasOwnProperty('id')) {
+            this.store.loading = true
+            this.item = await store.getItem(this.$route.params.id)
+            this.store.loading = false
+        }
+        this.store.loading = false
+
+    },
+    methods: {
+        initialize_item() {
+            this.item = {
                 "number": "",
                 "type": null,
                 "title": "",
@@ -80,42 +127,8 @@ export default {
                 "documents": [],
                 "attachements": [],
                 "valid": false
-            },
-            addEntityDialog: false,
-        }
-    },
-    computed: {
-        actionButtons() {
-            return {
-                save: this.item.valid ? 'active' : 'disable',
-                deletion: 'none'
             }
-        }
-    },
-    watch: {
-        async $route(to, from) {
-
-            if (this.$route.params.hasOwnProperty('id')) {
-                this.store.loading = true
-                this.item = await store.getItem(this.$route.params.id)
-                this.store.loading = false
-            }
-            this.store.loading = false
-
-        }
-    },
-    async created() {
-
-        // console.log(`this.$route.params.id: ${this.$route.params.id}`)
-        if (this.$route.params.hasOwnProperty('id')) {
-            this.store.loading = true
-            this.item = await store.getItem(this.$route.params.id)
-            this.store.loading = false
-        }
-        this.store.loading = false
-
-    },
-    methods: {
+        },
         async save() {
 
             this.wait = true
