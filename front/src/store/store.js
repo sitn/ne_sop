@@ -495,4 +495,19 @@ export const store = reactive({
         }
     },
 
+    // GET ENTITY DETAILS
+    async getNumberOfItemsPerYear() {
+
+        try {
+            const response = await fetch(`${host}/api/item-type-statistics`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
 })

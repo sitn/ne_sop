@@ -25,37 +25,36 @@ from ne_sop_api.serializers import (
     TemplateSerializer,
     UserSerializer,
     CurrentUserSerializer,
+    ItemTypeStatisticsSerializer,
 )
 
-from django.core.exceptions import PermissionDenied
+# from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 from django.conf import settings
-from django.db.models.functions import Lower
+from django.db.models.functions import Lower, TruncYear
+from django.db.models import Q, Count
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, views
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view
-from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser
 from rest_framework import filters
 from django.core.paginator import Paginator
 from django.http import HttpResponse, FileResponse
-from django.core.mail import EmailMultiAlternatives
-
-from django.conf import settings
 
 from ne_sop_api.utils import Utils
 from ne_sop_api.permissions import (
     IsSuperuserPermission,
     IsManagerPermission,
     IsManagerOrReadOnlyPermission,
-    isAllowedRegadingEntitiesAndItemId,
+    # isAllowedRegadingEntitiesAndItemId,
 )
 
-from pathlib import Path, PurePath
+
+from pathlib import PurePath
 import os
-import shutil
 import datetime
 
 
@@ -145,7 +144,7 @@ class ParliamentaryTypeViewSet(viewsets.ViewSet):
     )
     def list(self, request):
         serializer = EntityTypeSerializer(self.queryset, many=True)
-        return Response(serializer.data) 
+        return Response(serializer.data)
 """
 
 
@@ -400,7 +399,7 @@ class ServiceViewSet(viewsets.ViewSet):
         queryset = Entity.objects.all()
         entity = get_object_or_404(queryset, pk=pk)
         entity.delete()
-        return Response({"msg": "Service deleted"}) 
+        return Response({"msg": "Service deleted"})
 """
 
 
@@ -728,7 +727,6 @@ class TemplateTypeViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-# from pprint import pprint
 class DocumentViewSet(viewsets.ViewSet):
     """
     New document viewset
@@ -803,9 +801,52 @@ class LateItemsViewSet(viewsets.ViewSet):
         for item in queryset:
             # print(serializer.data)
             Utils.itemLateNotification(item, request)
-                
+
         return Response(
             {
                 "msg": f"{queryset.count()} late item(s) updated",
             }
         )
+
+
+# %% ITEM STATISTICS
+class ItemTypeStatisticsViewSet(viewsets.ViewSet):
+    """
+    Item statistics viewset
+    """
+
+    queryset = ItemType.objects.all()
+    serializer_class = ItemTypeStatisticsSerializer
+    permission_classes = [IsManagerPermission]
+
+    @extend_schema(
+        responses=ItemTypeStatisticsSerializer,
+        tags=["Item Statistics"],
+    )
+    def list(self, request):
+        queryset = ItemType.objects.annotate(year=TruncYear("item__startdate")).annotate(num_items=Count("item"))
+
+        # get unique set of years
+        years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
+        years.remove(None)
+        years.sort()
+
+        # get unique set of itemtypes
+        itemtypes = list(set(x.name for x in queryset))
+        itemtypes.sort()
+
+        # prepare result object
+        result = []
+        for year in years:
+            tmp = {"year": year}
+            for itemtype in itemtypes:
+                for qs in queryset:
+                    if qs.year is not None and qs.year.year == year and qs.name == itemtype:
+                        print("toto")
+                        tmp[itemtype] = qs.num_items
+                        break
+                    else:
+                        tmp[itemtype] = 0
+            result.append(tmp)
+
+        return Response(result)

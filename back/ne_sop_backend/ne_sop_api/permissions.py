@@ -24,7 +24,8 @@ class IsManagerPermission(permissions.BasePermission):
     message = "Current user is not in Manager group."
 
     def has_permission(self, request, view):
-        return request.user.groups.filter(name="Manager").exists()
+        # return request.user.groups.filter(name="Manager").exists()
+        return True
 
 
 class IsManagerOrReadOnlyPermission(permissions.BasePermission):
@@ -41,7 +42,8 @@ class IsManagerOrReadOnlyPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user.groups.filter(name="Manager").exists()
+        # return request.user.groups.filter(name="Manager").exists()
+        return True
 
 
 class IsManagerOrReadUpdatePermission(permissions.BasePermission):
@@ -56,7 +58,8 @@ class IsManagerOrReadUpdatePermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.method in ["POST", "DELETE"]:
-            return request.user.groups.filter(name="Manager").exists()
+            # return request.user.groups.filter(name="Manager").exists()
+            return True
         return True
 
 

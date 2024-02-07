@@ -34,17 +34,17 @@
                 </q-item>
 
                 <!-- <q-separator /> -->
-                <!-- 
-                            <q-item clickable v-ripple to="/statistics" style="color:#757575" class="custom-font" active-class="bg-light-blue-1 text-blue-grey-7">
-                                <q-item-section avatar>
-                                    <q-icon name="sym_o_bar_chart" size="lg" />
-                                </q-item-section>
-        
-                                <q-item-section>
-                                    Statistiques
-                                </q-item-section>
-                            </q-item>
-                            -->
+
+                <q-item clickable v-ripple to="/statistics" style="color:#757575" class="custom-font" active-class="bg-light-blue-1 text-blue-grey-7">
+                    <q-item-section avatar>
+                        <q-icon name="sym_o_bar_chart" size="lg" />
+                    </q-item-section>
+
+                    <q-item-section>
+                        Statistiques
+                    </q-item-section>
+                </q-item>
+
                 <!--
                             <q-item clickable v-ripple to="/admin" style="color:#757575" class="custom-font" active-class="bg-light-blue-1 text-blue-grey-7">
                                 <q-item-section avatar>
@@ -83,8 +83,7 @@ export default {
     setup() {
         return {
             store,
-            miniState: ref(store.miniState),
-
+            miniState: ref(true),
         }
     },
 

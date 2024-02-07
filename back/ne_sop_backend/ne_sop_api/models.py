@@ -1,7 +1,7 @@
 import uuid
 from pathlib import Path, PurePath
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db import models
 # from django.utils import timezone
 import datetime

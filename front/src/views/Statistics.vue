@@ -6,21 +6,22 @@
         </q-breadcrumbs>
     </div>
 
-    <!-- Identification -->
-    <FormSection title="Statistiques">
+    <!-- Statistics section -->
+    <FormSection title="Année de dépôt">
         <template v-slot:content>
-
+            <StatisticsTable></StatisticsTable>
         </template>
     </FormSection>
 </template>
 
 <script>
 import FormSection from "../components/FormSection.vue"
-
+import StatisticsTable from "../components/StatisticsTable.vue"
+const host = import.meta.env.VITE_API_URL
 
 export default {
     name: 'Help',
-    components: { FormSection },
+    components: { FormSection, StatisticsTable },
     props: { 'model': Object },
     emits: [],
     setup() {
@@ -41,7 +42,6 @@ export default {
     mounted() {
     },
     methods: {
-
     }
 }
 </script>
