@@ -810,9 +810,9 @@ class LateItemsViewSet(viewsets.ViewSet):
 
 
 # %% ITEM STATISTICS
-class ItemTypeStatisticsViewSet(viewsets.ViewSet):
+class ItemTypeStatisticsDepositedViewSet(viewsets.ViewSet):
     """
-    Item statistics viewset
+    Item deposited statistics viewset
     """
 
     queryset = ItemType.objects.all()
@@ -842,7 +842,47 @@ class ItemTypeStatisticsViewSet(viewsets.ViewSet):
             for itemtype in itemtypes:
                 for qs in queryset:
                     if qs.year is not None and qs.year.year == year and qs.name == itemtype:
-                        print("toto")
+                        tmp[itemtype] = qs.num_items
+                        break
+                    else:
+                        tmp[itemtype] = 0
+            result.append(tmp)
+
+        return Response(result)
+
+
+class ItemTypeStatisticsTreatedViewSet(viewsets.ViewSet):
+    """
+    Item treated statistics viewset
+    """
+
+    queryset = ItemType.objects.all()
+    serializer_class = ItemTypeStatisticsSerializer
+    permission_classes = [IsManagerPermission]
+
+    @extend_schema(
+        responses=ItemTypeStatisticsSerializer,
+        tags=["Item Statistics"],
+    )
+    def list(self, request):
+        queryset = ItemType.objects.annotate(year=TruncYear("item__enddate")).annotate(num_items=Count("item"))
+
+        # get unique set of years
+        years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
+        years.remove(None)
+        years.sort()
+
+        # get unique set of itemtypes
+        itemtypes = list(set(x.name for x in queryset))
+        itemtypes.sort()
+
+        # prepare result object
+        result = []
+        for year in years:
+            tmp = {"year": year}
+            for itemtype in itemtypes:
+                for qs in queryset:
+                    if qs.year is not None and qs.year.year == year and qs.name == itemtype:
                         tmp[itemtype] = qs.num_items
                         break
                     else:

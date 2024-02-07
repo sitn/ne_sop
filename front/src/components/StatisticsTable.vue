@@ -1,12 +1,12 @@
 <template>
     <q-table :rows="rows" :columns="columns" class="q-my-md" v-if="rows.length > 0"></q-table>
 
-    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
+    <!-- <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
         {{ rows }}
         <br>
         <br>
         {{ columns }}
-    </div>
+    </div> -->
 </template>
 
 <script>
@@ -15,23 +15,23 @@ import { store } from '../store/store.js'
 export default {
     name: 'StatisticsTable',
     components: {},
-    props: {},
+    props: {
+        data: { type: Array, default: () => [] }
+    },
     emits: [],
     data() {
         return {
             store,
             rows: [],
             loading: true,
-            data: [],
             columns: []
         }
     },
     computed: {
     },
-    async created() {
+    created() {
 
         this.loading = true
-        this.data = await this.store.getNumberOfItemsPerYear()
 
         this.rows = this.data
         let n_col = Object.keys(this.data[0]).length

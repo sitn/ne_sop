@@ -9,12 +9,19 @@
     <!-- Statistics section -->
     <FormSection title="Année de dépôt">
         <template v-slot:content>
-            <StatisticsTable></StatisticsTable>
+            <StatisticsTable :data="data_deposition" v-if="data_deposition.length > 0"></StatisticsTable>
+        </template>
+    </FormSection>
+
+    <FormSection title="Année de traitement">
+        <template v-slot:content>
+            <StatisticsTable :data="data_treatment" v-if="data_treatment.length > 0"></StatisticsTable>
         </template>
     </FormSection>
 </template>
 
 <script>
+import { store } from '../store/store.js'
 import FormSection from "../components/FormSection.vue"
 import StatisticsTable from "../components/StatisticsTable.vue"
 const host = import.meta.env.VITE_API_URL
@@ -32,8 +39,15 @@ export default {
     },
     data() {
         return {
+            store,
+            data_deposition: [],
+            data_treatment: [],
 
         }
+    },
+    async created() {
+        this.data_deposition = await this.store.getNumberOfItemsDepositedPerYear()
+        this.data_treatment = await this.store.getNumberOfItemsTreatedPerYear()
     },
     computed: {
     },
