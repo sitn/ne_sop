@@ -7,22 +7,16 @@
     </div>
 
     <!-- Statistics section -->
-    <div class="row q-col-gutter-md">
-        <div class="col-6">
-            <FormSection title="Année de dépôt">
-                <template v-slot:content>
-                    <StatisticsTable :data="data_deposition" v-if="data_deposition.length > 0"></StatisticsTable>
-                </template>
-            </FormSection>
-        </div>
-        <div class="col-6">
-            <FormSection title="Année de traitement">
-                <template v-slot:content>
-                    <StatisticsTable :data="data_treatment" v-if="data_treatment.length > 0"></StatisticsTable>
-                </template>
-            </FormSection>
-        </div>
-    </div>
+    <FormSection title="Année de dépôt">
+        <template v-slot:content>
+            <StatisticsTable :data="data_deposition" v-if="data_deposition.length > 0"></StatisticsTable>
+        </template>
+    </FormSection>
+    <FormSection title="Année de traitement">
+        <template v-slot:content>
+            <StatisticsTable :data="data_treatment" v-if="data_treatment.length > 0"></StatisticsTable>
+        </template>
+    </FormSection>
 
     <FormSection title="Nombre d'objets par service">
         <template v-slot:content>

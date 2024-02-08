@@ -906,7 +906,7 @@ class ServiceStatisticsViewSet(viewsets.ViewSet):
         tags=["Statistics"],
     )
     def list(self, request):
-        queryset = Entity.objects.filter(type__service=True).prefetch_related("item").annotate(year=TruncYear("item__startdate")).annotate(num_items=Count("uuid"))
+        queryset = Entity.objects.filter(type__service=True).prefetch_related("item").annotate(year=TruncYear("item__startdate")).annotate(num_items=Count("pk"))
 
         # get unique set of years
         years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
@@ -914,7 +914,7 @@ class ServiceStatisticsViewSet(viewsets.ViewSet):
         years.sort()
 
         # get unique set of services
-        services = list(set(x.name for x in queryset))
+        services = list(set(x.abbreviation for x in queryset))
         services.sort()
 
         # prepare result object
@@ -923,7 +923,7 @@ class ServiceStatisticsViewSet(viewsets.ViewSet):
             tmp = {"year": year}
             for service in services:
                 for qs in queryset:
-                    if qs.year is not None and qs.year.year == year and qs.name == service:
+                    if qs.year is not None and qs.year.year == year and qs.abbreviation == service:
                         tmp[service] = qs.num_items
                         break
                     else:
