@@ -321,7 +321,7 @@ export default {
         },
         async searchEntity(searchString = "", type = [], service = "") {
 
-            // TODO: REPLACE WITH GET CALL TO API 
+            // TODO: REPLACE WITH GET CALL TO API
 
             // await sleep(Math.random() * 1300)
             let str = searchString.toLowerCase()

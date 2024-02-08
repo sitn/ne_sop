@@ -257,6 +257,19 @@ class NestedItemSerializer(serializers.ModelSerializer):
             "valid",
         ]
 
+    # %% ITEM STATISTICS
+class ItemTypeStatisticsSerializer(serializers.ModelSerializer):
+    num_items = serializers.IntegerField()
+    year = serializers.DateField()
+
+    class Meta:
+        model = ItemType
+        fields = [
+            "name",
+            "num_items",
+            "year",
+        ]
+
 
 # %% EVENT LIST
 class EventListSerializer(serializers.ModelSerializer):

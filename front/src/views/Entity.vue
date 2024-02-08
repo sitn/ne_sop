@@ -1,7 +1,6 @@
 <template>
-
     <div class="" v-if="!store.loading">
-        <div v-if="entity && entity.id">
+        <div v-if="(entity && entity.id) || this.$route.name === 'NewEntity'">
             <q-layout>
 
             <!-- BREADCRUMBS NAVIGATION -->
@@ -50,20 +49,7 @@ export default {
             dialog: { deletion: false },
             edit: false,
             wait: false,
-            entity: {
-                "name": "",
-                "type": "",
-                "description": "",
-                "street": "",
-                "city": "",
-                "postalcode": "",
-                "region": "",
-                "country": "",
-                "website": "",
-                "email": "",
-                "telephone": "",
-                "valid": false
-            },
+            entity: {},
         }
     },
     computed: {
@@ -79,6 +65,12 @@ export default {
     watch: {
         async $route(to, from) {
 
+            if (to.name === "NewEntity" && from.href !== to.href) {
+                this.initialize_entity()
+                this.edit = true
+                this.$router.push({ name: 'NewEntity' })
+            }
+
             if (this.$route.params.hasOwnProperty('id')) {
                 this.store.loading = true
                 this.entity = await store.getEntity(this.$route.params.id)
@@ -89,6 +81,11 @@ export default {
         }
     },
     async created() {
+        this.initialize_entity()
+
+        if (this.$route.name === "NewEntity") {
+            this.edit = true
+        }
 
         // console.log(`this.$route.params.id: ${this.$route.params.id}`)
         if (this.$route.params.hasOwnProperty('id')) {
@@ -100,6 +97,22 @@ export default {
 
     },
     methods: {
+        initialize_entity() {
+            this.entity = {
+                "name": "",
+                "type": "",
+                "description": "",
+                "street": "",
+                "city": "",
+                "postalcode": "",
+                "region": "",
+                "country": "",
+                "website": "",
+                "email": "",
+                "telephone": "",
+                "valid": false,
+            }
+        },
         async save() {
 
             // console.log(`${this.$options.name}.vue | save()`)

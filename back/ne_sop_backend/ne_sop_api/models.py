@@ -1,7 +1,8 @@
-from django.db import models
-from django.contrib.auth.models import User, Group
 import uuid
 from pathlib import Path, PurePath
+
+from django.contrib.auth.models import User, Group
+from django.db import models
 
 # from django.utils import timezone
 import datetime
@@ -188,10 +189,11 @@ class Event(models.Model):
 
         end_event = Event.objects.filter(item=self.item.pk, type=3).order_by("date").last()
 
+        # get item instance
+        item_instance = Item.objects.get(id=self.item.pk)
+
         # update item end date and late status
         if end_event:
-            # get item instance
-            item_instance = Item.objects.get(id=self.item.pk)
 
             # Item.objects.filter(id=self.item.pk).update(enddate=end_event.date)
             item_instance.enddate = end_event.date
