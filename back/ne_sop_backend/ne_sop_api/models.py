@@ -3,6 +3,7 @@ from pathlib import Path, PurePath
 
 from django.contrib.auth.models import User, Group
 from django.db import models
+
 # from django.utils import timezone
 import datetime
 from ne_sop_api.utils import Utils
@@ -123,21 +124,13 @@ class Item(models.Model):
 
     def get_user_lead_email(self):
         related_entities = [self.lead]
-        related_users = (
-            User.objects.filter(entities__in=related_entities)
-            .distinct()
-            .values("email")
-        )
+        related_users = User.objects.filter(entities__in=related_entities).distinct().values("email")
         related_users = [ru.get("email") for ru in related_users]
         return related_users
 
     def get_users_support_email(self):
         related_entities = list(self.support.all())
-        related_users = (
-            User.objects.filter(entities__in=related_entities)
-            .distinct()
-            .values("email")
-        )
+        related_users = User.objects.filter(entities__in=related_entities).distinct().values("email")
         related_users = [ru.get("email") for ru in related_users]
         return related_users
 
@@ -194,14 +187,13 @@ class Event(models.Model):
         else:
             Item.objects.filter(id=self.item.pk).update(startdate=None)
 
-        end_event = (
-            Event.objects.filter(item=self.item.pk, type=3).order_by("date").last()
-        )
+        end_event = Event.objects.filter(item=self.item.pk, type=3).order_by("date").last()
+
+        # get item instance
+        item_instance = Item.objects.get(id=self.item.pk)
 
         # update item end date and late status
         if end_event:
-            # get item instance
-            item_instance = Item.objects.get(id=self.item.pk)
 
             # Item.objects.filter(id=self.item.pk).update(enddate=end_event.date)
             item_instance.enddate = end_event.date
