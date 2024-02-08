@@ -524,4 +524,18 @@ export const store = reactive({
         }
     },
 
+    async getNumberOfServiceItemsPerYear() {
+
+        try {
+            const response = await fetch(`${host}/api/service-statistics`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
 })

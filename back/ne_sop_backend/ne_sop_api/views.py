@@ -821,7 +821,7 @@ class ItemTypeStatisticsDepositedViewSet(viewsets.ViewSet):
 
     @extend_schema(
         responses=ItemTypeStatisticsSerializer,
-        tags=["Item Statistics"],
+        tags=["Statistics"],
     )
     def list(self, request):
         queryset = ItemType.objects.annotate(year=TruncYear("item__startdate")).annotate(num_items=Count("item"))
@@ -862,7 +862,7 @@ class ItemTypeStatisticsTreatedViewSet(viewsets.ViewSet):
 
     @extend_schema(
         responses=ItemTypeStatisticsSerializer,
-        tags=["Item Statistics"],
+        tags=["Statistics"],
     )
     def list(self, request):
         queryset = ItemType.objects.annotate(year=TruncYear("item__enddate")).annotate(num_items=Count("item"))
@@ -887,6 +887,47 @@ class ItemTypeStatisticsTreatedViewSet(viewsets.ViewSet):
                         break
                     else:
                         tmp[itemtype] = 0
+            result.append(tmp)
+
+        return Response(result)
+
+
+class ServiceStatisticsViewSet(viewsets.ViewSet):
+    """
+    Item treated by service viewset
+    """
+
+    queryset = Entity.objects.all()
+    # serializer_class = ItemTypeStatisticsSerializer
+    permission_classes = [IsManagerPermission]
+
+    @extend_schema(
+        # responses=ItemTypeStatisticsSerializer,
+        tags=["Statistics"],
+    )
+    def list(self, request):
+        queryset = Entity.objects.filter(type__service=True).prefetch_related("item").annotate(year=TruncYear("item__startdate")).annotate(num_items=Count("uuid"))
+
+        # get unique set of years
+        years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
+        years.remove(None)
+        years.sort()
+
+        # get unique set of services
+        services = list(set(x.name for x in queryset))
+        services.sort()
+
+        # prepare result object
+        result = []
+        for year in years:
+            tmp = {"year": year}
+            for service in services:
+                for qs in queryset:
+                    if qs.year is not None and qs.year.year == year and qs.name == service:
+                        tmp[service] = qs.num_items
+                        break
+                    else:
+                        tmp[service] = 0
             result.append(tmp)
 
         return Response(result)
