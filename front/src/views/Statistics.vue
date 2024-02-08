@@ -7,15 +7,26 @@
     </div>
 
     <!-- Statistics section -->
-    <FormSection title="Année de dépôt">
-        <template v-slot:content>
-            <StatisticsTable :data="data_deposition" v-if="data_deposition.length > 0"></StatisticsTable>
-        </template>
-    </FormSection>
+    <div class="row q-col-gutter-md">
+        <div class="col-6">
+            <FormSection title="Année de dépôt">
+                <template v-slot:content>
+                    <StatisticsTable :data="data_deposition" v-if="data_deposition.length > 0"></StatisticsTable>
+                </template>
+            </FormSection>
+        </div>
+        <div class="col-6">
+            <FormSection title="Année de traitement">
+                <template v-slot:content>
+                    <StatisticsTable :data="data_treatment" v-if="data_treatment.length > 0"></StatisticsTable>
+                </template>
+            </FormSection>
+        </div>
+    </div>
 
-    <FormSection title="Année de traitement">
+    <FormSection title="Nombre d'objets par service">
         <template v-slot:content>
-            <StatisticsTable :data="data_treatment" v-if="data_treatment.length > 0"></StatisticsTable>
+            <StatisticsTable :data="data_services" v-if="data_services.length > 0"></StatisticsTable>
         </template>
     </FormSection>
 </template>
@@ -42,12 +53,14 @@ export default {
             store,
             data_deposition: [],
             data_treatment: [],
+            data_services: [],
 
         }
     },
     async created() {
         this.data_deposition = await this.store.getNumberOfItemsDepositedPerYear()
         this.data_treatment = await this.store.getNumberOfItemsTreatedPerYear()
+        this.data_services = await this.store.getNumberOfServiceItemsPerYear()
     },
     computed: {
     },
