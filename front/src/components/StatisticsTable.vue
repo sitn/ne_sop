@@ -37,15 +37,16 @@ export default {
 
         this.rows = this.data
         let n_col = Object.keys(this.data[0]).length
+        let year_width = '100px'
 
-        this.columns = Object.keys(this.data[0]).map(x => {
+        this.columns = Object.keys(this.data[0]).map((x, idx) => {
             return {
                 name: x,
                 field: x,
                 align: "right",
                 label: x === "year" ? "Année" : x,
                 sortable: true,
-                headerStyle: `width: calc(100% / ${n_col})`,
+                headerStyle: idx === 0 ? `width: ${year_width}` : `width: calc((100% - ${year_width}) / ${n_col - 1})`,
             }
         })
 

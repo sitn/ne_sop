@@ -829,7 +829,7 @@ class ItemTypeStatisticsDepositedViewSet(viewsets.ViewSet):
         # get unique set of years
         years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
         years.remove(None)
-        years.sort()
+        years.sort(reverse=True)
 
         # get unique set of itemtypes
         itemtypes = list(set(x.name for x in queryset))
@@ -870,7 +870,7 @@ class ItemTypeStatisticsTreatedViewSet(viewsets.ViewSet):
         # get unique set of years
         years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
         years.remove(None)
-        years.sort()
+        years.sort(reverse=True)
 
         # get unique set of itemtypes
         itemtypes = list(set(x.name for x in queryset))
@@ -911,7 +911,7 @@ class ServiceStatisticsViewSet(viewsets.ViewSet):
         # get unique set of years
         years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
         years.remove(None)
-        years.sort()
+        years.sort(reverse=True)
 
         # get unique set of services
         services = list(set(x.abbreviation for x in queryset))
@@ -952,7 +952,7 @@ class StatutStatisticsViewSet(viewsets.ViewSet):
         # get unique set of years
         years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
         years.remove(None)
-        years.sort()
+        years.sort(reverse=True)
 
         # get unique set of statuts
         statuts = list(set(x.name for x in queryset))
@@ -996,7 +996,7 @@ class UrgentWrittenStatisticsViewSet(viewsets.ViewSet):
         years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
         if None in years:
             years.remove(None)
-        years.sort()
+        years.sort(reverse=True)
 
         # get unique set of statuts
         statuts = ["Urgence demandée", "Réponse écrite demandée"]
