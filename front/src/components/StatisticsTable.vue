@@ -33,6 +33,8 @@ export default {
 
         this.loading = true
 
+        this.computePercentage()
+
         this.rows = this.data
         let n_col = Object.keys(this.data[0]).length
 
@@ -51,6 +53,31 @@ export default {
 
     },
     methods: {
+        computePercentage() {
+            let row_sum
+            this.data.forEach(row => {
+                // compute total of objets by year
+                row_sum = 0;
+                for (const [key, value] of Object.entries(row)) {
+                    if (key !== 'year') {
+                        row_sum += value
+                    }
+                }
+
+                // comput percentage
+                for (const [key, value] of Object.entries(row)) {
+                    if (key !== 'year') {
+                        if (row_sum > 0) {
+                            row[key] = `${value} (${((value / row_sum) * 100).toFixed(0)}%)`
+                        } else {
+                            row[key] = `${value} (-%)`
+                        }
+                    }
+                }
+
+            })
+
+        }
     }
 }
 </script>
