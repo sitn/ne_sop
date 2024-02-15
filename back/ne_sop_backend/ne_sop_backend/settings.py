@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+
 import os
 
 from pathlib import Path, PurePath
@@ -28,13 +29,12 @@ load_dotenv(PurePath(Path(BASE_DIR).resolve().parent, ".env"))
 SECRET_KEY = os.environ["NESOP_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.environ.get('DEBUG', '') == 'True' else False
+DEBUG = True if os.environ.get("DEBUG", "") == "True" else False
 
-if DEBUG and os.environ.get('LOCAL_DEBUG_USER'):
+if DEBUG and os.environ.get("LOCAL_DEBUG_USER"):
     DEBUG_USER = os.environ["LOCAL_DEBUG_USER"]
 
 ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
-
 
 
 # Application definition
@@ -102,7 +102,8 @@ DATABASES = {
         "PASSWORD": os.environ["NESOP_DATABASE_PASSWORD"],
         "HOST": os.environ["NESOP_DATABASE_SERVER"],
         "PORT": "1433",
-        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
+        "OPTIONS": {
+            "driver": "ODBC Driver 17 for SQL Server",
         },
     },
 }
@@ -147,8 +148,8 @@ STATIC_URL = "static/"
 STATIC_ROOT = PurePath(BASE_DIR, "ne_sop_backend", "static")
 
 # Media files
-MEDIA_URL='/media/'
-MEDIA_ROOT = os.environ['NESOP_OP_PATH']
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.environ["NESOP_OP_PATH"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -158,8 +159,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
     ],
     "PAGE_SIZE": 10,
     "DATETIME_FORMAT": "%d.%m.%Y %H:%M:%S",
@@ -168,9 +169,7 @@ REST_FRAMEWORK = {
     "DATE_INPUT_FORMATS": ["%d.%m.%Y"],
     "TIME_FORMAT": "%H:%M",
     "TIME_INPUT_FORMATS": ["%H:%M"],
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        'rest_framework.authentication.RemoteUserAuthentication',
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework.authentication.RemoteUserAuthentication",),
 }
 
 SPECTACULAR_SETTINGS = {
@@ -197,8 +196,10 @@ LOGGING = {
     },
 }
 
-FRONT_URL = os.getenv('FRONT_URL')
+FRONT_URL = os.getenv("FRONT_URL")
 
 CSRF_TRUSTED_ORIGINS = os.environ["CORS_ALLOWED_ORIGINS"].split(",")
 
-EMAIL_HOST=os.environ.get("NESOP_EMAIL_HOST", "localhost")
+EMAIL_HOST = os.environ.get("NESOP_EMAIL_HOST", "localhost")
+
+SECRET_UUID = os.environ["NESOP_SECRET_UUID"]
