@@ -33,17 +33,20 @@ export default {
 
         this.loading = true
 
+        this.computePercentage()
+
         this.rows = this.data
         let n_col = Object.keys(this.data[0]).length
+        let year_width = '100px'
 
-        this.columns = Object.keys(this.data[0]).map(x => {
+        this.columns = Object.keys(this.data[0]).map((x, idx) => {
             return {
                 name: x,
                 field: x,
                 align: "right",
                 label: x === "year" ? "Année" : x,
                 sortable: true,
-                headerStyle: `width: calc(100% / ${n_col})`,
+                headerStyle: idx === 0 ? `width: ${year_width}` : `width: calc((100% - ${year_width}) / ${n_col - 1})`,
             }
         })
 
@@ -51,6 +54,31 @@ export default {
 
     },
     methods: {
+        computePercentage() {
+            let row_sum
+            this.data.forEach(row => {
+                // compute total of objets by year
+                row_sum = 0;
+                for (const [key, value] of Object.entries(row)) {
+                    if (key !== 'year') {
+                        row_sum += value
+                    }
+                }
+
+                // comput percentage
+                for (const [key, value] of Object.entries(row)) {
+                    if (key !== 'year') {
+                        if (row_sum > 0) {
+                            row[key] = `${value} (${((value / row_sum) * 100).toFixed(0)}%)`
+                        } else {
+                            row[key] = `${value} (-%)`
+                        }
+                    }
+                }
+
+            })
+
+        }
     }
 }
 </script>

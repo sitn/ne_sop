@@ -12,10 +12,27 @@
             <StatisticsTable :data="data_deposition" v-if="data_deposition.length > 0"></StatisticsTable>
         </template>
     </FormSection>
-
     <FormSection title="Année de traitement">
         <template v-slot:content>
             <StatisticsTable :data="data_treatment" v-if="data_treatment.length > 0"></StatisticsTable>
+        </template>
+    </FormSection>
+
+    <FormSection title="Nombre d'objets par service">
+        <template v-slot:content>
+            <StatisticsTable :data="data_services" v-if="data_services.length > 0"></StatisticsTable>
+        </template>
+    </FormSection>
+
+    <FormSection title="Nombre d'objets par statut et par année d'ouverture">
+        <template v-slot:content>
+            <StatisticsTable :data="data_itemstatus" v-if="data_itemstatus.length > 0"></StatisticsTable>
+        </template>
+    </FormSection>
+
+    <FormSection title="Réponses urgentes et/ou écrites demandées et par année d'ouverture">
+        <template v-slot:content>
+            <StatisticsTable :data="data_urgentWritten" v-if="data_urgentWritten.length > 0"></StatisticsTable>
         </template>
     </FormSection>
 </template>
@@ -42,12 +59,17 @@ export default {
             store,
             data_deposition: [],
             data_treatment: [],
-
+            data_services: [],
+            data_itemstatus: [],
+            data_urgentWritten: [],
         }
     },
     async created() {
         this.data_deposition = await this.store.getNumberOfItemsDepositedPerYear()
         this.data_treatment = await this.store.getNumberOfItemsTreatedPerYear()
+        this.data_services = await this.store.getNumberOfServiceItemsPerYear()
+        this.data_itemstatus = await this.store.getStatisticItemStatus()
+        this.data_urgentWritten = await this.store.getStatisticItemUrgentWritten()
     },
     computed: {
     },

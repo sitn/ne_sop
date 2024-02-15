@@ -29,6 +29,7 @@ class Entity(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    abbreviation = models.CharField(max_length=16, blank=True, default="")
     type = models.ForeignKey("EntityType", null=True, on_delete=models.PROTECT)
     # type = models.CharField(choices=ENTITY_TYPES, default="", max_length=100)
     description = models.CharField(max_length=256, blank=True, default="")

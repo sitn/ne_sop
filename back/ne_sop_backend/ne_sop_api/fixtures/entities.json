@@ -5,6 +5,7 @@
         "fields": {
             "uuid": "178a09eb-d04d-4cc2-94d7-c3e3b53d0580",
             "name": "Service de l'aménagement du territoire (SCAT)",
+            "abbreviation": "SCAT",
             "type": 1,
             "description": "",
             "street": "Rue de Tivoli 5",
@@ -24,6 +25,7 @@
         "fields": {
             "uuid": "649b2776-bcd6-41dc-8e05-4784b9a944fa",
             "name": "Service de la faune, des forêts et de la nature (SFFN)",
+            "abbreviation": "SFFN",
             "type": 1,
             "description": "",
             "street": "Rue du Premier-Mars 11",
@@ -43,6 +45,7 @@
         "fields": {
             "uuid": "704308ac-0823-42aa-abe2-1415d4feef88",
             "name": "Service de l'énergie et de l'environnement (SENE)",
+            "abbreviation": "SENE",
             "type": 1,
             "description": "",
             "street": "Rue du Tombet 24",
@@ -62,6 +65,7 @@
         "fields": {
             "uuid": "e44182c1-1f72-4380-bad3-208849da680a",
             "name": "Service de l'agriculture (SAGR)",
+            "abbreviation": "SAGR",
             "type": 1,
             "description": "",
             "street": "Route de l'Aurore 1",
@@ -81,6 +85,7 @@
         "fields": {
             "uuid": "087fd563-6ded-4da9-ac33-57e1ad4a10e8",
             "name": "Service des transports (SCTR)",
+            "abbreviation": "SCTR",
             "type": 1,
             "description": "",
             "street": "Rue de Tivoli 22",
@@ -100,6 +105,7 @@
         "fields": {
             "uuid": "6ae879cb-5c47-4052-88ce-2591dd5c9a6b",
             "name": "Service de la consommation et des affaires vétérinaires (SCAV)",
+            "abbreviation": "SCAV",
             "type": 1,
             "description": "",
             "street": "Rue Jehanne-de-Hochberg 5",
@@ -119,6 +125,7 @@
         "fields": {
             "uuid": "68c42858-b47d-4eb5-85fd-3aa1318b63e4",
             "name": "Département du développement territorial et de l'environnement (DDTE)",
+            "abbreviation": "DDTE",
             "type": 1,
             "description": "",
             "street": "Château Rue de la Collégiale 12",
@@ -138,6 +145,7 @@
         "fields": {
             "uuid": "9c81c518-8e4f-4077-8952-4270f126d376",
             "name": "Groupe PLR",
+            "abbreviation": "",
             "type": 3,
             "description": "",
             "street": "",
@@ -157,6 +165,7 @@
         "fields": {
             "uuid": "e7ebaa0e-bb53-457b-afd2-f6280c21a7d2",
             "name": "Patrick Erard",
+            "abbreviation": "",
             "type": 2,
             "description": "",
             "street": "",
@@ -176,6 +185,7 @@
         "fields": {
             "uuid": "806b53d7-6af2-44ce-8c1a-030bfc86426c",
             "name": "Jonathan Doe",
+            "abbreviation": "",
             "type": 4,
             "description": "",
             "street": "",
@@ -195,6 +205,7 @@
         "fields": {
             "uuid": "acdb88e0-64f0-4dbb-a57e-579201900741",
             "name": "Secrétariat général du DDTE",
+            "abbreviation": "SG DDTE",
             "type": 1,
             "description": "",
             "street": "Château, Rue de la Collégiale 12, Case postale 1",
@@ -214,6 +225,7 @@
         "fields": {
             "uuid": "49cee2a2-87b4-485b-9b9b-0c4ca9b5cd5c",
             "name": "Secrétariat général du DECS",
+            "abbreviation": "SG DECS",
             "type": 1,
             "description": "",
             "street": "Château, Rue de la Collégiale 12, Case postale 1",
@@ -233,6 +245,7 @@
         "fields": {
             "uuid": "4ed0aee9-1e9e-40c4-a570-680f69a9e9e0",
             "name": "Secrétariat général du DESC",
+            "abbreviation": "SG DESC",
             "type": 1,
             "description": "",
             "street": "Château, Rue de la Collégiale 12, Case postale 1",
@@ -248,10 +261,11 @@
     },
     {
         "model": "ne_sop_api.Entity",
-        "pk": 13,
+        "pk": 14,
         "fields": {
             "uuid": "4ed0aee9-1e9e-40c4-a570-680f69a9e9e0",
             "name": "Secrétariat général du DFDS",
+            "abbreviation": "SG DFDS",
             "type": 1,
             "description": "",
             "street": "Château, Rue de la Collégiale 12, Case postale 1",

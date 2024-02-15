@@ -821,7 +821,7 @@ class ItemTypeStatisticsDepositedViewSet(viewsets.ViewSet):
 
     @extend_schema(
         responses=ItemTypeStatisticsSerializer,
-        tags=["Item Statistics"],
+        tags=["Statistics"],
     )
     def list(self, request):
         queryset = ItemType.objects.annotate(year=TruncYear("item__startdate")).annotate(num_items=Count("item"))
@@ -829,7 +829,7 @@ class ItemTypeStatisticsDepositedViewSet(viewsets.ViewSet):
         # get unique set of years
         years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
         years.remove(None)
-        years.sort()
+        years.sort(reverse=True)
 
         # get unique set of itemtypes
         itemtypes = list(set(x.name for x in queryset))
@@ -862,7 +862,7 @@ class ItemTypeStatisticsTreatedViewSet(viewsets.ViewSet):
 
     @extend_schema(
         responses=ItemTypeStatisticsSerializer,
-        tags=["Item Statistics"],
+        tags=["Statistics"],
     )
     def list(self, request):
         queryset = ItemType.objects.annotate(year=TruncYear("item__enddate")).annotate(num_items=Count("item"))
@@ -870,7 +870,7 @@ class ItemTypeStatisticsTreatedViewSet(viewsets.ViewSet):
         # get unique set of years
         years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
         years.remove(None)
-        years.sort()
+        years.sort(reverse=True)
 
         # get unique set of itemtypes
         itemtypes = list(set(x.name for x in queryset))
@@ -887,6 +887,141 @@ class ItemTypeStatisticsTreatedViewSet(viewsets.ViewSet):
                         break
                     else:
                         tmp[itemtype] = 0
+            result.append(tmp)
+
+        return Response(result)
+
+
+class ServiceStatisticsViewSet(viewsets.ViewSet):
+    """
+    Item treated by service viewset
+    """
+
+    queryset = Entity.objects.all()
+    # serializer_class = ItemTypeStatisticsSerializer
+    permission_classes = [IsManagerPermission]
+
+    @extend_schema(
+        # responses=ItemTypeStatisticsSerializer,
+        tags=["Statistics"],
+    )
+    def list(self, request):
+        queryset = Entity.objects.filter(type__service=True).prefetch_related("item").annotate(year=TruncYear("item__startdate")).annotate(num_items=Count("pk"))
+
+        # get unique set of years
+        years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
+        years.remove(None)
+        years.sort(reverse=True)
+
+        # get unique set of services
+        services = list(set(x.abbreviation for x in queryset))
+        services.sort()
+
+        # prepare result object
+        result = []
+        for year in years:
+            tmp = {"year": year}
+            for service in services:
+                for qs in queryset:
+                    if qs.year is not None and qs.year.year == year and qs.abbreviation == service:
+                        tmp[service] = qs.num_items
+                        break
+                    else:
+                        tmp[service] = 0
+            result.append(tmp)
+
+        return Response(result)
+
+
+class StatutStatisticsViewSet(viewsets.ViewSet):
+    """
+    Item status statistics viewset
+    """
+
+    queryset = ItemStatus.objects.all()
+    # serializer_class = ItemTypeStatisticsSerializer
+    permission_classes = [IsManagerPermission]
+
+    @extend_schema(
+        # responses=ItemTypeStatisticsSerializer,
+        tags=["Statistics"],
+    )
+    def list(self, request):
+        queryset = ItemStatus.objects.annotate(year=TruncYear("item__startdate")).annotate(num_items=Count("item"))
+
+        # get unique set of years
+        years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
+        years.remove(None)
+        years.sort(reverse=True)
+
+        # get unique set of statuts
+        statuts = list(set(x.name for x in queryset))
+        statuts.sort()
+
+        # prepare result object
+        result = []
+        for year in years:
+            tmp = {"year": year}
+            for statut in statuts:
+                for qs in queryset:
+                    if qs.year is not None and qs.year.year == year and qs.name == statut:
+                        tmp[statut] = qs.num_items
+                        break
+                    else:
+                        tmp[statut] = 0
+            result.append(tmp)
+
+        return Response(result)
+
+
+class UrgentWrittenStatisticsViewSet(viewsets.ViewSet):
+    """
+    Item urgency statistics viewset
+    """
+
+    queryset = ItemStatus.objects.all()
+    # serializer_class = ItemTypeStatisticsSerializer
+    permission_classes = [IsManagerPermission]
+
+    @extend_schema(
+        # responses=ItemTypeStatisticsSerializer,
+        tags=["Statistics"],
+    )
+    def list(self, request):
+        queryset = Item.objects.annotate(year=TruncYear("startdate"))
+        queryset_urgent = Item.objects.filter(urgent=True).annotate(year=TruncYear("startdate")).annotate(num_items=Count("pk"))
+        queryset_writtenresponse = Item.objects.filter(writtenresponse=True).annotate(year=TruncYear("startdate")).annotate(num_items=Count("pk"))
+
+        # get unique set of years
+        years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
+        if None in years:
+            years.remove(None)
+        years.sort(reverse=True)
+
+        # get unique set of statuts
+        statuts = ["Urgence demandée", "Réponse écrite demandée"]
+
+        # prepare result object
+        result = []
+        for year in years:
+            tmp = {"year": year}
+            for statut in statuts:
+                if statut == "Urgence demandée":
+                    for qs in queryset_urgent:
+                        if qs.year is not None and qs.year.year == year:
+                            tmp[statut] = qs.num_items
+                            break
+                        else:
+                            tmp[statut] = 0
+
+                if statut == "Réponse écrite demandée":
+                    for qs in queryset_writtenresponse:
+                        if qs.year is not None and qs.year.year == year:
+                            tmp[statut] = qs.num_items
+                            break
+                        else:
+                            tmp[statut] = 0
+
             result.append(tmp)
 
         return Response(result)

@@ -524,4 +524,46 @@ export const store = reactive({
         }
     },
 
+    async getNumberOfServiceItemsPerYear() {
+
+        try {
+            const response = await fetch(`${host}/api/service-statistics`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+    async getStatisticItemStatus() {
+
+        try {
+            const response = await fetch(`${host}/api/item-status-statistics`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+    async getStatisticItemUrgentWritten() {
+
+        try {
+            const response = await fetch(`${host}/api/item-urgent-written-statistics`, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            return await response.json()
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
 })
