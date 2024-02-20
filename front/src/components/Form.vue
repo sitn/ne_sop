@@ -64,8 +64,21 @@ export default {
         validateForm() {
             this.$nextTick(() => { this.$refs.form.validate() })
 
-            let oldDataString = JSON.stringify(store.oldFormData).replaceAll(/"id":\d+,/gi, '').replaceAll(/"uuid":"[a-z0-9-]+",/gi, '')
-            let newDataString = JSON.stringify(this.model).replaceAll(/"id":\d+,/gi, '').replaceAll(/"uuid":"[a-z0-9-]+",/gi, '')
+            let oldDataString = JSON.stringify(store.oldFormData)
+                .replaceAll(/"id":\d+,/gi, '')
+                .replaceAll(/"uuid":"[a-z0-9-]+",/gi, '')
+                .replaceAll(/"created":"[0-9.:\s]+",/gi, '')
+                .replaceAll(/"template_id":\d+,/gi, '')
+                .replaceAll(/"author_id":\d+,/gi, '')
+                .replaceAll(/"author":"[^"]+",/gi, '')
+
+            let newDataString = JSON.stringify(this.model)
+                .replaceAll(/"id":\d+,/gi, '')
+                .replaceAll(/"uuid":"[a-z0-9-]+",/gi, '')
+                .replaceAll(/"created":"[0-9.:\s]+",/gi, '')
+                .replaceAll(/"template_id":\d+,/gi, '')
+                .replaceAll(/"author_id":\d+,/gi, '')
+                .replaceAll(/"author":"[^"]+",/gi, '')
 
             // console.log(oldDataString)
             // console.log(newDataString)
