@@ -37,17 +37,20 @@ export default {
             edit: true,
             document: {
                 "file": null,
+                "created": null,
                 "filename": "",
-                "filesize": "",
-                "format": "",
-                "title": "",
-                "version": null,
+                // "filesize": "",
+                // "format": "",
+                // "title": "",
+                // "version": null,
                 "type": null,
-                "date": new Date(),
-                "timestamp": Date.now(),
+                "size": null,
+                // "date": new Date(),
+                // "timestamp": Date.now(),
                 // "author": store.session.user,
                 "note": null,
-                "content": "",
+                "author_id": null,
+                // "content": "",
                 "valid": false
             }
         }
@@ -68,15 +71,17 @@ export default {
         async save() {
 
             this.documents.unshift({
-                'file': this.document.file,
+                'created': "", // new Date().toLocaleString(),
                 'filename': this.document.filename,
-                'created': new Date().toLocaleString(),
                 // 'item_id': this.$route.params.id,
                 'template': this.document.type.name,
                 'template_id': this.document.type.id,
-                'size': this.document.size,
                 'note': this.document.note,
-                'author_id': 1 // /!\ METTRE A JOUR AVEC LA VALEUR DE L'AUTEUR DU DOCUMENT !
+                'version': null,
+                'size': this.document.size,
+                'item': null,
+                'author_id': 1, // /!\ METTRE A JOUR AVEC LA VALEUR DE L'AUTEUR DU DOCUMENT !
+                'file': this.document.file,
             })
         }
     }
