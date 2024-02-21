@@ -471,7 +471,7 @@ class ItemViewSet(viewsets.ViewSet):
         user = self.request.user
         if user.groups.filter(name="Manager").exists():
             return Item.objects.all()
-        return Item.objects.filter(support__in=user.entities.all())
+        return Item.objects.filter(Q(lead__in=user.entities.all()) | Q(support__in=user.entities.all()))
 
     @extend_schema(
         responses=NewItemSerializer,
@@ -606,7 +606,7 @@ class EventViewSet(viewsets.ViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Event.objects.filter(item__support__in=user.entities.all())
+        return Event.objects.filter(Q(item__lead__in=user.entities.all()) | Q(item__support__in=user.entities.all()))
 
     @extend_schema(
         responses=EventSerializer,
@@ -737,7 +737,7 @@ class DocumentViewSet(viewsets.ViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Document.objects.filter(item__support__in=user.entities.all())
+        return Document.objects.filter(Q(item__lead__in=user.entities.all()) | Q(item__support__in=user.entities.all()))
 
     @extend_schema(
         responses=DocumentSerializer,
