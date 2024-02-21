@@ -130,7 +130,7 @@ export default {
                 "valid": false
             }
         },
-        async save() {
+        async save(redirectTo) {
 
             this.wait = true
             if (this.item.id) {
@@ -139,6 +139,10 @@ export default {
                 this.item = await store.addItem(this.item)
             }
             this.wait = false
+
+            if (redirectTo !== null) {
+                this.$router.push({ path: redirectTo })
+            }
 
         },
         handleDeletion() {
