@@ -60,7 +60,7 @@
                             <q-input bg-color="white" outlined v-model="entity.street" label="Rue" :disable="!edit" />
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-input bg-color="white" outlined v-model="entity.postalCode" label="Code postal" :disable="!edit" />
+                            <q-input bg-color="white" outlined v-model="entity.postalcode" label="Code postal" :disable="!edit" />
                         </div>
                     </div>
 
