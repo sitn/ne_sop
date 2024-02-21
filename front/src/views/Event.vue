@@ -93,7 +93,7 @@ export default {
 
     },
     methods: {
-        async save() {
+        async save(redirectTo) {
 
             this.wait = true
             if (this.event.id) {
@@ -102,6 +102,10 @@ export default {
                 this.event = await store.addEvent(this.event)
             }
             this.wait = false
+
+            if (redirectTo !== null) {
+                this.$router.push({ path: redirectTo })
+            }
 
         },
         handleValidation(val) {
