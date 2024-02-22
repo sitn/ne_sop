@@ -149,7 +149,7 @@ export default {
         modelValue: {
             handler(newValue, oldValue) {
 
-                store.entity.new = Object.assign({}, this.modelValue)
+                store.entity.new = JSON.stringify(this.modelValue)
 
                 if (this.changewatch) {
                     store.updateWarning(store.entity)
@@ -160,7 +160,7 @@ export default {
         },
     },
     mounted() {
-        store.entity.old = Object.assign({}, this.entity)
+        store.entity.old = JSON.stringify(this.entity)
     },
     async created() {
         this.entityTypes = await this.store.getEntityTypes()
