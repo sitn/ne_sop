@@ -27,7 +27,7 @@ export const store = reactive({
     // UPDATE UNSAVED CHANGES WARNING PANEL
     updateWarning(obj) {
 
-        let oldDataString = JSON.stringify(obj.old)
+        let oldDataString = obj.old
             .replaceAll(/"id":\d+,/gi, '')
             .replaceAll(/"uuid":"[a-z0-9-]+",/gi, '')
             .replaceAll(/"created":"[0-9.:\s]+",/gi, '')
@@ -35,7 +35,7 @@ export const store = reactive({
             .replaceAll(/"author_id":\d+,/gi, '')
             .replaceAll(/"author":"[^"]+",/gi, '')
 
-        let newDataString = JSON.stringify(obj.new)
+        let newDataString = obj.new
             .replaceAll(/"id":\d+,/gi, '')
             .replaceAll(/"uuid":"[a-z0-9-]+",/gi, '')
             .replaceAll(/"created":"[0-9.:\s]+",/gi, '')
@@ -43,17 +43,19 @@ export const store = reactive({
             .replaceAll(/"author_id":\d+,/gi, '')
             .replaceAll(/"author":"[^"]+",/gi, '')
 
-        // console.log('oldDataString')
-        // console.log(oldDataString)
-        // console.log('newDataString')
-        // console.log(newDataString)
+        /*    
+        console.log('oldDataString')
+        console.log(oldDataString)
+        console.log('newDataString')
+        console.log(newDataString)
+        */
 
         if (oldDataString !== newDataString) {
             this.warning = true
-            console.log('NOT EQUAL')
+            // console.log('NOT EQUAL')
         } else {
             this.warning = false
-            console.log('EQUAL')
+            // console.log('EQUAL')
         }
 
     },
@@ -241,6 +243,7 @@ export const store = reactive({
             // await sleep(1000)
             let documents = data.documents
             let data_nodocs = Object.assign({}, data)
+            // let data_nodocs = JSON.parse(JSON.stringify(data))
             delete data_nodocs.documents
 
             const response = await fetch(`${host}/api/item/${id}/`, {
@@ -255,7 +258,6 @@ export const store = reactive({
             await response.json()
             await this.prepareAddDocuments(documents, data_nodocs)
 
-            console.log('this.getItem(id)')
             return await this.getItem(id)
 
         } catch (error) {
@@ -269,6 +271,7 @@ export const store = reactive({
     async addItem(data) {
         let documents = data.documents
         let data_nodocs = Object.assign({}, data)
+        // let data_nodocs = JSON.parse(JSON.stringify(data))
         delete data_nodocs.documents
 
         try {
