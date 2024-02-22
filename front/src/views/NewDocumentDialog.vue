@@ -7,7 +7,7 @@
         <q-card-section class="row items-center scroll" style="max-height: 70vh">
 
             <!-- FORM -->
-            <DocumentForm class="col" v-model="document" :item_type="item_type" :edit="edit"></DocumentForm>
+            <DocumentForm class="col" v-model="document" :item_type="item_type" :edit="edit" :changewatch="false"></DocumentForm>
 
         </q-card-section>
 
