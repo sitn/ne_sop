@@ -49,6 +49,16 @@
         {{ events }}
     </div>
 
+    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev & store.item.old !== null">
+        <div><b>OLD EVENTS</b></div>
+        {{ store.item.old }}
+    </div>
+
+    <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev & store.item.new !== null">
+        <div><b>NEW EVENTS</b></div>
+        {{ store.item.new }}
+    </div>
+
     <!-- ADD NEW EVENT DIALOG -->
     <q-dialog v-model="dialog.add">
         <NewEventDialog v-model="events"></NewEventDialog>
