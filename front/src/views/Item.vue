@@ -134,10 +134,14 @@ export default {
 
             this.wait = true
             if (this.item.id) {
+                // console.log(`${this.$options.name}.vue | updateItem()`)
                 this.item = await store.updateItem(this.item.id, this.item)
             } else {
+                // console.log(`${this.$options.name}.vue | addItem()`)
                 this.item = await store.addItem(this.item)
             }
+
+            store.item.old = Object.assign({}, this.item)
             this.wait = false
 
             if (redirectTo !== null) {
