@@ -8,7 +8,6 @@
 
             <!-- FORM -->
             <EventForm class="col" v-model="event" :edit="edit" :changewatch="false"></EventForm>
-            <!-- <EventForm v-model="event" :edit="edit" @validation-event="handleValidation"></EventForm> -->
 
         </q-card-section>
 
@@ -67,16 +66,6 @@ export default {
                 this.$emit('update:modelValue', events)
             }
         }
-        /*
-        item: {
-            get() {
-                return this.modelValue
-            },
-            set(item) {
-                this.$emit('update:modelValue', item)
-            }
-        }
-        */
     },
     mounted() {
 

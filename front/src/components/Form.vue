@@ -30,16 +30,20 @@ export default {
             store,
             editMode: this.edit,
             valid: null,
-            oldData: null,
-            newData: null,
         }
     },
     mounted() {
         this.validateForm()
         store.warning = false
     },
-    updated() {
-        this.validateForm()
+    watch: {
+        model: {
+            handler(newValue, oldValue) {
+                // console.log(`${this.$options.name} | watch: model`)
+                this.validateForm()
+            },
+            deep: true
+        },
     },
     methods: {
         validateForm() {
@@ -49,14 +53,14 @@ export default {
             // console.log(`${this.$options.name} | validationSuccess()`)
             this.valid = true
             this.model.valid = true
-            store.valid = true
+            // store.valid = true
             this.$emit('validationEvent', true)
         },
         validationError() {
             // console.log(`${this.$options.name} | validationError()`)
             this.valid = false
             this.model.valid = false
-            store.valid = false
+            // store.valid = false
             this.$emit('validationEvent', false)
         },
         async save(redirectTo) {

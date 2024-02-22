@@ -160,7 +160,8 @@ export default {
     watch: {
         modelValue: {
             handler(newValue, oldValue) {
-                // this.validateForm()
+                // console.log(`${this.$options.name} | watch: modelValue`)
+
                 if (newValue.time === "") {
                     newValue.time = null
                 }

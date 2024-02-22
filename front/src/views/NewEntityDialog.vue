@@ -27,9 +27,6 @@ export default {
     components: { EntityForm },
     props: {},
     emits: ['addNewEntity'],
-    setup() {
-        return {}
-    },
     data() {
         return {
             store,
@@ -49,11 +46,6 @@ export default {
                 "valid": false
             },
         }
-    },
-    computed: {
-    },
-    mounted() {
-
     },
     methods: {
         save() {

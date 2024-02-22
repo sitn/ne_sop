@@ -101,17 +101,11 @@ export default {
         async save(redirect = null) {
 
             // console.log(`${this.$options.name}.vue | saveEvent`)
-
-            store.warning = false
-            store.oldFormData = Object.assign({}, store.newFormData)
-
             // this.$emit('saveEvent', { redirect: redirect })
-
             this.$emit('saveEvent', redirect)
 
             // console.log(`${this.$options.name}.vue | store.navigation.to: ${store.navigation.to}`)
             // this.$router.push({ path: store.navigation.to })
-
 
         },
         remove() {
