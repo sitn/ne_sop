@@ -117,7 +117,6 @@ export default {
                 "writtenresponse": false,
                 "oralresponse": false,
                 "autonotify": false,
-                /* "fight": false, */
                 "author": null,
                 "lead": null,
                 "support": [],
@@ -141,7 +140,9 @@ export default {
                 this.item = await store.addItem(this.item)
             }
 
-            store.item.old = Object.assign({}, this.item)
+            // console.log(`${this.$options.name}.vue | store.item.old`)
+            store.item.old = JSON.stringify(this.item)
+
             this.wait = false
 
             if (redirectTo !== null) {
@@ -153,7 +154,6 @@ export default {
             this.dialog.deletion = true
         },
         async remove() {
-            // TODO: DELETE RECORD IN DATABASE
             // console.log(`${this.$options.name}.vue | remove()`)
             this.$router.push({ name: 'ItemsList' })
         },
