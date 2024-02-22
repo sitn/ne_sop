@@ -38,15 +38,14 @@ export default {
     created() {
         // console.log(`${this.$options.name}.vue | created()`)
         this.event = Object.assign({}, this.modelValue) // assign a copy of the model value, to bypass reactivity
+        // this.event = this.modelValue
     },
     methods: {
         save() {
-
+            // console.log(`${this.$options.name}.vue | save()`)
             Object.assign(this.modelValue, this.event)
             this.$emit('update:modelValue', this.modelValue)
-
-        },
-
+        }
     }
 }
 </script>
