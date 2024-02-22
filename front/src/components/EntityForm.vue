@@ -1,5 +1,5 @@
 <template>
-    <Form :model="entity" :edit="edit">
+    <Form :model="entity" :edit="edit" :changewatch="changewatch">
         <!-- @validation-event="validation" -->
 
         <template v-slot:body>
@@ -123,7 +123,7 @@ import FormSection from "../components/FormSection.vue"
 export default {
     name: 'EntityForm',
     components: { Form, FormSection },
-    props: { 'edit': Boolean, 'modelValue': Object },
+    props: { 'edit': Boolean, 'modelValue': Object, 'changewatch': { type: Boolean, default: true } },
     emits: ['update:modelValue'],
     setup() {
         return {
@@ -144,6 +144,23 @@ export default {
                 this.$emit('update:modelValue', entity)
             }
         }
+    },
+    watch: {
+        modelValue: {
+            handler(newValue, oldValue) {
+
+                store.entity.new = Object.assign({}, this.modelValue)
+
+                if (this.changewatch) {
+                    store.updateWarning(store.entity)
+                }
+
+            },
+            deep: true
+        },
+    },
+    mounted() {
+        store.entity.old = Object.assign({}, this.entity)
     },
     async created() {
         this.entityTypes = await this.store.getEntityTypes()
