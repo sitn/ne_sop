@@ -289,7 +289,8 @@ export default {
         modelValue: {
             handler(newValue, oldValue) {
 
-                store.item.new = Object.assign({}, this.modelValue)
+                // store.item.new = Object.assign({}, this.modelValue)
+                store.item.new = JSON.stringify(this.modelValue)
 
                 if (this.changewatch) {
                     store.updateWarning(store.item)
@@ -317,7 +318,9 @@ export default {
 
     },
     async mounted() {
-        store.item.old = Object.assign({}, this.modelValue)
+
+        store.item.old = JSON.stringify(this.modelValue)
+
     },
     methods: {
         checkFilled,
@@ -329,8 +332,6 @@ export default {
             this.dialog.newEntity = true
         },
         async searchEntity(searchString = "", type = [], service = "") {
-
-            // TODO: REPLACE WITH GET CALL TO API
 
             // await sleep(Math.random() * 1300)
             let str = searchString.toLowerCase()
