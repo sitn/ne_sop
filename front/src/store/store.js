@@ -1,4 +1,4 @@
-// store.js
+// store.jsoldFormData
 import { ref } from 'vue'
 import { reactive } from 'vue'
 import users from '../assets/data/users.json'
@@ -13,12 +13,50 @@ export const store = reactive({
     navigation: { "from": null, "to": null },
     oldFormData: null,
     newFormData: null,
-    entity: null,
-    event: null,
+
+    entity: { old: null, new: null },
+    item: { old: null, new: null },
+    document: { old: null, new: null },
+    event: { old: null, new: null },
+
     documents: [],
     users: users,
     user: null,
     drawer: ref(false),
+
+    // UPDATE UNSAVED CHANGES WARNING PANEL
+    updateWarning(obj) {
+
+        let oldDataString = JSON.stringify(obj.old)
+            .replaceAll(/"id":\d+,/gi, '')
+            .replaceAll(/"uuid":"[a-z0-9-]+",/gi, '')
+            .replaceAll(/"created":"[0-9.:\s]+",/gi, '')
+            .replaceAll(/"template_id":\d+,/gi, '')
+            .replaceAll(/"author_id":\d+,/gi, '')
+            .replaceAll(/"author":"[^"]+",/gi, '')
+
+        let newDataString = JSON.stringify(obj.new)
+            .replaceAll(/"id":\d+,/gi, '')
+            .replaceAll(/"uuid":"[a-z0-9-]+",/gi, '')
+            .replaceAll(/"created":"[0-9.:\s]+",/gi, '')
+            .replaceAll(/"template_id":\d+,/gi, '')
+            .replaceAll(/"author_id":\d+,/gi, '')
+            .replaceAll(/"author":"[^"]+",/gi, '')
+
+        // console.log('oldDataString')
+        // console.log(oldDataString)
+        // console.log('newDataString')
+        // console.log(newDataString)
+
+        if (oldDataString !== newDataString) {
+            this.warning = true
+            console.log('NOT EQUAL')
+        } else {
+            this.warning = false
+            console.log('EQUAL')
+        }
+
+    },
 
     // GET CURRENT USER
     async getCurrentUser() {
@@ -202,20 +240,22 @@ export const store = reactive({
         try {
             // await sleep(1000)
             let documents = data.documents
-            delete data.documents
+            let data_nodocs = Object.assign({}, data)
+            delete data_nodocs.documents
 
             const response = await fetch(`${host}/api/item/${id}/`, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(data_nodocs),
                 redirect: 'follow',
             })
 
             await response.json()
-            await this.prepareAddDocuments(documents, data)
+            await this.prepareAddDocuments(documents, data_nodocs)
 
+            console.log('this.getItem(id)')
             return await this.getItem(id)
 
         } catch (error) {
@@ -228,7 +268,8 @@ export const store = reactive({
     // ADD NEW ITEM
     async addItem(data) {
         let documents = data.documents
-        delete data.documents
+        let data_nodocs = Object.assign({}, data)
+        delete data_nodocs.documents
 
         try {
             const response = await fetch(`${host}/api/item/`, {
@@ -236,7 +277,7 @@ export const store = reactive({
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(data_nodocs),
                 redirect: 'follow',
             })
 
@@ -434,7 +475,7 @@ export const store = reactive({
             formData.append('item', item.id)
 
             promises.push(store.addDocument(formData, x.filename))
-        });
+        })
 
         return await Promise.all(promises)
             .catch(error => console.log('error', error))
