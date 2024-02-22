@@ -23,7 +23,7 @@ import { store } from '../store/store.js'
 export default {
     name: 'Form',
     components: {},
-    props: { 'edit': Boolean, 'model': Object }, // { 'title': String },
+    props: { 'edit': Boolean, 'model': Object, 'changewatch': Boolean }, // { 'title': String },
     emits: ['editEvent', 'validationEvent'],
     data() {
         return {
@@ -34,61 +34,16 @@ export default {
             newData: null,
         }
     },
-    computed: {
-        formData() {
-            // console.log("this.form")
-            // console.log(this.$refs.form)
-            return Object.assign({}, this.model)
-        }
-    },
     mounted() {
         this.validateForm()
-        store.oldFormData = Object.assign({}, this.model)
         store.warning = false
     },
     updated() {
         this.validateForm()
     },
-    watch: {
-        formData: {
-            handler(newValue, oldValue) {
-
-                store.newFormData = Object.assign({}, this.model)
-                this.validateForm()
-
-            },
-            deep: true
-        },
-    },
     methods: {
         validateForm() {
             this.$nextTick(() => { this.$refs.form.validate() })
-
-            let oldDataString = JSON.stringify(store.oldFormData)
-                .replaceAll(/"id":\d+,/gi, '')
-                .replaceAll(/"uuid":"[a-z0-9-]+",/gi, '')
-                .replaceAll(/"created":"[0-9.:\s]+",/gi, '')
-                .replaceAll(/"template_id":\d+,/gi, '')
-                .replaceAll(/"author_id":\d+,/gi, '')
-                .replaceAll(/"author":"[^"]+",/gi, '')
-
-            let newDataString = JSON.stringify(this.model)
-                .replaceAll(/"id":\d+,/gi, '')
-                .replaceAll(/"uuid":"[a-z0-9-]+",/gi, '')
-                .replaceAll(/"created":"[0-9.:\s]+",/gi, '')
-                .replaceAll(/"template_id":\d+,/gi, '')
-                .replaceAll(/"author_id":\d+,/gi, '')
-                .replaceAll(/"author":"[^"]+",/gi, '')
-
-            // console.log(oldDataString)
-            // console.log(newDataString)
-
-            if (oldDataString !== newDataString) {
-                store.warning = true
-            } else {
-                store.warning = false
-            }
-
         },
         validationSuccess() {
             // console.log(`${this.$options.name} | validationSuccess()`)
@@ -106,7 +61,7 @@ export default {
         },
         async save(redirectTo) {
 
-            // console.log(`${this.$options.name}.vue | save()`)
+            console.log(`${this.$options.name}.vue | save()`)
 
             if (redirectTo !== null) {
                 this.$router.push({ path: redirectTo })
