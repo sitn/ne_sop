@@ -155,7 +155,7 @@ export default {
         // console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
     },
     async mounted() {
-        store.event.old = Object.assign({}, this.modelValue)
+        store.event.old = JSON.stringify(this.modelValue)
     },
     watch: {
         modelValue: {
@@ -166,7 +166,8 @@ export default {
                     newValue.time = null
                 }
 
-                store.event.new = Object.assign({}, this.modelValue)
+                // store.event.new = Object.assign({}, this.modelValue)
+                store.event.new = JSON.stringify(this.modelValue)
 
                 if (this.changewatch) {
                     store.updateWarning(store.event)
@@ -182,7 +183,7 @@ export default {
         checkDate,
         checkTime,
         validation(val) {
-            console.log(`${this.$options.name} | validation: ${val}`)
+            // console.log(`${this.$options.name} | validation: ${val}`)
             this.valid = val
             this.$emit('validationEvent', this.valid)
         },
