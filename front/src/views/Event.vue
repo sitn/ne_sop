@@ -103,6 +103,8 @@ export default {
             }
             this.wait = false
 
+            store.event.old = Object.assign({}, this.event)
+
             if (redirectTo !== null) {
                 this.$router.push({ path: redirectTo })
             }
