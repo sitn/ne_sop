@@ -124,6 +124,8 @@ export default {
             }
             this.wait = false
 
+            store.entity.old = Object.assign({}, this.entity)
+
             if (redirectTo !== null) {
                 this.$router.push({ path: redirectTo })
             }
