@@ -80,7 +80,7 @@ export default {
                 'version': null,
                 'size': this.document.size,
                 'item': null,
-                'author_id': 1, // /!\ METTRE A JOUR AVEC LA VALEUR DE L'AUTEUR DU DOCUMENT !
+                // 'author_id': 1, // /!\ METTRE A JOUR AVEC LA VALEUR DE L'AUTEUR DU DOCUMENT !
                 'file': this.document.file,
             })
         }
