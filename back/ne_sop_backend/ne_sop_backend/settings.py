@@ -203,3 +203,5 @@ CSRF_TRUSTED_ORIGINS = os.environ["CORS_ALLOWED_ORIGINS"].split(",")
 EMAIL_HOST = os.environ.get("NESOP_EMAIL_HOST", "localhost")
 
 SECRET_UUID = os.environ["NESOP_SECRET_UUID"]
+
+NESOP_TEMPLATE_AUTRE_ID = os.environ["NESOP_TEMPLATE_AUTRE_ID"]
