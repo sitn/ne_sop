@@ -1,5 +1,5 @@
 <template>
-    <Form :model="document" :edit="edit">
+    <Form :model="document" :edit="edit" :changewatch="changewatch">
 
         <template v-slot:body>
 
@@ -66,7 +66,7 @@ import FormSection from "../components/FormSection.vue"
 export default {
     name: 'DocumentForm',
     components: { Form, FormSection },
-    props: { 'item_type': Number, 'edit': Boolean, 'modelValue': Object },
+    props: { 'item_type': Number, 'edit': Boolean, 'modelValue': Object, 'changewatch': { type: Boolean, default: true } },
     emits: ['update:modelValue'],
     setup() {
         return {

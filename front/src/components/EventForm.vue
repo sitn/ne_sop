@@ -1,5 +1,5 @@
 <template>
-    <Form :model="event" :edit="edit" @validation-event="validation">
+    <Form :model="event" :edit="edit" :changewatch="changewatch" @validation-event="validation">
 
         <template v-slot:body>
 
@@ -126,7 +126,7 @@ import FormSection from "../components/FormSection.vue"
 export default {
     name: 'EventForm',
     components: { Form, FormSection },
-    props: { 'edit': Boolean, 'modelValue': Object, 'mode': String },
+    props: { 'edit': Boolean, 'modelValue': Object, 'mode': String, 'changewatch': { type: Boolean, default: true } },
     emits: ['update:modelValue', 'validationEvent'],
     data() {
         return {
@@ -154,14 +154,25 @@ export default {
         }
         // console.log(`${this.$options.name} | router id: ${this.$route.params.id}`)
     },
-
+    async mounted() {
+        store.event.old = JSON.stringify(this.modelValue)
+    },
     watch: {
-        event: {
+        modelValue: {
             handler(newValue, oldValue) {
-                // this.validateForm()
+                // console.log(`${this.$options.name} | watch: modelValue`)
+
                 if (newValue.time === "") {
                     newValue.time = null
                 }
+
+                // store.event.new = Object.assign({}, this.modelValue)
+                store.event.new = JSON.stringify(this.modelValue)
+
+                if (this.changewatch) {
+                    store.updateWarning(store.event)
+                }
+
             },
             deep: true
         }
@@ -172,7 +183,7 @@ export default {
         checkDate,
         checkTime,
         validation(val) {
-            console.log(`${this.$options.name} | validation: ${val}`)
+            // console.log(`${this.$options.name} | validation: ${val}`)
             this.valid = val
             this.$emit('validationEvent', this.valid)
         },

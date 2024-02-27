@@ -117,7 +117,6 @@ export default {
                 "writtenresponse": false,
                 "oralresponse": false,
                 "autonotify": false,
-                /* "fight": false, */
                 "author": null,
                 "lead": null,
                 "support": [],
@@ -130,22 +129,31 @@ export default {
                 "valid": false
             }
         },
-        async save() {
+        async save(redirectTo) {
 
             this.wait = true
             if (this.item.id) {
+                // console.log(`${this.$options.name}.vue | updateItem()`)
                 this.item = await store.updateItem(this.item.id, this.item)
             } else {
+                // console.log(`${this.$options.name}.vue | addItem()`)
                 this.item = await store.addItem(this.item)
             }
+
+            // console.log(`${this.$options.name}.vue | store.item.old`)
+            store.item.old = JSON.stringify(this.item)
+
             this.wait = false
+
+            if (redirectTo !== null) {
+                this.$router.push({ path: redirectTo })
+            }
 
         },
         handleDeletion() {
             this.dialog.deletion = true
         },
         async remove() {
-            // TODO: DELETE RECORD IN DATABASE
             // console.log(`${this.$options.name}.vue | remove()`)
             this.$router.push({ name: 'ItemsList' })
         },

@@ -3,13 +3,13 @@
         <div v-if="(entity && entity.id) || this.$route.name === 'NewEntity'">
             <q-layout>
 
-            <!-- BREADCRUMBS NAVIGATION -->
-            <div class="q-pa-sm q-gutter-sm">
-                <q-breadcrumbs style="font-size: 16px">
-                    <q-breadcrumbs-el label="Parlementaires" to="/entities" />
-                    <q-breadcrumbs-el :label="entity.name" />
-                </q-breadcrumbs>
-            </div>
+                <!-- BREADCRUMBS NAVIGATION -->
+                <div class="q-pa-sm q-gutter-sm">
+                    <q-breadcrumbs style="font-size: 16px">
+                        <q-breadcrumbs-el label="Parlementaires" to="/entities" />
+                        <q-breadcrumbs-el :label="entity.name" />
+                    </q-breadcrumbs>
+                </div>
 
                 <!-- FORM -->
                 <EntityForm v-model="entity" :edit="edit"></EntityForm>
@@ -113,7 +113,7 @@ export default {
                 "valid": false,
             }
         },
-        async save() {
+        async save(redirectTo) {
 
             // console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
@@ -123,6 +123,12 @@ export default {
                 this.entity = await store.addEntity(this.entity)
             }
             this.wait = false
+
+            store.entity.old = JSON.stringify(this.entity)
+
+            if (redirectTo !== null) {
+                this.$router.push({ path: redirectTo })
+            }
 
         },
         handleDeletion() {

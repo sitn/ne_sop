@@ -1,5 +1,5 @@
 <template>
-    <Form :model="entity" :edit="edit">
+    <Form :model="entity" :edit="edit" :changewatch="changewatch">
         <!-- @validation-event="validation" -->
 
         <template v-slot:body>
@@ -60,7 +60,7 @@
                             <q-input bg-color="white" outlined v-model="entity.street" label="Rue" :disable="!edit" />
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-input bg-color="white" outlined v-model="entity.postalCode" label="Code postal" :disable="!edit" />
+                            <q-input bg-color="white" outlined v-model="entity.postalcode" label="Code postal" :disable="!edit" />
                         </div>
                     </div>
 
@@ -123,7 +123,7 @@ import FormSection from "../components/FormSection.vue"
 export default {
     name: 'EntityForm',
     components: { Form, FormSection },
-    props: { 'edit': Boolean, 'modelValue': Object },
+    props: { 'edit': Boolean, 'modelValue': Object, 'changewatch': { type: Boolean, default: true } },
     emits: ['update:modelValue'],
     setup() {
         return {
@@ -144,6 +144,23 @@ export default {
                 this.$emit('update:modelValue', entity)
             }
         }
+    },
+    watch: {
+        modelValue: {
+            handler(newValue, oldValue) {
+
+                store.entity.new = JSON.stringify(this.modelValue)
+
+                if (this.changewatch) {
+                    store.updateWarning(store.entity)
+                }
+
+            },
+            deep: true
+        },
+    },
+    mounted() {
+        store.entity.old = JSON.stringify(this.entity)
     },
     async created() {
         this.entityTypes = await this.store.getEntityTypes()

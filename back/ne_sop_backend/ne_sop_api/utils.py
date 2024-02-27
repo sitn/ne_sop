@@ -67,7 +67,7 @@ class Utils(object):
         user_lead_email = item.get_user_lead_email()
         users_support_email = item.get_users_support_email()
 
-        subject = f"SOP - création de l'op {item.number}"
+        subject = f"SOP - création de l'OP {item.number}"
         body = template.render(context, request)
         to = user_lead_email if user_lead_email is not None else users_support_email
         cc = users_support_email if to is user_lead_email is not None else None
@@ -89,7 +89,7 @@ class Utils(object):
         user_lead_email = item.get_user_lead_email()
         users_support_email = item.get_users_support_email()
 
-        subject = f"SOP - modification de l'op {item.number}"
+        subject = f"SOP - modification de l'OP {item.number}"
         body = template.render(context, request)
         to = user_lead_email if user_lead_email is not None else users_support_email
         cc = users_support_email if to is user_lead_email is not None else None
@@ -107,7 +107,7 @@ class Utils(object):
         user_lead_email = item.get_user_lead_email()
         users_support_email = item.get_users_support_email()
 
-        subject = f"SOP - suppression de l'op {item.number}"
+        subject = f"SOP - suppression de l'OP {item.number}"
         body = template.render(context, request)
         to = user_lead_email if user_lead_email is not None else users_support_email
         cc = users_support_email if to is user_lead_email is not None else None
@@ -129,7 +129,7 @@ class Utils(object):
         user_lead_email = item.get_user_lead_email()
         users_support_email = item.get_users_support_email()
 
-        subject = f"SOP - modification de l'op {item.number}"
+        subject = f"SOP - retard de traitement de l'OP {item.number}"
         body = template.render(context, request)
         to = user_lead_email if user_lead_email is not None else users_support_email
         cc = users_support_email if to is user_lead_email is not None else None

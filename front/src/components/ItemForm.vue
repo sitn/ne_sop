@@ -1,5 +1,5 @@
 <template>
-    <Form :model="item" :edit="edit">
+    <Form :model="item" :edit="edit" :changewatch="changewatch">
 
         <template v-slot:body>
 
@@ -244,20 +244,16 @@
 <script>
 import { store } from '../store/store.js'
 import { checkFilled } from '../store/shared.js'
-// import itemTypes from '../assets/data/item-types.json'
-// import itemStatus from '../assets/data/item-status.json'
 import Form from "../components/Form.vue"
 import FormSection from "../components/FormSection.vue"
 import EventsTable from "../components/EventsTable.vue"
 import DocumentsTable from "../components/DocumentsTable.vue"
 import NewEntityDialog from "../views/NewEntityDialog.vue"
 
-// const subset = ["Parlementaire", "Groupe parlementaire", "Autre"]
-
 export default {
     name: 'EntityForm',
     components: { Form, FormSection, NewEntityDialog, EventsTable, DocumentsTable },
-    props: { 'edit': Boolean, 'modelValue': Object, 'mode': String },
+    props: { 'edit': Boolean, 'modelValue': Object, 'mode': String, 'changewatch': { type: Boolean, default: true } },
     emits: ['update:modelValue'],
     setup() {
         return {
@@ -273,6 +269,7 @@ export default {
             serviceOptions: [],
             events: [],
             documents: [],
+            formValues: { old: null, new: null }
         }
     },
     computed: {
@@ -286,9 +283,22 @@ export default {
         },
         mailtostring() {
             return `mailto:${this.item.users.map(o => o.email).join(";")}&subject=OP ${encodeURIComponent(this.item.number)} - ${encodeURIComponent(this.item.title)}&body=Bonjour,%0D%0A%0D%0AL'objet parlementaire ${encodeURIComponent(this.item.number)} a été modifié.%0D%0A%0D%0AConsulter les modifications: https://sop.ne.ch/items/${this.item.id}`
-        }
+        },
     },
-    beforeCreate() {
+    watch: {
+        modelValue: {
+            handler(newValue, oldValue) {
+
+                // store.item.new = Object.assign({}, this.modelValue)
+                store.item.new = JSON.stringify(this.modelValue)
+
+                if (this.changewatch) {
+                    store.updateWarning(store.item)
+                }
+
+            },
+            deep: true
+        },
     },
     async created() {
         // console.log(`router id: ${this.$route.params.id}`)
@@ -309,6 +319,8 @@ export default {
     },
     async mounted() {
 
+        store.item.old = JSON.stringify(this.modelValue)
+
     },
     methods: {
         checkFilled,
@@ -320,8 +332,6 @@ export default {
             this.dialog.newEntity = true
         },
         async searchEntity(searchString = "", type = [], service = "") {
-
-            // TODO: REPLACE WITH GET CALL TO API
 
             // await sleep(Math.random() * 1300)
             let str = searchString.toLowerCase()

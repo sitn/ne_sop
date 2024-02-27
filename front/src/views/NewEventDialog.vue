@@ -7,8 +7,7 @@
         <q-card-section class="row items-center scroll" style="max-height: 70vh">
 
             <!-- FORM -->
-            <EventForm class="col" v-model="event" :edit="edit"></EventForm>
-            <!-- <EventForm v-model="event" :edit="edit" @validation-event="handleValidation"></EventForm> -->
+            <EventForm class="col" v-model="event" :edit="edit" :changewatch="false"></EventForm>
 
         </q-card-section>
 
@@ -67,16 +66,6 @@ export default {
                 this.$emit('update:modelValue', events)
             }
         }
-        /*
-        item: {
-            get() {
-                return this.modelValue
-            },
-            set(item) {
-                this.$emit('update:modelValue', item)
-            }
-        }
-        */
     },
     mounted() {
 

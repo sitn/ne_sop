@@ -7,7 +7,7 @@
         <q-card-section class="row items-center scroll" style="max-height: 70vh">
 
             <!-- FORM -->
-            <EventForm class="col" v-model="event" :edit="edit"></EventForm>
+            <EventForm class="col" v-model="event" :edit="edit" :changewatch="false"></EventForm>
 
         </q-card-section>
 
@@ -38,15 +38,14 @@ export default {
     created() {
         // console.log(`${this.$options.name}.vue | created()`)
         this.event = Object.assign({}, this.modelValue) // assign a copy of the model value, to bypass reactivity
+        // this.event = this.modelValue
     },
     methods: {
         save() {
-
+            // console.log(`${this.$options.name}.vue | save()`)
             Object.assign(this.modelValue, this.event)
             this.$emit('update:modelValue', this.modelValue)
-
-        },
-
+        }
     }
 }
 </script>

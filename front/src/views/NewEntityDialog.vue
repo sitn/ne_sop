@@ -7,7 +7,7 @@
         <q-card-section class="row items-center scroll" style="max-height: 70vh">
 
             <!-- FORM -->
-            <EntityForm class="col" v-model="entity" :edit="edit"></EntityForm>
+            <EntityForm class="col" v-model="entity" :edit="edit" :changewatch="false"></EntityForm>
 
         </q-card-section>
 
@@ -27,9 +27,6 @@ export default {
     components: { EntityForm },
     props: {},
     emits: ['addNewEntity'],
-    setup() {
-        return {}
-    },
     data() {
         return {
             store,
@@ -49,11 +46,6 @@ export default {
                 "valid": false
             },
         }
-    },
-    computed: {
-    },
-    mounted() {
-
     },
     methods: {
         save() {

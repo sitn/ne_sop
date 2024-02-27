@@ -98,22 +98,14 @@ export default {
             this.editMode = !this.editMode
             this.$emit('editEvent', this.editMode)
         },
-        save(redirect = null) {
+        async save(redirect = null) {
 
             // console.log(`${this.$options.name}.vue | saveEvent`)
-            store.warning = false
-            store.oldFormData = Object.assign({}, store.newFormData)
-
             // this.$emit('saveEvent', { redirect: redirect })
             this.$emit('saveEvent', redirect)
 
-            this.$router.push({ path: store.navigation.to })
-
-            /*
-            if (redirect !== null) {
-                this.$router.push({ path: redirect })
-            }
-            */
+            // console.log(`${this.$options.name}.vue | store.navigation.to: ${store.navigation.to}`)
+            // this.$router.push({ path: store.navigation.to })
 
         },
         remove() {
@@ -127,6 +119,9 @@ export default {
 
             this.store.warning = false
             this.store.exit = false
+
+            // console.log(`${this.$options.name}.vue | store.navigation.to: ${store.navigation.to}`)
+
             this.$router.push({ path: store.navigation.to })
         },
     }

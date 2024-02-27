@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from ne_sop_api.utils import Utils
-import os
+from django.conf import settings
 
 from ne_sop_api.models import (
     Document,
@@ -260,6 +260,8 @@ class NestedItemSerializer(serializers.ModelSerializer):
         ]
 
     # %% ITEM STATISTICS
+
+
 class ItemTypeStatisticsSerializer(serializers.ModelSerializer):
     num_items = serializers.IntegerField()
     year = serializers.DateField()
@@ -393,7 +395,7 @@ class DocumentSerializer(serializers.ModelSerializer):
         filename = file.name
         file_extension = filename.rsplit(".", 1)[1]
 
-        if int(template.id) != int(os.environ["NESOP_TEMPLATE_AUTRE_ID"]):
+        if int(template.id) != int(settings.NESOP_TEMPLATE_AUTRE_ID):
             template = Template.objects.filter(id=template.id).first()
             filename = template.filename
 

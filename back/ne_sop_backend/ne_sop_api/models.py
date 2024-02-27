@@ -81,7 +81,7 @@ class ItemStatus(models.Model):
 class Item(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
-    number = models.CharField(max_length=30, blank=True, default="")
+    number = models.CharField(max_length=30, blank=True, default="", unique=True)
     title = models.CharField(max_length=512, blank=True, default="")
 
     author = models.ForeignKey("Entity", related_name="author", null=True, on_delete=models.SET_NULL)
