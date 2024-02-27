@@ -606,6 +606,9 @@ class EventViewSet(viewsets.ViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        if user.groups.filter(name="Manager").exists():
+            return Event.objects.all()
+
         return Event.objects.filter(Q(item__lead__in=user.entities.all()) | Q(item__support__in=user.entities.all()))
 
     @extend_schema(
@@ -737,6 +740,8 @@ class DocumentViewSet(viewsets.ViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        if user.groups.filter(name="Manager").exists():
+            return Document.objects.all()
         return Document.objects.filter(Q(item__lead__in=user.entities.all()) | Q(item__support__in=user.entities.all()))
 
     @extend_schema(
