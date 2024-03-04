@@ -111,21 +111,33 @@ export default {
                 "email": "",
                 "telephone": "",
                 "valid": false,
+                "active": true
             }
         },
         async save(redirectTo) {
 
             // console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
+
+            let response
+
             if (this.entity.id) {
-                this.entity = await store.updateEntity(this.entity.id, this.entity)
+                // update existing record
+                response = await store.updateEntity(this.entity.id, this.entity)
             } else {
-                this.entity = await store.addEntity(this.entity)
+                // create a new record
+                response = await store.addEntity(this.entity)
             }
+
             this.wait = false
 
-            store.entity.old = JSON.stringify(this.entity)
+            // update entity
+            if (response) {
+                this.entity = response
+                store.entity.old = JSON.stringify(this.entity)
+            }
 
+            // redirection
             if (redirectTo !== null) {
                 this.$router.push({ path: redirectTo })
             }
@@ -135,7 +147,6 @@ export default {
             this.dialog.deletion = true
         },
         async remove() {
-            // TODO: DELETE RECORD IN DATABASE
             // console.log(`${this.$options.name}.vue | remove()`)
             this.$router.push({ name: 'EntitiesList' })
         },
