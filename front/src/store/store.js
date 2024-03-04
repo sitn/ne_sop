@@ -1,28 +1,28 @@
 // store.jsoldFormData
 import { ref } from 'vue'
 import { reactive } from 'vue'
-import users from '../assets/data/users.json'
+// import users from '../assets/data/users.json'
 const host = import.meta.env.VITE_API_URL
 const dev = import.meta.env.VITE_DEV.toLowerCase() === 'true'
 
 export const store = reactive({
-    dev: dev,
+    dev: dev, // enable/disable development mode
     loading: true,
-    warning: false,
-    exit: false,
+    // warning: false,
+    // exit: false,
     navigation: { "from": null, "to": null },
-    oldFormData: null,
-    newFormData: null,
+    dialogs: { warning: false, exit: false, error: false },
+    errormessage: '',
+    drawer: ref(false),
 
+    // filters: { items: null, entities: null },
     entity: { old: null, new: null },
     item: { old: null, new: null },
     document: { old: null, new: null },
     event: { old: null, new: null },
-
     documents: [],
-    users: users,
+    // users: users,
     user: null,
-    drawer: ref(false),
 
     // UPDATE UNSAVED CHANGES WARNING PANEL
     updateWarning(obj) {
@@ -52,10 +52,33 @@ export const store = reactive({
 
         if (oldDataString !== newDataString) {
             this.warning = true
+            this.dialogs.warning = true
             // console.log('NOT EQUAL')
         } else {
             this.warning = false
+            this.dialogs.warning = false
             // console.log('EQUAL')
+        }
+
+    },
+
+    // HANDLE HTTP FETCH RESPONSE
+    async handleResponse(response) {
+
+        let payload = await response.json()
+
+        // handle server errors
+        if (response.ok) {
+
+            return payload
+
+        } else {
+
+            this.dialogs.error = true
+            this.errormessage = payload
+            return
+            // throw new Error('Ceci est une erreur')
+
         }
 
     },
@@ -65,13 +88,16 @@ export const store = reactive({
         try {
 
             // await sleep(1300)
-            const response = await fetch(`${host}/api/current-user/`, {
+            const query = new URL(`${host}/api/current-user/`)
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+
             console.error(error)
         }
     },
@@ -94,15 +120,29 @@ export const store = reactive({
     */
 
     // GET LIST OF ENTITIES
-    async getEntities(search = "", type = [], service = "", page = 1, size = 10, sortBy = "", descending = "false") {
+    async getEntities(filter = {}, page = 1, size = 10, sortBy = "", descending = "false") {
         try {
 
-            // await sleep(1300)
-            const response = await fetch(`${host}/api/entity?page=${page}&size=${size}&search=${search}&type=${type}&service=${service}&sortby=${sortBy}&descending=${descending}`, {
+            const query = new URL(`${host}/api/entity?`)
+            query.searchParams.append("page", page)
+            query.searchParams.append("size", size)
+            query.searchParams.append("sortBy", sortBy)
+            query.searchParams.append("descending", descending)
+
+            for (const [key, value] of Object.entries(filter)) {
+                if (value) {
+                    // console.log(`${key}: ${value}`)
+                    query.searchParams.append(key, value)
+                }
+            }
+            // const query = `${host}/api/entity?page=${page}&size=${size}&search=${filter.search}&type=${filter.type}&service=${filter.service}&sortby=${sortBy}&descending=${descending}`
+
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
             console.error(error)
@@ -113,10 +153,12 @@ export const store = reactive({
     async getEntity(id) {
         try {
 
-            const response = await fetch(`${host}/api/entity/${id}`, {
+            const query = new URL(`${host}/api/entity/${id}`)
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
+
             return await response.json()
 
         } catch (error) {
@@ -128,7 +170,8 @@ export const store = reactive({
     async updateEntity(id, data) {
         try {
             // await sleep(1000)
-            const response = await fetch(`${host}/api/entity/${id}/`, {
+            const query = new URL(`${host}/api/entity/${id}/`)
+            const response = await fetch(query, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
@@ -137,7 +180,7 @@ export const store = reactive({
                 redirect: 'follow',
             })
 
-            return await response.json()
+            return await this.handleResponse(response)
 
         } catch (error) {
             console.error(error)
@@ -147,10 +190,12 @@ export const store = reactive({
 
     // ADD ENTITY
     async addEntity(data) {
+
         try {
 
             // await sleep(1000)
-            const response = await fetch(`${host}/api/entity/`, {
+            const query = new URL(`${host}/api/entity/`)
+            const response = await fetch(query, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -159,9 +204,11 @@ export const store = reactive({
                 redirect: 'follow',
             })
 
-            return await response.json()
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
 
@@ -172,13 +219,17 @@ export const store = reactive({
         try {
 
             // await sleep(1000)
-            const response = await fetch(`${host}/api/entity/${id}`, {
+            const query = new URL(`${host}/api/entity/${id}`)
+            const response = await fetch(query, {
                 method: 'DELETE',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -187,28 +238,55 @@ export const store = reactive({
     async getEntityTypes() {
         try {
 
-            const response = await fetch(`${host}/api/entity-type/`, {
+            const query = new URL(`${host}/api/entity-type/`)
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
 
     // GET LIST OF ITEMS
-    async getItems(search = "", page = 1, size = 10, sortBy = "", descending = "false") {
+    // async getItems(search = "", page = 1, size = 10, sortBy = "", descending = "false") {
+    async getItems(filter = {}, page = 1, size = 10, sortBy = "", descending = "false") {
         try {
 
-            const response = await fetch(`${host}/api/item?page=${page}&size=${size}&sortby=${sortBy}&descending=${descending}&search=${search}`, {
+            // console.log('getItems')
+            // console.log(filter)
+
+            const query = new URL(`${host}/api/item?`)
+            query.searchParams.append("page", page)
+            query.searchParams.append("size", size)
+            query.searchParams.append("sortBy", sortBy)
+            query.searchParams.append("descending", descending)
+
+            for (const [key, value] of Object.entries(filter)) {
+                if (value) {
+                    // console.log(`${key}: ${value}`)
+                    query.searchParams.append(key, value)
+                }
+            }
+
+            // let query = `${host}/api/item?page=${page}&size=${size}&sortby=${sortBy}&descending=${descending}&search=${filter.search}&number=${filter.number}&title=${filter.title}&status=${filter.status.join()}&type=${filter.type.join()}`
+            // console.log(query)
+
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -216,26 +294,25 @@ export const store = reactive({
     // GET ITEM DETAILS
     async getItem(id, summary = false) {
         try {
-
-            let url = ""
+            let query
             if (summary) {
-                url = `${host}/api/item-summary/${id}`
+                query = new URL(`${host}/api/item-summary/${id}`)
             } else {
-                url = `${host}/api/item/${id}`
+                query = new URL(`${host}/api/item/${id}`)
             }
 
-            const response = await fetch(url, {
-
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
-
 
     // UPDATE ITEM
     async updateItem(id, data) {
@@ -246,7 +323,8 @@ export const store = reactive({
             // let data_nodocs = JSON.parse(JSON.stringify(data))
             delete data_nodocs.documents
 
-            const response = await fetch(`${host}/api/item/${id}/`, {
+            const query = new URL(`${host}/api/item/${id}/`)
+            const response = await fetch(query, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
@@ -255,12 +333,15 @@ export const store = reactive({
                 redirect: 'follow',
             })
 
-            await response.json()
+            // await response.json()
+            await this.handleResponse(response)
             await this.prepareAddDocuments(documents, data_nodocs)
 
             return await this.getItem(id)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
 
@@ -275,7 +356,8 @@ export const store = reactive({
         delete data_nodocs.documents
 
         try {
-            const response = await fetch(`${host}/api/item/`, {
+            const query = new URL(`${host}/api/item/`)
+            const response = await fetch(query, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -291,6 +373,8 @@ export const store = reactive({
             return await this.getItem(tmp.id)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -298,12 +382,12 @@ export const store = reactive({
     // DELETE ITEM
     async deleteItem(id) {
         try {
-
-            const response = await fetch(`${host}/api/item/${id}`, {
+            const query = new URL(`${host}/api/item/${id}`)
+            const response = await fetch(query, {
                 method: 'DELETE',
                 redirect: 'follow'
             })
-            return await response.json()
+            return await this.handleResponse(response)
 
         } catch (error) {
             console.error(error)
@@ -313,14 +397,17 @@ export const store = reactive({
     // GET ITEM TYPES
     async getItemTypes() {
         try {
-
-            const response = await fetch(`${host}/api/item-type`, {
+            const query = new URL(`${host}/api/item-type`)
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -328,30 +415,50 @@ export const store = reactive({
     // GET ITEM STATUS
     async getItemStatus() {
         try {
-
-            const response = await fetch(`${host}/api/item-status`, {
+            const query = new URL(`${host}/api/item-status`)
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
 
 
     // GET LIST OF EVENTS
-    async getEvents(search = "", item = "", page = 1, size = 10, sortBy = "", descending = "false") {
+    // async getEvents(search = "", item = "", page = 1, size = 10, sortBy = "", descending = "false") {
+    async getEvents(filter = {}, page = 1, size = 10, sortBy = "", descending = "false") {
         try {
 
-            const response = await fetch(`${host}/api/event?page=${page}&size=${size}&sortby=${sortBy}&descending=${descending}&item=${item}&search=${search}`, {
+            const query = new URL(`${host}/api/event?`)
+            query.searchParams.append("page", page)
+            query.searchParams.append("size", size)
+            query.searchParams.append("sortBy", sortBy)
+            query.searchParams.append("descending", descending)
+
+            for (const [key, value] of Object.entries(filter)) {
+                if (value) {
+                    // console.log(`${key}: ${value}`)
+                    query.searchParams.append(key, value)
+                }
+            }
+
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -359,12 +466,13 @@ export const store = reactive({
     // GET EVENT DETAILS
     async getEvent(id) {
         try {
-
-            const response = await fetch(`${host}/api/event/${id}`, {
+            const query = new URL(`${host}/api/event/${id}`)
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
             console.error(error)
@@ -374,8 +482,8 @@ export const store = reactive({
     // UPDATE EVENT
     async updateEvent(id, data) {
         try {
-
-            const response = await fetch(`${host}/api/event/${id}/`, {
+            const query = new URL(`${host}/api/event/${id}/`)
+            const response = await fetch(query, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
@@ -384,9 +492,11 @@ export const store = reactive({
                 redirect: 'follow',
             })
 
-            return await response.json()
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
 
@@ -396,7 +506,8 @@ export const store = reactive({
     async addEvent(data) {
         try {
 
-            const response = await fetch(`${host}/api/event/`, {
+            const query = new URL(`${host}/api/event/`)
+            const response = await fetch(query, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -405,9 +516,11 @@ export const store = reactive({
                 redirect: 'follow',
             })
 
-            return await response.json()
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
 
@@ -417,13 +530,17 @@ export const store = reactive({
     async deleteEvent(id) {
         try {
 
-            const response = await fetch(`${host}/api/event/${id}`, {
+            const query = new URL(`${host}/api/event/${id}`)
+            const response = await fetch(query, {
                 method: 'DELETE',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -432,13 +549,17 @@ export const store = reactive({
     async getEventTypes() {
         try {
 
-            const response = await fetch(`${host}/api/event-type/`, {
+            const query = new URL(`${host}/api/event-type/`)
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -447,14 +568,19 @@ export const store = reactive({
     // GET LIST OF TEMPLATES FOR THIS ITEM TYPE
     async getTemplatesByItemType(type_id) {
         try {
+            const query = new URL(`${host}/api/template-types`)
+            query.searchParams.append("itemtype_id", type_id)
 
-            const response = await fetch(`${host}/api/template-types?itemtype_id=${type_id}`, {
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -489,14 +615,18 @@ export const store = reactive({
     async addDocument(formData) {
         try {
 
-            const response = await fetch(`${host}/api/document/`, {
+            const query = new URL(`${host}/api/document/`)
+            const response = await fetch(query, {
                 method: 'POST',
                 body: formData,
                 redirect: 'follow'
             })
-            await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -515,6 +645,8 @@ export const store = reactive({
             )
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -524,17 +656,19 @@ export const store = reactive({
     async deleteDocument(document_id) {
         try {
 
-            const response = await fetch(`${host}/api/document/${document_id}/`,
+            const query = new URL(`${host}/api/document/${document_id}/`)
+            const response = await fetch(query,
                 {
                     method: 'DELETE',
                     redirect: 'follow'
                 }
             )
 
-            await response.json()
-
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -543,13 +677,17 @@ export const store = reactive({
     async getNumberOfItemsDepositedPerYear() {
 
         try {
-            const response = await fetch(`${host}/api/item-type-statistics-deposited`, {
+            const query = new URL(`${host}/api/item-type-statistics-deposited`)
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -557,13 +695,17 @@ export const store = reactive({
     async getNumberOfItemsTreatedPerYear() {
 
         try {
-            const response = await fetch(`${host}/api/item-type-statistics-treated`, {
+            const query = new URL(`${host}/api/item-type-statistics-treated`)
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -571,13 +713,17 @@ export const store = reactive({
     async getNumberOfServiceItemsPerYear() {
 
         try {
-            const response = await fetch(`${host}/api/service-statistics`, {
+            const query = new URL(`${host}/api/service-statistics`)
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -585,13 +731,17 @@ export const store = reactive({
     async getStatisticItemStatus() {
 
         try {
-            const response = await fetch(`${host}/api/item-status-statistics`, {
+            const query = new URL(`${host}/api/item-status-statistics`)
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
@@ -599,13 +749,17 @@ export const store = reactive({
     async getStatisticItemUrgentWritten() {
 
         try {
-            const response = await fetch(`${host}/api/item-urgent-written-statistics`, {
+            const query = new URL(`${host}/api/item-urgent-written-statistics`)
+            const response = await fetch(query, {
                 method: 'GET',
                 redirect: 'follow'
             })
-            return await response.json()
+
+            return await this.handleResponse(response)
 
         } catch (error) {
+            // handle network and CORS errors (fetch promise rejected) 
+            this.dialogs.error = true
             console.error(error)
         }
     },
