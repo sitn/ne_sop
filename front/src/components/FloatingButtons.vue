@@ -30,7 +30,7 @@
     </q-page-sticky>
 
     <!-- SEAMLESS BOTTOM DIALOG WARNING ON UNSAVED CHANGES -->
-    <q-dialog v-model="store.warning" no-focus seamless position="bottom">
+    <q-dialog v-model="store.dialogs.warning" no-focus seamless position="bottom">
         <q-card class="bg-blue-1" style="width: 300px">
 
             <q-card-section class="row items-center no-wrap">
@@ -46,8 +46,31 @@
         </q-card>
     </q-dialog>
 
+    <!-- ERROR DIALOG -->
+    <q-dialog v-model="store.dialogs.error">
+        <q-card class="bg-yellow">
+
+            <q-card-section class="row justify-center items-center no-wrap q-mt-md q-pa-none">
+                <q-avatar size="xl" font-size="28px" color="red" text-color="white" icon="priority_high" class="row justify-center items-center q-mx-md" />
+            </q-card-section>
+
+            <q-card-section class="row justify-center items-center no-wrap q-ma-none">
+                <div class="text-weight-bold">Erreur</div>
+            </q-card-section>
+
+            <q-card-section class="row justify-center items-center no-wrap">
+                <div class="">{{ store.errormessage }}</div>
+            </q-card-section>
+
+            <q-card-actions align="right">
+                <q-btn outline label="Fermer" icon="sym_o_close" color="black" v-close-popup />
+            </q-card-actions>
+
+        </q-card>
+    </q-dialog>
+
     <!-- EXIT DIALOG WARNING ON UNSAVED CHANGES -->
-    <q-dialog v-model="store.exit">
+    <q-dialog v-model="store.dialogs.exit">
         <q-card class="bg-yellow">
 
             <q-card-section class="row justify-center items-center no-wrap q-mt-md q-pa-none">
@@ -117,8 +140,8 @@ export default {
             // console.log(this.$route)
             // console.log(`store.navigation.to: ${store.navigation.to}`)
 
-            this.store.warning = false
-            this.store.exit = false
+            this.store.dialogs.warning = false
+            this.store.dialogs.exit = false
 
             // console.log(`${this.$options.name}.vue | store.navigation.to: ${store.navigation.to}`)
 
