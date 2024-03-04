@@ -13,18 +13,21 @@
                 </div>
 
                 <!-- FORM -->
-                <ItemForm v-model="item" :mode="mode" :edit="edit" ref="ItemForm"></ItemForm>
+                <ItemForm v-model="item" :edit="edit" ref="ItemForm"></ItemForm>
+                <!-- <ItemForm v-model="item" :mode="mode" :edit="edit" ref="ItemForm"></ItemForm> -->
 
                 <!-- FLOATING ACTION BUTTONS -->
                 <FloatingButtons :edit="edit" :wait="wait" :buttons="actionButtons" @save-event="save" @delete-event="handleDeletion" @edit-event="setEditMode"></FloatingButtons>
 
                 <!-- DELETE DIALOG -->
-                <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+                <!-- <DeleteDialog v-model="dialog.deletion" @delete-event="remove" /> -->
 
                 <!-- ADD NEW ENTITY DIALOG -->
+                <!--
                 <q-dialog v-model="addEntityDialog">
                     <NewEntityDialog @addNewEntity="addNewEntity"></NewEntityDialog>
-                </q-dialog>
+                </q-dialog> 
+                -->
 
             </q-layout>
         </div>
@@ -57,7 +60,6 @@ export default {
         return {
             store,
             dialog: { deletion: false },
-            mode: "update",
             edit: false,
             wait: false,
             item: {},
@@ -66,6 +68,7 @@ export default {
     },
     computed: {
         actionButtons() {
+
             return {
                 save: this.item.valid ? 'active' : 'disable',
                 deletion: 'none'
@@ -131,20 +134,28 @@ export default {
         },
         async save(redirectTo) {
 
+            // console.log(`${this.$options.name}.vue | save()`)
             this.wait = true
-            if (this.item.id) {
-                // console.log(`${this.$options.name}.vue | updateItem()`)
-                this.item = await store.updateItem(this.item.id, this.item)
-            } else {
-                // console.log(`${this.$options.name}.vue | addItem()`)
-                this.item = await store.addItem(this.item)
-            }
 
-            // console.log(`${this.$options.name}.vue | store.item.old`)
-            store.item.old = JSON.stringify(this.item)
+            let response
+
+            if (this.item.id) {
+                // update existing record
+                response = await store.updateItem(this.item.id, this.item)
+            } else {
+                // create a new record
+                response = await store.addItem(this.item)
+            }
 
             this.wait = false
 
+            // update item
+            if (response) {
+                this.item = response
+                store.item.old = JSON.stringify(this.item)
+            }
+
+            // redirection
             if (redirectTo !== null) {
                 this.$router.push({ path: redirectTo })
             }
