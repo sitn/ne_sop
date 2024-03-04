@@ -11,7 +11,7 @@
 
             <!-- SEARCH RECORDS FIELD -->
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
-                <q-input bg-color="white" v-model="searchString" outlined dense placeholder="Rechercher" @update:model-value="query()">
+                <q-input bg-color="white" v-model="filter.search" outlined dense placeholder="Rechercher" @update:model-value="query()">
                     <template v-slot:prepend>
                         <q-icon name="sym_o_search" />
                     </template>
@@ -39,7 +39,7 @@
         </div>
 
         <!-- EVENTS TABLE -->
-        <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" @request="onRequest" binary-state-sort class="q-my-lg">
+        <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" @request="onRequest" binary-state-sort class="q-my-lg">
             <!-- TABLE BODY -->
             <template v-slot:body="props">
                 <q-tr :props="props">
@@ -127,8 +127,7 @@ export default {
         return {
             store,
             selected: null,
-            searchString: "",
-            filter: "",
+            filter: { search: "", item: "" },
             dialog: { deletion: false },
             data: null,
             rows: [],
@@ -171,39 +170,37 @@ export default {
             ],
         }
     },
+    watch: {
+        filter: {
+            handler(newValue, oldValue) {
+                // console.log(`${this.$options.name} | filter()`)
+                this.query()
+            },
+            deep: true
+        },
+    },
     async created() {
 
-        this.loading = true
-        this.data = await store.getEvents("", "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-        this.rows = this.data.results
-        this.pagination.rowsNumber = this.data.nrows
-        this.loading = false
+        this.query()
 
     },
     methods: {
         downloadICS,
         async onRequest(props) {
 
-            this.loading = true
-            let { page, rowsPerPage, sortBy, descending } = props.pagination
-            // let filter = props.filter
-            rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage // rowsPerPage
-            this.data = await store.getEvents("", "", page, rowsPerPage, sortBy, descending)
-            this.rows = this.data.results
-
             // update pagination object
             this.pagination = props.pagination
-            this.loading = false
+            this.pagination.rowsPerPage = props.pagination.rowsPerPage === 0 ? this.pagination.rowsNumber : props.pagination.rowsPerPage
+
+            // update table rows
+            this.query()
 
         },
         async query() {
 
             this.loading = true
-            if (this.searchString.length >= 3) {
-                this.data = await store.getEvents(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-            } else {
-                this.data = await store.getEvents("", "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-            }
+            // if (this.filter.search.length >= 3) {
+            this.data = await store.getEvents(this.filter, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             this.rows = this.data.results
             this.loading = false
         },
@@ -214,14 +211,10 @@ export default {
         async remove() {
 
             // console.log(`delete ${this.selected}`)
-            this.loading = true
             let message = await store.deleteEvent(this.selected)
             if (message) {
-                this.data = await store.getEvents(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-                this.rows = this.data.results
+                this.query()
             }
-            this.loading = false
-
         }
     }
 }
