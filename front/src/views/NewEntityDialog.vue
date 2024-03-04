@@ -43,7 +43,8 @@ export default {
                 "website": "",
                 "email": "",
                 "telephone": "",
-                "valid": false
+                "valid": false,
+                "active": true
             },
         }
     },
