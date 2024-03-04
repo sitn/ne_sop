@@ -8,9 +8,9 @@ import Event from './views/Event.vue'
 import Statistics from './views/Statistics.vue'
 import Item from './views/Item.vue'
 import Entity from './views/Entity.vue'
-import User from './views/User.vue'
-import NewUser from './views/NewUser.vue'
-import Admin from './views/Admin.vue'
+// import User from './views/User.vue'
+// import NewUser from './views/NewUser.vue'
+// import Admin from './views/Admin.vue'
 import Help from './views/Help.vue'
 import Unauthorized from './views/Unauthorized.vue'
 import NotFound from './components/NotFound.vue'
@@ -28,9 +28,9 @@ const routes = [
     { path: '/events/:id(\\d+)', name: 'Event', component: Event, props: true },
     { path: '/events/new', name: 'NewEvent', component: Event },
     { path: '/statistics', name: 'Statistics', component: Statistics },
-    { path: '/admin', name: 'Admin', component: Admin },
-    { path: '/admin/users/:id(\\d+)', name: 'User', component: User, props: true },
-    { path: '/admin/users/new', name: 'NewUser', component: NewUser },
+    // { path: '/admin', name: 'Admin', component: Admin },
+    // { path: '/admin/users/:id(\\d+)', name: 'User', component: User, props: true },
+    // { path: '/admin/users/new', name: 'NewUser', component: NewUser },
     { path: '/help', name: 'Help', component: Help },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
 ]
@@ -57,12 +57,12 @@ router.beforeEach(async (to, from) => {
     }
 
     // DISPLAY WARNING DIALOG
-    if (store.warning) {
+    if (store.dialogs.warning) {
 
         // console.log(from)
         // console.log(to)
 
-        store.exit = true
+        store.dialogs.exit = true
         return false
 
     } else {
