@@ -472,17 +472,20 @@ class ItemViewSet(viewsets.ViewSet):
         if user.groups.filter(name="Manager").exists():
             return Item.objects.all()
         return Item.objects.filter(Q(lead__in=user.entities.all()) | Q(support__in=user.entities.all()))
+        # return Item.objects.all()
 
     @extend_schema(
         responses=NewItemSerializer,
         tags=["Items"],
     )
     def list(self, request):
-        filter = filters.SearchFilter()
-        queryset = filter.filter_queryset(request, self.get_queryset(), self)
+        search_filter = filters.SearchFilter()
+        queryset = search_filter.filter_queryset(request, self.get_queryset(), self)
 
-        title = request.query_params.get("title", "")
-        number = request.query_params.get("number", "")
+        number = request.query_params.get("number")
+        title = request.query_params.get("title")
+        item_type = request.query_params.get("type")
+        status = request.query_params.get("status")
         page = int(request.query_params.get("page", "1"))
         size = int(request.query_params.get("size", "10"))
         sortby = request.query_params.get("sortby", "id")
@@ -504,11 +507,17 @@ class ItemViewSet(viewsets.ViewSet):
         if descending not in ["true", "false"]:
             descending = "false"
 
-        if title is not None:
-            queryset = queryset.filter(title__icontains=title)
+        if number:
+            queryset = queryset.filter(number=number)  # __icontains
 
-        if number is not None:
-            queryset = queryset.filter(number__icontains=number)
+        if title:
+            queryset = queryset.filter(title=title)  # __icontains
+
+        if status:
+            queryset = queryset.filter(status__id__in=list(filter(None, status.split(","))))
+
+        if item_type:
+            queryset = queryset.filter(type__id__in=list(filter(None, item_type.split(","))))
 
         if descending == "true":
             paginator = Paginator(queryset.order_by(Lower(sortby).desc()), size)
@@ -543,6 +552,8 @@ class ItemViewSet(viewsets.ViewSet):
             Utils.itemCreatedNotification(item, request)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+        print("serializer.errors")
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
@@ -571,8 +582,8 @@ class ItemViewSet(viewsets.ViewSet):
     )
     def destroy(self, request, pk=None):
         item = get_object_or_404(self.get_queryset(), pk=pk)
-        item.delete()
         Utils.itemRemovedNotification(item, request)
+        item.delete()
         return Response({"msg": "Item deleted"})
 
 
