@@ -323,11 +323,8 @@ export default {
             console.log(val)
             let isexception = val === exception
 
-            let didi = await store.getItems({ search: "", number: val, title: "", status: [], type: [] }, 1, 20, "id", "false")
-            console.log(didi.results)
-            console.log(didi.results.length !== 0)
-
-            return ((didi.results.length == 0) || isexception) ? true : 'Cette valeur existe déjà'
+            let request = await store.getItems({ search: "", number: val, title: "", status: [], type: [] }, 1, 20, "id", "false")
+            return ((request.results.length == 0) || isexception) ? true : 'Cette valeur existe déjà'
         },
         reset() {
             this.item.support = []
