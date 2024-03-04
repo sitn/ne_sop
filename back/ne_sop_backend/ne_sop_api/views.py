@@ -552,8 +552,8 @@ class ItemViewSet(viewsets.ViewSet):
             Utils.itemCreatedNotification(item, request)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        print("serializer.errors")
-        print(serializer.errors)
+        # print("serializer.errors")
+        # print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
