@@ -59,7 +59,7 @@
                                     <q-item-section>
                                         <div class="row">
                                             <q-btn @click="filter.type = itemTypes.map(x => x.id)" label="Toutes les options" dense class="col q-ma-sm"></q-btn>
-                                            <q-btn @click="filter.type = []" label="Aucun option" dense class="col q-ma-sm"></q-btn>
+                                            <q-btn @click="filter.type = []" label="Aucune option" dense class="col q-ma-sm"></q-btn>
                                         </div>
                                     </q-item-section>
                                 </q-item>

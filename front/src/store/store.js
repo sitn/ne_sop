@@ -172,7 +172,7 @@ export const store = reactive({
             // await sleep(1000)
             const query = new URL(`${host}/api/entity/${id}/`)
             const response = await fetch(query, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -213,26 +213,6 @@ export const store = reactive({
         }
 
     },
-
-    // DEACTIVATE ENTITY
-    async deactivateEntity(id) {
-        try {
-
-            // await sleep(1000)
-            const response = await fetch(`${host}/api/entity-deactivate/${id}/`, {
-                method: 'PUT',
-                redirect: 'follow'
-            })
-
-            return await this.handleResponse(response)
-
-        } catch (error) {
-            // handle network and CORS errors (fetch promise rejected)
-            this.dialogs.error = true
-            console.error(error)
-        }
-    },
-
     // // DELETE ENTITY
     // async deleteEntity(id) {
     //     try {

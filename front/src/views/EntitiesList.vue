@@ -49,11 +49,11 @@
                     <q-td key="type" :props="props">
 
                         <router-link :to="{
-                    name: 'Entity',
-                    params: {
-                        id: props.row.id
-                    }
-                }">
+                            name: 'Entity',
+                            params: {
+                                id: props.row.id
+                            }
+                        }">
                             {{ props.row.name }}
                             <span v-if="!props.row.active"> (désactivé)</span>
                         </router-link>
@@ -74,14 +74,14 @@
                             <q-btn dense round flat color="grey" name="phone" @click="console.log(props.row.telephone)" icon="sym_o_call" :href="`tel:${props.row.telephone}`" v-if="props.row.telephone !== ''">
                                 <q-tooltip class="bg-black" v-if="props.row.telephone">Appeler: {{ props.row.telephone }}</q-tooltip>
                             </q-btn>
-                            <!--
-                            <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row)" icon="sym_o_delete" v-if="store.user.is_manager">
-                                <q-tooltip class="bg-black">Désactiver</q-tooltip>
-                            </q-btn>
-                             -->
-                            <q-toggle dense round flat name="deactivate" v-model="props.row.active" @update:model-value="remove(props.row)" checked-icon="check" color="green" unchecked-icon="clear" v-if="store.user.is_manager">
+                            <q-toggle dense round flat name="deactivate" v-model="props.row.active" @update:model-value="deactivate(props.row)" checked-icon="check" color="green" unchecked-icon="clear" v-if="store.user.is_manager">
                                 <q-tooltip class="bg-black">{{ props.row.active ? "Désactiver" : "Activer" }}</q-tooltip>
                             </q-toggle>
+                            <!-- 
+                            <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete" v-if="store.user.is_manager">
+                                <q-tooltip class="bg-black">Supprimer</q-tooltip>
+                            </q-btn>
+                            -->
                         </div>
                     </q-td>
 
@@ -186,12 +186,22 @@ export default {
             this.pagination.rowsNumber = this.data.nrows
             this.loading = false
         },
-        // handleDeletion(val) {
-        //     this.selected = val
-        //     console.log('handleDeletion() | this.selected', this.selected)
-        //     this.dialog.deletion = true
-        // },
-        async remove(data) {
+        /*
+        handleDeletion(val) {
+            this.selected = val
+            this.dialog.deletion = true
+        },
+        */
+        async deactivate(val) {
+            this.selected = val
+            let message = await store.updateEntity(val.id, { active: val.active })
+
+            if (message) {
+                this.query()
+            }
+
+        },
+        async remove() {
 
             // console.log(`delete ${this.selected}`)
             // let message = await store.deleteEntity(this.selected)

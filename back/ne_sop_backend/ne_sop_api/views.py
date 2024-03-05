@@ -258,18 +258,48 @@ class EntityViewSet(viewsets.ViewSet):
         serializer = EntitySerializer(entity)
         return Response(serializer.data)
 
+    # @extend_schema(
+    #     tags=["Entities"],
+    # )
+    # def update(self, request, pk=None):
+    #     queryset = Entity.objects.all()
+    #     entity = get_object_or_404(queryset, pk=pk)
+    #     serializer = EntitySerializer(entity, data=request.data)
+    #     # print("UPDATE ENTITY")
+    #     # print(serializer.validated_data.get("type").service)
+
+    #     if serializer.is_valid():
+
+    #         # if (not self.request.user.is_superuser) & serializer.validated_data.get("type").service:
+    #         if (not self.request.user.is_superuser) & entity.type.service:
+    #             # if not self.request.user.is_superuser & serializer.validated_data.get("type").id not in [2, 3, 4]:
+    #             return Response(
+    #                 {"msg": "You do not have permissions to update a service"},
+    #                 status=status.HTTP_403_FORBIDDEN,
+    #             )
+    #         else:
+    #             serializer.save()
+    #             return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     @extend_schema(
         tags=["Entities"],
     )
-    def update(self, request, pk=None):
+    def partial_update(self, request, *args, **kwargs):
+
+        # instance = self.queryset.get(pk=kwargs.get('pk'))
+
         queryset = Entity.objects.all()
-        entity = get_object_or_404(queryset, pk=pk)
-        serializer = EntitySerializer(entity, data=request.data)
+        # entity = get_object_or_404(queryset, pk=pk)
+        entity = get_object_or_404(queryset, pk=kwargs.get("pk"))
+        serializer = EntitySerializer(entity, data=request.data, partial=True)
         # print("UPDATE ENTITY")
         # print(serializer.validated_data.get("type").service)
 
         if serializer.is_valid():
-            if (not self.request.user.is_superuser) & serializer.validated_data.get("type").service:
+
+            # if (not self.request.user.is_superuser) & serializer.validated_data.get("type").service:
+            if (not self.request.user.is_superuser) & entity.type.service:
                 # if not self.request.user.is_superuser & serializer.validated_data.get("type").id not in [2, 3, 4]:
                 return Response(
                     {"msg": "You do not have permissions to update a service"},
@@ -304,22 +334,6 @@ class EntityViewSet(viewsets.ViewSet):
             # print("DELETED")
 
         return Response({"msg": "Entity deleted"})
-
-
-class EntityDeactivateViewSet(viewsets.ViewSet):
-
-    permission_classes = [IsManagerOrReadOnlyPermission]
-
-    @extend_schema(
-        tags=["Entity-deactivate"],
-    )
-    def update(self, request, pk=None, format=None):
-        entity = get_object_or_404(Entity.objects.all(), pk=pk)
-        entity.active = not entity.active
-        entity.save()
-        entity = get_object_or_404(Entity.objects.all(), pk=pk)
-        serializer = EntitySerializer(entity)
-        return Response(serializer.data)
 
 
 # %% SERVICE
@@ -776,7 +790,7 @@ class DocumentViewSet(viewsets.ViewSet):
         tags=["Document"],
     )
     def create(self, request):
-        serializer = DocumentSerializer(data=request.data, context={'request': self.request})
+        serializer = DocumentSerializer(data=request.data, context={"request": self.request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
