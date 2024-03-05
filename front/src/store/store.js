@@ -172,7 +172,7 @@ export const store = reactive({
             // await sleep(1000)
             const query = new URL(`${host}/api/entity/${id}/`)
             const response = await fetch(query, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -207,32 +207,27 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
 
     },
+    // // DELETE ENTITY
+    // async deleteEntity(id) {
+    //     try {
 
-    // DELETE ENTITY
-    async deleteEntity(id) {
-        try {
+    //         // await sleep(1000)
+    //         const response = await fetch(`${host}/api/entity/${id}`, {
+    //             method: 'DELETE',
+    //             redirect: 'follow'
+    //         })
+    //         return await response.json()
 
-            // await sleep(1000)
-            const query = new URL(`${host}/api/entity/${id}`)
-            const response = await fetch(query, {
-                method: 'DELETE',
-                redirect: 'follow'
-            })
-
-            return await this.handleResponse(response)
-
-        } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
-            this.dialogs.error = true
-            console.error(error)
-        }
-    },
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // },
 
     // GET ENTITY TYPES
     async getEntityTypes() {
@@ -247,7 +242,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -285,7 +280,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -308,7 +303,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -340,7 +335,7 @@ export const store = reactive({
             return await this.getItem(id)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -373,7 +368,7 @@ export const store = reactive({
             return await this.getItem(tmp.id)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -406,7 +401,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -424,7 +419,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -457,7 +452,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -495,7 +490,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -519,7 +514,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -539,7 +534,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -558,7 +553,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -579,7 +574,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -624,7 +619,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -644,7 +639,7 @@ export const store = reactive({
             )
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -666,7 +661,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -685,7 +680,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -703,7 +698,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -721,7 +716,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -739,7 +734,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
@@ -757,7 +752,7 @@ export const store = reactive({
             return await this.handleResponse(response)
 
         } catch (error) {
-            // handle network and CORS errors (fetch promise rejected) 
+            // handle network and CORS errors (fetch promise rejected)
             this.dialogs.error = true
             console.error(error)
         }
