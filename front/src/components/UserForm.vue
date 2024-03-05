@@ -1,6 +1,3 @@
-<!-- 
-    https://vuejs.org/guide/components/v-model.html
--->
 <template>
     <Form :model="user" :edit="edit">
 

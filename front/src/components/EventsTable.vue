@@ -91,7 +91,7 @@ const columns = [
 export default {
     name: 'EventsTable',
     components: { NewEventDialog, EditEventDialog, DeleteDialog },
-    props: { 'item': Number, 'edit': Boolean, 'modelValue': Object },
+    props: { 'edit': Boolean, 'modelValue': Object },
     emits: ['update:modelValue'],
     data() {
         return {
@@ -124,10 +124,16 @@ export default {
     },
     async created() {
 
+        // console.log(`${this.$options.name} | created()`)
+
         this.eventTypes = await this.store.getEventTypes()
         this.render = true
         this.loading = true
-        this.data = await store.getEvents("", this.item, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+
+        // this.data = await store.getEvents({ search: '', item: 18 }, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+        this.data = await this.events
+        // console.log(this.data)
+
         this.rows = this.data.results
         this.pagination.rowsNumber = this.data.nrows
         this.loading = false
@@ -138,16 +144,10 @@ export default {
         async onRequest(props) {
 
             this.loading = true
-
-            // console.log('onRequest')
-            // console.log(props.pagination)
-            let { page, rowsPerPage, sortBy, descending } = props.pagination
-            // let filter = props.filter
-            // console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
-
-            rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage
-
-            this.data = await store.getEvents("", this.item, page, rowsPerPage, sortBy, descending)
+            // let { page, rowsPerPage, sortBy, descending } = props.pagination
+            // rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage
+            // this.data = await store.getEvents({ search: "", item: 18 }, page, rowsPerPage, sortBy, descending)
+            this.data = await this.events
             this.rows = this.data.results
 
             // update pagination object

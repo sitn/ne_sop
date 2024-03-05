@@ -11,7 +11,8 @@
 
                         <!-- REFERENCE NUMBER TEXT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-input bg-color="white" outlined v-model="item.number" label="N°" :rules="[v => checkFilled(v)]" :disable="!edit || !store.user.is_manager" />
+                            <q-input bg-color="white" outlined v-model="item.number" label="N°" :rules="[checkFilled]" :disable="!edit || !store.user.is_manager" />
+                            <!-- <q-input bg-color="white" outlined v-model="item.number" label="N°" :rules="[checkFilled, v => checkUnique(v, exceptions.itemNumber)]" :disable="!edit || !store.user.is_manager" /> -->
                         </div>
 
                         <!-- TYPE SELECT FIELD -->
@@ -27,7 +28,6 @@
                             </q-select>
                         </div>
 
-
                     </div>
 
                     <div class="row q-col-gutter-lg q-py-md">
@@ -41,7 +41,6 @@
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 
                             <!--  <q-select bg-color="white" outlined v-model="item.author" :options="authorOptions" option-label="name" option-value="id" emit-value map-options label="Auteur" clearable :rules="[v => checkFilled(v)]" :disable="!edit"> -->
-
                             <q-select bg-color="white" outlined v-model="item.author" use-input :options="authorOptions" option-label="name" option-value="id" emit-value map-options @filter="filterFn" label="Auteur" clearable :rules="[v => checkFilled(v)]" :disable="!edit || !store.user.is_manager">
 
                                 <template v-slot:option="scope">
@@ -253,7 +252,8 @@ import NewEntityDialog from "../views/NewEntityDialog.vue"
 export default {
     name: 'EntityForm',
     components: { Form, FormSection, NewEntityDialog, EventsTable, DocumentsTable },
-    props: { 'edit': Boolean, 'modelValue': Object, 'mode': String, 'changewatch': { type: Boolean, default: true } },
+    // props: { 'edit': Boolean, 'modelValue': Object, 'mode': String, 'changewatch': { type: Boolean, default: true } },
+    props: { 'edit': Boolean, 'modelValue': Object, 'changewatch': { type: Boolean, default: true } },
     emits: ['update:modelValue'],
     setup() {
         return {
@@ -263,13 +263,13 @@ export default {
         return {
             store,
             dialog: { newEntity: false, newEvent: false, newDocument: false },
+            exceptions: { itemNumber: null },
             itemTypes: [],
             itemStatus: [],
             authorOptions: [],
             serviceOptions: [],
             events: [],
             documents: [],
-            formValues: { old: null, new: null }
         }
     },
     computed: {
@@ -289,8 +289,9 @@ export default {
         modelValue: {
             handler(newValue, oldValue) {
 
-                // store.item.new = Object.assign({}, this.modelValue)
                 store.item.new = JSON.stringify(this.modelValue)
+                // console.log(`this.modelValue.number: ${this.modelValue.number}`)
+                // console.log(`this.exceptions.itemNumber: ${this.exceptions.itemNumber}`)
 
                 if (this.changewatch) {
                     store.updateWarning(store.item)
@@ -301,49 +302,46 @@ export default {
         },
     },
     async created() {
-        // console.log(`router id: ${this.$route.params.id}`)
-        let data1 = await store.getEntities("", [], "true", 1, 20, "name", "false")
-        this.serviceOptions = data1.results
-        // console.log('this.serviceOptions')
-        // console.log(this.serviceOptions)
 
-        let data2 = await store.getEntities("", [], "false", 1, 20, "name", "false")
-        this.authorOptions = data2.results
-        // console.log("this.authorOptions")
-        // console.log(this.authorOptions)
-
+        this.serviceOptions = (await store.getEntities({ search: "", type: [], service: "true" }, 1, 20, "name", "false")).results
+        this.authorOptions = (await store.getEntities({ search: "", type: [], service: "false" }, 1, 20, "name", "false")).results
         this.itemStatus = await store.getItemStatus()
         this.itemTypes = await store.getItemTypes()
-        // this.events = await store.getEvents("", this.item.id, 1, 20) // search = "", item = "", page = 1, size = 10
 
     },
     async mounted() {
 
         store.item.old = JSON.stringify(this.modelValue)
+        this.exceptions.itemNumber = this.modelValue.number
 
     },
     methods: {
         checkFilled,
+        async checkUnique(val, exception) {
+
+            console.log(`${this.$options.name} | checkUnique()`)
+            console.log(val)
+            let isexception = val === exception
+
+            let request = await store.getItems({ search: "", number: val, title: "", status: [], type: [] }, 1, 20, "id", "false")
+            return ((request.results.length == 0) || isexception) ? true : 'Cette valeur existe déjà'
+        },
         reset() {
             this.item.support = []
         },
         addEntity() {
-            // console.log('ItemForm.vue | Add new entity')
             this.dialog.newEntity = true
         },
         async searchEntity(searchString = "", type = [], service = "") {
 
             // await sleep(Math.random() * 1300)
             let str = searchString.toLowerCase()
-            let data = ""
+            let data = {}
 
             if (str.length >= 3) {
-                // this.store.getEntities(str, 1, this.pagination.rowsPerPage)
-                // this.rows = this.store.entities.filter((x) => (x.name.toLowerCase().includes(str)))
-                data = await store.getEntities(str, type, service, 1, 5, "name", "false")
+                data = await store.getEntities({ search: str, type: type, service: service }, 1, 5, "name", "false")
             } else {
-                // this.store.getEntities("", 1, this.pagination.rowsPerPage)
-                data = await store.getEntities("", type, service, 1, 20, "name", "false")
+                data = await store.getEntities({ search: "", type: type, service: service }, 1, 5, "name", "false")
             }
 
             return data.results
@@ -352,19 +350,13 @@ export default {
         async addNewEntity(val) {
 
             // console.log(`${this.$options.name} | addNewEntity()`)
-
             let newEntity = await store.addEntity(val)
-            // this.authorOptions = await store.getEntities("", [2, 3], 1, 50)
             this.authorOptions = [await store.getEntity(newEntity.id)]
-
-            // console.log(this.authorOptions)
             this.item.author = await newEntity.id
 
         },
         filterFn(val, update, abort) {
             update(async () => {
-                // console.log('filterFn')
-                // TODO - GET RECORDS FROM DATABASE
                 const str = val.toLowerCase()
                 // this.authorOptions = entities.filter((v) => v.name.toLowerCase().indexOf(needle) > -1)
                 // this.authorOptions = store.entities.filter((e) => subset.includes(e.type)).filter((v) => v.name.toLowerCase().indexOf(str) > -1)

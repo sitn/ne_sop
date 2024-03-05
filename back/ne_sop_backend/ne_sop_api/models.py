@@ -42,7 +42,7 @@ class Entity(models.Model):
     email = models.EmailField(max_length=256, blank=True, default="")
     telephone = models.CharField(max_length=256, blank=True, default="")
     users = models.ManyToManyField(User, blank=True, related_name="entities")
-
+    active = models.BooleanField(default=True)
     valid = models.BooleanField(default=True)
     # owner = models.ForeignKey("auth.User", related_name="snippets", on_delete=models.CASCADE)
 

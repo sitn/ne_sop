@@ -96,15 +96,26 @@ export default {
         async save(redirectTo) {
 
             this.wait = true
+
+            let response
+
             if (this.event.id) {
-                this.event = await store.updateEvent(this.event.id, this.event)
+                // update existing record
+                response = await store.updateEvent(this.event.id, this.event)
             } else {
-                this.event = await store.addEvent(this.event)
+                // create a new record
+                response = await store.addEvent(this.event)
             }
+
             this.wait = false
 
-            store.event.old = JSON.stringify(this.event)
+            // update event
+            if (response) {
+                this.event = response
+                store.event.old = JSON.stringify(this.event)
+            }
 
+            // redirection
             if (redirectTo !== null) {
                 this.$router.push({ path: redirectTo })
             }

@@ -129,6 +129,7 @@ class EntitySerializer(serializers.ModelSerializer):
             "email",
             "telephone",
             "users",
+            "active",
             "valid",
         ]
 

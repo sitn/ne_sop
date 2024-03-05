@@ -38,7 +38,7 @@ export default {
     },
     created() {
         window.addEventListener('beforeunload', (e) => {
-            if (store.warning) {
+            if (store.dialogs.warning) {
                 e.preventDefault()
                 e.returnValue = ''
             }

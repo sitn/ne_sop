@@ -34,7 +34,7 @@ export default {
     },
     mounted() {
         this.validateForm()
-        store.warning = false
+        store.dialogs.warning = false
     },
     watch: {
         model: {

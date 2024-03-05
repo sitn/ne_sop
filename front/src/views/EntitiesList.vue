@@ -1,18 +1,17 @@
 <template>
-
     <div class="q-pa-sm q-gutter-sm">
 
-            <!-- BREADCRUMBS NAVIGATION -->
-            <q-breadcrumbs style="font-size: 16px">
-                <q-breadcrumbs-el label="Parlementaires" to="/entities" />
-            </q-breadcrumbs>
+        <!-- BREADCRUMBS NAVIGATION -->
+        <q-breadcrumbs style="font-size: 16px">
+            <q-breadcrumbs-el label="Parlementaires" to="/entities" />
+        </q-breadcrumbs>
 
         <!-- SEARCH AND FILTER SECTION -->
         <div class="row q-col-gutter-md q-px-sm q-mt-xs items-center">
 
             <!-- SEARCH RECORDS FIELD -->
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
-                <q-input bg-color="white" v-model="searchString" outlined dense placeholder="Rechercher" @update:model-value="query()">
+                <q-input bg-color="white" v-model="filter.search" outlined dense placeholder="Rechercher"> <!-- @update:model-value="query()" -->
                     <template v-slot:prepend>
                         <q-icon name="sym_o_search" />
                     </template>
@@ -38,7 +37,7 @@
         </div>
 
         <!-- ENTITIES TABLE -->
-        <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" :filter="filter" @request="onRequest" binary-state-sort class="q-my-lg">
+        <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" @request="onRequest" binary-state-sort class="q-my-lg">
 
             <!-- TABLE BODY -->
             <template v-slot:body="props">
@@ -89,7 +88,6 @@
 
     <!-- DELETE DIALOG -->
     <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
-
 </template>
 
 <script>
@@ -109,8 +107,7 @@ export default {
         return {
             store,
             selected: null,
-            searchString: "",
-            filter: "",
+            filter: { search: "", service: "false", type: [] },
             dialog: { deletion: false },
             data: null,
             rows: [],
@@ -147,53 +144,37 @@ export default {
             ],
         }
     },
-    computed: {
-    },
-    async beforeCreate() {
+    watch: {
+        filter: {
+            handler(newValue, oldValue) {
+                // console.log(`${this.$options.name} | filter()`)
+                this.query()
+            },
+            deep: true
+        },
     },
     async created() {
-        this.loading = true
-        this.data = await store.getEntities("", [2, 3, 4], "false", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-        this.rows = this.data.results // await store.getEntities("", "", this.pagination.page, this.pagination.rowsPerPage) // .then(console.log(this.rows))
-        this.pagination.rowsNumber = this.data.nrows
-        this.loading = false
-    },
-    mounted() {
+
+        this.query()
     },
     methods: {
         async onRequest(props) {
 
-            this.loading = true
-
-            // console.log('onRequest')
-            // console.log(props.pagination)
-            let { page, rowsPerPage, sortBy, descending } = props.pagination
-            // let filter = props.filter
-
-            // console.log(`page: ${page}, rowsPerPage: ${rowsPerPage}, sortBy: ${sortBy}, descending: ${descending}`)
-
-            rowsPerPage = rowsPerPage === 0 ? this.pagination.rowsNumber : rowsPerPage // rowsPerPage
-
-            this.data = await store.getEntities("", [2, 3, 4], "false", page, rowsPerPage, sortBy, descending)
-            this.rows = this.data.results
-
             // update pagination object
             this.pagination = props.pagination
-            this.loading = false
+            this.pagination.rowsPerPage = props.pagination.rowsPerPage === 0 ? this.pagination.rowsNumber : props.pagination.rowsPerPage // rowsPerPage
+
+            // update table rows
+            this.query()
 
         },
         async query() {
 
-            // console.log(`search: ${this.searchString}`)
+            // console.log(`search: ${this.filter.search}`)
             this.loading = true
-
-            if (this.searchString.length >= 3) {
-
-                this.data = await store.getEntities(this.searchString, [2, 3, 4], "false", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-            } else {
-                this.data = await store.getEntities("", [2, 3, 4], "false", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-            }
+            this.data = await store.getEntities(this.filter, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             this.rows = this.data.results
+            this.pagination.rowsNumber = this.data.nrows
             this.loading = false
         },
         handleDeletion(val) {
@@ -202,18 +183,12 @@ export default {
         },
         async remove() {
 
-            this.loading = true
             // console.log(`delete ${this.selected}`)
             let message = await store.deleteEntity(this.selected)
-            this.data = await store.getEntities(this.searchString, [2, 3, 4], "false", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-            this.rows = this.data.results
-            /*
+
             if (message) {
-                this.data = await store.getEntities(this.searchString, "", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
-                this.rows = this.data.results
+                this.query()
             }
-            */
-            this.loading = false
 
         }
     }
