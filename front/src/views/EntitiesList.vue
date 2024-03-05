@@ -79,7 +79,7 @@
                                 <q-tooltip class="bg-black">Désactiver</q-tooltip>
                             </q-btn>
                              -->
-                            <q-toggle dense round flat name="deactivate" v-model="props.row.active" checked-icon="check" color="green" unchecked-icon="clear" v-if="store.user.is_manager">
+                            <q-toggle dense round flat name="deactivate" v-model="props.row.active" @update:model-value="remove(props.row)" checked-icon="check" color="green" unchecked-icon="clear" v-if="store.user.is_manager">
                                 <q-tooltip class="bg-black">{{ props.row.active ? "Désactiver" : "Activer" }}</q-tooltip>
                             </q-toggle>
                         </div>
@@ -186,22 +186,19 @@ export default {
             this.pagination.rowsNumber = this.data.nrows
             this.loading = false
         },
-        handleDeletion(val) {
-            this.selected = val
-            console.log('handleDeletion() | this.selected', this.selected)
-            console.log('handleDeletion() | this.selected.active', this.selected.active)
-            this.dialog.deletion = true
-            console.log(this.confirmDialogContent)
-        },
-        async remove() {
+        // handleDeletion(val) {
+        //     this.selected = val
+        //     console.log('handleDeletion() | this.selected', this.selected)
+        //     this.dialog.deletion = true
+        // },
+        async remove(data) {
 
             // console.log(`delete ${this.selected}`)
             // let message = await store.deleteEntity(this.selected)
-            let message = await store.deactivateEntity(this.selected)
-            // let message = await store.deleteEntity(this.selected)
-            this.data = await store.getEntities(this.searchString, [2, 3, 4], "false", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+            let message = await store.deactivateEntity(data.id)
+            this.data = await store.getEntities(this.filter, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             this.rows = this.data.results
-            
+
             if (message) {
                 this.query()
             }

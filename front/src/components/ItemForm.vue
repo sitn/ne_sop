@@ -50,7 +50,7 @@
                                             <q-item-label caption>{{ scope.opt.type }}</q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
-                                            <q-chip dense square :color="scope.opt.valid? 'green': 'red'" text-color="white">
+                                            <q-chip dense square :color="scope.opt.active? 'green': 'red'" text-color="white">
                                                 {{ scope.opt.active? 'ACTIF': 'INACTIF' }}
                                             </q-chip>
                                         </q-item-section>
