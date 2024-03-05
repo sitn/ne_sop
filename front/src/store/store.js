@@ -43,7 +43,7 @@ export const store = reactive({
             .replaceAll(/"author_id":\d+,/gi, '')
             .replaceAll(/"author":"[^"]+",/gi, '')
 
-        /*    
+        /*
         console.log('oldDataString')
         console.log(oldDataString)
         console.log('newDataString')
@@ -474,7 +474,6 @@ export const store = reactive({
             formData.append('template_id', x.template_id)
             formData.append('size', x.size)
             formData.append('note', x.note)
-            formData.append('author_id', x.author_id)
             formData.append('item', item.id)
 
             promises.push(store.addDocument(formData, x.filename))

@@ -240,7 +240,7 @@ class Document(models.Model):
     version = models.PositiveIntegerField(default=None)
     size = models.PositiveIntegerField(default=0, null=False)
     item = models.ForeignKey(Item, related_name="documents", on_delete=models.CASCADE)
-    author = models.ForeignKey(Entity, null=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     file = models.FileField(upload_to=Utils.get_upload_path)
 
     class Meta:

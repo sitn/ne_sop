@@ -49,7 +49,6 @@ export default {
                 // "timestamp": Date.now(),
                 // "author": store.session.user,
                 "note": null,
-                "author_id": null,
                 // "content": "",
                 "valid": false
             }
@@ -80,7 +79,6 @@ export default {
                 'version': null,
                 'size': this.document.size,
                 'item': null,
-                // 'author_id': 1, // /!\ METTRE A JOUR AVEC LA VALEUR DE L'AUTEUR DU DOCUMENT !
                 'file': this.document.file,
             })
         }

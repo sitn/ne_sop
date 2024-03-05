@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from ne_sop_api.utils import Utils
 from django.conf import settings
+from django.contrib.auth.models import User
 
 from ne_sop_api.models import (
     Document,
@@ -353,14 +354,23 @@ class NewEventSerializer(serializers.ModelSerializer):
         ]
 
 
+class UserFullNameSerializer(serializers.ModelSerializer):
+    def to_representation(self, obj):
+        return "{} {}".format(obj.first_name, obj.last_name)
+
+    class Meta:
+        model = User
+        fields = "__all__"
+
+
 class DocumentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False, read_only=False)
 
     template = serializers.SlugRelatedField(slug_field="name", read_only=True)
     template_id = serializers.PrimaryKeyRelatedField(source="template", queryset=Template.objects.all(), write_only=True)
 
-    author = serializers.SlugRelatedField(slug_field="name", read_only=True)
-    author_id = serializers.PrimaryKeyRelatedField(source="author", queryset=Entity.objects.all(), write_only=True)
+    author = UserFullNameSerializer(read_only=True)
+    author_id = serializers.PrimaryKeyRelatedField(source="author", queryset=User.objects.all(), default=serializers.CurrentUserDefault(), write_only=True)
 
     version = serializers.IntegerField(required=False)
 

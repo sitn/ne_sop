@@ -749,7 +749,7 @@ class DocumentViewSet(viewsets.ViewSet):
         tags=["Document"],
     )
     def create(self, request):
-        serializer = DocumentSerializer(data=request.data)
+        serializer = DocumentSerializer(data=request.data, context={'request': self.request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
