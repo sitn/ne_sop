@@ -102,6 +102,7 @@ class EntityListSerializer(serializers.ModelSerializer):
             "website",
             "email",
             "telephone",
+            "active",
             "valid",
         ]
 

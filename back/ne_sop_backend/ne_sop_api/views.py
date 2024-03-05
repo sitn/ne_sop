@@ -306,6 +306,22 @@ class EntityViewSet(viewsets.ViewSet):
         return Response({"msg": "Entity deleted"})
 
 
+class EntityDeactivateViewSet(viewsets.ViewSet):
+
+    permission_classes = [IsManagerOrReadOnlyPermission]
+
+    @extend_schema(
+        tags=["Entity-deactivate"],
+    )
+    def update(self, request, pk=None, format=None):
+        entity = get_object_or_404(Entity.objects.all(), pk=pk)
+        entity.active = not entity.active
+        entity.save()
+        entity = get_object_or_404(Entity.objects.all(), pk=pk)
+        serializer = EntitySerializer(entity)
+        return Response(serializer.data)
+
+
 # %% SERVICE
 """
 class ServiceViewSet(viewsets.ViewSet):

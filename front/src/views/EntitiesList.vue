@@ -15,6 +15,7 @@
                     <template v-slot:prepend>
                         <q-icon name="sym_o_search" />
                     </template>
+
                     <template v-slot:append>
                         <q-spinner color="blue-grey" :thickness="3" v-if="loading" />
                         <!-- FILTER BUTTON -->
@@ -40,19 +41,21 @@
         <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" @request="onRequest" binary-state-sort class="q-my-lg">
 
             <!-- TABLE BODY -->
+
             <template v-slot:body="props">
-                <q-tr :props="props">
+                <q-tr :props="props" :class="{ inactive: !props.row.active }">
 
                     <!-- NAME COLUMN -->
                     <q-td key="type" :props="props">
 
                         <router-link :to="{
-                            name: 'Entity',
-                            params: {
-                                id: props.row.id
-                            }
-                        }">
+                    name: 'Entity',
+                    params: {
+                        id: props.row.id
+                    }
+                }">
                             {{ props.row.name }}
+                            <span v-if="!props.row.active"> (désactivé)</span>
                         </router-link>
 
                     </q-td>
@@ -71,14 +74,20 @@
                             <q-btn dense round flat color="grey" name="phone" @click="console.log(props.row.telephone)" icon="sym_o_call" :href="`tel:${props.row.telephone}`" v-if="props.row.telephone !== ''">
                                 <q-tooltip class="bg-black" v-if="props.row.telephone">Appeler: {{ props.row.telephone }}</q-tooltip>
                             </q-btn>
-                            <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete" v-if="store.user.is_manager">
-                                <q-tooltip class="bg-black">Supprimer</q-tooltip>
+                            <!--
+                            <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row)" icon="sym_o_delete" v-if="store.user.is_manager">
+                                <q-tooltip class="bg-black">Désactiver</q-tooltip>
                             </q-btn>
+                             -->
+                            <q-toggle dense round flat name="deactivate" v-model="props.row.active" checked-icon="check" color="green" unchecked-icon="clear" v-if="store.user.is_manager">
+                                <q-tooltip class="bg-black">{{ props.row.active ? "Désactiver" : "Activer" }}</q-tooltip>
+                            </q-toggle>
                         </div>
                     </q-td>
 
                 </q-tr>
             </template>
+
             <template v-slot:no-data>
                 Aucune objet
             </template>
@@ -87,7 +96,7 @@
     </div>
 
     <!-- DELETE DIALOG -->
-    <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+    <!-- <DeleteDialog v-model="dialog.deletion" @delete-event="remove" :content="selected.active? 'Désactiver cette entrée ? (Il sera possible de réactiver à tout moment)': 'Activer cette entrée ?'" /> -->
 </template>
 
 <script>
@@ -179,20 +188,33 @@ export default {
         },
         handleDeletion(val) {
             this.selected = val
+            console.log('handleDeletion() | this.selected', this.selected)
+            console.log('handleDeletion() | this.selected.active', this.selected.active)
             this.dialog.deletion = true
+            console.log(this.confirmDialogContent)
         },
         async remove() {
 
             // console.log(`delete ${this.selected}`)
-            let message = await store.deleteEntity(this.selected)
-
+            // let message = await store.deleteEntity(this.selected)
+            let message = await store.deactivateEntity(this.selected)
+            // let message = await store.deleteEntity(this.selected)
+            this.data = await store.getEntities(this.searchString, [2, 3, 4], "false", this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
+            this.rows = this.data.results
+            
             if (message) {
                 this.query()
             }
+
 
         }
     }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.inactive {
+    font-style: italic;
+    color: grey;
+}
+</style>
