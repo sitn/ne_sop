@@ -1032,8 +1032,8 @@ class UrgentWrittenStatisticsViewSet(viewsets.ViewSet):
     )
     def list(self, request):
         queryset = Item.objects.annotate(year=TruncYear("startdate"))
-        queryset_urgent = Item.objects.filter(urgent=True).annotate(year=TruncYear("startdate"))
-        queryset_writtenresponse = Item.objects.filter(writtenresponse=True).annotate(year=TruncYear("startdate"))
+        # queryset_urgent = Item.objects.filter(urgent=True).annotate(year=TruncYear("startdate"))
+        # queryset_writtenresponse = Item.objects.filter(writtenresponse=True).annotate(year=TruncYear("startdate"))
 
         # get unique set of years
         years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
