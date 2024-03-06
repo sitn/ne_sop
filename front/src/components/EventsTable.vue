@@ -11,7 +11,7 @@
     </div>
 
     <!-- EVENTS TABLE -->
-    <q-table :rows="events" :columns="columns" row-key="date" @request="onRequest" binary-state-sort class="q-my-md" v-if="eventTypes.length > 0">
+    <q-table :rows="events" :columns="columns" row-key="date" v-model:pagination="pagination" @request="onRequest" binary-state-sort class="q-my-md" v-if="eventTypes.length > 0">
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="date" :props="props">
@@ -75,14 +75,15 @@
 
 <script>
 import { store } from '../store/store.js'
+import { date as dateutils } from 'quasar'
 import { downloadICS } from '../store/shared.js'
 import NewEventDialog from "../views/NewEventDialog.vue"
 import EditEventDialog from "../views/EditEventDialog.vue"
 import DeleteDialog from './DeleteDialog.vue'
 
 const columns = [
-    { name: "date", align: "left", label: "Date", field: "date", sortable: true },
-    { name: "time", align: "left", label: "Heure", field: "", sortable: true },
+    { name: "date", align: "left", label: "Date", field: "date", sortable: true, sort: (a, b, rowA, rowB) => dateutils.extractDate(a, 'DD.MM.YYYY') - dateutils.extractDate(b, 'DD.MM.YYYY') },
+    { name: "time", align: "left", label: "Heure", field: "time", sortable: true, sort: (a, b, rowA, rowB) => dateutils.extractDate(a, 'HH:mm') - dateutils.extractDate(b, 'HH:mm') },
     { name: "type", align: "left", label: "Type", field: "eventType", sortable: true },
     { name: "description", align: "left", label: "Note", field: "description", sortable: false },
     { name: "actions", align: "right", label: "", field: "", sortable: false }
@@ -95,6 +96,7 @@ export default {
     emits: ['update:modelValue'],
     data() {
         return {
+            dateutils: dateutils,
             store,
             selected: null,
             dialog: { add: false, delete: false, edit: false },
@@ -105,6 +107,7 @@ export default {
             loading: true,
             render: false,
             pagination: {
+                rowsNumber: 0,
                 sortBy: "date",
                 descending: false,
                 page: 1,
@@ -152,6 +155,7 @@ export default {
 
             // update pagination object
             this.pagination = props.pagination
+            this.pagination.rowsPerPage = props.pagination.rowsPerPage === 0 ? this.pagination.rowsNumber : props.pagination.rowsPerPage
             this.loading = false
 
         },

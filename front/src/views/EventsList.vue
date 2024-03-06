@@ -11,7 +11,7 @@
 
             <!-- SEARCH RECORDS FIELD -->
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
-                <q-input bg-color="white" v-model="filter.search" outlined dense placeholder="Rechercher" @update:model-value="query()">
+                <q-input bg-color="white" v-model="filter.search" outlined dense placeholder="Rechercher (n° ou titre de l'objet)"> <!-- @update:model-value="query()" -->
                     <template v-slot:prepend>
                         <q-icon name="sym_o_search" />
                     </template>
@@ -54,18 +54,18 @@
                             }
                         }">
                             {{ props.row.date }}
+                            <!-- {{ mydate.formatDate(props.row.date, 'DD.MM.YYYY') }} -->
                         </router-link>
 
                     </q-td>
 
-                    <!-- EVEN TYPE COLUMN -->
+                    <!-- EVENT TYPE COLUMN -->
                     <q-td key="type" :props="props">
                         {{ props.row.type.name }}
                     </q-td>
 
                     <!-- ITEM COLUMN -->
                     <q-td key="item" :props="props">
-
 
                         <router-link :to="{
                             name: 'Item',
@@ -113,10 +113,14 @@
 </template>
 
 <script>
+import { date as mydate } from 'quasar'
 import { store } from '../store/store.js'
 import { downloadICS } from '../store/shared.js'
 import DeleteDialog from '../components/DeleteDialog.vue'
 
+/* const timeStamp = Date.now()
+const formattedString = mydate.formatDate(timeStamp, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
+console.log(formattedString) */
 
 export default {
     name: 'EventsList',
@@ -126,6 +130,7 @@ export default {
     data() {
         return {
             store,
+            mydate: mydate,
             selected: null,
             filter: { search: "", item: "" },
             dialog: { deletion: false },
@@ -133,10 +138,11 @@ export default {
             rows: [],
             loading: false,
             pagination: {
+                rowsNumber: 0,
                 sortBy: "date",
                 descending: true,
                 page: 1,
-                rowsPerPage: 20,
+                rowsPerPage: 25,
             },
             columns: [
                 {
@@ -194,7 +200,6 @@ export default {
 
             // update table rows
             this.query()
-
         },
         async query() {
 
@@ -202,6 +207,7 @@ export default {
             // if (this.filter.search.length >= 3) {
             this.data = await store.getEvents(this.filter, this.pagination.page, this.pagination.rowsPerPage, this.pagination.sortBy, this.pagination.descending)
             this.rows = this.data.results
+            this.pagination.rowsNumber = this.data.nrows
             this.loading = false
         },
         handleDeletion(val) {

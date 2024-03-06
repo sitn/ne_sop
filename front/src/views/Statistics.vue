@@ -12,25 +12,25 @@
             <StatisticsTable :data="data_deposition" v-if="data_deposition.length > 0"></StatisticsTable>
         </template>
     </FormSection>
-    <FormSection title="Année de traitement">
+    <FormSection title="Année de traitement (retour au secrétériat général)">
         <template v-slot:content>
             <StatisticsTable :data="data_treatment" v-if="data_treatment.length > 0"></StatisticsTable>
         </template>
     </FormSection>
 
-    <FormSection title="Nombre d'objets par service">
+    <FormSection title="Nombre d'objets par service et par année de dépôt">
         <template v-slot:content>
             <StatisticsTable :data="data_services" v-if="data_services.length > 0"></StatisticsTable>
         </template>
     </FormSection>
 
-    <FormSection title="Nombre d'objets par statut et par année d'ouverture">
+    <FormSection title="Nombre d'objets par statut et par année de dépôt">
         <template v-slot:content>
             <StatisticsTable :data="data_itemstatus" v-if="data_itemstatus.length > 0"></StatisticsTable>
         </template>
     </FormSection>
 
-    <FormSection title="Réponses urgentes et/ou écrites demandées et par année d'ouverture">
+    <FormSection title="Réponses urgentes et/ou écrites demandées et par année de dépôt">
         <template v-slot:content>
             <StatisticsTable :data="data_urgentWritten" v-if="data_urgentWritten.length > 0"></StatisticsTable>
         </template>

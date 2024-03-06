@@ -126,7 +126,7 @@ export const store = reactive({
             const query = new URL(`${host}/api/entity?`)
             query.searchParams.append("page", page)
             query.searchParams.append("size", size)
-            query.searchParams.append("sortBy", sortBy)
+            query.searchParams.append("sortby", sortBy)
             query.searchParams.append("descending", descending)
 
             for (const [key, value] of Object.entries(filter)) {
@@ -136,6 +136,8 @@ export const store = reactive({
                 }
             }
             // const query = `${host}/api/entity?page=${page}&size=${size}&search=${filter.search}&type=${filter.type}&service=${filter.service}&sortby=${sortBy}&descending=${descending}`
+
+            // console.log(`getEntities: ${query.href}`)
 
             const response = await fetch(query, {
                 method: 'GET',
@@ -259,7 +261,7 @@ export const store = reactive({
             const query = new URL(`${host}/api/item?`)
             query.searchParams.append("page", page)
             query.searchParams.append("size", size)
-            query.searchParams.append("sortBy", sortBy)
+            query.searchParams.append("sortby", sortBy)
             query.searchParams.append("descending", descending)
 
             for (const [key, value] of Object.entries(filter)) {
@@ -269,6 +271,7 @@ export const store = reactive({
                 }
             }
 
+            // console.log(`getItems: ${query.href}`)
             // let query = `${host}/api/item?page=${page}&size=${size}&sortby=${sortBy}&descending=${descending}&search=${filter.search}&number=${filter.number}&title=${filter.title}&status=${filter.status.join()}&type=${filter.type.join()}`
             // console.log(query)
 
@@ -434,7 +437,7 @@ export const store = reactive({
             const query = new URL(`${host}/api/event?`)
             query.searchParams.append("page", page)
             query.searchParams.append("size", size)
-            query.searchParams.append("sortBy", sortBy)
+            query.searchParams.append("sortby", sortBy)
             query.searchParams.append("descending", descending)
 
             for (const [key, value] of Object.entries(filter)) {
@@ -443,6 +446,7 @@ export const store = reactive({
                     query.searchParams.append(key, value)
                 }
             }
+            // console.log(`getEvents: ${query.href}`)
 
             const response = await fetch(query, {
                 method: 'GET',

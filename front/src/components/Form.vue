@@ -65,7 +65,7 @@ export default {
         },
         async save(redirectTo) {
 
-            console.log(`${this.$options.name}.vue | save()`)
+            // console.log(`${this.$options.name}.vue | save()`)
 
             if (redirectTo !== null) {
                 this.$router.push({ path: redirectTo })

@@ -668,10 +668,10 @@ class EventViewSet(viewsets.ViewSet):
         descending = request.query_params.get("descending", "false")
 
         if sortby not in ["id", "date", "type", "item"]:
-            sortby = "id"
+            sortby = "date"
 
         if descending not in ["true", "false"]:
-            descending = "false"
+            descending = "true"
 
         if item and len(item) > 0:
             queryset = queryset.filter(item__exact=item)
@@ -952,7 +952,7 @@ class ServiceStatisticsViewSet(viewsets.ViewSet):
         tags=["Statistics"],
     )
     def list(self, request):
-        queryset = Entity.objects.filter(type__service=True).prefetch_related("item").annotate(year=TruncYear("item__startdate")).annotate(num_items=Count("pk"))
+        queryset = Entity.objects.filter(type__service=True).prefetch_related("item__lead").annotate(year=TruncYear("item__startdate"))
 
         # get unique set of years
         years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
@@ -968,12 +968,9 @@ class ServiceStatisticsViewSet(viewsets.ViewSet):
         for year in years:
             tmp = {"year": year}
             for service in services:
-                for qs in queryset:
-                    if qs.year is not None and qs.year.year == year and qs.abbreviation == service:
-                        tmp[service] = qs.num_items
-                        break
-                    else:
-                        tmp[service] = 0
+
+                tmp[service] = len(Item.objects.filter(lead__abbreviation=service, startdate__year=year))
+
             result.append(tmp)
 
         return Response(result)
@@ -1035,8 +1032,8 @@ class UrgentWrittenStatisticsViewSet(viewsets.ViewSet):
     )
     def list(self, request):
         queryset = Item.objects.annotate(year=TruncYear("startdate"))
-        queryset_urgent = Item.objects.filter(urgent=True).annotate(year=TruncYear("startdate")).annotate(num_items=Count("pk"))
-        queryset_writtenresponse = Item.objects.filter(writtenresponse=True).annotate(year=TruncYear("startdate")).annotate(num_items=Count("pk"))
+        # queryset_urgent = Item.objects.filter(urgent=True).annotate(year=TruncYear("startdate"))
+        # queryset_writtenresponse = Item.objects.filter(writtenresponse=True).annotate(year=TruncYear("startdate"))
 
         # get unique set of years
         years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
@@ -1053,20 +1050,12 @@ class UrgentWrittenStatisticsViewSet(viewsets.ViewSet):
             tmp = {"year": year}
             for statut in statuts:
                 if statut == "Urgence demandée":
-                    for qs in queryset_urgent:
-                        if qs.year is not None and qs.year.year == year:
-                            tmp[statut] = qs.num_items
-                            break
-                        else:
-                            tmp[statut] = 0
+
+                    tmp[statut] = len(Item.objects.filter(urgent=True, startdate__year=year))
 
                 if statut == "Réponse écrite demandée":
-                    for qs in queryset_writtenresponse:
-                        if qs.year is not None and qs.year.year == year:
-                            tmp[statut] = qs.num_items
-                            break
-                        else:
-                            tmp[statut] = 0
+
+                    tmp[statut] = len(Item.objects.filter(writtenresponse=True, startdate__year=year))
 
             result.append(tmp)
 

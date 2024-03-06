@@ -41,7 +41,6 @@
         <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" @request="onRequest" binary-state-sort class="q-my-lg">
 
             <!-- TABLE BODY -->
-
             <template v-slot:body="props">
                 <q-tr :props="props" :class="{ inactive: !props.row.active }">
 
@@ -68,16 +67,16 @@
                     <!-- ACTIONS COLUMN -->
                     <q-td key="actions" :props="props">
                         <div class="float-right">
-                            <q-btn dense round flat color="grey" name="email" @click="console.log(props.row.email)" icon="sym_o_mail" :href="`mailto:${props.row.email}`" v-if="props.row.email !== ''">
+                            <q-btn dense round flat color="grey" name="email" icon="sym_o_mail" :href="`mailto:${props.row.email}`" v-if="props.row.email !== ''">
                                 <q-tooltip class="bg-black" v-if="props.row.email">Envoyer un email: {{ props.row.email }}</q-tooltip>
                             </q-btn>
-                            <q-btn dense round flat color="grey" name="phone" @click="console.log(props.row.telephone)" icon="sym_o_call" :href="`tel:${props.row.telephone}`" v-if="props.row.telephone !== ''">
+                            <q-btn dense round flat color="grey" name="phone" icon="sym_o_call" :href="`tel:${props.row.telephone}`" v-if="props.row.telephone !== ''">
                                 <q-tooltip class="bg-black" v-if="props.row.telephone">Appeler: {{ props.row.telephone }}</q-tooltip>
                             </q-btn>
                             <q-toggle dense round flat name="deactivate" v-model="props.row.active" @update:model-value="deactivate(props.row)" checked-icon="check" color="green" unchecked-icon="clear" v-if="store.user.is_manager">
                                 <q-tooltip class="bg-black">{{ props.row.active ? "Désactiver" : "Activer" }}</q-tooltip>
                             </q-toggle>
-                            <!-- 
+                            <!--
                             <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete" v-if="store.user.is_manager">
                                 <q-tooltip class="bg-black">Supprimer</q-tooltip>
                             </q-btn>
@@ -96,22 +95,20 @@
     </div>
 
     <!-- DELETE DIALOG -->
-    <!-- <DeleteDialog v-model="dialog.deletion" @delete-event="remove" :content="selected.active? 'Désactiver cette entrée ? (Il sera possible de réactiver à tout moment)': 'Activer cette entrée ?'" /> -->
+    <!--
+    <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+    -->
 </template>
 
 <script>
 import { store } from '../store/store.js'
-import DeleteDialog from '../components/DeleteDialog.vue'
+// import DeleteDialog from '../components/DeleteDialog.vue'
 
 export default {
     name: 'EntitiesList',
-    components: { DeleteDialog },
-    props: { 'title': String, 'model': Object },
+    components: {}, // DeleteDialog
+    props: { 'title': String },
     emits: [],
-    setup() {
-        return {
-        }
-    },
     data() {
         return {
             store,
