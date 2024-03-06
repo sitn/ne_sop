@@ -41,7 +41,6 @@
         <q-table title="" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination" :loading="loading" @request="onRequest" binary-state-sort class="q-my-lg">
 
             <!-- TABLE BODY -->
-
             <template v-slot:body="props">
                 <q-tr :props="props" :class="{ inactive: !props.row.active }">
 
@@ -96,22 +95,20 @@
     </div>
 
     <!-- DELETE DIALOG -->
-    <!-- <DeleteDialog v-model="dialog.deletion" @delete-event="remove" :content="selected.active? 'Désactiver cette entrée ? (Il sera possible de réactiver à tout moment)': 'Activer cette entrée ?'" /> -->
+    <!--
+    <DeleteDialog v-model="dialog.deletion" @delete-event="remove" />
+    -->
 </template>
 
 <script>
 import { store } from '../store/store.js'
-import DeleteDialog from '../components/DeleteDialog.vue'
+// import DeleteDialog from '../components/DeleteDialog.vue'
 
 export default {
     name: 'EntitiesList',
-    components: { DeleteDialog },
-    props: { 'title': String, 'model': Object },
+    components: {}, // DeleteDialog
+    props: { 'title': String },
     emits: [],
-    setup() {
-        return {
-        }
-    },
     data() {
         return {
             store,

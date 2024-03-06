@@ -11,7 +11,7 @@
             <!-- SEARCH ITEMS FIELD -->
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
 
-                <q-input class="q-pa-none q-ma-none" bg-color="white" v-model="filter.search" outlined dense placeholder="Rechercher"> <!-- @update:model-value="query()"-->
+                <q-input class="q-pa-none q-ma-none" bg-color="white" v-model="filter.search" outlined dense placeholder="Rechercher (n° ou titre)"> <!-- @update:model-value="query()"-->
                     <template v-slot:prepend>
                         <q-icon name="sym_o_search" />
                     </template>
@@ -91,13 +91,16 @@
                             {{ props.row.title }}
                         </router-link>
 
+                        <div>Auteur: {{ props.row.author }}</div>
+                        <div>Traitement: {{ props.row.lead }}</div>
+
                     </q-td>
-                    <!-- DEPOSIT DATE COLUMN -->
-                    <q-td key="deposit" :props="props">
+                    <!-- START DATE (DEPOSIT) DATE COLUMN -->
+                    <q-td key="startdate" :props="props">
                         {{ props.row.startdate }}
                     </q-td>
-                    <!-- DELAY DATE COLUMN -->
-                    <q-td key="delay" :props="props">
+                    <!-- END DATE (DELAY) DATE COLUMN -->
+                    <q-td key="enddate" :props="props">
                         {{ props.row.enddate }}
                     </q-td>
                     <!-- ACTIONS COLUMN -->
@@ -138,7 +141,7 @@ import ItemFilterDialog from './ItemFilterDialog.vue'
 export default {
     name: 'ItemsList',
     components: { DeleteDialog, ItemFilterDialog },
-    props: { 'title': String, 'model': Object },
+    props: { 'title': String },
     emits: [],
     data() {
         return {
@@ -186,14 +189,14 @@ export default {
                     sortable: true,
                 },
                 {
-                    name: "deposit",
+                    name: "startdate",
                     align: "left",
                     label: "Dépôt",
                     field: "events",
                     sortable: true,
                 },
                 {
-                    name: "delay",
+                    name: "enddate",
                     align: "left",
                     label: "Délai retour sec. gén.",
                     field: "events",
