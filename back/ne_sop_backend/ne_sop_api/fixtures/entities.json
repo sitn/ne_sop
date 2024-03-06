@@ -16,6 +16,7 @@
             "website": "https://www.ne.ch/autorites/ddte/scat/Pages/accueil.aspx",
             "email": "Service.AmenagementTerritoire@ne.ch",
             "telephone": "+41 32 889 67 40",
+            "active": true,
             "valid": true
         }
     },
@@ -36,6 +37,7 @@
             "website": "",
             "email": "SFFN@ne.ch",
             "telephone": "+41 32 889 67 60",
+            "active": true,
             "valid": true
         }
     },
@@ -56,6 +58,7 @@
             "website": "",
             "email": "",
             "telephone": "",
+            "active": true,
             "valid": true
         }
     },
@@ -76,6 +79,7 @@
             "website": "",
             "email": "sagr@ne.ch",
             "telephone": "+41 32 889 37 00",
+            "active": true,
             "valid": true
         }
     },
@@ -96,6 +100,7 @@
             "website": "",
             "email": "service.transports@ne.ch",
             "telephone": "+41 32 889 67 01",
+            "active": true,
             "valid": true
         }
     },
@@ -116,6 +121,7 @@
             "website": "https://www.ne.ch/autorites/DDTE/SCAV/",
             "email": "scav@ne.ch",
             "telephone": "+41 32 889 68 30",
+            "active": true,
             "valid": true
         }
     },
@@ -136,6 +142,7 @@
             "website": "https://www.ne.ch/autorites/DDTE/SDTE/",
             "email": "Secretariat.DDTE@ne.ch",
             "telephone": "+41 32 889 67 00",
+            "active": true,
             "valid": true
         }
     },
@@ -156,6 +163,7 @@
             "website": "",
             "email": "",
             "telephone": "",
+            "active": true,
             "valid": true
         }
     },
@@ -176,6 +184,7 @@
             "website": "",
             "email": "",
             "telephone": "",
+            "active": true,
             "valid": true
         }
     },
@@ -196,6 +205,7 @@
             "website": "",
             "email": "",
             "telephone": "",
+            "active": true,
             "valid": true
         }
     },
@@ -216,6 +226,7 @@
             "website": "https://www.ne.ch/autorites/ddte/sdte/Pages/accueil.aspx",
             "email": "Secretariat.DDTE@ne.ch",
             "telephone": "+41 32 889 67 00",
+            "active": true,
             "valid": true
         }
     },
@@ -236,6 +247,7 @@
             "website": "https://www.ne.ch/autorites/decs/secs/Pages/accueil.aspx",
             "email": "Secretariat.DECS@ne.ch",
             "telephone": "+41 32 889 68 00",
+            "active": true,
             "valid": true
         }
     },
@@ -256,6 +268,7 @@
             "website": "https://www.ne.ch/autorites/desc/sesc/Pages/accueil.aspx",
             "email": "Secretariat.DESC@ne.ch",
             "telephone": "+41 32 889 61 00",
+            "active": true,
             "valid": true
         }
     },
@@ -276,6 +289,7 @@
             "website": "https://www.ne.ch/autorites/DFDS/sfds/Pages/accueil.aspx",
             "email": "Secretariat.DFDS@ne.ch",
             "telephone": "+41 889 69 00",
+            "active": true,
             "valid": true
         }
     }
