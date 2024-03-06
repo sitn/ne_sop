@@ -954,8 +954,6 @@ class ServiceStatisticsViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = Entity.objects.filter(type__service=True).prefetch_related("item__lead").annotate(year=TruncYear("item__startdate"))
 
-        print(queryset)
-
         # get unique set of years
         years = list(set(int(x.year.year) if x.year is not None else None for x in queryset))
         years.remove(None)

@@ -67,16 +67,16 @@
                     <!-- ACTIONS COLUMN -->
                     <q-td key="actions" :props="props">
                         <div class="float-right">
-                            <q-btn dense round flat color="grey" name="email" @click="console.log(props.row.email)" icon="sym_o_mail" :href="`mailto:${props.row.email}`" v-if="props.row.email !== ''">
+                            <q-btn dense round flat color="grey" name="email" icon="sym_o_mail" :href="`mailto:${props.row.email}`" v-if="props.row.email !== ''">
                                 <q-tooltip class="bg-black" v-if="props.row.email">Envoyer un email: {{ props.row.email }}</q-tooltip>
                             </q-btn>
-                            <q-btn dense round flat color="grey" name="phone" @click="console.log(props.row.telephone)" icon="sym_o_call" :href="`tel:${props.row.telephone}`" v-if="props.row.telephone !== ''">
+                            <q-btn dense round flat color="grey" name="phone" icon="sym_o_call" :href="`tel:${props.row.telephone}`" v-if="props.row.telephone !== ''">
                                 <q-tooltip class="bg-black" v-if="props.row.telephone">Appeler: {{ props.row.telephone }}</q-tooltip>
                             </q-btn>
                             <q-toggle dense round flat name="deactivate" v-model="props.row.active" @update:model-value="deactivate(props.row)" checked-icon="check" color="green" unchecked-icon="clear" v-if="store.user.is_manager">
                                 <q-tooltip class="bg-black">{{ props.row.active ? "Désactiver" : "Activer" }}</q-tooltip>
                             </q-toggle>
-                            <!-- 
+                            <!--
                             <q-btn dense round flat color="red" name="delete" @click="handleDeletion(props.row.id)" icon="sym_o_delete" v-if="store.user.is_manager">
                                 <q-tooltip class="bg-black">Supprimer</q-tooltip>
                             </q-btn>

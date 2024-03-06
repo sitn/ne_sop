@@ -324,8 +324,8 @@ export default {
         checkFilled,
         async checkUnique(val, exception) {
 
-            console.log(`${this.$options.name} | checkUnique()`)
-            console.log(val)
+            // console.log(`${this.$options.name} | checkUnique()`)
+            // console.log(val)
             let isexception = val === exception
 
             let request = await store.getItems({ search: "", number: val, title: "", status: [], type: [] }, 1, 20, "id", "false")
