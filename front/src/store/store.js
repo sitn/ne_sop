@@ -6,6 +6,7 @@ const host = import.meta.env.VITE_API_URL
 const dev = import.meta.env.VITE_DEV.toLowerCase() === 'true'
 
 export const store = reactive({
+    host: host,
     dev: dev, // enable/disable development mode
     loading: true,
     // warning: false,
@@ -76,6 +77,7 @@ export const store = reactive({
 
             this.dialogs.error = true
             this.errormessage = payload
+            // console.log(payload)
             return
             // throw new Error('Ceci est une erreur')
 
@@ -161,7 +163,8 @@ export const store = reactive({
                 redirect: 'follow'
             })
 
-            return await response.json()
+            return await this.handleResponse(response)
+            // return await response.json()
 
         } catch (error) {
             console.error(error)
@@ -364,7 +367,9 @@ export const store = reactive({
                 redirect: 'follow',
             })
 
-            let tmp = await response.json()
+            // let tmp = await response.json()
+
+            let tmp = await this.handleResponse(response)
 
             await this.prepareAddDocuments(documents, tmp)
 
@@ -629,8 +634,8 @@ export const store = reactive({
         }
     },
 
-
     // DOWNLOAD DOCUMENT BY ID
+    /*
     async downloadDocument(document_id) {
         try {
 
@@ -648,7 +653,7 @@ export const store = reactive({
             console.error(error)
         }
     },
-
+    */
 
     // DELETE DOCUMENT BY ID
     async deleteDocument(document_id) {
