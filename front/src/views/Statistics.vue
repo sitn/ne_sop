@@ -41,7 +41,6 @@
 import { store } from '../store/store.js'
 import FormSection from "../components/FormSection.vue"
 import StatisticsTable from "../components/StatisticsTable.vue"
-const host = import.meta.env.VITE_API_URL
 
 export default {
     name: 'Help',
