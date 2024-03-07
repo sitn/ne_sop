@@ -277,8 +277,8 @@
         "pk": 14,
         "fields": {
             "uuid": "4ed0aee9-1e9e-40c4-a570-680f69a9e9e0",
-            "name": "Secrétariat général du DFDS",
-            "abbreviation": "SG DFDS",
+            "name": "Secrétariat général du DFFD",
+            "abbreviation": "SG DFFD",
             "type": 1,
             "description": "",
             "street": "Château, Rue de la Collégiale 12, Case postale 1",
@@ -292,5 +292,47 @@
             "active": true,
             "valid": true
         }
-    }
+    },
+    {
+        "model": "ne_sop_api.Entity",
+        "pk": 15,
+        "fields": {
+            "uuid": "76ffcbae-6b2e-414b-90b0-ae66c5282736",
+            "name": "Service des ponts et chaussées (SPCH)",
+            "abbreviation": "SPCH",
+            "type": 1,
+            "description": "",
+            "street": "Rue J.-L. Pourtalès 13",
+            "city": "Neuchâtel 2",
+            "postalcode": "2002",
+            "region": "Neuchâtel",
+            "country": "Suisse",
+            "website": "https://www.ne.ch/autorites/DDTE/SPCH/Pages/accueil.aspx",
+            "email": "Service.PontsChaussees@ne.ch",
+            "telephone": "+41 32 889 67 10",
+            "active": true,
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Entity",
+        "pk": 16,
+        "fields": {
+            "uuid": "0c6983d6-ad06-4e4d-b399-a57be9a16195",
+            "name": "Service de la géomatique et du registre foncier (SGRF)",
+            "abbreviation": "SGRF",
+            "type": 1,
+            "description": "",
+            "street": "Rue de Tivoli 22",
+            "city": "Neuchâtel 2",
+            "postalcode": "2002",
+            "region": "Neuchâtel",
+            "country": "Suisse",
+            "website": "https://www.ne.ch/autorites/DDTE/SGRF/Pages/accueil.aspx",
+            "email": "sgrf@ne.ch",
+            "telephone": "+41 32 889 67 50",
+            "active": true,
+            "valid": true
+        }
+    },
 ]
