@@ -42,7 +42,7 @@ from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser
 from rest_framework import filters
 from django.core.paginator import Paginator
-from django.http import HttpResponse, FileResponse
+from django.http import HttpResponse, HttpResponseForbidden, FileResponse
 
 from ne_sop_api.utils import Utils
 from ne_sop_api.permissions import (
@@ -51,7 +51,6 @@ from ne_sop_api.permissions import (
     IsManagerOrReadOnlyPermission,
     # isAllowedRegadingEntitiesAndItemId,
 )
-
 
 from pathlib import PurePath
 import os
@@ -839,6 +838,12 @@ class LateItemsViewSet(viewsets.ViewSet):
         tags=["Items"],
     )
     def list(self, request):
+
+        key = request.query_params.get("key", None)
+
+        if key != settings.SECRET_UUID:
+            return HttpResponseForbidden()
+
         # filter items that are late today
         # queryset = Item.objects.filter(enddate=datetime.date.today() - datetime.timedelta(days=1), status__in=[1, 2])
         queryset = Item.objects.filter(enddate=datetime.date.today() - datetime.timedelta(days=1), status__deadline=True)
