@@ -1,5 +1,4 @@
 from django.urls import path, include
-from django.conf import settings
 
 # from rest_framework.urlpatterns import format_suffix_patterns
 from ne_sop_api import views
@@ -27,8 +26,8 @@ router.register(r"item-status-statistics", views.StatutStatisticsViewSet, basena
 router.register(r"item-urgent-written-statistics", views.UrgentWrittenStatisticsViewSet, basename="item-urgent-written-statistics")
 router.register(r"user", views.UserViewSet, basename="user")
 router.register(r"current-user", views.CurrentUserViewSet, basename="current-user")
-router.register(r"send-late-email/{}".format(settings.SECRET_UUID), views.LateItemsViewSet, basename="send-late-email")
-
+# router.register(r"send-late-email/{}".format(settings.SECRET_UUID), views.LateItemsViewSet, basename="send-late-email")
+router.register(r"send-late-email", views.LateItemsViewSet, basename="send-late-email")
 
 urlpatterns = [
     path("api/", include(router.urls)),
