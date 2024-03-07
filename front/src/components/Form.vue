@@ -6,7 +6,7 @@
 
             <div class="row justify-center">
 
-                <q-form ref="form" class="col" @validation-success="validationSuccess" @validation-error="validationError" greedy no-error-focus>
+                <q-form ref="form" class="col" @validation-success="validationSuccess" @validation-error="validationError" greedy no-reset-focus no-error-focus>
                     <slot name="body"></slot>
                 </q-form>
 
