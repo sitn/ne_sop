@@ -43,6 +43,10 @@
                             <!--  <q-select bg-color="white" outlined v-model="item.author" :options="authorOptions" option-label="name" option-value="id" emit-value map-options label="Auteur" clearable :rules="[v => checkFilled(v)]" :disable="!edit"> -->
                             <q-select bg-color="white" outlined v-model="item.author" use-input :options="authorOptions" option-label="name" option-value="id" emit-value map-options @filter="filterFn" label="Auteur" clearable :rules="[v => checkFilled(v)]" :disable="!edit || !store.user.is_manager">
 
+                                <template v-slot:prepend>
+                                    <q-icon name="sym_o_search" />
+                                </template>
+
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section>
@@ -50,11 +54,15 @@
                                             <q-item-label caption>{{ scope.opt.type }}</q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
-                                            <q-chip dense square :color="scope.opt.active? 'green': 'red'" text-color="white">
-                                                {{ scope.opt.active? 'ACTIF': 'INACTIF' }}
+                                            <q-chip dense square :color="scope.opt.active ? 'green' : 'red'" text-color="white">
+                                                {{ scope.opt.active ? 'ACTIF' : 'INACTIF' }}
                                             </q-chip>
                                         </q-item-section>
                                     </q-item>
+                                </template>
+
+                                <template v-slot:append>
+                                    <q-spinner color="blue-grey" :thickness="3" v-if="loading.authors" />
                                 </template>
 
                                 <template v-slot:after>
@@ -66,7 +74,6 @@
                             </q-select>
 
                         </div>
-
 
                     </div>
 
@@ -269,6 +276,7 @@ export default {
             store,
             dialog: { newEntity: false, newEvent: false, newDocument: false },
             exceptions: { itemNumber: null },
+            loading: { authors: false },
             itemTypes: [],
             itemStatus: [],
             authorOptions: [],
@@ -322,35 +330,21 @@ export default {
     },
     methods: {
         checkFilled,
+        /*
         async checkUnique(val, exception) {
 
             // console.log(`${this.$options.name} | checkUnique()`)
             // console.log(val)
             let isexception = val === exception
-
             let request = await store.getItems({ search: "", number: val, title: "", status: [], type: [] }, 1, 20, "id", "false")
             return ((request.results.length == 0) || isexception) ? true : 'Cette valeur existe déjà'
         },
+        */
         reset() {
             this.item.support = []
         },
         addEntity() {
             this.dialog.newEntity = true
-        },
-        async searchEntity(searchString = "", type = [], service = "") {
-
-            // await sleep(Math.random() * 1300)
-            let str = searchString.toLowerCase()
-            let data = {}
-
-            if (str.length >= 3) {
-                data = await store.getEntities({ search: str, type: type, service: service }, 1, 5, "name", "false")
-            } else {
-                data = await store.getEntities({ search: "", type: type, service: service }, 1, 5, "name", "false")
-            }
-
-            return data.results
-
         },
         async addNewEntity(val) {
 
@@ -362,10 +356,10 @@ export default {
         },
         filterFn(val, update, abort) {
             update(async () => {
+                this.loading.authors = true
                 const str = val.toLowerCase()
-                // this.authorOptions = entities.filter((v) => v.name.toLowerCase().indexOf(needle) > -1)
-                // this.authorOptions = store.entities.filter((e) => subset.includes(e.type)).filter((v) => v.name.toLowerCase().indexOf(str) > -1)
-                this.authorOptions = await this.searchEntity(str, [2, 3], "false")
+                this.authorOptions = (await store.getEntities({ search: str, type: [], service: "false" }, 1, 5, "name", "false")).results
+                this.loading.authors = false
             })
         }
     }

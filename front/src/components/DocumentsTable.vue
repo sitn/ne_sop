@@ -37,9 +37,14 @@
                 </q-td>
                 <q-td key="actions" :props="props">
                     <div class="float-right">
+                        <q-btn dense round flat color="grey" name="download" @click="" :href="`${store.host}/api/document/${props.row.id}/`" icon="sym_o_download" :disable="!edit" v-if="props.row.id">
+                            <q-tooltip class="bg-black">Télécharger</q-tooltip>
+                        </q-btn>
+                        <!--
                         <q-btn dense round flat color="grey" name="download" @click="store.downloadDocument(props.row.id)" icon="sym_o_download" :disable="!edit" v-if="props.row.id">
                             <q-tooltip class="bg-black">Télécharger</q-tooltip>
                         </q-btn>
+                        -->
                         <!-- <q-btn dense round flat color="blue" name="edit" @click="handleEdition(props.row)" icon="sym_o_edit" :disable="!edit">
                             <q-tooltip class="bg-black">Modifier</q-tooltip>
                         </q-btn> -->
@@ -61,7 +66,7 @@
         <NewDocumentDialog v-model="documents" :item_type="type"></NewDocumentDialog>
     </q-dialog>
 
-    <!-- EDIT EVENT DIALOG -->
+    <!-- EDIT DOCUMENT DIALOG -->
     <!-- <q-dialog v-model="dialog.edit">
         <EditDocumentDialog v-model="selected" :item_type="type"></EditDocumentDialog>
     </q-dialog> -->
@@ -78,6 +83,8 @@ import NewDocumentDialog from "../views/NewDocumentDialog.vue"
 // import EditDocumentDialog from '../views/EditDocumentDialog.vue'
 import DeleteDialog from './DeleteDialog.vue'
 
+const host = import.meta.env.VITE_API_URL
+
 const columns = [
     { name: 'filename', align: 'left', label: 'Fichier', field: 'filename', sortable: true },
     /*{ name: 'template', align: 'left', label: 'Type', field: 'template', sortable: true }, */
@@ -91,7 +98,7 @@ export default {
     name: 'DocumentsTable',
     // components: { NewDocumentDialog, EditDocumentDialog, DeleteDialog },
     components: { NewDocumentDialog, DeleteDialog },
-    props: { 'type': Number, 'edit': Boolean, 'modelValue': Object }, //  'events': Object,
+    props: { 'type': Number, 'edit': Boolean, 'modelValue': Object },
     emits: ['update:modelValue'],
     setup() {
         return {
@@ -117,19 +124,17 @@ export default {
             }
         }
     },
-    created() {
-    },
-    mounted() {
-    },
     methods: {
         formatBytes,
         addDocument() {
             this.dialog.newDocument = true
         },
-        // handleEdition(val) {
-        //     this.selected = val
-        //     this.dialog.edit = true
-        // },
+        /*
+        handleEdition(val) {
+             this.selected = val
+             this.dialog.edit = true
+        },
+        */
         handleDeletion(val) {
             this.selected = val
             this.dialog_content = `Supprimer définitivement le document '${val.filename}' ?`
