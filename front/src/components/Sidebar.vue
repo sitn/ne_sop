@@ -19,7 +19,7 @@
                     </q-item-section>
 
                     <q-item-section>
-                        Personnes et groupes
+                        Parlementaires
                     </q-item-section>
                 </q-item>
 
