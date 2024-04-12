@@ -15,10 +15,10 @@
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="filename" :props="props">
-                    <div class="text-bold">{{ props.row.filename }} ({{ formatBytes(props.row.size) }})</div>
-                    <div>{{ props.row.template }}</div>
+                    <div class="text-bold overflow-ellipsis">{{ props.row.filename }} ({{ formatBytes(props.row.size) }})<q-tooltip anchor="bottom middle">{{ props.row.filename }} ({{ formatBytes(props.row.size) }})</q-tooltip></div>
+                    <div class="overflow-ellipsis">{{ props.row.template }}</div>
                 </q-td>
-                <!-- 
+                <!--
                 <q-td key="template" :props="props">
                     {{ props.row.template }}
                 </q-td>
@@ -29,7 +29,8 @@
                 </q-td>
                 -->
                 <q-td key="created" :props="props">
-                    <div class="text-bold">{{ props.row.created }}</div>
+                    <div class="text-bold">{{ date.formatDate(props.row.created, 'DD.MM.YYYY') }}</div>
+                    <!-- <div class="text-bold">{{ props.row.created }}</div> -->
                     <div>{{ props.row.author }}</div>
                 </q-td>
                 <q-td key="note" :props="props">
@@ -86,12 +87,12 @@ import DeleteDialog from './DeleteDialog.vue'
 const host = import.meta.env.VITE_API_URL
 
 const columns = [
-    { name: 'filename', align: 'left', label: 'Fichier', field: 'filename', sortable: true },
+    { name: 'filename', align: 'left', label: 'Fichier', field: 'filename', sortable: true, style: 'max-width: 250px; width: 250px' },
     /*{ name: 'template', align: 'left', label: 'Type', field: 'template', sortable: true }, */
     /*{ name: 'author', align: 'left', label: 'Ajouté par', field: 'author', sortable: true },*/
-    { name: 'created', align: 'left', label: 'Ajouté le', field: 'created', sortable: true },
-    { name: 'note', align: 'left', label: 'Notes', field: 'note', sortable: true },
-    { name: 'actions', align: 'right', label: '', field: 'action', sortable: false }
+    { name: 'created', align: 'left', label: 'Ajouté le', field: 'created', sortable: true, style: 'max-width: 110px; width: 110px' },
+    { name: 'note', align: 'left', label: 'Notes', field: 'note', sortable: true, style: 'max-width: 150px; width: 150px' },
+    { name: 'actions', align: 'right', label: '', field: 'action', sortable: false, style: 'max-width: 120px; width: 120px' }
 ]
 
 export default {
@@ -150,4 +151,10 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.overflow-ellipsis{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>
