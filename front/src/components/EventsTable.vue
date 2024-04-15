@@ -11,7 +11,7 @@
     </div>
 
     <!-- EVENTS TABLE -->
-    <q-table :rows="events" :columns="columns" row-key="date" v-model:pagination="pagination" @request="onRequest" binary-state-sort class="q-my-md" v-if="eventTypes.length > 0">
+    <q-table :rows="events" :columns="columns" row-key="date" v-model:pagination="pagination" @request="onRequest" binary-state-sort class="q-my-md" v-if="eventTypes.length > 0" :loading="loading" >
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="date" :props="props">
@@ -28,7 +28,7 @@
                 </q-td>
                 <q-td key="actions" :props="props">
                     <div class="float-right">
-                        <!-- 
+                        <!--
                         <q-btn dense round flat color="grey" name="calendar" @click="downloadICS(props.row)" icon="sym_o_calendar_add_on" :disable="!edit">
                             <q-tooltip class="bg-black">Ajouter au calendrier</q-tooltip>
                         </q-btn>

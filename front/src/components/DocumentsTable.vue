@@ -11,7 +11,7 @@
     </div>
 
     <!-- DOCUMENTS TABLE -->
-    <q-table :rows="documents" :columns="columns" row-key="date" class="q-my-md">
+    <q-table :rows="documents" :columns="columns" row-key="date" v-model:pagination="pagination" class="q-my-md" :loading="loading">
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="filename" :props="props">
@@ -29,8 +29,7 @@
                 </q-td>
                 -->
                 <q-td key="created" :props="props">
-                    <div class="text-bold">{{ date.formatDate(props.row.created, 'DD.MM.YYYY') }}</div>
-                    <!-- <div class="text-bold">{{ props.row.created }}</div> -->
+                    <div class="text-bold">{{ props.row.created }}</div>
                     <div>{{ props.row.author }}</div>
                 </q-td>
                 <q-td key="note" :props="props">
@@ -91,8 +90,8 @@ const columns = [
     /*{ name: 'template', align: 'left', label: 'Type', field: 'template', sortable: true }, */
     /*{ name: 'author', align: 'left', label: 'Ajouté par', field: 'author', sortable: true },*/
     { name: 'created', align: 'left', label: 'Ajouté le', field: 'created', sortable: true, style: 'max-width: 110px; width: 110px' },
-    { name: 'note', align: 'left', label: 'Notes', field: 'note', sortable: true, style: 'max-width: 150px; width: 150px' },
-    { name: 'actions', align: 'right', label: '', field: 'action', sortable: false, style: 'max-width: 120px; width: 120px' }
+    { name: 'note', align: 'left', label: 'Notes', field: 'note', sortable: true, style: 'max-width: 190px; width: 190px; white-space: normal;' },
+    { name: 'actions', align: 'right', label: '', field: 'action', sortable: false, style: 'max-width: 120px; width: 80px' }
 ]
 
 export default {
@@ -113,6 +112,14 @@ export default {
             dialog: { newDocument: false, deletion: false },
             columns: columns,
             dialog_content: undefined,
+            loading: false,
+            pagination: {
+                rowsNumber: 0,
+                sortBy: "date",
+                descending: false,
+                page: 1,
+                rowsPerPage: 20,
+            },
         }
     },
     computed: {
@@ -124,6 +131,17 @@ export default {
                 this.$emit('update:modelValue', documents)
             }
         }
+    },
+    async created() {
+
+        this.loading = true
+
+        this.data = await this.documents
+
+        this.rows = this.data.results
+        this.pagination.rowsNumber = this.data.nrows
+        this.loading = false
+
     },
     methods: {
         formatBytes,
@@ -144,7 +162,9 @@ export default {
         async deleteRessource(ressource) {
             this.documents = this.documents.filter(x => x.filename !== ressource.filename)
             if (ressource.id !== undefined) {
+                this.loading = true
                 store.deleteDocument(ressource.id)
+                this.loading = false
             }
         },
     }

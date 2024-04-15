@@ -39,7 +39,7 @@
                     <!-- NOTE TEXT AREA FIELD -->
                     <div class="row q-col-gutter-lg">
                         <div class="col">
-                            <q-input bg-color="white" outlined v-model="document.note" label="Notes" type="textarea" :disable="!edit" />
+                            <q-input bg-color="white" outlined v-model="document.note" label="Notes" type="textarea" :disable="!edit" counter maxlength="500" />
                         </div>
                     </div>
 
