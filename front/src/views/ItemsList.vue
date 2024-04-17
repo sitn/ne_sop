@@ -83,16 +83,17 @@
                     <q-td key="title" :props="props">
 
                         <router-link :to="{
-                            name: 'Item',
-                            params: {
-                                id: props.row.id
-                            }
-                        }">
+                    name: 'Item',
+                    params: {
+                        id: props.row.id
+                    }
+                }">
                             {{ props.row.title }}
                         </router-link>
 
                         <div>Auteur: {{ props.row.author }}</div>
-                        <div>Traitement: {{ props.row.lead }}</div>
+                        <div>Lead: {{ props.row.lead }}</div>
+                        <div>Support: {{ props.row.support.join(", ") }}</div>
 
                     </q-td>
                     <!-- START DATE (DEPOSIT) DATE COLUMN -->
@@ -226,6 +227,7 @@ export default {
         // initialize filters
         this.filter.type = (await store.getItemTypes()).map(x => x.id)
         this.filter.status = (await store.getItemStatus()).map(x => x.id)
+        this.filter.service = (await store.getEntities({ search: "", type: [], service: "true" }, 1, 20, "name", "false")).results.map(x => x.id)
 
         this.query()
 
