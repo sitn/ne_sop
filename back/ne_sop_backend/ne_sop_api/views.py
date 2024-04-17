@@ -515,6 +515,7 @@ class ItemViewSet(viewsets.ViewSet):
         title = request.query_params.get("title")
         item_type = request.query_params.get("type")
         status = request.query_params.get("status")
+        service = request.query_params.get("service")
         page = int(request.query_params.get("page", "1"))
         size = int(request.query_params.get("size", "10"))
         sortby = request.query_params.get("sortby", "id")
@@ -547,6 +548,12 @@ class ItemViewSet(viewsets.ViewSet):
 
         if item_type:
             queryset = queryset.filter(type__id__in=list(filter(None, item_type.split(","))))
+
+        if service:
+            # queryset = queryset.filter(lead__id__in=list(filter(None, service.split(","))))
+            queryset = queryset.filter(Q(lead__id__in=list(filter(None, service.split(",")))) | Q(support__id__in=list(filter(None, service.split(","))))).distinct()
+
+            # Item.objects.filter(Q(lead__in=user.entities.all()) | Q(support__in=user.entities.all()))
 
         if descending == "true":
             paginator = Paginator(queryset.order_by(Lower(sortby).desc()), size)
