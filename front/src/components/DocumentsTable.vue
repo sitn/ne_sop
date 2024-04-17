@@ -11,14 +11,14 @@
     </div>
 
     <!-- DOCUMENTS TABLE -->
-    <q-table :rows="documents" :columns="columns" row-key="date" class="q-my-md">
+    <q-table :rows="documents" :columns="columns" row-key="date" v-model:pagination="pagination" class="q-my-md" :loading="loading">
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="filename" :props="props">
-                    <div class="text-bold">{{ props.row.filename }} ({{ formatBytes(props.row.size) }})</div>
-                    <div>{{ props.row.template }}</div>
+                    <div class="text-bold overflow-ellipsis">{{ props.row.filename }} ({{ formatBytes(props.row.size) }})<q-tooltip anchor="bottom middle">{{ props.row.filename }} ({{ formatBytes(props.row.size) }})</q-tooltip></div>
+                    <div class="overflow-ellipsis">{{ props.row.template }}</div>
                 </q-td>
-                <!-- 
+                <!--
                 <q-td key="template" :props="props">
                     {{ props.row.template }}
                 </q-td>
@@ -86,12 +86,12 @@ import DeleteDialog from './DeleteDialog.vue'
 const host = import.meta.env.VITE_API_URL
 
 const columns = [
-    { name: 'filename', align: 'left', label: 'Fichier', field: 'filename', sortable: true },
+    { name: 'filename', align: 'left', label: 'Fichier', field: 'filename', sortable: true, style: 'max-width: 250px; width: 250px' },
     /*{ name: 'template', align: 'left', label: 'Type', field: 'template', sortable: true }, */
     /*{ name: 'author', align: 'left', label: 'Ajouté par', field: 'author', sortable: true },*/
-    { name: 'created', align: 'left', label: 'Ajouté le', field: 'created', sortable: true },
-    { name: 'note', align: 'left', label: 'Notes', field: 'note', sortable: true },
-    { name: 'actions', align: 'right', label: '', field: 'action', sortable: false }
+    { name: 'created', align: 'left', label: 'Ajouté le', field: 'created', sortable: true, style: 'max-width: 110px; width: 110px' },
+    { name: 'note', align: 'left', label: 'Notes', field: 'note', sortable: true, style: 'max-width: 190px; width: 190px; white-space: normal;' },
+    { name: 'actions', align: 'right', label: '', field: 'action', sortable: false, style: 'max-width: 120px; width: 80px' }
 ]
 
 export default {
@@ -112,6 +112,14 @@ export default {
             dialog: { newDocument: false, deletion: false },
             columns: columns,
             dialog_content: undefined,
+            loading: false,
+            pagination: {
+                rowsNumber: 0,
+                sortBy: "date",
+                descending: false,
+                page: 1,
+                rowsPerPage: 20,
+            },
         }
     },
     computed: {
@@ -123,6 +131,17 @@ export default {
                 this.$emit('update:modelValue', documents)
             }
         }
+    },
+    async created() {
+
+        this.loading = true
+
+        this.data = await this.documents
+
+        this.rows = this.data.results
+        this.pagination.rowsNumber = this.data.nrows
+        this.loading = false
+
     },
     methods: {
         formatBytes,
@@ -143,11 +162,19 @@ export default {
         async deleteRessource(ressource) {
             this.documents = this.documents.filter(x => x.filename !== ressource.filename)
             if (ressource.id !== undefined) {
+                this.loading = true
                 store.deleteDocument(ressource.id)
+                this.loading = false
             }
         },
     }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.overflow-ellipsis{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>

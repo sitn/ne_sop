@@ -48,7 +48,7 @@ export default {
                 // "date": new Date(),
                 // "timestamp": Date.now(),
                 // "author": store.session.user,
-                "note": null,
+                "note": '',
                 // "content": "",
                 "valid": false
             }
