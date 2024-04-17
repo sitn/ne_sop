@@ -188,6 +188,7 @@ export default {
                     label: "Titre",
                     field: "title",
                     sortable: true,
+                    style: 'max-width: 600px; width: 500px;white-space: normal;',
                 },
                 {
                     name: "startdate",
