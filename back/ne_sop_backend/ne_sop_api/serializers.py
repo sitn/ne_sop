@@ -155,6 +155,7 @@ class ItemListSerializer(serializers.ModelSerializer):
     status = ItemStatusSerializer(read_only=True)
     author = serializers.StringRelatedField()
     lead = serializers.StringRelatedField()
+    support = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Item

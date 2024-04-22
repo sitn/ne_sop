@@ -77,6 +77,46 @@
                         </q-select>
                     </div>
 
+                    <!-- SERVICE -->
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <q-select bg-color="white" outlined v-model="filter.service" :options="services" option-label="name" option-value="id" emit-value map-options label="Service(s)" multiple @update:model-value="" @clear="clear('service')">
+
+                            <template v-slot:option="scope">
+                                <q-item v-bind="scope.itemProps">
+
+                                    <q-item-section side>
+                                        <q-checkbox :model-value="scope.selected" @update:model-value="scope.toggleOption(scope.opt)" />
+                                    </q-item-section>
+                                    <q-item-section>
+                                        <q-item-label>{{ scope.opt.name }}</q-item-label>
+                                    </q-item-section>
+
+                                </q-item>
+                            </template>
+
+                            <template v-slot:before-options="props">
+                                <q-item>
+                                    <q-item-section>
+                                        <div class="row">
+                                            <q-btn @click="filter.service = services.map(x => x.id)" label="Toutes les options" dense class="col q-ma-sm"></q-btn>
+                                            <q-btn @click="filter.service = []" label="Aucune option" dense class="col q-ma-sm"></q-btn>
+                                        </div>
+                                    </q-item-section>
+                                </q-item>
+                            </template>
+
+                            <template v-slot:append>
+                                <q-spinner color="blue-grey" :thickness="3" v-if="loading" />
+                            </template>
+
+                            <!--                         
+                        <template v-if="filter.type" v-slot:append>
+                            <q-icon name="cancel" @click.stop.prevent="filter.type = []" class="cursor-pointer" />
+                        </template> 
+                        -->
+                        </q-select>
+                    </div>
+
                 </div>
 
             </q-card-section>
@@ -103,6 +143,7 @@ export default {
             loading: true,
             itemStatus: [],
             itemTypes: [],
+            services: [],
             dialog: true,
         }
     },
@@ -134,12 +175,14 @@ export default {
             this.filterModel.search = ''
             this.filterModel.status = this.itemStatus.map(x => x.id)
             this.filterModel.type = this.itemTypes.map(x => x.id)
+            this.filterModel.service = this.services.map(x => x.id)
         }
     },
     async created() {
         // console.log(`${this.$options.name} | created`)
         this.itemStatus = await store.getItemStatus()
         this.itemTypes = await store.getItemTypes()
+        this.services = (await store.getEntities({ search: "", type: [], service: "true" }, 1, 20, "name", "false")).results
         this.loading = false
     }
 }
