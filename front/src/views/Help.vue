@@ -18,9 +18,26 @@
         </template>
     </FormSection>
 
-    <FormSection title="Enregistrement d'un objet parlementaire">
+    <FormSection title="Ajout d'un nouvel objet parlementaire">
 
         <template v-slot:content>
+            <ol class="instructions">
+                <li>Aller sur la page <a href="./items">Objets parlementaires</a></li>
+                <li>Cliquer sur le bouton <q-btn size="sm" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none"></q-btn></li>
+                <li>Dans la formulaire du nouvel objet parlementaire, remplir les champs obligatoires (en rouge)</li>
+                <li>Pour indiquer l'auteur de l'objet, il y a deux options:</li>
+
+                <ul>
+                    <li>Choisir un parlementaire existant dans la liste déroulante ou;</li>
+                    <li>Créer un nouveau parlementaire en cliquant sur le bouton <q-btn round unelevated size="sm" color="blue-grey-8" icon="sym_o_person_add"></q-btn></li>
+                </ul>
+                <li>Remplir la section calendrier</li>
+                <li>Remplir la section documents</li>
+                <li>Cliquer sur le bouton <kbd>Enregister</kbd> <q-btn round unelevated size="sm" color="green-5" icon="sym_o_save"></q-btn> en bas à droite</li>
+
+
+            </ol>
+
             <p>
                 Tous les champs du formulaire des objets parlementaires sont enregistrés lorsque l'utilisateur clique sur le bouton "enregistrer".
                 C'est également le cas pour les évènements créés et pour les fichiers enregistrés.
@@ -29,6 +46,11 @@
             <p>
                 <q-icon name="warning" color="warning" size="1.5rem" style="margin-right: 10pt;" /> La suppression de documents est un cas particulier: les documents supprimés sont définitivement supprimés lorsque l'utilisateur confirme leur suppression, même si l'objet parlementaire n'est pas enregistré.
             </p>
+
+            <video controls width="600">
+                <source src="video/2024-04-25 15-33-26.mp4" type="video/mp4" />
+            </video>
+
         </template>
     </FormSection>
 
@@ -41,6 +63,8 @@
             <p style="font-style: italic;">
                 La gestion des utilisateurs pourra prochainement être réalisée par les managers de l'application, au travers de l'active directory.
             </p>
+
+
         </template>
     </FormSection>
 
@@ -80,4 +104,9 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.instructions li {
+    line-height: 2.2em;
+    height: auto;
+}
+</style>
