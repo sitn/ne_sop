@@ -31,7 +31,11 @@
                     <li>Choisir un parlementaire existant dans la liste déroulante ou;</li>
                     <li>Créer un nouveau parlementaire en cliquant sur le bouton <q-btn round unelevated size="sm" color="blue-grey-8" icon="sym_o_person_add"></q-btn></li>
                 </ul>
-                <li>Remplir la section calendrier</li>
+                <li>Remplir la section calendrier:</li>
+                <ul>
+                    <li>Cliquer sur le bouton <q-btn size="sm" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" class="q-py-none q-my-none"></q-btn></li>
+                    <li>Créer un nouveau parlementaire en cliquant sur le bouton <q-btn round unelevated size="sm" color="blue-grey-8" icon="sym_o_person_add"></q-btn></li>
+                </ul>
                 <li>Remplir la section documents</li>
                 <li>Cliquer sur le bouton <kbd>Enregister</kbd> <q-btn round unelevated size="sm" color="green-5" icon="sym_o_save"></q-btn> en bas à droite</li>
 
