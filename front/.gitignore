@@ -2,6 +2,9 @@
 node_modules/
 src/store/item-types.js
 src/store/entity-types.js
+public/video/
+public/documents/
+
 
 # Files
 package-lock.json
