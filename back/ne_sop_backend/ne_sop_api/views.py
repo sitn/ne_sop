@@ -454,9 +454,12 @@ class ItemTypeViewSet(viewsets.ViewSet):
 class ItemStatusViewSet(viewsets.ViewSet):
     """
     Item status viewset
+    order_by(Lower(sortby).asc())
     """
 
-    queryset = ItemStatus.objects.all()
+    # order queryset by ascending id
+    sortby = "id"
+    queryset = ItemStatus.objects.all().order_by(Lower(sortby).asc())
     serializer_class = ItemStatusSerializer
 
     @extend_schema(
@@ -629,7 +632,9 @@ class EventTypeViewSet(viewsets.ViewSet):
     Event types viewset
     """
 
-    queryset = EventType.objects.all()
+    # order queryset by ascending id
+    sortby = "id"
+    queryset = EventType.objects.all().order_by(Lower(sortby).asc())
     serializer_class = EventTypeSerializer
 
     @extend_schema(
