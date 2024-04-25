@@ -33,5 +33,12 @@
         "fields": {
             "name": "Séance du CE prévue"
         }
+    },
+    {
+        "model": "ne_sop_api.EventType",
+        "pk": 6,
+        "fields": {
+            "name": "Traitement / session du Grand Conseil"
+        }
     }
 ]
