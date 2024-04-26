@@ -19,3 +19,6 @@ package-lock.json
 # Nuxt.js build / generate output
 dist
 src/drafts/
+
+# video media
+public/video/*
