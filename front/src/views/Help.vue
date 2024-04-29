@@ -12,8 +12,8 @@
             <!-- Créer et éditer une personne ou un groupe parlementaire -->
             <div>
                 <q-card class="my-card">
-                    <q-card-section class="bg-blue-grey-5 text-white">
-                        <div class="text-h6">Créer et éditer une personne ou un groupe parlementaire</div>
+                    <q-card-section class="bg-blue-grey-5 text-grey-2">
+                        <div class="title-format">Créer et éditer une personne ou un groupe parlementaire</div>
                     </q-card-section>
 
                     <video class="video-format" controls>
@@ -78,9 +78,8 @@
             <!-- Créer un nouvel utilisateur ou un nouveau service -->
             <div>
                 <q-card class="my-card">
-                    <!-- <q-card-section> -->
-                    <q-card-section class="bg-blue-grey-5 text-white">
-                        <div class="text-h6">Ajouter un utilisateur ou un service</div>
+                    <q-card-section class="bg-blue-grey-5 text-grey-2">
+                        <div class="title-format">Ajouter un utilisateur ou un service</div>
                     </q-card-section>
 
                     <q-card-section>
@@ -97,8 +96,8 @@
             <!-- Question ou remarque -->
             <div>
                 <q-card class="my-card">
-                    <q-card-section class="bg-blue-grey-5 text-white">
-                        <div class="text-h6">Question ou remarque ?</div>
+                    <q-card-section class="bg-blue-grey-5 text-grey-2">
+                        <div class="title-format">Question ou remarque ?</div>
                     </q-card-section>
 
                     <q-card-section>
@@ -244,5 +243,9 @@ export default {
 
 .my-card .icon-class {
     margin-top: 0;
+}
+
+.title-format{
+    font-size: large;
 }
 </style>
