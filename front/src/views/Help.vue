@@ -29,8 +29,8 @@
                     <q-tab-panel name="Créer un nouvel objet">
 
                         <div class="video-container">
-                            <video controls>
-                                <source src="video/2024-04-29 14-52-57.mp4" type="video/mp4" />
+                            <video controls autoplay>
+                                <source src="video/edition_objet_parlementaire_1080p_titre5s.mp4#t=0,68" type="video/mp4" />
                             </video>
                         </div>
 
@@ -69,7 +69,7 @@
 
                         </ol>
 
-                        <!-- 
+                        <!--
                         <p>
                             Tous les champs du formulaire des objets parlementaires sont enregistrés lorsque l'utilisateur clique sur le bouton "enregistrer".
                             C'est également le cas pour les évènements créés et pour les fichiers enregistrés.
@@ -87,8 +87,8 @@
                     <q-tab-panel name="Modifier un objet">
 
                         <div class="video-container">
-                            <video controls>
-                                <source src="video/2024-04-29 14-52-57.mp4" type="video/mp4" />
+                            <video controls autoplay>
+                                <source src="video/edition_objet_parlementaire_1080p_titre5s.mp4#t=68,98" type="video/mp4" />
                             </video>
                         </div>
 
@@ -107,6 +107,11 @@
                     <!-- CREER UN NOUVEAU PARLEMENTAIRE -->
                     <q-tab-panel name="Supprimer un objet">
 
+                        <div class="video-container">
+                            <video controls autoplay>
+                                <source src="video/edition_objet_parlementaire_1080p_titre5s.mp4#t=98" type="video/mp4" />
+                            </video>
+                        </div>
 
                         <div class="text-h5 q-my-md">Supprimer un objet</div>
 
@@ -131,8 +136,8 @@
                     <q-tab-panel name="Créer un nouveau parlementaire">
 
                         <div class="video-container">
-                            <video controls>
-                                <source src="video/parlementaire_edition.mp4" type="video/mp4" />
+                            <video controls autoplay>
+                                <source src="video/edition_parlementaire_1080p_titre5s.mp4#t=0,42" type="video/mp4" />
                             </video>
                         </div>
 
@@ -152,8 +157,8 @@
                     <q-tab-panel name="Modifier un parlementaire">
 
                         <div class="video-container">
-                            <video controls>
-                                <source src="video/parlementaire_edition.mp4" type="video/mp4" />
+                            <video controls autoplay>
+                                <source src="video/edition_parlementaire_1080p_titre5s.mp4#t=42,73" type="video/mp4" />
                             </video>
                         </div>
 
@@ -172,7 +177,22 @@
                     <!-- ACTIVER/DESACTVER UN PARLEMENTAIRE -->
                     <q-tab-panel name="Activer/désactiver un parlementaire">
 
+                        <div class="video-container">
+                            <video controls autoplay>
+                                <source src="video/edition_parlementaire_1080p_titre5s.mp4#t=73" type="video/mp4" />
+                            </video>
+                        </div>
+
                         <div class="text-h5 q-mb-md">Activer/désactiver un parlementaire</div>
+
+                        <q-banner inline-actions class="text-white bg-blue">
+                            La suppression d'un parlementaire ou d'un groupe parlementaire n'est pas possible, pour préserver l'intégrité référentielle des données
+                            <template v-slot:avatar>
+
+                                <q-icon name="info" color="white" class="q-py-sm" />
+
+                            </template>
+                        </q-banner>
 
                         <ol class="instructions">
                             <li>Aller sur la page <a href="./entities">Parlementaires</a></li>
