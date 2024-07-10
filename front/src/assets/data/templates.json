@@ -114,5 +114,95 @@
         ],
         "name": "Autre",
         "relpath": "NoteCE.dotx"
+    },
+    {
+        "id": "15",
+        "category": [
+            "Interpellation",
+            "Motion",
+            "Postulat",
+            "Projet de lois et décrets",
+            "Question",
+            "Rapport",
+            "Recommandation",
+            "Résolution"
+        ],
+        "name": "Document de base",
+        "relpath": "documentBase.docx"
+    },
+    {
+        "id": "16",
+        "category": [
+            "Interpellation",
+            "Motion",
+            "Postulat",
+            "Projet de lois et décrets",
+            "Question",
+            "Rapport",
+            "Recommandation",
+            "Résolution"
+        ],
+        "name": "Modèle de réponse à utiliser",
+        "relpath": "modeleReponse.docx"
+    },
+    {
+        "id": "17",
+        "category": [
+            "Interpellation",
+            "Motion",
+            "Postulat",
+            "Projet de lois et décrets",
+            "Question",
+            "Rapport",
+            "Recommandation",
+            "Résolution"
+        ],
+        "name": "Réponse écrite",
+        "relpath": "reponseEcrite.docx"
+    },
+    {
+        "id": "18",
+        "category": [
+            "Interpellation",
+            "Motion",
+            "Postulat",
+            "Projet de lois et décrets",
+            "Question",
+            "Rapport",
+            "Recommandation",
+            "Résolution"
+        ],
+        "name": "Réponse orale",
+        "relpath": "reponseOrale.docx"
+    },
+    {
+        "id": "19",
+        "category": [
+            "Interpellation",
+            "Motion",
+            "Postulat",
+            "Projet de lois et décrets",
+            "Question",
+            "Rapport",
+            "Recommandation",
+            "Résolution"
+        ],
+        "name": "Réponse validée",
+        "relpath": "reponseValidee.docx"
+    },
+    {
+        "id": "20",
+        "category": [
+            "Interpellation",
+            "Motion",
+            "Postulat",
+            "Projet de lois et décrets",
+            "Question",
+            "Rapport",
+            "Recommandation",
+            "Résolution"
+        ],
+        "name": "Autre",
+        "relpath": "autre.docx"
     }
 ]
