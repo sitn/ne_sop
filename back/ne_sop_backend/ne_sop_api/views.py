@@ -775,7 +775,7 @@ class TemplateTypeViewSet(viewsets.ViewSet):
         templates = Template.objects
         if itemtype_id is not None:
             templates = templates.filter(item_types__id=itemtype_id)
-        templates = templates.all()
+        templates = templates.filter(valid=True).all()
 
         serializer = TemplateSerializer(templates, many=True)
 

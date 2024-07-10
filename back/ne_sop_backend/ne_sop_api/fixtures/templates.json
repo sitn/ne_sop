@@ -9,7 +9,7 @@
             ],
             "name": "Prise de position - Motion Postulat (CE)",
             "relpath": "Modele_FicheAccomp_PrisePositionCEMoPo.dotx",
-            "valid": true
+            "valid": false
         }
     },
     {
@@ -22,7 +22,7 @@
             ],
             "name": "Refus Motion Postulat 1",
             "relpath": "Modele_FicheAccomp_RefusMoPo1.dotx",
-            "valid": true
+            "valid": false
         }
     },
     {
@@ -35,7 +35,7 @@
             ],
             "name": "Refus Motion Postulat 2",
             "relpath": "Modele_FicheAccomp_RefusMoPo2.dotx",
-            "valid": true
+            "valid": false
         }
     },
     {
@@ -48,7 +48,7 @@
             ],
             "name": "Réponse écrite - Interpellation",
             "relpath": "Modele_FicheAccomp_ReponseEcriteInterpellation.dotx",
-            "valid": true
+            "valid": false
         }
     },
     {
@@ -61,7 +61,7 @@
             ],
             "name": "Réponse écrite - Question",
             "relpath": "Modele_FicheAccomp_ReponseEcriteQuestion1.dotx",
-            "valid": true
+            "valid": false
         }
     },
     {
@@ -74,7 +74,7 @@
             ],
             "name": "Position contre - Motion Postulat (CE)",
             "relpath": "Modele_PositionContre_MoPo.dotx",
-            "valid": true
+            "valid": false
         }
     },
     {
@@ -87,7 +87,7 @@
             ],
             "name": "Prise de position contre - Motion Postulat (CE)",
             "relpath": "Modele_PrisePositionContre_MoPo.dotx",
-            "valid": true
+            "valid": false
         }
     },
     {
@@ -100,7 +100,7 @@
             ],
             "name": "Réponse écrite - Interpellation (CE)",
             "relpath": "Modele_ReponseEcrite_Interpellation.dotx",
-            "valid": true
+            "valid": false
         }
     },
     {
@@ -113,7 +113,7 @@
             ],
             "name": "Réponse écrite - Question (CE)",
             "relpath": "Modele_ReponseEcrite_Question.dotx",
-            "valid": true
+            "valid": false
         }
     },
     {
@@ -126,7 +126,7 @@
             ],
             "name": "Speaking note - Interpellation (CE)",
             "relpath": "Modele_SpeakingNote_Interpellation.dotx",
-            "valid": true
+            "valid": false
         }
     },
     {
@@ -139,7 +139,7 @@
             ],
             "name": "Speaking note - Question (CE)",
             "relpath": "Modele_SpeakingNote_Question.dotx",
-            "valid": true
+            "valid": false
         }
     },
     {
@@ -152,7 +152,7 @@
             ],
             "name": "Speaking note - Recommandation (CE)",
             "relpath": "Modele_SpeakingNote_Recommandation.dotx",
-            "valid": true
+            "valid": false
         }
     },
         {
@@ -165,7 +165,7 @@
             ],
             "name": "Note (CE)",
             "relpath": "NoteCE.dotx",
-            "valid": true
+            "valid": false
         }
     },
     {
@@ -182,6 +182,126 @@
             ],
             "name": "Autre",
             "relpath": "NoteCE.dotx",
+            "valid": false
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "15",
+        "fields": {
+            "created": "2024-07-10 15:02:00",
+            "item_types": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+            ],
+            "name": "Document de base",
+            "relpath": "documentBase.docx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "16",
+        "fields": {
+            "created": "2024-07-10 15:02:00",
+            "item_types": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+            ],
+            "name": "Modèle de réponse à utiliser",
+            "relpath": "modeleReponse.docx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "17",
+        "fields": {
+            "created": "2024-07-10 15:02:00",
+            "item_types": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+            ],
+            "name": "Réponse écrite",
+            "relpath": "reponseEcrite.docx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "18",
+        "fields": {
+            "created": "2024-07-10 15:02:00",
+            "item_types": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+            ],
+            "name": "Réponse orale",
+            "relpath": "reponseOrale.docx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "19",
+        "fields": {
+            "created": "2024-07-10 15:02:00",
+            "item_types": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+            ],
+            "name": "Réponse validée",
+            "relpath": "reponseValidee.docx",
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Template",
+        "pk": "20",
+        "fields": {
+            "created": "2024-07-10 15:02:00",
+            "item_types": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+            ],
+            "name": "Autre",
+            "relpath": "autre.docx",
             "valid": true
         }
     }
