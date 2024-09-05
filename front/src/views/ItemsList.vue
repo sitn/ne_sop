@@ -51,7 +51,7 @@
                     <!-- STATUS COLUMN -->
                     <q-td key="status" :props="props">
 
-                        <!-- 
+                        <!--
                     <q-avatar rounded size="58px" v-if="props.row.islate">
                         <img src="img/kermit-panicking.gif">
                     </q-avatar>
@@ -125,7 +125,7 @@
         <!-- FILTER DIALOG -->
         <ItemFilterDialog ref="didi" v-model:show="dialog.filter" v-model:filter="filter"></ItemFilterDialog>
 
-        <!-- 
+        <!--
         <q-dialog v-model="dialog.filter">
             <ItemFilterDialog v-model="filter"></ItemFilterDialog>
         </q-dialog>
@@ -148,6 +148,7 @@ export default {
         return {
             store,
             selected: null,
+            enableWatch: false,
             filter: { search: "", number: "", title: "", status: [], type: [] },
             dialog: { deletion: false, filter: false },
             data: null,
@@ -218,7 +219,9 @@ export default {
         filter: {
             handler(newValue, oldValue) {
                 // console.log(`${this.$options.name} | filter()`)
-                this.query()
+                if (this.enableWatch) {
+                    this.query()
+                }
             },
             deep: true
         },
@@ -230,7 +233,9 @@ export default {
         this.filter.status = (await store.getItemStatus()).map(x => x.id)
         this.filter.service = (await store.getEntities({ search: "", type: [], service: "true" }, 1, 20, "name", "false")).results.map(x => x.id)
 
-        this.query()
+        this.enableWatch = true;
+
+        // this.query()
 
     },
     methods: {

@@ -503,7 +503,7 @@ class ItemViewSet(viewsets.ViewSet):
         user = self.request.user
         if user.groups.filter(name="Manager").exists():
             return Item.objects.all()
-        return Item.objects.filter(Q(lead__in=user.entities.all()) | Q(support__in=user.entities.all()))
+        return Item.objects.filter(Q(lead__in=user.entities.all()) | Q(support__in=user.entities.all())).distinct()
         # return Item.objects.all()
 
     @extend_schema(
@@ -547,10 +547,10 @@ class ItemViewSet(viewsets.ViewSet):
             queryset = queryset.filter(title=title)  # __icontains
 
         if status:
-            queryset = queryset.filter(status__id__in=list(filter(None, status.split(","))))
+            queryset = queryset.filter(status__id__in=list(filter(None, status.split(",")))).distinct()
 
         if item_type:
-            queryset = queryset.filter(type__id__in=list(filter(None, item_type.split(","))))
+            queryset = queryset.filter(type__id__in=list(filter(None, item_type.split(",")))).distinct()
 
         if service:
             # queryset = queryset.filter(lead__id__in=list(filter(None, service.split(","))))
@@ -880,7 +880,7 @@ class ItemTypeStatisticsDepositedViewSet(viewsets.ViewSet):
 
     queryset = ItemType.objects.all()
     serializer_class = ItemTypeStatisticsSerializer
-    permission_classes = [IsManagerPermission]
+    # permission_classes = [IsManagerPermission]
 
     @extend_schema(
         responses=ItemTypeStatisticsSerializer,
@@ -921,7 +921,7 @@ class ItemTypeStatisticsTreatedViewSet(viewsets.ViewSet):
 
     queryset = ItemType.objects.all()
     serializer_class = ItemTypeStatisticsSerializer
-    permission_classes = [IsManagerPermission]
+    # permission_classes = [IsManagerPermission]
 
     @extend_schema(
         responses=ItemTypeStatisticsSerializer,
@@ -962,7 +962,7 @@ class ServiceStatisticsViewSet(viewsets.ViewSet):
 
     queryset = Entity.objects.all()
     # serializer_class = ItemTypeStatisticsSerializer
-    permission_classes = [IsManagerPermission]
+    # permission_classes = [IsManagerPermission]
 
     @extend_schema(
         # responses=ItemTypeStatisticsSerializer,
@@ -1000,7 +1000,7 @@ class StatutStatisticsViewSet(viewsets.ViewSet):
 
     queryset = ItemStatus.objects.all()
     # serializer_class = ItemTypeStatisticsSerializer
-    permission_classes = [IsManagerPermission]
+    # permission_classes = [IsManagerPermission]
 
     @extend_schema(
         # responses=ItemTypeStatisticsSerializer,
@@ -1041,7 +1041,7 @@ class UrgentWrittenStatisticsViewSet(viewsets.ViewSet):
 
     queryset = ItemStatus.objects.all()
     # serializer_class = ItemTypeStatisticsSerializer
-    permission_classes = [IsManagerPermission]
+    # permission_classes = [IsManagerPermission]
 
     @extend_schema(
         # responses=ItemTypeStatisticsSerializer,
