@@ -334,5 +334,47 @@
             "active": true,
             "valid": true
         }
+    },
+    {
+        "model": "ne_sop_api.Entity",
+        "pk": 17,
+        "fields": {
+            "uuid": "b7849f23-2e88-4467-b282-627162bc8697",
+            "name": "Département de la santé, des régions et des sports (DSRS)",
+            "abbreviation": "DSRS",
+            "type": 1,
+            "description": "",
+            "street": "Château Rue de la Collégiale 12",
+            "city": "Neuchâtel",
+            "postalcode": "2000",
+            "region": "Neuchâtel",
+            "country": "Suisse",
+            "website": "https://www.ne.ch/autorites/DFS/SDFS/Pages/accueil.aspx",
+            "email": "Secretariat.DFS@ne.ch",
+            "telephone": "+41 32 889 64 00",
+            "active": true,
+            "valid": true
+        }
+    },
+    {
+        "model": "ne_sop_api.Entity",
+        "pk": 18,
+        "fields": {
+            "uuid": "147aa3f9-8b63-45f1-8d9c-5cfdca96f000",
+            "name": "Chancellerie d'État (CHAN)",
+            "abbreviation": "CHAN",
+            "type": 1,
+            "description": "",
+            "street": "Château Rue de la Collégiale 12",
+            "city": "Neuchâtel",
+            "postalcode": "2000",
+            "region": "Neuchâtel",
+            "country": "Suisse",
+            "website": "https://www.ne.ch/autorites/CHAN/Pages/accueil.aspx",
+            "email": "chancellerie.etat@ne.ch",
+            "telephone": "+41 32 889 40 03",
+            "active": true,
+            "valid": true
+        }
     }
 ]
