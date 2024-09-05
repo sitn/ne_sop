@@ -316,8 +316,8 @@ export default {
     },
     async created() {
 
-        this.serviceOptions = (await store.getEntities({ search: "", type: [], service: "true" }, 1, 20, "name", "false")).results
-        this.authorOptions = (await store.getEntities({ search: "", type: [], service: "false" }, 1, 20, "name", "false")).results
+        this.serviceOptions = (await store.getEntities({ search: "", type: [], service: "true" }, 1, 100, "name", "false")).results
+        this.authorOptions = (await store.getEntities({ search: "", type: [], service: "false" }, 1, 200, "name", "false")).results
         this.itemStatus = await store.getItemStatus()
         this.itemTypes = await store.getItemTypes()
 
