@@ -148,3 +148,19 @@ class Utils(object):
         )
         msg.content_subtype = "html"
         msg.send()
+
+    @classmethod
+    def auto_adjust_excel_column_width(cls, ws):
+        for col in ws.columns:
+            max_length = 0
+            column = col[0].column_letter  # Obtenir la lettre de la colonne
+            for cell in col:
+                try:
+                    actual_max_length = max([len(str(s)) for s in cell.value.split("\n")])
+                    if actual_max_length > max_length:
+                        max_length = actual_max_length
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)  # Ajouter un peu d'espace
+            ws.column_dimensions[column].width = adjusted_width
+        return ws

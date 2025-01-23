@@ -38,7 +38,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.parsers import MultiPartParser
 from rest_framework import filters
 from django.core.paginator import Paginator
@@ -55,6 +55,11 @@ from ne_sop_api.permissions import (
 from pathlib import PurePath
 import os
 import datetime
+import openpyxl
+from openpyxl.worksheet.table import Table, TableStyleInfo
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Alignment, Font
+from io import BytesIO
 
 
 # %% TEST BACKEND
@@ -624,6 +629,95 @@ class ItemViewSet(viewsets.ViewSet):
         Utils.itemRemovedNotification(item, request)
         item.delete()
         return Response({"msg": "Item deleted"})
+
+    # def list(self, request):
+    @action(detail=False, methods=["get"], url_path="download")
+    def export_excel(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        now = datetime.datetime.now()
+        filename = f'{datetime.datetime.strftime(now, "%Y%m%d-%H%M%S")}_ObjetsParlementaires.xlsx'
+
+        ## Save results in Excel file
+        # create workbook
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Objets parlementaires"
+        ws.cell(1, 1).value = "Liste des objets parlementaires"
+        ws.cell(1, 1).font = Font(size=16, bold=True)
+        ws.cell(2, 1).value = "Date"
+        ws.cell(2, 2).value = datetime.datetime.strftime(now, "%d.%m.%Y")
+
+        row_id = 4
+
+        # table header
+        ws.cell(row_id, 1).value = "Uuid"
+        ws.cell(row_id, 2).value = "Numéro"
+        ws.cell(row_id, 3).value = "Titre"
+        ws.cell(row_id, 4).value = "Création"
+        ws.cell(row_id, 5).value = "Auteur"
+        ws.cell(row_id, 6).value = "Type"
+        ws.cell(row_id, 7).value = "Statut"
+        ws.cell(row_id, 8).value = "Description"
+        ws.cell(row_id, 9).value = "Urgent"
+        ws.cell(row_id, 10).value = "Réponse écrite"
+        ws.cell(row_id, 11).value = "Réponse orale"
+        ws.cell(row_id, 12).value = "Date de dépôt"
+        ws.cell(row_id, 13).value = "Date de retour au SG"
+        ws.cell(row_id, 14).value = "Notifications auto"
+        ws.cell(row_id, 15).value = "Valide"
+        ws.cell(row_id, 16).value = "Retard"
+        ws.cell(row_id, 17).value = "Service principal"
+        ws.cell(row_id, 18).value = "Service(s) en appui"
+        ws.cell(row_id, 19).value = "Événements"
+        ws.cell(row_id, 20).value = "Documents"
+
+        sep = "\n"
+        for op in queryset:
+            row_id += 1
+            # table row
+            ws.cell(row_id, 1).value = str(op.uuid) or None
+            ws.cell(row_id, 2).value = op.number or None
+            ws.cell(row_id, 3).value = op.title or None
+            ws.cell(row_id, 4).value = datetime.datetime.strftime(op.created, "%d.%m.%Y %H:%M:%S") if op.created is not None else None
+            ws.cell(row_id, 5).value = op.author.name or None
+            ws.cell(row_id, 6).value = op.type.name or None
+            ws.cell(row_id, 7).value = op.status.name or None
+            ws.cell(row_id, 8).value = op.description or None
+            ws.cell(row_id, 9).value = op.urgent or None
+            ws.cell(row_id, 10).value = op.writtenresponse or None
+            ws.cell(row_id, 11).value = op.oralresponse or None
+            ws.cell(row_id, 12).value = datetime.datetime.strftime(op.startdate, "%d.%m.%Y") if op.startdate is not None else None
+            ws.cell(row_id, 13).value = datetime.datetime.strftime(op.enddate, "%d.%m.%Y") if op.enddate is not None else None
+            ws.cell(row_id, 14).value = op.autonotify or None
+            ws.cell(row_id, 15).value = op.valid or None
+            ws.cell(row_id, 16).value = op.late or None
+            ws.cell(row_id, 17).value = op.lead.name or None
+            ws.cell(row_id, 18).value = sep.join([sup.name for sup in op.support.all()])
+            ws.cell(row_id, 19).value = sep.join([tmp.type.name for tmp in op.events.all()])
+            ws.cell(row_id, 20).value = sep.join([tmp.filename for tmp in op.documents.all()])
+            ws.cell(row_id, 18).alignment = Alignment(wrap_text=True)
+            ws.cell(row_id, 19).alignment = Alignment(wrap_text=True)
+            ws.cell(row_id, 20).alignment = Alignment(wrap_text=True)
+
+            # adjust row height
+            ws.row_dimensions[row_id].height = (max([len(op.support.all()), len(op.events.all()), len(op.events.all())]) - 1) * 15 + 15
+
+        # adjust column width
+        ws = Utils.auto_adjust_excel_column_width(ws)
+
+        # create table in worksheet
+        table = Table(displayName="Table1", ref="A4:" + get_column_letter(20) + str(row_id))
+        style = TableStyleInfo(name="TableStyleMedium9", showFirstColumn=False, showLastColumn=False, showRowStripes=True, showColumnStripes=False)
+        table.tableStyleInfo = style
+        ws.add_table(table)
+
+        file_stream = BytesIO()
+        wb.save(file_stream)
+        file_stream.seek(0)
+
+        response = FileResponse(file_stream, filename=filename, as_attachment=True)
+        return response
 
 
 # %% EVENT TYPE
