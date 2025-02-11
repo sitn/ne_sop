@@ -54,5 +54,19 @@
         "fields": {
             "name": "Résolution"
         }
+    },
+    {
+        "model": "ne_sop_api.ItemType",
+        "pk": 9,
+        "fields": {
+            "name": "Pétition"
+        }
+    },
+    {
+        "model": "ne_sop_api.ItemType",
+        "pk": 10,
+        "fields": {
+            "name": "Motion populaire"
+        }
     }
 ]
