@@ -4,3 +4,4 @@
 apache/app.wsgi
 apache/wsgi.conf
 doc
+deploy_sop_prod.ps1
