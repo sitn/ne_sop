@@ -79,8 +79,19 @@
 
                     <!-- DESCRIPTION TEXT AREA FIELD -->
                     <div class="row q-col-gutter-lg q-py-md">
-                        <div class="col">
-                            <q-input bg-color="white" outlined v-model="item.description" label="Description" type="textarea" :disable="!edit || !store.user.is_manager" />
+                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 q-mb-md">
+                            <q-field id="item-description" label="Remarques" model-value="item.description" :disable="!edit || !store.user.is_manager" bg-color="white" outlined>
+                                <!-- Commentaires -->
+                                <!-- Le label n'est pas bien affiché (devrait être plus petit et plus haut lorsque le champ texte est non vide) -->
+                                <!-- Le texte devrait être aligné à gauche (tentatives de résolution infructueuses dans le CSS en bas de ce document) -->
+                                <!-- Le lien doit être clicable lorsque le texte est en mode read-only -->
+                                <!-- Lorsqu'on colle du texte, celui-ci doit être formaté par défaut (actuellement il conserve sa couleur d'origine par exemple) -->
+                                <q-editor id="item-remarques" v-model="item.description" style="width: 100%; border: none;" class="q-mt-sm q-pa-one" :toolbar="!edit || !store.user.is_manager? '': [
+                                    ['bold', 'italic', 'strike', 'underline', 'subscript', 'superscript'],
+                                    ['token', 'hr', 'link', 'custom_btn'],
+                                    ['unordered', 'ordered'],
+                                ]" />
+                            </q-field>
                         </div>
                     </div>
 
@@ -366,4 +377,12 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+
+/* #item-description.q-editor__content {
+    background-color: aqua !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+} */
+</style>
