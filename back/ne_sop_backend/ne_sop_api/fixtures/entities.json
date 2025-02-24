@@ -838,5 +838,26 @@
       "active": true,
       "valid": true
     }
+  },
+  {
+    "model": "ne_sop_api.Entity",
+    "pk": 41,
+    "fields": {
+      "uuid": "19657bda-92cd-4120-bfdf-b28358124494",
+      "name": "Établissements autonomes",
+      "abbreviation": "EA",
+      "type": 4,
+      "description": "",
+      "street": "",
+      "city": "",
+      "postalcode": "",
+      "region": "",
+      "country": "",
+      "website": "",
+      "email": "",
+      "telephone": "",
+      "active": true,
+      "valid": true
+    }
   }
 ]
