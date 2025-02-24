@@ -41,7 +41,8 @@
                     </q-btn>
 
                     <!-- DOWNLOAD ITEM LIST BUTTON -->
-                    <q-btn round padding="sm" unelevated no-caps color="blue-grey-8" icon="download" :href="`${store.host}/api/item/download/`">
+                    <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_download" label="Télécharger" :href="`${store.host}/api/item/download/`">
+                        <!-- <q-btn round padding="sm" unelevated no-caps color="blue-grey-8" icon="download" :href="`${store.host}/api/item/download/`">-->
                         <q-tooltip class="bg-black">Télécharger la liste Excel de tous les objets parlementaires</q-tooltip>
                     </q-btn>
 
