@@ -18,16 +18,16 @@
   },
   "homepage": "https://github.com/sitn/ne_sop#readme",
   "dependencies": {
-    "ics": "^3.5.0",
-    "libphonenumber-js": "^1.10.44",
-    "quasar": "^2.12.5",
-    "uuid": "^9.0.1",
-    "vue": "^3.3.4",
-    "vue-router": "^4.2.4"
+    "ics": "^3.8.1",
+    "libphonenumber-js": "^1.11.20",
+    "quasar": "^2.17.7",
+    "uuid": "^11.1.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@quasar/vite-plugin": "^1.5.0",
-    "@vitejs/plugin-vue": "^4.3.1",
-    "vite": "^4.4.9"
+    "@quasar/vite-plugin": "^1.9.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^6.1.1"
   }
 }
