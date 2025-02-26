@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 from ne_sop_api.models import (
     Document,
+    DocumentType,
     Entity,
     EntityType,
     Event,
@@ -14,7 +15,7 @@ from ne_sop_api.models import (
     ItemStatus,
     Template,
     Group,
-    User,
+    # User,
 )
 
 
@@ -223,6 +224,7 @@ class ItemSerializer(serializers.ModelSerializer):
         ]
 
 
+# %% NESTED ITEM TYPE
 class NestedItemSerializer(serializers.ModelSerializer):
     type = ItemTypeSerializer(read_only=True)
 
@@ -263,9 +265,8 @@ class NestedItemSerializer(serializers.ModelSerializer):
             "valid",
         ]
 
-    # %% ITEM STATISTICS
 
-
+# %% ITEM STATISTICS
 class ItemTypeStatisticsSerializer(serializers.ModelSerializer):
     num_items = serializers.IntegerField()
     year = serializers.DateField()
@@ -334,7 +335,6 @@ class FileSerializer(serializers.Serializer):
 
 # %% TESTING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 class NewEventSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False, read_only=False)
 
@@ -366,32 +366,60 @@ class UserFullNameSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class DocumentSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False, read_only=False)
+# %% DOCUMENT LIST
+class DocumentListSerializer(serializers.ModelSerializer):
 
-    template = serializers.SlugRelatedField(slug_field="name", read_only=True)
-    template_id = serializers.PrimaryKeyRelatedField(source="template", queryset=Template.objects.all(), write_only=True)
-
-    author = UserFullNameSerializer(read_only=True)
-    author_id = serializers.PrimaryKeyRelatedField(source="author", queryset=User.objects.all(), default=serializers.CurrentUserDefault(), write_only=True)
-
-    version = serializers.IntegerField(required=False)
-
-    item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
+    items = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Document
         fields = [
             "id",
             "uuid",
+            "title",
+            "reference",
+            "type",
+            "items",
             "created",
             "filename",
-            "template",
-            "template_id",
+        ]
+
+
+# %% DOCUMENT TYPE
+class DocumentTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentType
+        fields = "__all__"
+
+
+# %% DOCUMENT
+class DocumentSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False, read_only=False)
+
+    # template = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    # template_id = serializers.PrimaryKeyRelatedField(source="template", queryset=Template.objects.all(), write_only=True)
+
+    author = UserFullNameSerializer(read_only=True)
+    author_id = serializers.PrimaryKeyRelatedField(source="author", queryset=User.objects.all(), default=serializers.CurrentUserDefault(), write_only=True)
+
+    version = serializers.IntegerField(required=False)
+
+    # item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
+
+    class Meta:
+        model = Document
+        fields = [
+            "id",
+            "uuid",
+            "reference",
+            "title",
+            "type",
+            "created",
+            "filename",
             "note",
             "version",
             "size",
-            "item",
+            "items",
             "author",
             "author_id",
             "file",
@@ -401,16 +429,18 @@ class DocumentSerializer(serializers.ModelSerializer):
         version = Utils.get_next_documentVersion(Document, validated_data)
         validated_data["version"] = version
 
-        template = validated_data.get("template")
+        # template = validated_data.get("template")
 
         file = validated_data.get("file", None)
 
         filename = file.name
         file_extension = filename.rsplit(".", 1)[1]
 
+        '''
         if int(template.id) != int(settings.NESOP_TEMPLATE_AUTRE_ID):
             template = Template.objects.filter(id=template.id).first()
             filename = template.filename
+        '''
 
         filename = filename.rsplit(".", 1)[0] + f"_v{version}." + file_extension
 
@@ -422,6 +452,7 @@ class DocumentSerializer(serializers.ModelSerializer):
         return document
 
 
+# %% New item serializer
 class NewItemSerializer(serializers.ModelSerializer):
     type = serializers.PrimaryKeyRelatedField(
         required=True,
