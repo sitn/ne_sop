@@ -4,20 +4,36 @@
         <template v-slot:body>
 
             <!-- FILE SECTION -->
-            <FormSection>
+            <FormSection title="Informations générales" class="q-mt-none">
                 <template v-slot:content>
-                    <div class="text-h6">Fichier</div>
+                    <!-- <div class="text-h6">Document</div> -->
+
+                    <div class="row q-col-gutter-lg q-py-md">
+
+                        <!-- REFERENCE TEXT FIELD -->
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <q-input bg-color="white" outlined v-model="document.reference" label="N° référence" :disable="!edit" />
+                        </div>
+
+                        <!-- TITLE TEXT FIELD -->
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <q-input bg-color="white" outlined v-model="document.title" label="Titre" :rules="[v => checkFilled(v)]" :disable="!edit" />
+                        </div>
+
+                    </div>
 
                     <div class="row q-col-gutter-lg q-py-md">
 
                         <!-- FILE SELECTOR FIELD -->
+                        <!--
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <q-file bg-color="white" outlined v-model="document.file" label="Sélectionner un fichier" counter max-files="1" :rules="[v => checkFile(v)]" clearable @update:model-value="getFileAttributes">
                                 <template v-slot:prepend>
                                     <q-icon name="sym_o_attach_file" />
                                 </template>
-                            </q-file>
-                        </div>
+</q-file>
+</div>
+-->
 
                         <!-- TYPE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -89,8 +105,9 @@ export default {
             }
         }
     },
-    created() {
-        this.getDocumentTypes()
+    async created() {
+        this.documentTypes = await this.store.getDocumentTypes()
+        // this.getDocumentTypes()
     },
     methods: {
         checkFilled,
@@ -105,10 +122,12 @@ export default {
                 this.document.filename = this.document.file.name
                 this.document.size = this.document.file.size
             }
-        },
+        }
+        /*
         async getDocumentTypes() {
             this.documentTypes = await store.getTemplatesByItemType(this.item_type)
         }
+        */
     }
 }
 </script>
