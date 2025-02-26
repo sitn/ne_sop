@@ -213,6 +213,7 @@ class Event(models.Model):
             # Item.objects.filter(id=self.item.pk).update(enddate=None)
 
 
+# %% FILE TEMPLATE
 class Template(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=100, blank=True, default="")
@@ -231,15 +232,32 @@ class Template(models.Model):
         return self.name
 
 
+# %% DOCUMENT TYPES
+class DocumentType(models.Model):
+    name = models.CharField(max_length=200, blank=True, default="")
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
+# %% DOCUMENT
 class Document(models.Model):
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
+    reference = models.CharField(max_length=200, blank=True, null=True, default="")
+    title = models.CharField(max_length=200, blank=True, null=True, default="")
+    type = models.ForeignKey(DocumentType, null=True, on_delete=models.PROTECT)
     created = models.DateTimeField(auto_now_add=True)
-    template = models.ForeignKey(Template, null=True, on_delete=models.SET_NULL)
+    # template = models.ForeignKey(Template, null=True, on_delete=models.SET_NULL)
     note = models.CharField(max_length=500, blank=True, default="")
     filename = models.CharField(default=None, max_length=200)
     version = models.PositiveIntegerField(default=None)
     size = models.PositiveIntegerField(default=0, null=False)
-    item = models.ForeignKey(Item, related_name="documents", on_delete=models.CASCADE)
+    # item = models.ForeignKey(Item, related_name="documents", on_delete=models.CASCADE)
+
+    items = models.ManyToManyField(Item, blank=True, related_name="documents")
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     file = models.FileField(upload_to=Utils.get_upload_path)
 
