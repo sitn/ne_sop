@@ -3,7 +3,7 @@
 
         <!-- ADD NEW DOCUMENT BUTTON -->
         <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
-            <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" @click="addDocument()" :disable="!edit">
+            <q-btn padding="sm md" unelevated no-caps color="blue-grey-8" text-color="white" icon="sym_o_add_circle" label="Ajouter" @click="showDocumentDialog()" :disable="!edit">
                 <q-tooltip class="bg-black">Ajouter un document</q-tooltip>
             </q-btn>
         </div>
@@ -145,7 +145,7 @@ export default {
     },
     methods: {
         formatBytes,
-        addDocument() {
+        showDocumentDialog() {
             this.dialog.newDocument = true
         },
         /*
