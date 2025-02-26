@@ -42,7 +42,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view, action
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import filters
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseForbidden, FileResponse
@@ -641,7 +641,7 @@ class ItemViewSet(viewsets.ViewSet):
         now = datetime.datetime.now()
         filename = f'{datetime.datetime.strftime(now, "%Y%m%d-%H%M%S")}_ObjetsParlementaires.xlsx'
 
-        ## Save results in Excel file
+        # Save results in Excel file
         # create workbook
         wb = openpyxl.Workbook()
         ws = wb.active
@@ -905,7 +905,7 @@ class DocumentViewSet(viewsets.ViewSet):
     New document viewset
     """
 
-    parser_classes = [MultiPartParser]
+    parser_classes = (MultiPartParser, FormParser)
     serializer_class = DocumentSerializer
     search_fields = ["title", "reference", "filename", "items__title"]
     # lookup_field = "uuid"
@@ -1015,25 +1015,37 @@ class DocumentViewSet(viewsets.ViewSet):
         return response
     '''
 
-    '''
-    @action(detail=False, methods=["get"], url_path="download")
-    def download_file(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-
-        now = datetime.datetime.now()
-        filename = f'{datetime.datetime.strftime(now, "%Y%m%d-%H%M%S")}_ObjetsParlementaires.xlsx'
-
-        response = FileResponse(file_stream, filename=filename, as_attachment=True)
-        return response
-    '''
-
     @extend_schema(
         tags=["Document"],
     )
     def update(self, request, pk=None):
         #  document = get_object_or_404(self.get_queryset(), pk=pk) # TODO: decide if we use uuid or integer PK
         document = get_object_or_404(self.get_queryset(), uuid=pk)
+
+        # os.remove(PurePath(settings.MEDIA_ROOT, document.file.name))
+
+        # Check if a new file has been uploaded
+        if 'file' in request.FILES:
+            print("There is an existing file")
+            # If an existing file is present, delete it.
+            if document.file:
+                print("Delete file")
+                print("File path:", document.file.path)
+                document.file.delete(save=False)
+
         serializer = DocumentSerializer(document, data=request.data)
+        print("Update document")
+        print("Request:")
+        print(request)
+
+        print("Request FILES:")
+        print(request.FILES)
+
+        print("Request data:")
+        print(request.data)
+        print("Document:")
+        # print(document)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -1044,7 +1056,7 @@ class DocumentViewSet(viewsets.ViewSet):
         tags=["Document"],
     )
     def destroy(self, request, pk=None):
-        document = get_object_or_404(self.get_queryset(), pk=pk)
+        document = get_object_or_404(self.get_queryset(), uuid=pk)
         os.remove(PurePath(settings.MEDIA_ROOT, document.file.name))
         document.delete()
         return Response({"msg": "Document deleted"})
