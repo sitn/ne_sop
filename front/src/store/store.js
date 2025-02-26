@@ -627,6 +627,71 @@ export const store = reactive({
     }
   },
 
+  async updateMyDocument(id, formInput) {
+    // Create a new FormData object
+
+    console.log("updateMyDocument");
+    console.log(formInput);
+
+    const formData = new FormData();
+
+    // Iterate over each key in the input object and append it to formData.
+    // Note: If the file attachment is a File object, it will be appended properly.
+
+    /*
+    Object.keys(formInput).forEach((key) => {
+      console.log(`Key: ${key}: value: ${formInput[key]}`);
+      formData.append(key, formInput[key]);
+    });
+    */
+
+    formData.append("id", formInput.id);
+    formData.append("uuid", formInput.uuid);
+    formData.append("reference", formInput.reference);
+    formData.append("title", formInput.title);
+    formData.append("type", "1");
+    formData.append("filename", formInput.filename);
+    formData.append("note", formInput.note);
+    formData.append("version", formInput.version); // TODO remove
+    formData.append("size", formInput.size);
+    formData.append("items", "37"); // ISSUE
+    formData.append("author_id", "6");
+    formData.append("file", formInput.file);
+    // formdata.append("file", fileInput.files[0], "/C:/Users/parkanm/Downloads/sop.ics");
+    formData.append("valid", "true");
+    formData.append("created", formInput.created);
+
+    /*
+    formData.append("title", document.title);
+    formData.append("reference", document.title);
+    formData.append("file", document.file);
+    formData.append("filename", document.filename);
+    formData.append("created", document.created);
+    formData.append("size", document.size);
+    formData.append("note", document.note);
+    */
+    console.log(formData);
+
+    try {
+      const query = new URL(`${host}/api/document/${id}/`);
+      const response = await fetch(query, {
+        method: "PUT", // PUT
+        body: formData,
+        redirect: "follow",
+        // Do not set the Content-Type header manually; the browser will set it automatically.
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Document updated successfully:", data);
+    } catch (error) {
+      console.error("Error updating document:", error);
+    }
+  },
+
   // UPDATE DOCUMENT
   async updateDocument(id, data) {
     try {
