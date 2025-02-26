@@ -71,7 +71,7 @@
 
                         <div class="q-gutter-xs">
                             <q-badge color="red" class="q-my-sm" v-if="props.row.urgent">Urgent</q-badge>
-                            <q-badge color="yellow" text-color="black" class="q-my-sm blink" v-if="props.row.late"> Retard</q-badge>
+                            <q-badge color="yellow" text-color="black" class="q-my-sm blink" v-if="props.row.late"><q-icon name="sym_o_alarm" color="black" class="q-mr-xs" />Retard</q-badge>
                         </div>
                         <div class="row items-center">
                             <q-badge :color="props.row.status.color" rounded class="q-mr-sm" />
