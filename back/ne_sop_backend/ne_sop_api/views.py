@@ -1,5 +1,6 @@
 from ne_sop_api.models import (
     Document,
+    DocumentType,
     Entity,
     EntityType,
     Event,
@@ -11,6 +12,8 @@ from ne_sop_api.models import (
 )
 from ne_sop_api.serializers import (
     DocumentSerializer,
+    DocumentListSerializer,
+    DocumentTypeSerializer,
     EntitySerializer,
     EntityListSerializer,
     EntityTypeSerializer,
@@ -876,6 +879,27 @@ class TemplateTypeViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
+# %% DOCUMENT TYPE
+class DocumentTypeViewSet(viewsets.ViewSet):
+    """
+    Document types viewset
+    """
+
+    # order queryset by ascending id
+    sortby = "name"
+    queryset = DocumentType.objects.all().order_by(Lower(sortby).asc())
+    serializer_class = DocumentTypeSerializer
+
+    @extend_schema(
+        responses=DocumentTypeSerializer,
+        tags=["Document types"],
+    )
+    def list(self, request):
+        serializer = DocumentTypeSerializer(self.queryset, many=True)
+        return Response(serializer.data)
+
+
+# %% DOCUMENT
 class DocumentViewSet(viewsets.ViewSet):
     """
     New document viewset
@@ -883,12 +907,64 @@ class DocumentViewSet(viewsets.ViewSet):
 
     parser_classes = [MultiPartParser]
     serializer_class = DocumentSerializer
+    search_fields = ["title", "reference", "filename", "items__title"]
+    # lookup_field = "uuid"
+    # lookup_url_kwarg = "uuid"
 
     def get_queryset(self):
         user = self.request.user
         if user.groups.filter(name="Manager").exists():
             return Document.objects.all()
         return Document.objects.filter(Q(item__lead__in=user.entities.all()) | Q(item__support__in=user.entities.all()))
+
+    @extend_schema(
+        responses=DocumentListSerializer,
+        tags=["Document"],
+    )
+    def list(self, request):
+        filter = filters.SearchFilter()
+        queryset = filter.filter_queryset(request, self.get_queryset(), self)
+
+        # queryset = Event.objects.all()
+        item = request.query_params.get("document", None)
+        page = int(request.query_params.get("page", "1"))
+        size = int(request.query_params.get("size", "10"))
+        sortby = request.query_params.get("sortby", "id")
+        descending = request.query_params.get("descending", "false")
+
+        if sortby not in ["id", "date", "type"]:
+            sortby = "date"
+
+        if descending not in ["true", "false"]:
+            descending = "true"
+
+        if item and len(item) > 0:
+            queryset = queryset.filter(items__id__in=item.split(","))
+
+            # queryset = queryset.filter(items__in=item)
+            # queryset = queryset.filter(Q(lead__id__in=list(filter(None, service.split(",")))) | Q(support__id__in=list(filter(None, service.split(","))))).distinct()
+
+        if descending == "true":
+            paginator = Paginator(queryset.order_by(Lower(sortby).desc()), size)
+        else:
+            paginator = Paginator(queryset.order_by(Lower(sortby).asc()), size)
+
+        queryset = paginator.page(page)
+        nrows = paginator.count
+        npages = paginator.num_pages
+
+        serializer = DocumentListSerializer(queryset, many=True)
+
+        return Response(
+            {
+                "page": page,
+                "npages": npages,
+                "nrows": nrows,
+                "sortby": sortby,
+                "descending": descending,
+                "results": serializer.data,
+            }
+        )
 
     @extend_schema(
         responses=DocumentSerializer,
@@ -901,6 +977,25 @@ class DocumentViewSet(viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @extend_schema(
+        tags=["Document"],
+    )
+    def retrieve(self, request, pk=None):
+        #  document = get_object_or_404(self.get_queryset(), pk=pk) # TODO: decide if we use uuid or integer PK
+        document = get_object_or_404(self.get_queryset(), uuid=pk)
+        serializer = DocumentSerializer(document)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'], url_path='download', url_name='download')
+    @extend_schema(tags=["Document"], description="Download the file attached to the document")
+    def download_file(self, request, pk=None):
+        document = get_object_or_404(self.get_queryset(), uuid=pk)
+        # Ensure the file is opened and returned as a response. Adjust this if you're using a custom storage.
+        file_handle = document.file.open(mode='rb')
+        response = FileResponse(file_handle, as_attachment=True, filename=document.file.name)
+        return response
+
+    '''
     @extend_schema(
         responses=DocumentSerializer,
         tags=["Document"],
@@ -918,6 +1013,31 @@ class DocumentViewSet(viewsets.ViewSet):
         headers["Accept-Ranges"] = "bite"
         response["Content-Disposition"] = f"attachment; filename={document.filename}"
         return response
+    '''
+
+    '''
+    @action(detail=False, methods=["get"], url_path="download")
+    def download_file(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        now = datetime.datetime.now()
+        filename = f'{datetime.datetime.strftime(now, "%Y%m%d-%H%M%S")}_ObjetsParlementaires.xlsx'
+
+        response = FileResponse(file_stream, filename=filename, as_attachment=True)
+        return response
+    '''
+
+    @extend_schema(
+        tags=["Document"],
+    )
+    def update(self, request, pk=None):
+        #  document = get_object_or_404(self.get_queryset(), pk=pk) # TODO: decide if we use uuid or integer PK
+        document = get_object_or_404(self.get_queryset(), uuid=pk)
+        serializer = DocumentSerializer(document, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
         responses=DocumentSerializer,
