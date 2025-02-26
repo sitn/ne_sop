@@ -40,7 +40,8 @@ class Utils(object):
 
     @classmethod
     def get_upload_path(cls, instance, filename):
-        return PurePath(str(instance.item.created.year), str(instance.item.id), filename)
+        return PurePath(str(instance.uuid), filename)
+        # return PurePath(str(instance.item.created.year), str(instance.item.id), filename)
 
     @classmethod
     def get_next_documentVersion(cls, DocumentModel, data):
