@@ -13,6 +13,17 @@
                     </q-item-section>
                 </q-item>
 
+                <q-item clickable v-ripple to="/documents" style="color:#757575" active-class="bg-light-blue-1 text-blue-grey-7">
+                    <!-- active #dce4eb -->
+                    <q-item-section avatar>
+                        <q-icon name="sym_o_file_present" size="lg" />
+                    </q-item-section>
+
+                    <q-item-section>
+                        Documents
+                    </q-item-section>
+                </q-item>
+
                 <q-item clickable v-ripple to="/entities" style="color:#757575" active-class="bg-light-blue-1 text-blue-grey-7">
                     <q-item-section avatar>
                         <q-icon name="sym_o_groups" size="lg" />
