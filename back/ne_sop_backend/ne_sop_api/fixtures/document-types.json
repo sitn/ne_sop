@@ -1,0 +1,79 @@
+[
+  {
+    "model": "ne_sop_api.DocumentType",
+    "pk": "1",
+    "fields": {
+      "name": "Refus"
+    }
+  },
+  {
+    "model": "ne_sop_api.DocumentType",
+    "pk": "2",
+    "fields": {
+      "name": "Prise de position"
+    }
+  },
+  {
+    "model": "ne_sop_api.DocumentType",
+    "pk": "3",
+    "fields": {
+      "name": "Réponse écrite"
+    }
+  },
+  {
+    "model": "ne_sop_api.DocumentType",
+    "pk": "4",
+    "fields": {
+      "name": "Speaking note"
+    }
+  },
+  {
+    "model": "ne_sop_api.DocumentType",
+    "pk": "5",
+    "fields": {
+      "name": "Note (CE)"
+    }
+  },
+  {
+    "model": "ne_sop_api.DocumentType",
+    "pk": "6",
+    "fields": {
+      "name": "Document de base"
+    }
+  },
+  {
+    "model": "ne_sop_api.DocumentType",
+    "pk": "7",
+    "fields": {
+      "name": "Modèle de réponse à utiliser"
+    }
+  },
+  {
+    "model": "ne_sop_api.DocumentType",
+    "pk": "8",
+    "fields": {
+      "name": "Réponse orale"
+    }
+  },
+  {
+    "model": "ne_sop_api.DocumentType",
+    "pk": "9",
+    "fields": {
+      "name": "Réponse validée"
+    }
+  },
+  {
+    "model": "ne_sop_api.DocumentType",
+    "pk": "10",
+    "fields": {
+      "name": "Autre"
+    }
+  },
+  {
+    "model": "ne_sop_api.DocumentType",
+    "pk": "11",
+    "fields": {
+      "name": "Communiqué de presse"
+    }
+  }
+]
