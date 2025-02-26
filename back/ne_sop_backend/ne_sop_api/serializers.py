@@ -426,8 +426,9 @@ class DocumentSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        version = Utils.get_next_documentVersion(Document, validated_data)
-        validated_data["version"] = version
+        # version = Utils.get_next_documentVersion(Document, validated_data)
+        # validated_data["version"] = version
+        version = "1"
 
         # template = validated_data.get("template")
 
