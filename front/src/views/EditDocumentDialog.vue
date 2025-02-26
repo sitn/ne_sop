@@ -40,10 +40,8 @@ export default {
     },
     methods: {
         save() {
-
             Object.assign(this.modelValue, this.document)
             this.$emit('update:modelValue', this.modelValue)
-
         },
 
     }
