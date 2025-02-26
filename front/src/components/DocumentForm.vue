@@ -54,6 +54,33 @@
                         </div>
                     </div>
 
+                    <div class="row q-col-gutter-lg q-py-md" v-if="document.file">
+
+                        <!-- ATTACHED FILE -->
+                        <div class="col">
+                            <q-list bordered separator>
+                                <q-item clickable>
+                                    <q-item-section avatar>
+                                        <!-- <q-icon color="primary" name="sym_o_file_present" /> -->
+                                        <q-avatar color="grey" text-color="white" icon="sym_o_file_present" />
+                                    </q-item-section>
+                                    <q-item-section>
+                                        <q-item-label>{{ document.filename }}</q-item-label>
+                                        <q-item-label caption>{{ document.size }}</q-item-label>
+                                    </q-item-section>
+                                    <q-item-section avatar>
+                                        <q-btn dense round flat color="red" name="delete" @click="" icon="sym_o_delete">
+                                            <q-tooltip class="bg-black">Supprimer</q-tooltip>
+                                        </q-btn>
+                                    </q-item-section>
+                                </q-item>
+
+                            </q-list>
+                        </div>
+
+
+                    </div>
+
                     <!-- TODO REMOVE/DEV DISPLAY JSON-->
                     <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
                         <div>document</div>
