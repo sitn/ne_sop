@@ -6,7 +6,6 @@
             <!-- FILE SECTION -->
             <FormSection title="Informations générales" class="q-mt-none">
                 <template v-slot:content>
-                    <!-- <div class="text-h6">Document</div> -->
 
                     <div class="row q-col-gutter-lg q-py-md">
 
@@ -25,20 +24,17 @@
                     <div class="row q-col-gutter-lg q-py-md">
 
                         <!-- FILE SELECTOR FIELD -->
-                        <!--
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <q-file bg-color="white" outlined v-model="document.file" label="Sélectionner un fichier" counter max-files="1" :rules="[v => checkFile(v)]" clearable @update:model-value="getFileAttributes">
+                            <q-file bg-color="white" outlined v-model="newFile" label="Sélectionner un fichier" counter max-files="1" :rules="[v => checkFile(v)]" clearable @update:model-value="getFileAttributes">
                                 <template v-slot:prepend>
                                     <q-icon name="sym_o_attach_file" />
                                 </template>
-</q-file>
-</div>
--->
+                            </q-file>
+                        </div>
 
                         <!-- TYPE SELECT FIELD -->
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <q-select bg-color="white" outlined v-model="document.type" :options="documentTypes" option-label="name" emit-value label="Type" :rules="[v => checkFilled(v)]" clearable :disable="!edit">
-
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps">
                                         <q-item-section>
@@ -46,7 +42,6 @@
                                         </q-item-section>
                                     </q-item>
                                 </template>
-
                             </q-select>
                         </div>
 
@@ -92,6 +87,7 @@ export default {
         return {
             store,
             documentTypes: [],
+            newFile: null,
             valid: null,
         }
     },
@@ -118,10 +114,18 @@ export default {
             // this.$emit('validationEvent', this.valid)
         },
         getFileAttributes() {
+            if (this.newFile) {
+                this.document.file = this.newFile
+                this.document.filename = this.newFile.name
+                this.document.size = this.newFile.size
+                this.document.type = 1 // TODO rmeove this
+            }
+            /*
             if (this.document.file) {
                 this.document.filename = this.document.file.name
                 this.document.size = this.document.file.size
             }
+            */
         }
         /*
         async getDocumentTypes() {
