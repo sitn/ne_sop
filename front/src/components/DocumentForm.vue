@@ -80,6 +80,19 @@
                         </div>
                     </div>
 
+                    <div class="row q-col-gutter-lg q-py-md">
+                        <div class="col">
+                            <q-list dense bordered padding class="rounded-borders">
+                                <q-item clickable v-for="item in document.items">
+                                    <q-item-section>
+                                        {{ item }}
+                                    </q-item-section>
+                                </q-item>
+                            </q-list>
+                        </div>
+                    </div>
+
+
                     <!-- TODO REMOVE/DEV DISPLAY JSON-->
                     <div class="bg-light-blue-1 q-my-md q-pa-md" v-if="store.dev">
                         <div>document</div>
