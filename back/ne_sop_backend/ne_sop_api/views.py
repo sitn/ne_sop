@@ -932,8 +932,8 @@ class DocumentViewSet(viewsets.ViewSet):
         sortby = request.query_params.get("sortby", "id")
         descending = request.query_params.get("descending", "false")
 
-        if sortby not in ["id", "date", "type"]:
-            sortby = "date"
+        if sortby not in ["id", "created", "type", "title"]:
+            sortby = "created"
 
         if descending not in ["true", "false"]:
             descending = "true"
