@@ -369,7 +369,9 @@ class UserFullNameSerializer(serializers.ModelSerializer):
 # %% DOCUMENT LIST
 class DocumentListSerializer(serializers.ModelSerializer):
 
-    items = serializers.StringRelatedField(many=True)
+    type = serializers.StringRelatedField()
+    # items = serializers.StringRelatedField(many=True)
+    items = NestedItemSerializer(read_only=True, many=True)
 
     class Meta:
         model = Document
@@ -396,6 +398,18 @@ class DocumentTypeSerializer(serializers.ModelSerializer):
 class DocumentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False, read_only=False)
 
+    # type = serializers.PrimaryKeyRelatedField(queryset=DocumentType.objects.all())
+
+    '''
+    type = DocumentTypeSerializer(read_only=True)
+
+    type_id = serializers.PrimaryKeyRelatedField(
+        source="type",
+        queryset=DocumentType.objects.all(),
+        write_only=True,
+    )
+    '''
+
     # template = serializers.SlugRelatedField(slug_field="name", read_only=True)
     # template_id = serializers.PrimaryKeyRelatedField(source="template", queryset=Template.objects.all(), write_only=True)
 
@@ -405,6 +419,7 @@ class DocumentSerializer(serializers.ModelSerializer):
     version = serializers.IntegerField(required=False)
 
     # item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
+    #             "type_id",
 
     class Meta:
         model = Document
