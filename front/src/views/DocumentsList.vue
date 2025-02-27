@@ -11,7 +11,7 @@
 
             <!-- SEARCH RECORDS FIELD -->
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
-                <q-input bg-color="white" v-model="filter.search" outlined dense placeholder="Rechercher (n° ou titre du fichier)"> <!-- @update:model-value="query()" -->
+                <q-input bg-color="white" v-model="filter.search" outlined dense placeholder="Rechercher (réf. ou titre)"> <!-- @update:model-value="query()" -->
                     <template v-slot:prepend>
                         <q-icon name="sym_o_search" />
                     </template>
@@ -43,70 +43,45 @@
             <template v-slot:body="props">
                 <q-tr :props="props">
 
-                    <!-- ID COLUMN -->
-                    <q-td key="id" :props="props">
-                        {{ props.row.id }}
-                    </q-td>
-
-                    <!-- FILENAME COLUMN -->
-                    <!--
-                    <q-td key="filename" :props="props">
-                        {{ props.row.filename }}
-                    </q-td>
-                    -->
-
-
                     <!-- TITLE COLUMN -->
-                    <q-td key="title" :props="props">
-
+                    <q-td key="title" :props="props" style="max-width: 250px">
                         <router-link :to="{
                             name: 'Document',
                             params: {
                                 id: props.row.uuid
                             }
                         }">
-                            {{ props.row.title }}
+                            <q-chip clickable square outline color="blue-5" text-color="white" icon="sym_o_loupe">
+                                <div class="ellipsis">{{ props.row.title }} / {{ props.row.reference }}</div>
+                            </q-chip>
                         </router-link>
-
-                        <div>Ref: {{ props.row.reference }}</div>
                     </q-td>
 
-                    <!-- FILENAME COLUMN -->
-                    <q-td key="filename" :props="props">
-
-                        <router-link :to="{
-                            name: 'Document',
-                            params: {
-                                id: props.row.uuid
-                            }
-                        }">
-                            {{ props.row.filename }}
-                        </router-link>
-
-                        <!--
-                        <div>Auteur: {{ props.row.author }}</div>
-                        <div>Lead: {{ props.row.lead }}</div>
-                        <div>Support: {{ props.row.support.join(", ") }}</div>
-                        -->
-
+                    <!-- TYPE COLUMN -->
+                    <q-td key="type" :props="props">
+                        {{ props.row.type }}
                     </q-td>
 
-
-
-                    <!--
-                    <q-td key="id" :props="props">
-
-                        <router-link :to="{
-                            name: 'Item',
-                            params: {
-                                id: props.row.id
-                            }
-                        }">
-
-                        </router-link>
-
+                    <!-- ITEMS COLUMN -->
+                    <q-td key="type" :props="props">
+                        <div v-for="item in props.row.items" style="max-width: 250px">
+                            <router-link :to="{
+                                name: 'Item',
+                                params: {
+                                    id: item.id
+                                }
+                            }">
+                                <q-chip clickable square outline color="blue-5" text-color="white" icon="sym_o_loupe">
+                                    <div class="ellipsis">{{ item.number }} - {{ item.title }}</div>
+                                </q-chip>
+                            </router-link>
+                        </div>
                     </q-td>
-                    -->
+
+                    <!-- DATE COLUMN -->
+                    <q-td key="created" :props="props">
+                        {{ props.row.created }}
+                    </q-td>
 
                     <!-- ACTIONS COLUMN -->
                     <q-td key="actions" :props="props">
@@ -165,13 +140,6 @@ export default {
             },
             columns: [
                 {
-                    name: "id",
-                    align: "left",
-                    label: "ID",
-                    field: "id",
-                    sortable: true,
-                },
-                {
                     name: "title",
                     align: "left",
                     label: "Titre / Réf.",
@@ -179,10 +147,24 @@ export default {
                     sortable: true,
                 },
                 {
-                    name: "filename",
+                    name: "type",
                     align: "left",
-                    label: "Fichier",
-                    field: "filename",
+                    label: "Type",
+                    field: "type",
+                    sortable: true,
+                },
+                {
+                    name: "items",
+                    align: "left",
+                    label: "Objet(s) lié(s)",
+                    field: "items",
+                    sortable: false,
+                },
+                {
+                    name: "created",
+                    align: "left",
+                    label: "Date",
+                    field: "created",
                     sortable: true,
                 },
                 {
